@@ -2,39 +2,7 @@ import zipfile
 from bs4 import BeautifulSoup
 from datetime import datetime
 import pandas as pd
-
-#DataFrames pandas a serem atualizados com os dados e exportados
-dfGerais = pd.DataFrame(columns=["ID", "DATA ATUALIZACAO", "NOME", "CIDADE", "ESTADO", "PAIS", "NOMES CITACOES", "ORCID", 
-    "RESUMO", "INSTITUICAO PROFISSIONAL"])
-
-def exportCSV(dicionarioDF):
-    """
-    FUNÇÃO PARA EXPORTAR DATAFRAMES PANDAS PARA CSV
-
-    Descrição: Recebe um dicionario de dataframes pandas e exporta cada um para um csv
-
-    Parâmetro: dicionarioDF - dicionário contendo dataframes pandas.
-
-    Retorno: Nenhum
-    """
-
-    dicionarioDF["DADOS GERAIS"].to_csv('./csv/dadosGerais.csv', index=False)
-    #Acrescentar resto das exportações dos outros dicionarios
-
-def adicionarLinha(df, linha):
-    """
-    FUNÇÃO PARA ADICIONAR UMA NOVA LINHA (REGISTRO) A UM DATAFRAME PANDAS
-
-    Descrição: Recebe um dataframe e adiciona uma nova linha a ele
-
-    Parâmetro: df - DataFrame pandas
-    Parâmetro: linha - dicionário a ser incrementado ao DataFrame
-
-    Retorno: df - DataFrame atualizado
-    """
-    novaLinha = pd.DataFrame([linha])
-    df = pd.concat([df, novaLinha], ignore_index=True)
-    return df
+import csv
 
 def openCurriculo(curriculoZIP):
     """
@@ -56,16 +24,23 @@ def openCurriculo(curriculoZIP):
 
     curriculo = BeautifulSoup(curriculoXML, features="xml", from_encoding='ISO-8859-1') #Fazendo leitura do XML
 
-    #DADOS GERAIS
+    #============= DADOS GERAIS ================#
     dadosGeraisPesquisador = getDadosGerais(curriculo) #Extraindo dados gerais do pesquisador e salvando em um dicionário
     dadosGeraisPesquisador["ID"] = idPesquisador #Adicionando o ID
-    global dfGerais
-    dfGerais = adicionarLinha(dfGerais, dadosGeraisPesquisador) #Adicionando o registro a um dataframe
 
-    #OUTRO MÉTODO PARA EXTRAIR AQUI
-
-    dicionarioDF = {"DADOS GERAIS": dfGerais}
-    exportCSV(dicionarioDF)
+    #Cabeçalhos do CSV
+    cabeçalhos = ["ID", "DATA ATUALIZACAO", "NOME", "CIDADE", "ESTADO", "PAIS", "NOMES CITACOES", "ORCID", "RESUMO", "INSTITUICAO PROFISSIONAL"]
+            
+    try: #Tenta adicionar o novo dado a linha
+        with open('./csv/dadosGerais.csv', mode='a', newline='', encoding='utf-8') as dadosGerais:
+            writer = csv.DictWriter(dadosGerais, fieldnames=cabeçalhos)
+            writer.writerow(dadosGeraisPesquisador)
+    except: #Se não achou arquivo, criar e adicionar a nova linha
+        # Abrindo o arquivo em modo escrita para criar e adicionar os cabeçalhos
+        with open('./csv/dadosGerais.csv', mode='a', newline='', encoding='utf-8') as dadosGerais:
+            writer = csv.DictWriter(dadosGerais, fieldnames=cabeçalhos)
+            writer.writeheader() #Adicionando cabeçalho
+            writer.writerow(dadosGeraisPesquisador) #Adicionando linha
 
 def getDadosGerais(curriculo):
     """
