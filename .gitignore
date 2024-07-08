@@ -2,3 +2,9 @@ ECHO est� ativado.
 
 #Arquivos zipados dos currículos (muitos dados) que estão no diretório
 repo/
+
+#Arquivos csv tbm não devem ir para o repositório
+csv/*.csv
+
+#Ambiente virtual python também não deve ir
+ambienteCurricFilter/
