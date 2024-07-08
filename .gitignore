@@ -6,5 +6,6 @@ repo/
 #Arquivos csv tbm não devem ir para o repositório
 csv/*.csv
 
-#Ambiente virtual python também não deve ir
+#Ambiente virtual python e pycache também não deve ir
 ambienteCurricFilter/
+__pycache__/
