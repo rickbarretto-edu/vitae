@@ -3,6 +3,11 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import pandas as pd
 import csv
+from utils.loggers import configLogger
+from arquivoTesteLogs import *
+from teste2 import *
+
+logger = configLogger(__name__)
 
 def openCurriculo(curriculoZIP):
     """
@@ -105,3 +110,8 @@ def getDadosGerais(curriculo):
     "RESUMO": textoResumo, "INSTITUICAO PROFISSIONAL": nomeInstituicao}
 
     return dadosGeraisPesquisador
+
+
+
+teste1()
+teste2()

@@ -4,8 +4,9 @@ ECHO est� ativado.
 repo/
 
 #Arquivos csv tbm não devem ir para o repositório
-csv/*.csv
+csv/
 
-#Ambiente virtual python e pycache também não deve ir
+#Ambiente virtual python, pycache e logs também não deve ir
 ambienteCurricFilter/
 __pycache__/
+logs/
