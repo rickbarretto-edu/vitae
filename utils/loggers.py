@@ -3,6 +3,7 @@ from pythonjsonlogger import jsonlogger
 import json
 import os
 
+# Filtros para cada Nível de Log
 class DebugFilter(logging.Filter):
     def filter(self, record):
         return record.levelno == logging.DEBUG
@@ -23,15 +24,43 @@ class CriticalFilter(logging.Filter):
     def filter(self, record):
         return record.levelno == logging.CRITICAL
 
+# Handler Customizado para criar arquivo JSON
+class ListHandler(logging.Handler):
+
+    def __init__(self, logfile):
+        super().__init__()
+        self.logfile = logfile
+
+    def emit(self, record): # Método acionado a cada chamada de log
+
+        logs = carregarLogs(self.logfile) # Carrega os logs daquele nível
+        log = self.format(record)
+        logs.append(log) # Adicionando o log a lista de logs
+        salvarLogs(logs, self.logfile) # Salva o log daquele nível
+
+# Formatação JSON
 class JSONFormatter(logging.Formatter):
     def format(self, record):
         data = {
-            'timestamp': self.formatTime(record),
-            'level': record.levelname,
-            'message': record.getMessage(),
-            'filename': record.filename,
+            'timestamp': self.formatTime(record), # Data e Hora de emissão do log
+            'level': record.levelname, # Nível do Log
+            'message': record.getMessage(), # Mensagem do Log
+            'filename': record.filename, # Arquivo que emitiu o Log
         }
-        return json.dumps(data, indent=4)
+        return data
+
+# Função para carregar logs existentes dado um arquivo de log JSON
+def carregarLogs(arquivo):
+    try:
+        with open(arquivo, 'r') as arquivo:
+            return json.load(arquivo).get('logs', [])
+    except FileNotFoundError as error: # Caso arquivo não exista, criá-lo
+        return []
+
+# Função para salvar logs dado o arquivo de log JSON
+def salvarLogs(logs, arquivo):
+    with open(arquivo, 'w') as arquivo:
+        json.dump({"logs": logs}, arquivo, indent=2)
 
 # Função para garantir que o diretório existe
 def createLogDir():
@@ -39,6 +68,7 @@ def createLogDir():
     if not os.path.exists(logDir):
         os.makedirs(logDir)
 
+# Função para configuração do Logger, seus Handlers, Formatters e Filters
 def configLogger(nome):
 
     # Garantir existência do diretório LOG
@@ -49,19 +79,19 @@ def configLogger(nome):
     logger.setLevel(logging.DEBUG) # Setando o menor nível como o de DEBUG
 
     # Handlers
-    DebugHandler = logging.FileHandler(filename='./logs/debug.log')
+    DebugHandler = ListHandler(logfile='./logs/debug.json')
     DebugHandler.setLevel(logging.DEBUG) # Setando o menor nível como o de DEBUG
 
-    InfoHandler = logging.FileHandler(filename='./logs/info.log')
+    InfoHandler = ListHandler(logfile='./logs/info.json')
     InfoHandler.setLevel(logging.INFO) # Setando o menor nível como o de INFO
 
-    WarningHandler = logging.FileHandler(filename='./logs/warning.log')
+    WarningHandler = ListHandler(logfile='./logs/warning.json')
     WarningHandler.setLevel(logging.WARNING) # Setando o menor nível como o de WARNING
 
-    ErrorHandler = logging.FileHandler(filename='./logs/error.log')
+    ErrorHandler = ListHandler(logfile='./logs/error.json')
     ErrorHandler.setLevel(logging.ERROR) # Setando o menor nível como o de ERROR
 
-    CriticalHandler = logging.FileHandler(filename='./logs/critical.log')
+    CriticalHandler = ListHandler(logfile='./logs/critical.json')
     CriticalHandler.setLevel(logging.CRITICAL) # Setando o menor nível como o de CRITICAL
 
     # Criando formatador do Logger e adicionando-o aos Handlers do Log
