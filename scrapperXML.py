@@ -4,10 +4,15 @@ from datetime import datetime
 import pandas as pd
 import csv
 from utils.loggers import configLogger
-from arquivoTesteLogs import *
-from teste2 import *
+import os
 
 logger = configLogger(__name__)
+
+# Função para garantir que o diretório existe
+def createCSVDir():
+    csvDir = './csv'
+    if not os.path.exists(csvDir):
+        os.makedirs(csvDir)
 
 def openCurriculo(curriculoZIP):
     """
@@ -41,6 +46,10 @@ def openCurriculo(curriculoZIP):
             writer = csv.DictWriter(dadosGerais, fieldnames=cabeçalhos)
             writer.writerow(dadosGeraisPesquisador)
     except: #Se não achou arquivo, criar e adicionar a nova linha
+
+        # Verificar se a pasta CSV existe. Senão, criá-la
+        createCSVDir()
+
         # Abrindo o arquivo em modo escrita para criar e adicionar os cabeçalhos
         with open('./csv/dadosGerais.csv', mode='a', newline='', encoding='utf-8') as dadosGerais:
             writer = csv.DictWriter(dadosGerais, fieldnames=cabeçalhos)
@@ -110,8 +119,3 @@ def getDadosGerais(curriculo):
     "RESUMO": textoResumo, "INSTITUICAO PROFISSIONAL": nomeInstituicao}
 
     return dadosGeraisPesquisador
-
-
-
-teste1()
-teste2()
