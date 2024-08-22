@@ -1,5 +1,6 @@
 import os
 from scrapperXML import *
+#import cProfile
 
 def scanning():
     """
@@ -19,14 +20,16 @@ def scanning():
 
     #iterando lista de subdiretorios
     for subdiretorio in listaDeSubDiretorios:
-        subdiretorio = os.path.join(diretorioCurriculos, subdiretorio) #pegando o caminho de cada subdiretório
-        curriculos = os.listdir(subdiretorio) #lista de curriculos de cada subdiretório
+        subdiretorioPath = os.path.join(diretorioCurriculos, subdiretorio) #pegando o caminho de cada subdiretório
+        curriculos = os.listdir(subdiretorioPath) #lista de curriculos de cada subdiretório
 
         #iterando a lista de curriculos
         for curriculo in curriculos:
-            curriculo = os.path.join(subdiretorio, curriculo) #pegando o caminho para o currículo Zipado
-
-            openCurriculo(curriculo) #Chamando função de abertura de arquivo
+            curriculo = os.path.join(subdiretorioPath, curriculo) #pegando o caminho para o currículo Zipado
+            print(curriculo)
+            openCurriculo(curriculo, subdiretorio) #Chamando função de abertura de arquivo
 
         break #BREAK temporário só para percorrer até o subdiretório 01
-scanning()  
+
+#cProfile.run('scanning()', 'profilingET.prof') # Rodar o scanning com a varredura de um único subdiretório de currículos (01)
+scanning()

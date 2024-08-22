@@ -10,3 +10,4 @@ csv/
 ambienteCurricFilter/
 __pycache__/
 logs/
+profiling/
