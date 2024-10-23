@@ -1,36 +1,57 @@
 import os
-from scrapperXML import *
-#import cProfile
+from scrapperXML import openCurriculo
+from utils.loggers import configLogger
 
+# Configuração do logger
+logger = configLogger(__name__)
+
+# Função para realizar a varredura do diretório de currículos
 def scanning():
     """
     VARRE O DIRETÓRIO DE CURRÍCULOS LATTES E BUSCA TODOS OS CURRÍCULOS ZIPADOS
 
-    Descrição: Caminha o diretório atual até os arquivo zips e chama a 
-    função openCurriculo(curriculo) passando como parâmetro o currículo zipado
+    Descrição: Caminha o diretório atual até os arquivos ZIPs e chama a 
+    função openCurriculo(curriculo) passando como parâmetro o currículo zipado.
 
     Parâmetro: Nenhum
 
     Retorno: Nenhum
     """
-    diretorioAtual = os.getcwd() #pegando o diretório atual
+    try:
+        diretorioAtual = os.getcwd()  # Pegando o diretório atual
+        logger.info(f"Diretorio atual: {diretorioAtual}")
 
-    diretorioCurriculos = os.path.join(diretorioAtual, "repo") #pegando o diretório dos currículos
-    listaDeSubDiretorios = os.listdir(diretorioCurriculos) #gerando lista de subdiretórios para serem iteradas
+        diretorioCurriculos = os.path.join(diretorioAtual, "repo")  # Diretório dos currículos
+        listaDeSubDiretorios = os.listdir(diretorioCurriculos)  # Lista de subdiretórios
 
-    #iterando lista de subdiretorios
-    for subdiretorio in listaDeSubDiretorios:
-        subdiretorioPath = os.path.join(diretorioCurriculos, subdiretorio) #pegando o caminho de cada subdiretório
-        curriculos = os.listdir(subdiretorioPath) #lista de curriculos de cada subdiretório
+        # Log do início do processo de varredura
+        logger.info(f"Subdiretorios encontrados em {diretorioCurriculos}: {listaDeSubDiretorios}")
 
-        buffer = [] #buffer que armazena os dados de todos os currículos de um subdiretório, após o subdiretótio ser completo, salva em disco e o buffer é limpo
-        #iterando a lista de curriculos
-        for curriculo in curriculos:
-            curriculo = os.path.join(subdiretorioPath, curriculo) #pegando o caminho para o currículo Zipado
-            print(curriculo)
-            openCurriculo(curriculo, subdiretorio, buffer) #Chamando função de abertura de arquivo
+        # Iterando sobre os subdiretórios
+        for subdiretorio in listaDeSubDiretorios:
+            subdiretorioPath = os.path.join(diretorioCurriculos, subdiretorio)  # Caminho de cada subdiretório
+            curriculos = os.listdir(subdiretorioPath)  # Lista de currículos no subdiretório
 
-        break #BREAK temporário só para percorrer até o subdiretório 01
+            logger.info(f"Processando subdiretorio: {subdiretorio} com {len(curriculos)} curriculos")
 
-#cProfile.run('scanning()', 'profilingET.prof') # Rodar o scanning com a varredura de um único subdiretório de currículos (01)
+            buffer = []  # Buffer para armazenar os dados dos currículos processados
+
+            # Iterando sobre os currículos
+            for curriculo in curriculos:
+                curriculoPath = os.path.join(subdiretorioPath, curriculo)  # Caminho para o currículo ZIP
+                logger.debug(f"Abrindo curriculo: {curriculoPath}")
+                openCurriculo(curriculoPath, subdiretorio, buffer)  # Processando o currículo
+
+            # Aqui você pode realizar o processamento final com o buffer, como salvar em disco
+            logger.info(f"Subdiretorio {subdiretorio} processado com sucesso. Limpeza do buffer.")
+            buffer.clear()  # Limpa o buffer após processar os currículos do subdiretório
+
+            # Removendo o break para varrer todos os subdiretórios
+            # break  # TEMPORÁRIO: Use para processar apenas um subdiretório para testes
+
+        logger.info("Varredura completa de todos os subdiretórios.")
+    except Exception as e:
+        logger.error(f"Ocorreu um erro durante a varredura: {e}")
+
+# Chamando a função scanning()
 scanning()
