@@ -23,11 +23,12 @@ def scanning():
         subdiretorioPath = os.path.join(diretorioCurriculos, subdiretorio) #pegando o caminho de cada subdiretório
         curriculos = os.listdir(subdiretorioPath) #lista de curriculos de cada subdiretório
 
+        buffer = [] #buffer que armazena os dados de todos os currículos de um subdiretório, após o subdiretótio ser completo, salva em disco e o buffer é limpo
         #iterando a lista de curriculos
         for curriculo in curriculos:
             curriculo = os.path.join(subdiretorioPath, curriculo) #pegando o caminho para o currículo Zipado
             print(curriculo)
-            openCurriculo(curriculo, subdiretorio) #Chamando função de abertura de arquivo
+            openCurriculo(curriculo, subdiretorio, buffer) #Chamando função de abertura de arquivo
 
         break #BREAK temporário só para percorrer até o subdiretório 01
 
