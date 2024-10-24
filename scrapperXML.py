@@ -13,7 +13,7 @@ def createCSVDir():
     if not os.path.exists(csvDir):
         os.makedirs(csvDir)
 
-def openCurriculo(curriculoZIP="D:\\Projetos\\curricFilter\\repo\\01\\0113088308433808.zip", subdiretorio="01", buffer=[]):
+def openCurriculo(curriculoZIP, subdiretorio, buffer, flush):
     """
     FUNÇÃO PARA ABRIR O CURRÍCULO XML DENTRO DO ARQUIVO ZIPADO
 
@@ -52,7 +52,7 @@ def openCurriculo(curriculoZIP="D:\\Projetos\\curricFilter\\repo\\01\\0113088308
                 fileExist = os.path.isfile(f'./csv/dadosGerais{subdiretorio}.csv')
 
                 buffer.append(dadosGeraisPesquisador)
-                if len(buffer) >= 1000: # Quando buffer atingir 1000 itens, salvar em disco
+                if flush == True: # Quando buffer atingir total de currículos, salvar em disco
                     with open(f'./csv/dadosGerais{subdiretorio}.csv', mode='a', newline='', encoding='utf-8') as dadosGerais:
                         writer = csv.DictWriter(dadosGerais, fieldnames=cabeçalhos)
 
@@ -127,5 +127,3 @@ def getDadosGerais(curriculo):
     except Exception as e:
         logger.error(f"Erro ao extrair dados gerais: {str(e)}")
         return {}
-
-openCurriculo()

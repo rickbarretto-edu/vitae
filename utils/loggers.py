@@ -1,7 +1,9 @@
 import logging
-from pythonjsonlogger import jsonlogger
+import threading
 import json
 import os
+
+lock = threading.Lock() # Variável de lock global
 
 # Filtros para cada Nível de Log
 class DebugFilter(logging.Filter):
@@ -32,11 +34,11 @@ class ListHandler(logging.Handler):
         self.logfile = logfile
 
     def emit(self, record): # Método acionado a cada chamada de log
-
-        logs = carregarLogs(self.logfile) # Carrega os logs daquele nível
-        log = self.format(record)
-        logs.append(log) # Adicionando o log a lista de logs
-        salvarLogs(logs, self.logfile) # Salva o log daquele nível
+        with lock:
+            logs = carregarLogs(self.logfile) # Carrega os logs daquele nível
+            log = self.format(record)
+            logs.append(log) # Adicionando o log a lista de logs
+            salvarLogs(logs, self.logfile) # Salva o log daquele nível
 
 # Formatação JSON
 class JSONFormatter(logging.Formatter):
