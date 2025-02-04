@@ -13,7 +13,7 @@ def createCSVDir():
     if not os.path.exists(csvDir):
         os.makedirs(csvDir)
 
-def openCurriculo(curriculoZIP, subdiretorio, buffer, flush):
+def openCurriculo(curriculoZIP, subdiretorio, bufferDadosGerais, bufferProfissao, flush):
     """
     FUNÇÃO PARA ABRIR O CURRÍCULO XML DENTRO DO ARQUIVO ZIPADO
 
@@ -46,22 +46,45 @@ def openCurriculo(curriculoZIP, subdiretorio, buffer, flush):
                 dadosGeraisPesquisador["ID"] = idPesquisador # Adicionando o ID
 
                 # Cabeçalhos do CSV
-                cabeçalhos = ["ID", "DATA ATUALIZACAO", "NOME", "CIDADE", "ESTADO", "PAIS", "NOMES CITACOES", "ORCID", "RESUMO", "INSTITUICAO PROFISSIONAL"]
+                cabeçalhos = ["ID", "DATA_ATUALIZACAO", "NOME", "CIDADE", "ESTADO", "PAIS", "NOMES_CITACOES", "ORCID", "RESUMO", "INSTITUICAO_PROFISSIONAL"]
 
                 # Verifica se o arquivo já existe antes de abri-lo em modo de adição
                 fileExist = os.path.isfile(f'./csv/dadosGerais{subdiretorio}.csv')
 
-                buffer.append(dadosGeraisPesquisador)
-                if flush == True: # Quando buffer atingir total de currículos, salvar em disco
+                bufferDadosGerais.append(dadosGeraisPesquisador)
+                if flush: # Quando buffer atingir total de currículos, salvar em disco
                     with open(f'./csv/dadosGerais{subdiretorio}.csv', mode='a', newline='', encoding='utf-8') as dadosGerais:
                         writer = csv.DictWriter(dadosGerais, fieldnames=cabeçalhos)
 
                         if not fileExist:
                             logger.debug(f"Criando novo arquivo CSV ./csv/dadosGerais{subdiretorio}.csv")
                             writer.writeheader() # Adicionando cabeçalho
-                        writer.writerows(buffer)
-                        buffer.clear() # Limpa buffer
+                        writer.writerows(bufferDadosGerais)
+                        bufferDadosGerais.clear() # Limpa buffer
                         logger.info(f"Dados gerais do pesquisador {idPesquisador} adicionados com sucesso ao CSV.")
+
+                #============= EXPERIÊNCIA PROFISSIONAL ================#
+                experienciaProfissional = getExperienciaProfissional(curriculo)
+
+                # Cabeçalhos do CSV
+                cabeçalhos = ["ID", "INSTITUICAO", "TIPO_VINCULO", "CARGO", "ANO_INICIO", "ANO_FIM"]
+
+                # Verifica se o arquivo já existe antes de abri-lo em modo de adição
+                fileExist = os.path.isfile(f'./csv/experienciaProfissional{subdiretorio}.csv')
+
+                for linha in experienciaProfissional:
+                    bufferProfissao.append(linha)
+
+                if flush: # Quando buffer atingir total de currículos, salvar em disco
+                    with open(f'./csv/experienciaProfissional{subdiretorio}.csv', mode='a', newline='', encoding='utf-8') as dadosGerais:
+                        writer = csv.DictWriter(dadosGerais, fieldnames=cabeçalhos)
+
+                        if not fileExist:
+                            logger.debug(f"Criando novo arquivo CSV ./csv/experienciaProfissional{subdiretorio}.csv")
+                            writer.writeheader() # Adicionando cabeçalho
+                        writer.writerows(bufferProfissao)
+                        bufferProfissao.clear() # Limpa buffer
+                        logger.info(f"Experiencias profissionais do pesquisador {idPesquisador} adicionadas com sucesso ao CSV.")
 
     except Exception as e:
         logger.error(f"Erro ao processar o arquivo {curriculoZIP}: {str(e)}")
@@ -110,15 +133,15 @@ def getDadosGerais(curriculo):
             nomeInstituicao = ""
 
         dadosGeraisPesquisador = {
-            "DATA ATUALIZACAO": dataAtualizacao,
+            "DATA_ATUALIZACAO": dataAtualizacao,
             "NOME": nomeCompleto,
             "CIDADE": cidadeNasc,
             "ESTADO": estadoNasc,
             "PAIS": paisNasc,
-            "NOMES CITACOES": nomesCitacoes,
+            "NOMES_CITACOES": nomesCitacoes,
             "ORCID": orcid,
             "RESUMO": textoResumo,
-            "INSTITUICAO PROFISSIONAL": nomeInstituicao
+            "INSTITUICAO_PROFISSIONAL": nomeInstituicao
         }
 
         logger.debug(f"Dados gerais do pesquisador extraidos com sucesso")
@@ -127,3 +150,93 @@ def getDadosGerais(curriculo):
     except Exception as e:
         logger.error(f"Erro ao extrair dados gerais: {str(e)}")
         return {}
+        
+def getExperienciaProfissional(curriculo):
+    """
+    FUNÇÃO PARA EXTRAIR A EXPERIÊNCIA PROFISSIONAL DO CURRÍCULO LATTES
+
+    Descrição: Recebe o currículo XML e percorre suas tags, extraindo informações das experiências profissionais.
+
+    Parâmetro: curriculo - currículo Lattes de um pesquisador em XML.
+
+    Retorno: experienciaProfissional - lista de dicionários contendo informações de cada experiência profissional.
+    """
+    try:
+        # Raiz do XML
+        CV = curriculo
+        dadosGerais = CV.find("DADOS-GERAIS")
+
+        # Busca da TAG de ATUAÇÕES PROFISSIONAIS
+        atuacoes = dadosGerais.find("ATUACOES-PROFISSIONAIS")
+        if atuacoes is None:
+            return {}
+
+        experienciaProfissional = []
+        for atuacao in atuacoes.findall("ATUACAO-PROFISSIONAL"):
+            instituicao = atuacao.attrib.get("NOME-INSTITUICAO", "")
+            vinculos = atuacao.findall("VINCULOS")
+
+            for vinculo in vinculos:
+                tipoVinculo = vinculo.attrib.get("TIPO-DE-VINCULO", "")
+                cargo = vinculo.attrib.get("OUTRO-ENQUADRAMENTO-FUNCIONAL-INFORMADO", "")
+                anoInicio = vinculo.attrib.get("ANO-INICIO", "")
+                anoFim = vinculo.attrib.get("ANO-FIM", "")
+
+                experienciaProfissional.append({
+                    "INSTITUICAO": instituicao,
+                    "TIPO_VINCULO": tipoVinculo,
+                    "CARGO": cargo,
+                    "ANO_INICIO": anoInicio,
+                    "ANO_FIM": anoFim
+                })
+
+        logger.debug(f"Experiência profissional extraída com sucesso")
+        return experienciaProfissional
+
+    except Exception as e:
+        logger.error(f"Erro ao extrair experiência profissional: {str(e)}")
+        return []
+    
+def getFormacaoAcademica(curriculo):
+    """
+    FUNÇÃO PARA EXTRAIR A FORMAÇÃO ACADÊMICA DO CURRÍCULO LATTES
+
+    Descrição: Recebe o currículo XML e percorre suas tags, extraindo informações de formação acadêmica.
+
+    Parâmetro: curriculo - currículo Lattes de um pesquisador em XML.
+
+    Retorno: formacaoAcademica - lista de dicionários contendo informações de cada formação acadêmica.
+    """
+    try:
+        # Raiz do XML
+        CV = curriculo
+
+        # Busca da TAG de FORMAÇÃO ACADÊMICA
+        formacoes = CV.find("FORMACAO-ACADEMICA-TITULACAO")
+        if formacoes is None:
+            return []
+
+        formacaoAcademica = []
+        for formacao in formacoes:
+            tipoFormacao = formacao.tag  # Ex: GRADUACAO, DOUTORADO, POS-DOUTORADO
+            instituicao = formacao.attrib.get("NOME-INSTITUICAO", "")
+            curso = formacao.attrib.get("NOME-CURSO", "")
+            anoInicio = formacao.attrib.get("ANO-DE-INICIO", "")
+            anoConclusao = formacao.attrib.get("ANO-DE-CONCLUSAO", "")
+            tituloTrabalho = formacao.attrib.get("TITULO-DO-TRABALHO-DE-CONCLUSAO-DE-CURSO", "")
+
+            formacaoAcademica.append({
+                "TIPO": tipoFormacao,
+                "INSTITUICAO": instituicao,
+                "CURSO": curso,
+                "ANO_INICIO": anoInicio,
+                "ANO_CONCLUSAO": anoConclusao,
+                "TITULO_TRABALHO": tituloTrabalho
+            })
+
+        logger.debug(f"Formação acadêmica extraída com sucesso")
+        return formacaoAcademica
+
+    except Exception as e:
+        logger.error(f"Erro ao extrair formação acadêmica: {str(e)}")
+        return []
