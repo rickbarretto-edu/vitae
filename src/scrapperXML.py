@@ -64,7 +64,7 @@ def openCurriculo(curriculoZIP, subdiretorio, bufferDadosGerais, bufferProfissao
                         logger.info(f"Dados gerais do pesquisador {idPesquisador} adicionados com sucesso ao CSV.")
 
                 #============= EXPERIÊNCIA PROFISSIONAL ================#
-                experienciaProfissional = getExperienciaProfissional(curriculo)
+                experienciaProfissional = getAtuacaoProfissional(curriculo)
 
                 # Cabeçalhos do CSV
                 cabeçalhos = ["ID", "INSTITUICAO", "TIPO_VINCULO", "CARGO", "ANO_INICIO", "ANO_FIM"]
@@ -162,7 +162,7 @@ def getDadosGerais(curriculo):
         logger.error(f"Erro ao extrair dados gerais: {str(e)}")
         return {}
         
-def getExperienciaProfissional(curriculo):
+def getAtuacaoProfissional(curriculo):
     """
     FUNÇÃO PARA EXTRAIR A EXPERIÊNCIA PROFISSIONAL DO CURRÍCULO LATTES
 
@@ -170,7 +170,7 @@ def getExperienciaProfissional(curriculo):
 
     Parâmetro: curriculo - currículo Lattes de um pesquisador em XML.
 
-    Retorno: experienciaProfissional - lista de dicionários contendo informações de cada experiência profissional.
+    Retorno: AtuacaoProfissional - lista de dicionários contendo informações de cada experiência profissional.
     """
     try:
         # Raiz do XML
@@ -187,17 +187,16 @@ def getExperienciaProfissional(curriculo):
             instituicao = atuacao.attrib.get("NOME-INSTITUICAO", "")
             vinculos = atuacao.findall("VINCULOS")
 
-            #TODO Se a pessoa digitou livre, pegar outro enquadramento para botar no tipo de vínculo
             for vinculo in vinculos:
                 tipoVinculo = vinculo.attrib.get("TIPO-DE-VINCULO", "")
-                cargo = vinculo.attrib.get("OUTRO-ENQUADRAMENTO-FUNCIONAL-INFORMADO", "")
+                if tipoVinculo == "LIVRE":
+                    tipoVinculo = vinculo.attrib.get("OUTRO-VINCULO-INFORMADO", "")
                 anoInicio = vinculo.attrib.get("ANO-INICIO", "")
                 anoFim = vinculo.attrib.get("ANO-FIM", "")
 
                 experienciaProfissional.append({
                     "INSTITUICAO": instituicao,
                     "TIPO_VINCULO": tipoVinculo,
-                    "CARGO": cargo,
                     "ANO_INICIO": anoInicio,
                     "ANO_FIM": anoFim
                 })
@@ -252,3 +251,6 @@ def getFormacaoAcademica(curriculo):
     except Exception as e:
         logger.error(f"Erro ao extrair formação acadêmica: {str(e)}")
         return []
+
+def getAreaAtuacao():
+    pass
