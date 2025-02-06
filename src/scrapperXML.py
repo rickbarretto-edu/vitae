@@ -128,9 +128,18 @@ def getDadosGerais(curriculo):
         endereco = dadosGerais.find("ENDERECO")
         if endereco is not None:
             enderecoProf = endereco.find("ENDERECO-PROFISSIONAL")
-            nomeInstituicao = enderecoProf.attrib.get("NOME-INSTITUICAO-EMPRESA", "") if enderecoProf is not None else ""
+            if enderecoProf is not None:
+                nomeInstituicao = enderecoProf.attrib.get("NOME-INSTITUICAO-EMPRESA", "")
+                ufInstituicao = enderecoProf.attrib.get("UF", "")
+                cidadeInstituicao = enderecoProf.attrib.get("CIDADE")
+            else:
+                nomeInstituicao = ""
+                ufInstituicao = ""
+                cidadeInstituicao = ""
         else:
             nomeInstituicao = ""
+            ufInstituicao = ""
+            cidadeInstituicao = ""
 
         dadosGeraisPesquisador = {
             "DATA_ATUALIZACAO": dataAtualizacao,
@@ -141,7 +150,9 @@ def getDadosGerais(curriculo):
             "NOMES_CITACOES": nomesCitacoes,
             "ORCID": orcid,
             "RESUMO": textoResumo,
-            "INSTITUICAO_PROFISSIONAL": nomeInstituicao
+            "INSTITUICAO_PROFISSIONAL": nomeInstituicao, 
+            "UF_INSTITUCAO": ufInstituicao,
+            "CIDADE_INSTITUCAO": cidadeInstituicao
         }
 
         logger.debug(f"Dados gerais do pesquisador extraidos com sucesso")
@@ -176,6 +187,7 @@ def getExperienciaProfissional(curriculo):
             instituicao = atuacao.attrib.get("NOME-INSTITUICAO", "")
             vinculos = atuacao.findall("VINCULOS")
 
+            #TODO Se a pessoa digitou livre, pegar outro enquadramento para botar no tipo de vínculo
             for vinculo in vinculos:
                 tipoVinculo = vinculo.attrib.get("TIPO-DE-VINCULO", "")
                 cargo = vinculo.attrib.get("OUTRO-ENQUADRAMENTO-FUNCIONAL-INFORMADO", "")
@@ -218,7 +230,7 @@ def getFormacaoAcademica(curriculo):
 
         formacaoAcademica = []
         for formacao in formacoes:
-            tipoFormacao = formacao.tag  # Ex: GRADUACAO, DOUTORADO, POS-DOUTORADO
+            tipoFormacao = formacao.tag
             instituicao = formacao.attrib.get("NOME-INSTITUICAO", "")
             curso = formacao.attrib.get("NOME-CURSO", "")
             anoInicio = formacao.attrib.get("ANO-DE-INICIO", "")
