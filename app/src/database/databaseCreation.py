@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2 import sql
-from utils.loadEnv import loadEnv
+from app.utils.loadEnv import loadEnv
 
 class DatabaseCreation:
     def __init__(self):

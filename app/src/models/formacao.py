@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from src.database.databaseConfig import Base
+from app.src.database.databaseConfig import databaseConfig
 
-class FormacaoAcademica(Base):
+class FormacaoAcademica(databaseConfig.base):
     __tablename__ = "formacao_academica"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

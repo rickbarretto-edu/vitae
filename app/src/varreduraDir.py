@@ -1,6 +1,6 @@
 import os
-from scrapperXML import openCurriculo
-from utils.loggers import ConfigLogger
+from app.src.scrapperXML import openCurriculo
+from app.utils.loggers import ConfigLogger
 from concurrent.futures import ThreadPoolExecutor
 
 # Configuração do logger

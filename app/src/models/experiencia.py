@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from src.database.databaseConfig import Base
+from app.src.database.databaseConfig import databaseConfig
 
-class ExperienciaProfissional(Base):
+class ExperienciaProfissional(databaseConfig.base):
     __tablename__ = "experiencia_profissional"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

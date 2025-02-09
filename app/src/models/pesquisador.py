@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from src.database.databaseConfig import Base
+from app.src.database.databaseConfig import databaseConfig
 
-class Pesquisador(Base):
+class Pesquisador(databaseConfig.base):
     __tablename__ = "pesquisador"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

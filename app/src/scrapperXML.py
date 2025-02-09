@@ -1,7 +1,7 @@
 import zipfile
 from datetime import datetime
 import csv
-from utils.loggers import ConfigLogger
+from app.utils.loggers import ConfigLogger
 import os
 import xml.etree.ElementTree as ET
 
