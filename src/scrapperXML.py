@@ -291,3 +291,44 @@ def getAreaAtuacao(curriculo):
     except Exception as e:
         logger.error(f"Erro ao extrair área de atuação: {str(e)}")
         return []
+    
+# TODO Ajustar Areas de Conhecimento
+def getAreaConhecimento(curriculo):
+    """
+    FUNÇÃO PARA EXTRAIR A ÁREA DE ATUAÇÃO DO CURRÍCULO LATTES
+
+    Descrição: Recebe o currículo XML e percorre suas tags, extraindo informações de área de atuação.
+
+    Parâmetro: curriculo - currículo Lattes de um pesquisador em XML.
+
+    Retorno: area - lista de dicionários contendo informações de cada área de atuação.
+    """
+    try:
+        # Raiz do XML
+        CV = curriculo
+
+        # Busca da TAG de FORMAÇÃO ACADÊMICA
+        atuacoes = CV.find("AREAS-DE-ATUACAO")
+        if atuacoes is None:
+            return []
+
+        areaAtuacao = []
+        for atuacao in atuacoes:
+            grandeArea = atuacao.attrib.get("NOME-GRANDE-AREA-DO-CONHECIMENTO", "")
+            area = atuacao.attrib.get("NOME-DA-AREA-DO-CONHECIMENTO", "")
+            subArea = atuacao.attrib.get("NOME-DA-SUB-AREA-DO-CONHECIMENTO", "")
+            especialidade = atuacao.attrib.get("NOME-DA-ESPECIALIDADE", "")
+
+            areaAtuacao.append({
+                "GRANDE_AREA": grandeArea,
+                "AREA": area,
+                "SUB_AREA": subArea,
+                "ESPECIALIDADE": especialidade,
+            })
+
+        logger.debug(f"Formação acadêmica extraída com sucesso")
+        return areaAtuacao
+
+    except Exception as e:
+        logger.error(f"Erro ao extrair área de atuação: {str(e)}")
+        return []
