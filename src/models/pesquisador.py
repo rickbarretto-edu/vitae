@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from src.database import Base
+from src.database.databaseConfig import Base
 
 class Pesquisador(Base):
     __tablename__ = "pesquisador"

@@ -1,10 +1,11 @@
 import os
 from scrapperXML import openCurriculo
-from utils.loggers import configLogger
+from utils.loggers import ConfigLogger
 from concurrent.futures import ThreadPoolExecutor
 
 # Configuração do logger
-logger = configLogger(__name__)
+configLogger = ConfigLogger(__name__)
+logger = configLogger.logger
 
 # Função para realizar a varredura do diretório de currículos
 def scanning():

@@ -1,19 +1,26 @@
 import psycopg2
 from psycopg2 import sql
-from utils.loadEnv import *
+from utils.loadEnv import loadEnv
 
-try:
-    conn = psycopg2.connect(dbname="postgres", user=DATABASE_USER, password=DATABASE_PASSWORD, 
-                            host=DATABASE_HOST, port=DATABASE_PORT)
-    conn.autocommit = True  
-    cursor = conn.cursor()
+class DatabaseCreation:
+    def __init__(self):
+        self.createDataBase()
 
-    cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(DATABASE_NAME)))
+    def createDataBase(self):
+        try:
+            conn = psycopg2.connect(dbname="postgres", user=loadEnv.DatabaseUser, password=loadEnv.DatabasePassword, 
+                                    host=loadEnv.DatabaseHost, port=loadEnv.DatabasePort)
+            conn.autocommit = True  
+            cursor = conn.cursor()
 
-    print(f"Banco de dados '{DATABASE_NAME}' criado com sucesso!")
+            cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(loadEnv.DatabaseName)))
 
-    cursor.close()
-    conn.close()
+            print(f"Banco de dados '{loadEnv.DatabaseName}' criado com sucesso!")
 
-except psycopg2.Error as e:
-    print(f"Erro ao criar o banco de dados: {e}")
+            cursor.close()
+            conn.close()
+
+        except psycopg2.Error as e:
+            print(f"Erro ao criar o banco de dados: {e}")
+
+databaseConnection = DatabaseCreation()

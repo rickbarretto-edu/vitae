@@ -1,13 +1,13 @@
 import zipfile
 from datetime import datetime
 import csv
-from utils.loggers import configLogger
+from utils.loggers import ConfigLogger
 import os
 import xml.etree.ElementTree as ET
 
-logger = configLogger(__name__)
+configLogger = ConfigLogger(__name__)
+logger = configLogger.logger
 
-# Função para garantir que o diretório existe
 def createCSVDir():
     csvDir = './csv'
     if not os.path.exists(csvDir):
