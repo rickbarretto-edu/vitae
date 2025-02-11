@@ -1,6 +1,6 @@
 repo/
 csv/
-ambienteCurricFilter/
+.venv/
 __pycache__/
 logs/
 profiling/

@@ -1,7 +1,7 @@
 import zipfile
 from datetime import datetime
 import csv
-from app.utils.loggers import ConfigLogger
+from utils.loggers import ConfigLogger
 import os
 import xml.etree.ElementTree as ET
 
@@ -234,15 +234,13 @@ def getFormacaoAcademica(curriculo):
             curso = formacao.attrib.get("NOME-CURSO", "")
             anoInicio = formacao.attrib.get("ANO-DE-INICIO", "")
             anoConclusao = formacao.attrib.get("ANO-DE-CONCLUSAO", "")
-            tituloTrabalho = formacao.attrib.get("TITULO-DO-TRABALHO-DE-CONCLUSAO-DE-CURSO", "")
 
             formacaoAcademica.append({
                 "TIPO": tipoFormacao,
                 "INSTITUICAO": instituicao,
                 "CURSO": curso,
                 "ANO_INICIO": anoInicio,
-                "ANO_CONCLUSAO": anoConclusao,
-                "TITULO_TRABALHO": tituloTrabalho
+                "ANO_CONCLUSAO": anoConclusao
             })
 
         logger.debug(f"Formação acadêmica extraída com sucesso")

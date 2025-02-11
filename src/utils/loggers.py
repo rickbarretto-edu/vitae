@@ -35,13 +35,13 @@ class ListHandler(logging.Handler):
 
     def emit(self, record): # Método acionado a cada chamada de log
         with lock:
-            logs = self.carregarLogs(self.logfile) # Carrega os logs daquele nível
+            logs = self.carregar_logs(self.logfile) # Carrega os logs daquele nível
             log = self.format(record)
             logs.append(log) # Adicionando o log a lista de logs
-            self.salvarLogs(logs, self.logfile) # Salva o log daquele nível
+            self.salvar_logs(logs, self.logfile) # Salva o log daquele nível
 
     # Função para carregar logs existentes dado um arquivo de log JSON
-    def carregarLogs(self, arquivo):
+    def carregar_logs(self, arquivo):
         try:
             with open(arquivo, 'r') as arquivo:
                 return json.load(arquivo).get('logs', [])
@@ -49,7 +49,7 @@ class ListHandler(logging.Handler):
             return []
         
     # Função para salvar logs dado o arquivo de log JSON
-    def salvarLogs(self, logs, arquivo):
+    def salvar_logs(self, logs, arquivo):
         with open(arquivo, 'w') as arquivo:
             json.dump({"logs": logs}, arquivo, indent=2)
 
@@ -66,15 +66,15 @@ class JSONFormatter(logging.Formatter):
 
 class ConfigLogger:
     def __init__(self, nome):
-        self.createLogDir()
+        self.create_log_dir()
 
         # Logger
         self.logger = logging.getLogger(nome)
         self.logger.setLevel(logging.DEBUG) # Setando o menor nível como o de DEBUG
 
-        self.createHandlers()
-        self.createJSONFormatter()
-        self.addFilters()
+        self.create_handlers()
+        self.create_json_formatter()
+        self.add_filters()
 
         # Adicionando Handler ao Logger
         self.logger.addHandler(self.DebugHandler)
@@ -84,12 +84,12 @@ class ConfigLogger:
         self.logger.addHandler(self.CriticalHandler)
 
     # Função para garantir que o diretório existe
-    def createLogDir(self):
+    def create_log_dir(self):
         logDir = './logs'
         if not os.path.exists(logDir):
             os.makedirs(logDir)
     
-    def createHandlers(self):
+    def create_handlers(self):
         # Handlers
         self.DebugHandler = ListHandler(logfile='./logs/debug.json')
         self.DebugHandler.setLevel(logging.DEBUG) # Setando o menor nível como o de DEBUG
@@ -106,7 +106,7 @@ class ConfigLogger:
         self.CriticalHandler = ListHandler(logfile='./logs/critical.json')
         self.CriticalHandler.setLevel(logging.CRITICAL) # Setando o menor nível como o de CRITICAL
     
-    def createJSONFormatter(self):
+    def create_json_formatter(self):
         # Criando formatador do Logger e adicionando-o aos Handlers do Log
         formatter = JSONFormatter()
 
@@ -116,7 +116,7 @@ class ConfigLogger:
         self.ErrorHandler.setFormatter(formatter)
         self.CriticalHandler.setFormatter(formatter)
 
-    def addFilters(self):
+    def add_filters(self):
         # Adicionar os Filters aos handlers
         self.DebugHandler.addFilter(DebugFilter())
         self.InfoHandler.addFilter(InfoFilter())

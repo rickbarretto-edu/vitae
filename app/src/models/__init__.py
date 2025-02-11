@@ -1,3 +1,0 @@
-from models.experiencia import ExperienciaProfissional
-from models.formacao import FormacaoAcademica
-from models.pesquisador import Pesquisador
