@@ -8,7 +8,7 @@ class DatabaseCreation:
 
     def create_database(self):
         try:
-            conn = psycopg2.connect(dbname=load_env.database_name, user=load_env.database_user, password=load_env.database_password, 
+            conn = psycopg2.connect(dbname="postgres", user=load_env.database_user, password=load_env.database_password, 
                                     host=load_env.database_host, port=load_env.database_port)
             conn.autocommit = True  
             cursor = conn.cursor()
