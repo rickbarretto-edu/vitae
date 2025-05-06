@@ -7,7 +7,7 @@ class KnowledgeArea(database_config.base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     major_knowledge_area = Column(String, nullable=False)
-    knowledge_area = Column(String, nullable=False)
+    knowledge_area = Column(String, nullable=True)
     sub_knowledge_area = Column(String, nullable=True)
     specialty = Column(String, nullable=True)
     academic_background_id = Column(Integer, ForeignKey("academic_background.id"), nullable=False)

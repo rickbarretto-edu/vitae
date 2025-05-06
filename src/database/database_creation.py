@@ -22,5 +22,3 @@ class DatabaseCreation:
 
         except psycopg2.Error as e:
             print(f"Erro ao criar o banco de dados: {e}")
-
-database_connection = DatabaseCreation()

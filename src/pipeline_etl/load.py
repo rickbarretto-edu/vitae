@@ -1,6 +1,9 @@
 from sqlalchemy.dialects.postgresql import insert
 from src.models.researcher import Researcher
 from src.models.professional_experience import ProfessionalExperience
+from src.models.academic_background import AcademicBackground
+from src.models.research_area import ResearchArea
+from src.models.knowledge_area import KnowledgeArea
 from src.database.database_config import database_config
 from utils.loggers import ConfigLogger
 
@@ -40,6 +43,7 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
+            print(f"Erro no upsert_researcher: {exception}")
             logger.error(f"Erro no upsert_researcher: {exception}")
             self.session.rollback()  
 
@@ -61,6 +65,7 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
+            print(f"Erro no upsert_professional_experience: {exception}")
             logger.error(f"Erro no upsert_professional_experience: {exception}")
             self.session.rollback()
 
@@ -70,7 +75,7 @@ class Load:
         try:
             unique_keys = ["major_knowledge_area", "knowledge_area", "sub_knowledge_area", "specialty", "researcher_id"]
             batch = self.remove_duplicates(batch, unique_keys)
-            query = insert(Researcher).values(batch)
+            query = insert(ResearchArea).values(batch)
 
             update_dict = {key: getattr(query.excluded, key) for key in batch[0] if key != "id"}
 
@@ -82,6 +87,7 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
+            print(f"Erro no upsert_research_area: {exception}")
             logger.error(f"Erro no upsert_research_area: {exception}")
             self.session.rollback()
 
@@ -91,7 +97,7 @@ class Load:
         try:
             unique_keys = ["major_knowledge_area", "knowledge_area", "sub_knowledge_area", "specialty", "researcher_id"]
             batch = self.remove_duplicates(batch, unique_keys)
-            query = insert(Researcher).values(batch)
+            query = insert(KnowledgeArea).values(batch)
 
             update_dict = {key: getattr(query.excluded, key) for key in batch[0] if key != "id"}
 
@@ -103,6 +109,7 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
+            print(f"Erro no upsert_knowledge_area: {exception}")
             logger.error(f"Erro no upsert_knowledge_area: {exception}")
             self.session.rollback()
 
@@ -112,7 +119,7 @@ class Load:
         try:
             unique_keys = ["type", "institution", "course", "start_year", "end_year", "researcher_id"]
             batch = self.remove_duplicates(batch, unique_keys)
-            query = insert(Researcher).values(batch)
+            query = insert(AcademicBackground).values(batch)
 
             update_dict = {key: getattr(query.excluded, key) for key in batch[0] if key != "id"}
 
@@ -124,6 +131,7 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
+            print(f"Erro no upsert_academic_background: {exception}")
             logger.error(f"Erro no upsert_academic_background: {exception}")
             self.session.rollback()
 

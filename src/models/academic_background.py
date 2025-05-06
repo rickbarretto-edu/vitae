@@ -8,7 +8,7 @@ class AcademicBackground(database_config.base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     type = Column(String, nullable=False)
     institution = Column(String, nullable=False)
-    course = Column(String, nullable=False)
+    course = Column(String, nullable=True)
     start_year = Column(Integer)
     end_year = Column(Integer)
     researcher_id = Column(String, ForeignKey("researcher.id", ondelete="CASCADE"), nullable=False)
