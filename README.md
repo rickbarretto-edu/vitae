@@ -17,6 +17,16 @@
    wsl -d Ubuntu
     ```
 
+2. **Criar .env com base no .env.example**
+    
+    No terminal do Ubuntu, execute:
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    e set as as variáveis de ambiente necessárias no arquivo `.env`.
+
 2. **Configurar o PYTHONPATH**
 
    No terminal do Ubuntu, execute:
