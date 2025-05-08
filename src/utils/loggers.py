@@ -40,7 +40,9 @@ class ListHandler(logging.Handler):
 
     def emit(self, record):  # Método acionado a cada chamada de log
         with lock:
-            logs = self.carregar_logs(self.logfile)  # Carrega os logs daquele nível
+            logs = self.carregar_logs(
+                self.logfile
+            )  # Carrega os logs daquele nível
             log = self.format(record)
             logs.append(log)  # Adicionando o log a lista de logs
             self.salvar_logs(logs, self.logfile)  # Salva o log daquele nível
@@ -63,7 +65,9 @@ class ListHandler(logging.Handler):
 class JSONFormatter(logging.Formatter):
     def format(self, record):
         data = {
-            "timestamp": self.formatTime(record),  # Data e Hora de emissão do log
+            "timestamp": self.formatTime(
+                record
+            ),  # Data e Hora de emissão do log
             "level": record.levelname,  # Nível do Log
             "message": record.getMessage(),  # Mensagem do Log
             "filename": record.filename,  # Arquivo que emitiu o Log
@@ -77,7 +81,9 @@ class ConfigLogger:
 
         # Logger
         self.logger = logging.getLogger(nome)
-        self.logger.setLevel(logging.DEBUG)  # Setando o menor nível como o de DEBUG
+        self.logger.setLevel(
+            logging.DEBUG
+        )  # Setando o menor nível como o de DEBUG
 
         self.create_handlers()
         self.create_json_formatter()
@@ -104,7 +110,9 @@ class ConfigLogger:
         )  # Setando o menor nível como o de DEBUG
 
         self.InfoHandler = ListHandler(logfile="./logs/info.json")
-        self.InfoHandler.setLevel(logging.INFO)  # Setando o menor nível como o de INFO
+        self.InfoHandler.setLevel(
+            logging.INFO
+        )  # Setando o menor nível como o de INFO
 
         self.WarningHandler = ListHandler(logfile="./logs/warning.json")
         self.WarningHandler.setLevel(

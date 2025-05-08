@@ -25,7 +25,9 @@ class DatabaseCreation:
                 )
             )
 
-            print(f"Banco de dados '{load_env.database_name}' criado com sucesso!")
+            print(
+                f"Banco de dados '{load_env.database_name}' criado com sucesso!"
+            )
 
             cursor.close()
             conn.close()

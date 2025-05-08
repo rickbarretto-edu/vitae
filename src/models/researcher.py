@@ -20,7 +20,9 @@ class Researcher(database_config.base):
     institution_city = Column(String)
 
     academic_background = relationship(
-        "AcademicBackground", back_populates="researcher", cascade="all, delete-orphan"
+        "AcademicBackground",
+        back_populates="researcher",
+        cascade="all, delete-orphan",
     )
     professional_experience = relationship(
         "ProfessionalExperience",
@@ -28,5 +30,7 @@ class Researcher(database_config.base):
         cascade="all, delete-orphan",
     )
     research_area = relationship(
-        "ResearchArea", back_populates="researcher", cascade="all, delete-orphan"
+        "ResearchArea",
+        back_populates="researcher",
+        cascade="all, delete-orphan",
     )

@@ -34,10 +34,14 @@ class Load:
         try:
             query = insert(Researcher).values(batch)
             update_dict = {
-                key: getattr(query.excluded, key) for key in batch[0] if key != "id"
+                key: getattr(query.excluded, key)
+                for key in batch[0]
+                if key != "id"
             }
 
-            query = query.on_conflict_do_update(index_elements=["id"], set_=update_dict)
+            query = query.on_conflict_do_update(
+                index_elements=["id"], set_=update_dict
+            )
 
             self.session.execute(query)
             self.session.commit()
@@ -63,7 +67,9 @@ class Load:
             )  # Corrigido: Agora insere na tabela correta
 
             update_dict = {
-                key: getattr(query.excluded, key) for key in batch[0] if key != "id"
+                key: getattr(query.excluded, key)
+                for key in batch[0]
+                if key != "id"
             }
 
             query = query.on_conflict_do_update(
@@ -99,7 +105,9 @@ class Load:
             query = insert(ResearchArea).values(batch)
 
             update_dict = {
-                key: getattr(query.excluded, key) for key in batch[0] if key != "id"
+                key: getattr(query.excluded, key)
+                for key in batch[0]
+                if key != "id"
             }
 
             query = query.on_conflict_do_update(
@@ -135,7 +143,9 @@ class Load:
             query = insert(KnowledgeArea).values(batch)
 
             update_dict = {
-                key: getattr(query.excluded, key) for key in batch[0] if key != "id"
+                key: getattr(query.excluded, key)
+                for key in batch[0]
+                if key != "id"
             }
 
             query = query.on_conflict_do_update(
@@ -172,7 +182,9 @@ class Load:
             query = insert(AcademicBackground).values(batch)
 
             update_dict = {
-                key: getattr(query.excluded, key) for key in batch[0] if key != "id"
+                key: getattr(query.excluded, key)
+                for key in batch[0]
+                if key != "id"
             }
 
             query = query.on_conflict_do_update(

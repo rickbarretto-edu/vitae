@@ -15,7 +15,9 @@ class ProfessionalExperience(database_config.base):
         String, ForeignKey("researcher.id", ondelete="CASCADE"), nullable=False
     )
 
-    researcher = relationship("Researcher", back_populates="professional_experience")
+    researcher = relationship(
+        "Researcher", back_populates="professional_experience"
+    )
 
     __table_args__ = (
         UniqueConstraint(

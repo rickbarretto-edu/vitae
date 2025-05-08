@@ -47,7 +47,9 @@ class CurriculumParser:
             with zipfile.ZipFile(curriculumZIP, "r") as zipFile:
                 name = zipFile.namelist()[0]
                 researcherID = name.split(".")[0]
-                logger.info(f"Extracting curriculum for researcher ID: {researcherID}")
+                logger.info(
+                    f"Extracting curriculum for researcher ID: {researcherID}"
+                )
 
                 with zipFile.open(name) as curriculumXML:
                     tree = ET.parse(curriculumXML)
@@ -59,7 +61,9 @@ class CurriculumParser:
                     generalDataBuffer.append(researcherGeneralData)
 
                     # ============= PROFESSIONAL EXPERIENCE ================#
-                    professionalExperience = self.getProfessionalExperience(curriculum)
+                    professionalExperience = self.getProfessionalExperience(
+                        curriculum
+                    )
                     for experience in professionalExperience:
                         experience["researcher_id"] = researcherID
                         professionBuffer.append(experience)
@@ -105,13 +109,19 @@ class CurriculumParser:
 
             generalData = CV.find("DADOS-GERAIS")
             if generalData is not None:
-                fullName = generalData.attrib.get("NOME-COMPLETO", "").strip() or None
-                birthCity = (
-                    generalData.attrib.get("CIDADE-NASCIMENTO", "").strip() or None
+                fullName = (
+                    generalData.attrib.get("NOME-COMPLETO", "").strip() or None
                 )
-                birthState = generalData.attrib.get("UF-NASCIMENTO", "").strip() or None
+                birthCity = (
+                    generalData.attrib.get("CIDADE-NASCIMENTO", "").strip()
+                    or None
+                )
+                birthState = (
+                    generalData.attrib.get("UF-NASCIMENTO", "").strip() or None
+                )
                 birthCountry = (
-                    generalData.attrib.get("PAIS-DE-NASCIMENTO", "").strip() or None
+                    generalData.attrib.get("PAIS-DE-NASCIMENTO", "").strip()
+                    or None
                 )
                 citationNames = (
                     generalData.attrib.get(
@@ -121,9 +131,9 @@ class CurriculumParser:
                 )
                 orcid = generalData.attrib.get("ORCID-ID", "").strip() or None
             else:
-                fullName = birthCity = birthState = birthCountry = citationNames = (
-                    orcid
-                ) = None
+                fullName = birthCity = birthState = birthCountry = (
+                    citationNames
+                ) = orcid = None
 
             resume = generalData.find("RESUMO-CV")
             resumeText = (
@@ -146,7 +156,8 @@ class CurriculumParser:
                         professionalAddress.attrib.get("UF", "").strip() or None
                     )
                     institutionCity = (
-                        professionalAddress.attrib.get("CIDADE", "").strip() or None
+                        professionalAddress.attrib.get("CIDADE", "").strip()
+                        or None
                     )
                 else:
                     institutionName = institutionState = institutionCity = None
@@ -198,18 +209,25 @@ class CurriculumParser:
             professionalExperience = []
             for experience in experiences.findall("ATUACAO-PROFISSIONAL"):
                 institution = (
-                    experience.attrib.get("NOME-INSTITUICAO", "").strip() or None
+                    experience.attrib.get("NOME-INSTITUICAO", "").strip()
+                    or None
                 )
                 links = experience.findall("VINCULOS")
 
                 for link in links:
-                    linkType = link.attrib.get("TIPO-DE-VINCULO", "").strip() or None
+                    linkType = (
+                        link.attrib.get("TIPO-DE-VINCULO", "").strip() or None
+                    )
                     if linkType == "LIVRE":
                         linkType = (
-                            link.attrib.get("OUTRO-VINCULO-INFORMADO", "").strip()
+                            link.attrib.get(
+                                "OUTRO-VINCULO-INFORMADO", ""
+                            ).strip()
                             or None
                         )
-                    startYear = link.attrib.get("ANO-INICIO", "").strip() or None
+                    startYear = (
+                        link.attrib.get("ANO-INICIO", "").strip() or None
+                    )
                     endYear = link.attrib.get("ANO-FIM", "").strip() or None
 
                     professionalExperience.append(
@@ -257,11 +275,17 @@ class CurriculumParser:
                 if backgroundType == None:
                     print(f"Background type: {backgroundType}")
                 institution = (
-                    background.attrib.get("NOME-INSTITUICAO", "").strip() or None
+                    background.attrib.get("NOME-INSTITUICAO", "").strip()
+                    or None
                 )
                 course = background.attrib.get("NOME-CURSO", "").strip() or None
-                startYear = background.attrib.get("ANO-DE-INICIO", "").strip() or None
-                endYear = background.attrib.get("ANO-DE-CONCLUSAO", "").strip() or None
+                startYear = (
+                    background.attrib.get("ANO-DE-INICIO", "").strip() or None
+                )
+                endYear = (
+                    background.attrib.get("ANO-DE-CONCLUSAO", "").strip()
+                    or None
+                )
 
                 academicBackground.append(
                     {
@@ -306,17 +330,24 @@ class CurriculumParser:
             researchArea = []
             for area in areas:
                 majorArea = (
-                    area.attrib.get("NOME-GRANDE-AREA-DO-CONHECIMENTO", "").strip()
+                    area.attrib.get(
+                        "NOME-GRANDE-AREA-DO-CONHECIMENTO", ""
+                    ).strip()
                     or None
                 )
                 knowledgeArea = (
-                    area.attrib.get("NOME-DA-AREA-DO-CONHECIMENTO", "").strip() or None
-                )
-                subKnowledgeArea = (
-                    area.attrib.get("NOME-DA-SUB-AREA-DO-CONHECIMENTO", "").strip()
+                    area.attrib.get("NOME-DA-AREA-DO-CONHECIMENTO", "").strip()
                     or None
                 )
-                specialty = area.attrib.get("NOME-DA-ESPECIALIDADE", "").strip() or None
+                subKnowledgeArea = (
+                    area.attrib.get(
+                        "NOME-DA-SUB-AREA-DO-CONHECIMENTO", ""
+                    ).strip()
+                    or None
+                )
+                specialty = (
+                    area.attrib.get("NOME-DA-ESPECIALIDADE", "").strip() or None
+                )
 
                 researchArea.append(
                     {
@@ -358,8 +389,12 @@ class CurriculumParser:
                     "NOME-GRANDE-AREA-DO-CONHECIMENTO", None
                 )
                 area = atuacao.attrib.get("NOME-DA-AREA-DO-CONHECIMENTO", None)
-                subArea = atuacao.attrib.get("NOME-DA-SUB-AREA-DO-CONHECIMENTO", None)
-                especialidade = atuacao.attrib.get("NOME-DA-ESPECIALIDADE", None)
+                subArea = atuacao.attrib.get(
+                    "NOME-DA-SUB-AREA-DO-CONHECIMENTO", None
+                )
+                especialidade = atuacao.attrib.get(
+                    "NOME-DA-ESPECIALIDADE", None
+                )
 
                 areaAtuacao.append(
                     {

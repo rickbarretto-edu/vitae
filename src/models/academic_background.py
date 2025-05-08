@@ -16,7 +16,9 @@ class AcademicBackground(database_config.base):
         String, ForeignKey("researcher.id", ondelete="CASCADE"), nullable=False
     )
 
-    researcher = relationship("Researcher", back_populates="academic_background")
+    researcher = relationship(
+        "Researcher", back_populates="academic_background"
+    )
     knowledge_area = relationship(
         "KnowledgeArea",
         back_populates="academic_background",
