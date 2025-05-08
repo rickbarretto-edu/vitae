@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from src.database.database_config import database_config
 
+
 class ResearchArea(database_config.base):
     __tablename__ = "research_area"
 
@@ -16,7 +17,11 @@ class ResearchArea(database_config.base):
 
     __table_args__ = (
         UniqueConstraint(
-            "major_knowledge_area", "knowledge_area", "sub_knowledge_area", "specialty", "researcher_id",
-            name="unique_research_area"
+            "major_knowledge_area",
+            "knowledge_area",
+            "sub_knowledge_area",
+            "specialty",
+            "researcher_id",
+            name="unique_research_area",
         ),
     )

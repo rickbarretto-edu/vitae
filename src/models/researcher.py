@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, func
 from sqlalchemy.orm import relationship
 from src.database.database_config import database_config
 
+
 class Researcher(database_config.base):
     __tablename__ = "researcher"
 
@@ -18,6 +19,14 @@ class Researcher(database_config.base):
     institution_state = Column(String)
     institution_city = Column(String)
 
-    academic_background = relationship("AcademicBackground", back_populates="researcher", cascade="all, delete-orphan")
-    professional_experience = relationship("ProfessionalExperience", back_populates="researcher", cascade="all, delete-orphan")
-    research_area = relationship("ResearchArea", back_populates="researcher", cascade="all, delete-orphan")
+    academic_background = relationship(
+        "AcademicBackground", back_populates="researcher", cascade="all, delete-orphan"
+    )
+    professional_experience = relationship(
+        "ProfessionalExperience",
+        back_populates="researcher",
+        cascade="all, delete-orphan",
+    )
+    research_area = relationship(
+        "ResearchArea", back_populates="researcher", cascade="all, delete-orphan"
+    )
