@@ -1,7 +1,7 @@
-import logging
-import threading
 import json
+import logging
 import os
+import threading
 
 lock = threading.Lock()  # Variável de lock global
 

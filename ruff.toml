@@ -13,3 +13,6 @@ skip-magic-trailing-comma = true
 [lint.isort]
 detect-same-package = true
 case-sensitive = true
+order-by-type = true
+no-sections = false
+force-sort-within-sections = true

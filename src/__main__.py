@@ -1,6 +1,6 @@
-from src.pipeline_etl.extract.dir_scanning import directory_scanning
-from src.database.database_creation import DatabaseCreation
 from src.database.database_config import database_config
+from src.database.database_creation import DatabaseCreation
+from src.pipeline_etl.extract.dir_scanning import directory_scanning
 
 if __name__ == "__main__":
     print("hello")

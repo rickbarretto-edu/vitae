@@ -1,10 +1,11 @@
 from sqlalchemy.dialects.postgresql import insert
-from src.models.researcher import Researcher
-from src.models.professional_experience import ProfessionalExperience
-from src.models.academic_background import AcademicBackground
-from src.models.research_area import ResearchArea
-from src.models.knowledge_area import KnowledgeArea
+
 from src.database.database_config import database_config
+from src.models.academic_background import AcademicBackground
+from src.models.knowledge_area import KnowledgeArea
+from src.models.professional_experience import ProfessionalExperience
+from src.models.research_area import ResearchArea
+from src.models.researcher import Researcher
 from src.utils.loggers import ConfigLogger
 
 configLogger = ConfigLogger(__name__)

@@ -1,8 +1,9 @@
-import zipfile
 from datetime import datetime
-from src.utils.loggers import ConfigLogger
 import xml.etree.ElementTree as ET
+import zipfile
+
 from src.pipeline_etl.load import load
+from src.utils.loggers import ConfigLogger
 
 configLogger = ConfigLogger(__name__)
 logger = configLogger.logger

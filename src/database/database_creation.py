@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2 import sql
+
 from src.utils.load_env import load_env
 
 

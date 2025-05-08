@@ -1,10 +1,12 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from src.utils.load_env import load_env
-from alembic.config import Config
+
 from alembic import command
-import os
+from alembic.config import Config
+from src.utils.load_env import load_env
 
 
 class DatabaseConfig:
