@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "vitae"
+version = "0.1.0"
+description = ""
+authors = ["Author, author@example.com"]
+readme = "README.md"
+
+packages = [
+    { include = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+sqlalchemy = "^2.0.40"
+python-dotenv = "^1.1.0"
+alembic = "^1.15.2"
+psycopg2-binary = "^2.9.10"
+psycopg2 = "^2.9.10"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.11.8"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
