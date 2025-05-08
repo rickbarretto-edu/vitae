@@ -50,7 +50,7 @@ class ListHandler(logging.Handler):
         try:
             with open(arquivo, "r") as arquivo:
                 return json.load(arquivo).get("logs", [])
-        except FileNotFoundError as error:  # Caso arquivo não exista, criá-lo
+        except FileNotFoundError:  # Caso arquivo não exista, criá-lo
             return []
 
     # Função para salvar logs dado o arquivo de log JSON

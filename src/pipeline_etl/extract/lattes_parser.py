@@ -166,7 +166,7 @@ class CurriculumParser:
                 "institution_city": institutionCity,
             }
 
-            logger.debug(f"Researcher general data successfully extracted")
+            logger.debug("Researcher general data successfully extracted")
             return researcherGeneralData
 
         except Exception as e:
@@ -225,7 +225,7 @@ class CurriculumParser:
                         }
                     )
 
-            logger.debug(f"Professional experience successfully extracted")
+            logger.debug("Professional experience successfully extracted")
             return professionalExperience
 
         except Exception as e:
@@ -277,7 +277,7 @@ class CurriculumParser:
                     }
                 )
 
-            logger.debug(f"Academic background successfully extracted")
+            logger.debug("Academic background successfully extracted")
             return academicBackground
 
         except Exception as e:
@@ -327,7 +327,7 @@ class CurriculumParser:
                     }
                 )
 
-            logger.debug(f"Research area successfully extracted")
+            logger.debug("Research area successfully extracted")
             return researchArea
 
         except Exception as e:
@@ -370,7 +370,7 @@ class CurriculumParser:
                     }
                 )
 
-            logger.debug(f"Formação acadêmica extraída com sucesso")
+            logger.debug("Formação acadêmica extraída com sucesso")
             return areaAtuacao
 
         except Exception as e:
