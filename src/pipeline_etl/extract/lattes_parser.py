@@ -1,6 +1,6 @@
 import zipfile
 from datetime import datetime
-from utils.loggers import ConfigLogger
+from src.utils.loggers import ConfigLogger
 import xml.etree.ElementTree as ET
 from src.pipeline_etl.load import load
 

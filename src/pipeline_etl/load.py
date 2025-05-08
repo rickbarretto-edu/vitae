@@ -5,7 +5,7 @@ from src.models.academic_background import AcademicBackground
 from src.models.research_area import ResearchArea
 from src.models.knowledge_area import KnowledgeArea
 from src.database.database_config import database_config
-from utils.loggers import ConfigLogger
+from src.utils.loggers import ConfigLogger
 
 configLogger = ConfigLogger(__name__)
 logger = configLogger.logger

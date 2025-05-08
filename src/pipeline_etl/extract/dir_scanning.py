@@ -1,6 +1,6 @@
 import os
 from src.pipeline_etl.extract.lattes_parser import parser
-from utils.loggers import ConfigLogger
+from src.utils.loggers import ConfigLogger
 from concurrent.futures import ThreadPoolExecutor
 
 configLogger = ConfigLogger(__name__)
