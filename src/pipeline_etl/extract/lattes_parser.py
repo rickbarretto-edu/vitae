@@ -13,11 +13,11 @@ class CurriculumParser:
 
     def open_curriculum(
         self,
-        curriculumZIP,
-        generalDataBuffer,
-        professionBuffer,
-        researchAreaBuffer,
-        educationBuffer,
+        curriculum_zip,
+        general_data_buffer,
+        profession_buffer,
+        research_area_buffer,
+        education_buffer,
         flush,
     ):
         """Opens and processes an XML curriculum file contained within a ZIP archive.
@@ -59,54 +59,54 @@ class CurriculumParser:
           `professional_experience`, `academic_background`, and `research_area`.
         - If `flush` is True, the data is inserted into the database using the `load` module.
         """
-        logger.info(f"Processing file {curriculumZIP}")
+        logger.info(f"Processing file {curriculum_zip}")
 
         try:
-            with zipfile.ZipFile(curriculumZIP, "r") as zipFile:
-                name = zipFile.namelist()[0]
+            with zipfile.ZipFile(curriculum_zip, "r") as zip_file:
+                name = zip_file.namelist()[0]
                 researcherID = name.split(".")[0]
                 logger.info(
                     f"Extracting curriculum for researcher ID: {researcherID}"
                 )
 
-                with zipFile.open(name) as curriculumXML:
-                    tree = ET.parse(curriculumXML)
+                with zip_file.open(name) as curriculum_xml:
+                    tree = ET.parse(curriculum_xml)
                     curriculum = tree.getroot()
 
                     # ============= GENERAL DATA ================#
-                    researcherGeneralData = self.general_data(curriculum)
-                    researcherGeneralData["id"] = researcherID
-                    generalDataBuffer.append(researcherGeneralData)
+                    general_data = self.general_data(curriculum)
+                    general_data["id"] = researcherID
+                    general_data_buffer.append(general_data)
 
                     # ============= PROFESSIONAL EXPERIENCE ================#
-                    professionalExperience = self.professional_experience(
+                    professional_experience = self.professional_experience(
                         curriculum
                     )
-                    for experience in professionalExperience:
+                    for experience in professional_experience:
                         experience["researcher_id"] = researcherID
-                        professionBuffer.append(experience)
+                        profession_buffer.append(experience)
 
                     # ============= ACADEMIC BACKGROUND ================#
-                    academicBackground = self.academic_background(curriculum)
-                    for background in academicBackground:
+                    academic_background = self.academic_background(curriculum)
+                    for background in academic_background:
                         background["researcher_id"] = researcherID
-                        educationBuffer.append(background)
+                        education_buffer.append(background)
 
                     # ============= RESEARCH AREA ================#
-                    researchArea = self.research_area(curriculum)
-                    for area in researchArea:
+                    research_area = self.research_area(curriculum)
+                    for area in research_area:
                         area["researcher_id"] = researcherID
-                        researchAreaBuffer.append(area)
+                        research_area_buffer.append(area)
 
                     if flush:
                         logger.info("INSERTING INTO DATABASE")
-                        load.upsert_researcher(generalDataBuffer)
-                        load.upsert_professional_experience(professionBuffer)
-                        load.upsert_academic_background(educationBuffer)
-                        load.upsert_research_area(researchAreaBuffer)
+                        load.upsert_researcher(general_data_buffer)
+                        load.upsert_professional_experience(profession_buffer)
+                        load.upsert_academic_background(education_buffer)
+                        load.upsert_research_area(research_area_buffer)
 
         except Exception as e:
-            logger.error(f"Error processing file {curriculumZIP}: {str(e)}")
+            logger.error(f"Error processing file {curriculum_zip}: {str(e)}")
 
     def general_data(self, curriculum):
         """Extract general data from the Lattes curriculum XML.
@@ -143,84 +143,82 @@ class CurriculumParser:
         """
 
         try:
-            CV = curriculum
+            update_date = curriculum.attrib.get("DATA-ATUALIZACAO", None)
+            if update_date:
+                update_date = datetime.strptime(update_date, "%d%m%Y")
 
-            updateDate = CV.attrib.get("DATA-ATUALIZACAO", None)
-            if updateDate:
-                updateDate = datetime.strptime(updateDate, "%d%m%Y")
-
-            generalData = CV.find("DADOS-GERAIS")
-            if generalData is not None:
-                fullName = (
-                    generalData.attrib.get("NOME-COMPLETO", "").strip() or None
+            general_data = curriculum.find("DADOS-GERAIS")
+            if general_data is not None:
+                full_name = (
+                    general_data.attrib.get("NOME-COMPLETO", "").strip() or None
                 )
-                birthCity = (
-                    generalData.attrib.get("CIDADE-NASCIMENTO", "").strip()
+                birth_city = (
+                    general_data.attrib.get("CIDADE-NASCIMENTO", "").strip()
                     or None
                 )
-                birthState = (
-                    generalData.attrib.get("UF-NASCIMENTO", "").strip() or None
+                birth_state = (
+                    general_data.attrib.get("UF-NASCIMENTO", "").strip() or None
                 )
-                birthCountry = (
-                    generalData.attrib.get("PAIS-DE-NASCIMENTO", "").strip()
+                birth_country = (
+                    general_data.attrib.get("PAIS-DE-NASCIMENTO", "").strip()
                     or None
                 )
-                citationNames = (
-                    generalData.attrib.get(
+                citation_names = (
+                    general_data.attrib.get(
                         "NOME-EM-CITACOES-BIBLIOGRAFICAS", ""
                     ).strip()
                     or None
                 )
-                orcid = generalData.attrib.get("ORCID-ID", "").strip() or None
+                orcid = general_data.attrib.get("ORCID-ID", "").strip() or None
             else:
-                fullName = birthCity = birthState = birthCountry = (
-                    citationNames
+                full_name = birth_city = birth_state = birth_country = (
+                    citation_names
                 ) = orcid = None
 
-            resume = generalData.find("RESUMO-CV")
-            resumeText = (
+            resume = general_data.find("RESUMO-CV")
+            resume_text = (
                 resume.attrib.get("TEXTO-RESUMO-CV-RH", "").strip() or None
                 if resume is not None
                 else None
             )
 
-            address = generalData.find("ENDERECO")
+            address = general_data.find("ENDERECO")
             if address is not None:
-                professionalAddress = address.find("ENDERECO-PROFISSIONAL")
-                if professionalAddress is not None:
-                    institutionName = (
-                        professionalAddress.attrib.get(
+                professional_address = address.find("ENDERECO-PROFISSIONAL")
+                if professional_address is not None:
+                    institution_name = (
+                        professional_address.attrib.get(
                             "NOME-INSTITUICAO-EMPRESA", ""
                         ).strip()
                         or None
                     )
-                    institutionState = (
-                        professionalAddress.attrib.get("UF", "").strip() or None
+                    institution_state = (
+                        professional_address.attrib.get("UF", "").strip() or None
                     )
-                    institutionCity = (
-                        professionalAddress.attrib.get("CIDADE", "").strip()
+                    institution_city = (
+                        professional_address.attrib.get("CIDADE", "").strip()
                         or None
                     )
                 else:
-                    institutionName = institutionState = institutionCity = None
+                    institution_name = institution_state = institution_city = None
             else:
-                institutionName = institutionState = institutionCity = None
+                institution_name = institution_state = institution_city = None
 
-            researcherGeneralData = {
-                "name": fullName,
-                "city": birthCity,
-                "state": birthState,
-                "country": birthCountry,
-                "quotes_names": citationNames,
+            researcher_general_data = {
+                "name": full_name,
+                "city": birth_city,
+                "state": birth_state,
+                "country": birth_country,
+                "quotes_names": citation_names,
                 "orcid": orcid,
-                "abstract": resumeText,
-                "professional_institution": institutionName,
-                "institution_state": institutionState,
-                "institution_city": institutionCity,
+                "abstract": resume_text,
+                "professional_institution": institution_name,
+                "institution_state": institution_state,
+                "institution_city": institution_city,
             }
 
             logger.debug("Researcher general data successfully extracted")
-            return researcherGeneralData
+            return researcher_general_data
 
         except Exception as e:
             logger.error(f"Error extracting general data: {str(e)}")
