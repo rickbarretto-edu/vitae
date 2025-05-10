@@ -1,16 +1,15 @@
 import os
 
+from alembic import command
+from alembic.config import Config
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from alembic import command
-from alembic.config import Config
 from src.utils.load_env import load_env
 
 
 class DatabaseConfig:
-
     def __init__(self):
         self.url = self.postgres_url
         self.engine = create_engine(self.postgres_url)

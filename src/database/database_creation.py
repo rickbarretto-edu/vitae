@@ -22,9 +22,11 @@ def new_database() -> None:
         )
         try:
             cursor.execute(query)
-            print(f"Banco de dados {load_env.database_name} criado com sucesso!")
+            print(
+                f"Banco de dados {load_env.database_name} criado com sucesso!"
+            )
         except psycopg.Error as error:
             # When no serious error occur, this will report that the database already exist
             print(error)
-    
+
     connection.close()
