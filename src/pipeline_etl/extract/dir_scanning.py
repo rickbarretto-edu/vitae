@@ -11,8 +11,24 @@ __all__ = ["scan_directory"]
 
 def scan_directory():
     """
-    SCANS THE DIRECTORY OF LATTES CURRICULA AND SEARCHES FOR ALL ZIPPED CURRICULA
+    Scan the directory containing Lattes curricula and process all subdirectories.
+
+    This function identifies the current working directory, verifies the existence
+    of a "repo" directory containing subdirectories of curricula, and processes
+    each subdirectory concurrently using a thread pool. Each subdirectory is expected
+    to contain zipped curricula files, which are parsed and processed.
+
+    Raises
+    ------
+    Exception
+        If an error occurs during the scanning or processing of directories.
+
+    Notes
+    -----
+    - The function logs the progress and any errors encountered during execution.
+    - Subdirectories are processed in parallel to improve performance.
     """
+
     try:
         current_directory = os.getcwd()
         logger.info("Current directory: %s", current_directory)
@@ -40,9 +56,47 @@ def scan_directory():
 
 
 def process_subdir(subdirectory):
+    """Process subdirectory.
+
+    This function scans the specified subdirectory for curriculum files, processes
+    each file using a parser, and manages data buffers for general data, professions,
+    research areas, and education. It also handles periodic flushing of buffers to
+    the database after processing a certain number of files.
+
+    Parameters
+    ----------
+    subdirectory : str
+        The path to the subdirectory containing curriculum files to be processed.
+
+    Returns
+    -------
+    None
+        This function does not return any value. It logs the processing status
+        and manages data buffers internally.
+
+    Notes
+    -----
+    - If the specified subdirectory does not exist, a warning is logged, and the
+        function exits without processing.
+    - Buffers are flushed to the database after every 50 files processed.
+    - After processing all files in the subdirectory, the buffers are cleared.
+
+    Logging
+    -------
+    - Logs a warning if the subdirectory does not exist.
+    - Logs information about the number of curricula files being processed.
+    - Logs debug information for each curriculum file being opened.
+    - Logs when buffers are flushed to the database.
+    - Logs a success message upon completing the processing of the subdirectory.
+
+    Examples
+    --------
+    >>> process_subdir("/path/to/subdirectory")
+    Processing subdirectory: /path/to/subdirectory with 10 curricula
+    Flushing buffers to database.
+    Subdirectory /path/to/subdirectory processed successfully.
     """
-    Processes a single subdirectory containing curricula files.
-    """
+
     if not os.path.exists(subdirectory):
         logger.warning("Subdirectory does not exist: %s", subdirectory)
         return
