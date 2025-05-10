@@ -6,6 +6,8 @@ from src.utils.load_env import load_env
 
 
 def new_database() -> None:
+    database: str = load_env.database_name or "vitae"
+
     with psycopg.connect(
         dbname="postgres",
         user=load_env.database_user,
@@ -16,12 +18,10 @@ def new_database() -> None:
         autocommit=True,
     ) as connection:
         with connection.cursor() as cursor:
-            query = SQL("create database {}").format(
-                Identifier(load_env.database_name or "vitae")
-            )
+            query = SQL("create database {}").format(Identifier(database))
             try:
                 cursor.execute(query)
-                print(f"{load_env.database_name} database was created!")
+                print(f"{database} database was created!")
             except psycopg.Error as error:
                 # When no serious error occur, this will report that the database already exist
                 print(error)
