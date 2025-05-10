@@ -10,18 +10,7 @@ logger = configLogger.logger
 
 
 class CurriculumParser:
-    """
-    CLASS TO PARSE THE LATTES CURRICULUM XML FILES
-
-    Description: This class is responsible for extracting information from the Lattes curriculum XML files. It includes methods to extract
-    general data, professional experience, academic background, and research areas from the XML structure.
-
-    Attributes:
-        curriculum (str): Path to the Lattes curriculum XML file.
-    """
-
-    def __init__(self):
-        pass
+    """Parses curriculum from XML."""
 
     def open_curriculum(
         self,
