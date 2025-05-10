@@ -513,9 +513,7 @@ class CurriculumParser:
         """
 
         try:
-            CV = curriculo
-
-            atuacoes = CV.find("AREAS-DE-ATUACAO")
+            atuacoes = curriculo.find("AREAS-DE-ATUACAO")
             if atuacoes is None:
                 return []
 
