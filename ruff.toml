@@ -1,3 +1,4 @@
+extend-exclude = ["migrations/"]
 fix = true
 line-length = 80
 
