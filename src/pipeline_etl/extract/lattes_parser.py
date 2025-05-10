@@ -332,48 +332,46 @@ class CurriculumParser:
         """
 
         try:
-            CV = curriculum
+            general_data = curriculum.find("DADOS-GERAIS")
 
-            generalData = CV.find("DADOS-GERAIS")
-
-            backgrounds = generalData.find("FORMACAO-ACADEMICA-TITULACAO")
+            backgrounds = general_data.find("FORMACAO-ACADEMICA-TITULACAO")
             if backgrounds is None:
                 return []
 
-            academicBackground = []
+            academic_background = []
             for background in backgrounds:
-                backgroundType = background.tag
-                if backgroundType == None:
-                    print(f"Background type: {backgroundType}")
+                background_type = background.tag
+                if not background_type:
+                    print(f"Background type: {background_type}")
                 institution = (
                     background.attrib.get("NOME-INSTITUICAO", "").strip()
                     or None
                 )
                 course = background.attrib.get("NOME-CURSO", "").strip() or None
-                startYear = (
+                start_year = (
                     background.attrib.get("ANO-DE-INICIO", "").strip() or None
                 )
-                endYear = (
+                end_year = (
                     background.attrib.get("ANO-DE-CONCLUSAO", "").strip()
                     or None
                 )
 
-                academicBackground.append(
+                academic_background.append(
                     {
-                        "type": backgroundType,
+                        "type": background_type,
                         "institution": institution,
                         "course": course,
-                        "start_year": int(startYear)
-                        if startYear and startYear.isdigit()
+                        "start_year": int(start_year)
+                        if start_year and start_year.isdigit()
                         else None,
-                        "end_year": int(endYear)
-                        if endYear and endYear.isdigit()
+                        "end_year": int(end_year)
+                        if end_year and end_year.isdigit()
                         else None,
                     }
                 )
 
             logger.debug("Academic background successfully extracted")
-            return academicBackground
+            return academic_background
 
         except Exception as e:
             logger.error(f"Error extracting academic background: {str(e)}")
