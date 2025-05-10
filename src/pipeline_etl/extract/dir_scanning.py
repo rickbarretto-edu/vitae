@@ -74,7 +74,7 @@ class DirectoryScanning:
                 flush = True
                 logger.info("Flushing buffers to database.")
 
-            parser.openCurriculum(
+            parser.open_curriculum(
                 curriculumPath,
                 generalDataBuffer,
                 professionBuffer,
