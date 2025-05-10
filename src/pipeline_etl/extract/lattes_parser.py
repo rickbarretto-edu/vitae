@@ -143,12 +143,10 @@ class CurriculumParser:
         """
 
         try:
-            update_date = curriculum.attrib.get("DATA-ATUALIZACAO", None)
-            if update_date:
+            if update_date := curriculum.attrib.get("DATA-ATUALIZACAO"):
                 update_date = datetime.strptime(update_date, "%d%m%Y")
 
-            general_data = curriculum.find("DADOS-GERAIS")
-            if general_data is not None:
+            if general_data := curriculum.find("DADOS-GERAIS"):
                 full_name = (
                     general_data.attrib.get("NOME-COMPLETO", "").strip() or None
                 )
@@ -182,10 +180,8 @@ class CurriculumParser:
                 else None
             )
 
-            address = general_data.find("ENDERECO")
-            if address is not None:
-                professional_address = address.find("ENDERECO-PROFISSIONAL")
-                if professional_address is not None:
+            if address := general_data.find("ENDERECO"):
+                if professional_address := address.find("ENDERECO-PROFISSIONAL"):
                     institution_name = (
                         professional_address.attrib.get(
                             "NOME-INSTITUICAO-EMPRESA", ""
