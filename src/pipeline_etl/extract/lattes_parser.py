@@ -59,14 +59,14 @@ class CurriculumParser:
           `professional_experience`, `academic_background`, and `research_area`.
         - If `flush` is True, the data is inserted into the database using the `load` module.
         """
-        logger.info(f"Processing file {curriculum_zip}")
+        logger.info("Processing file %s", curriculum_zip)
 
         try:
             with zipfile.ZipFile(curriculum_zip, "r") as zip_file:
                 name = zip_file.namelist()[0]
-                researcherID = name.split(".")[0]
+                researcher_id = name.split(".")[0]
                 logger.info(
-                    f"Extracting curriculum for researcher ID: {researcherID}"
+                    "Extracting curriculum for researcher ID: %s", researcher_id
                 )
 
                 with zip_file.open(name) as curriculum_xml:
@@ -75,7 +75,7 @@ class CurriculumParser:
 
                     # ============= GENERAL DATA ================#
                     general_data = self.general_data(curriculum)
-                    general_data["id"] = researcherID
+                    general_data["id"] = researcher_id
                     general_data_buffer.append(general_data)
 
                     # ============= PROFESSIONAL EXPERIENCE ================#
@@ -83,19 +83,19 @@ class CurriculumParser:
                         curriculum
                     )
                     for experience in professional_experience:
-                        experience["researcher_id"] = researcherID
+                        experience["researcher_id"] = researcher_id
                         profession_buffer.append(experience)
 
                     # ============= ACADEMIC BACKGROUND ================#
                     academic_background = self.academic_background(curriculum)
                     for background in academic_background:
-                        background["researcher_id"] = researcherID
+                        background["researcher_id"] = researcher_id
                         education_buffer.append(background)
 
                     # ============= RESEARCH AREA ================#
                     research_area = self.research_area(curriculum)
                     for area in research_area:
-                        area["researcher_id"] = researcherID
+                        area["researcher_id"] = researcher_id
                         research_area_buffer.append(area)
 
                     if flush:
@@ -106,7 +106,7 @@ class CurriculumParser:
                         load.upsert_research_area(research_area_buffer)
 
         except Exception as e:
-            logger.error(f"Error processing file {curriculum_zip}: {str(e)}")
+            logger.error("Error processing file %s: %s", curriculum_zip, str(e))
 
     def general_data(self, curriculum):
         """Extract general data from the Lattes curriculum XML.
@@ -217,7 +217,7 @@ class CurriculumParser:
             return researcher_general_data
 
         except Exception as e:
-            logger.error(f"Error extracting general data: {str(e)}")
+            logger.error("Error extracting general data: %s", str(e))
             return {}
 
     def professional_experience(self, curriculum):
@@ -300,7 +300,7 @@ class CurriculumParser:
             return professional_experience
 
         except Exception as e:
-            logger.error(f"Error extracting professional experience: {str(e)}")
+            logger.error("Error extracting professional experience: %s", str(e))
             return []
 
     def academic_background(self, curriculum) -> list:
@@ -374,7 +374,7 @@ class CurriculumParser:
             return academic_background
 
         except Exception as e:
-            logger.error(f"Error extracting academic background: {str(e)}")
+            logger.error("Error extracting academic background: %s", str(e))
             return []
 
     def research_area(self, curriculum):
@@ -456,7 +456,7 @@ class CurriculumParser:
             return research_area
 
         except Exception as e:
-            logger.error(f"Error extracting research area: {str(e)}")
+            logger.error("Error extracting research area: %s", str(e))
             return []
 
     # TODO Ajustar Areas de Conhecimento
@@ -543,7 +543,7 @@ class CurriculumParser:
             return knowledge_areas
 
         except Exception as e:
-            logger.error(f"Error extracting area of expertise: {str(e)}")
+            logger.error("Error extracting area of expertise: %s", str(e))
             return []
 
 
