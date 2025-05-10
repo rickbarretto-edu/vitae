@@ -5,3 +5,4 @@ __pycache__/
 logs/
 profiling/
 .env
+.ruff_cache
