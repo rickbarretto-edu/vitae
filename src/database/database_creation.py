@@ -6,6 +6,15 @@ from src.utils.load_env import load_env
 
 
 def new_database() -> None:
+    """Creates a new database if it not exist.
+
+    All database settings is read from ``.env`` file.
+
+    Note
+    ----
+    By default the database will be called "vitae" if ``DATABASE_NAME`` is not defined.
+    """
+
     database: str = load_env.database_name or "vitae"
 
     with psycopg.connect(
