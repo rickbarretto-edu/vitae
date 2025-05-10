@@ -1,61 +1,46 @@
-# Guia de Execução do Projeto
+# Vitae
 
-## Pré-requisitos
+## Execution Guide
 
-- Windows 10/11 com [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) instalado
-- Distribuição do Ubuntu instalada via WSL
-- Python 3 instalado no Ubuntu
-- `requirements.txt` com as dependências do projeto
+## Requirements
 
-## Passo a passo para rodar o projeto
+- [PostgreSQL](https://www.postgresql.org/)
+- [Python Poetry](https://python-poetry.org/)
 
-1. **Abrir o Ubuntu via WSL**
+## How to run it
 
-   No terminal do Windows (CMD ou PowerShell), execute:
+1. **Install all dependencies**
 
-   ```bash
-   wsl -d Ubuntu
-    ```
+```
+poetry install
+```
 
-2. **Criar .env com base no .env.example**
+2. **Create a `.env`**
     
-    No terminal do Ubuntu, execute:
 
-    ```bash
-    cp .env.example .env
-    ```
+```bash
+cp .env.example .env
+# Now edit it to use your own settings
+```
 
-    e set as as variáveis de ambiente necessárias no arquivo `.env`.
+3. **Enter the virtual environment**
 
-2. **Configurar o PYTHONPATH**
+```bash
+poetry shell
+```
 
-   No terminal do Ubuntu, execute:
+On *Visual Studio Code*: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>,
+then search for: *"Python: Select Interpreter"* and choose the one from Poetry's isolated environment.
 
-   ```bash
-   export PYTHONPATH="${PYTHONPATH}:/path/to/your/project/"
-   ```
+4. **Set PYTHONPATH**
 
-3. **Criar um ambiente virtual**
 
-   No terminal do Ubuntu, execute:
+```bash
+export PYTHONPATH="/path/to/your/project/"
+```
 
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
+5. **Execute**
 
-4. **Instalar as dependências**
-    
-    No terminal do Ubuntu, execute:
-    
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-5. **Executar o projeto**  
-
-   No terminal do Ubuntu, execute:
-
-   ```bash
-   python3 -m src.main
-   ```
+```bash
+python -m src
+```
