@@ -477,13 +477,13 @@ class CurriculumParser:
         list of dict
             A list of dictionaries, where each dictionary contains information
             about an area of expertise with the following keys:
-            - "GRANDE_AREA" : str or None
+            - "major_area" : str or None
                 The name of the major area of knowledge.
-            - "AREA" : str or None
+            - "area" : str or None
                 The name of the area of knowledge.
-            - "SUB_AREA" : str or None
+            - "sub_area" : str or None
                 The name of the sub-area of knowledge.
-            - "ESPECIALIDADE" : str or None
+            - "specialty" : str or None
                 The name of the specialty.
 
         Notes
@@ -506,44 +506,44 @@ class CurriculumParser:
         ... '''
         >>> curriculo = fromstring(xml_data)
         >>> knowledgment_area(curriculo)
-        [{'GRANDE_AREA': 'Ciências Exatas',
-          'AREA': 'Matemática',
-          'SUB_AREA': 'Álgebra',
-          'ESPECIALIDADE': 'Teoria dos Grupos'}]
+        [{'major_area': 'Ciências Exatas',
+          'area': 'Matemática',
+          'sub_area': 'Álgebra',
+          'specialty': 'Teoria dos Grupos'}]
         """
 
         try:
-            atuacoes = curriculo.find("AREAS-DE-ATUACAO")
-            if atuacoes is None:
+            expertise_area = curriculo.find("AREAS-DE-ATUACAO")
+            if expertise_area is None:
                 return []
 
-            areaAtuacao = []
-            for atuacao in atuacoes:
-                grandeArea = atuacao.attrib.get(
+            knowledge_areas = []
+            for knowledgement in expertise_area:
+                major_area = knowledgement.attrib.get(
                     "NOME-GRANDE-AREA-DO-CONHECIMENTO", None
                 )
-                area = atuacao.attrib.get("NOME-DA-AREA-DO-CONHECIMENTO", None)
-                subArea = atuacao.attrib.get(
+                area = knowledgement.attrib.get("NOME-DA-AREA-DO-CONHECIMENTO", None)
+                sub_area = knowledgement.attrib.get(
                     "NOME-DA-SUB-AREA-DO-CONHECIMENTO", None
                 )
-                especialidade = atuacao.attrib.get(
+                expertise = knowledgement.attrib.get(
                     "NOME-DA-ESPECIALIDADE", None
                 )
 
-                areaAtuacao.append(
+                knowledge_areas.append(
                     {
-                        "GRANDE_AREA": grandeArea,
-                        "AREA": area,
-                        "SUB_AREA": subArea,
-                        "ESPECIALIDADE": especialidade,
+                        "major_area": major_area,
+                        "area": area,
+                        "sub_area": sub_area,
+                        "specialty": expertise,
                     }
                 )
 
-            logger.debug("Formação acadêmica extraída com sucesso")
-            return areaAtuacao
+            logger.debug("Academic background successfully extracted")
+            return knowledge_areas
 
         except Exception as e:
-            logger.error(f"Erro ao extrair área de atuação: {str(e)}")
+            logger.error(f"Error extracting area of expertise: {str(e)}")
             return []
 
 
