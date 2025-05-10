@@ -1,9 +1,9 @@
 from src.database.database_config import database_config
-from src.database.database_creation import DatabaseCreation
+from src.database.database_creation import new_database
 from src.pipeline_etl.extract.dir_scanning import directory_scanning
 
 if __name__ == "__main__":
     print("hello")
-    database_creation = DatabaseCreation()
-    database_config.run_migrations()
+    new_database()
+    database_config.migrate()
     directory_scanning.scanning()
