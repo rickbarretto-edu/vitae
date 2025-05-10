@@ -415,27 +415,25 @@ class CurriculumParser:
         """
        
         try:
-            CV = curriculum
+            general_data = curriculum.find("DADOS-GERAIS")
 
-            generalData = CV.find("DADOS-GERAIS")
-
-            areas = generalData.find("AREAS-DE-ATUACAO")
+            areas = general_data.find("AREAS-DE-ATUACAO")
             if areas is None:
                 return []
 
-            researchArea = []
+            research_area = []
             for area in areas:
-                majorArea = (
+                major_area = (
                     area.attrib.get(
                         "NOME-GRANDE-AREA-DO-CONHECIMENTO", ""
                     ).strip()
                     or None
                 )
-                knowledgeArea = (
+                knowledge_area = (
                     area.attrib.get("NOME-DA-AREA-DO-CONHECIMENTO", "").strip()
                     or None
                 )
-                subKnowledgeArea = (
+                sub_knowledge_area = (
                     area.attrib.get(
                         "NOME-DA-SUB-AREA-DO-CONHECIMENTO", ""
                     ).strip()
@@ -445,17 +443,17 @@ class CurriculumParser:
                     area.attrib.get("NOME-DA-ESPECIALIDADE", "").strip() or None
                 )
 
-                researchArea.append(
+                research_area.append(
                     {
-                        "major_knowledge_area": majorArea,
-                        "knowledge_area": knowledgeArea,
-                        "sub_knowledge_area": subKnowledgeArea,
+                        "major_knowledge_area": major_area,
+                        "knowledge_area": knowledge_area,
+                        "sub_knowledge_area": sub_knowledge_area,
                         "specialty": specialty,
                     }
                 )
 
             logger.debug("Research area successfully extracted")
-            return researchArea
+            return research_area
 
         except Exception as e:
             logger.error(f"Error extracting research area: {str(e)}")
