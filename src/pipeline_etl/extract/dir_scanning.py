@@ -22,12 +22,12 @@ class DirectoryScanning:
         """
         try:
             current_directory = os.getcwd()
-            logger.info(f"Current directory: {current_directory}")
+            logger.info("Current directory: %s", current_directory)
 
             curriculum_directory = os.path.join(current_directory, "repo")
             if not os.path.exists(curriculum_directory):
                 logger.error(
-                    f"Curriculum directory does not exist: {curriculum_directory}"
+                    "Curriculum directory does not exist: %s", curriculum_directory
                 )
                 return
 
@@ -43,7 +43,7 @@ class DirectoryScanning:
 
             logger.info("Complete scan of all subdirectories.")
         except Exception as e:
-            logger.error(f"An error occurred during the scan: {e}")
+            logger.error("An error occurred during the scan: %s", e)
 
 
     def process_subdir(self, subdirectory):
@@ -51,13 +51,13 @@ class DirectoryScanning:
         Processes a single subdirectory containing curricula files.
         """
         if not os.path.exists(subdirectory):
-            logger.warning(f"Subdirectory does not exist: {subdirectory}")
+            logger.warning("Subdirectory does not exist: %s", subdirectory)
             return
 
         curricula = os.listdir(subdirectory)
 
         logger.info(
-            f"Processing subdirectory: {subdirectory} with {len(curricula)} curricula"
+            "Processing subdirectory: %s with %d curricula", subdirectory, len(curricula)
         )
 
         general_data_buffer = []
@@ -69,7 +69,7 @@ class DirectoryScanning:
         count = 0
         for curriculum in curricula:
             curriculum_path = os.path.join(subdirectory, curriculum)
-            logger.debug(f"Opening curriculum: {curriculum_path}")
+            logger.debug("Opening curriculum: %s", curriculum_path)
 
             if count == 50:
                 flush = True
@@ -85,7 +85,7 @@ class DirectoryScanning:
             )
             count += 1
 
-        logger.info(f"Subdirectory {subdirectory} processed successfully.")
+        logger.info("Subdirectory %s processed successfully.", subdirectory)
 
         general_data_buffer.clear()
         profession_buffer.clear()
