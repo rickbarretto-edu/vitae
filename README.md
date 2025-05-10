@@ -1,7 +1,5 @@
 # Vitae
 
-## Execution Guide
-
 ## Requirements
 
 - [PostgreSQL](https://www.postgresql.org/)
