@@ -23,7 +23,7 @@ class CurriculumParser:
     def __init__(self):
         pass
 
-    def openCurriculum(
+    def open_curriculum(
         self,
         curriculumZIP,
         generalDataBuffer,
@@ -91,7 +91,7 @@ class CurriculumParser:
         except Exception as e:
             logger.error(f"Error processing file {curriculumZIP}: {str(e)}")
 
-    def getGeneralData(self, curriculum):
+    def general_data(self, curriculum):
         """
         FUNCTION TO EXTRACT SOME GENERAL DATA FROM THE LATTES CURRICULUM
 
@@ -185,9 +185,7 @@ class CurriculumParser:
             logger.error(f"Error extracting general data: {str(e)}")
             return {}
 
-    def getProfessionalExperience(self, curriculum):
-        """
-        FUNCTION TO EXTRACT PROFESSIONAL EXPERIENCE FROM THE LATTES CURRICULUM
+    def professional_experience(self, curriculum):
 
         Description: Receives the XML curriculum and navigates through its tags, extracting information about professional experiences.
 
@@ -251,9 +249,7 @@ class CurriculumParser:
             logger.error(f"Error extracting professional experience: {str(e)}")
             return []
 
-    def getAcademicBackground(self, curriculum):
-        """
-        FUNCTION TO EXTRACT ACADEMIC BACKGROUND FROM THE LATTES CURRICULUM
+    def academic_background(self, curriculum) -> list:
 
         Description: Receives the XML curriculum and navigates through its tags, extracting information about academic background.
 
@@ -309,7 +305,7 @@ class CurriculumParser:
             logger.error(f"Error extracting academic background: {str(e)}")
             return []
 
-    def getResearchArea(self, curriculum):
+    def research_area(self, curriculum):
         """
         FUNCTION TO EXTRACT RESEARCH AREA FROM THE LATTES CURRICULUM
 
@@ -367,7 +363,7 @@ class CurriculumParser:
             return []
 
     # TODO Ajustar Areas de Conhecimento
-    def getAreaConhecimento(self, curriculo):
+    def knowledgment_area(self, curriculo):
         """
         FUNÇÃO PARA EXTRAIR A ÁREA DE ATUAÇÃO DO CURRÍCULO LATTES
 
