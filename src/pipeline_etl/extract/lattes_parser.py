@@ -249,18 +249,17 @@ class CurriculumParser:
         """
 
         try:
-            CV = curriculum
-            generalData = CV.find("DADOS-GERAIS")
+            general_data = curriculum.find("DADOS-GERAIS")
 
             experiences = (
-                generalData.find("ATUACOES-PROFISSIONAIS")
-                if generalData is not None
+                general_data.find("ATUACOES-PROFISSIONAIS")
+                if general_data is not None
                 else None
             )
             if experiences is None:
                 return []
 
-            professionalExperience = []
+            professional_experience = []
             for experience in experiences.findall("ATUACAO-PROFISSIONAL"):
                 institution = (
                     experience.attrib.get("NOME-INSTITUICAO", "").strip()
@@ -269,36 +268,36 @@ class CurriculumParser:
                 links = experience.findall("VINCULOS")
 
                 for link in links:
-                    linkType = (
+                    link_type = (
                         link.attrib.get("TIPO-DE-VINCULO", "").strip() or None
                     )
-                    if linkType == "LIVRE":
-                        linkType = (
+                    if link_type == "LIVRE":
+                        link_type = (
                             link.attrib.get(
                                 "OUTRO-VINCULO-INFORMADO", ""
                             ).strip()
                             or None
                         )
-                    startYear = (
+                    start_year = (
                         link.attrib.get("ANO-INICIO", "").strip() or None
                     )
-                    endYear = link.attrib.get("ANO-FIM", "").strip() or None
+                    end_year = link.attrib.get("ANO-FIM", "").strip() or None
 
-                    professionalExperience.append(
+                    professional_experience.append(
                         {
                             "institution": institution,
-                            "employment_relationship": linkType,
-                            "start_year": int(startYear)
-                            if startYear and startYear.isdigit()
+                            "employment_relationship": link_type,
+                            "start_year": int(start_year)
+                            if start_year and start_year.isdigit()
                             else None,
-                            "end_year": int(endYear)
-                            if endYear and endYear.isdigit()
+                            "end_year": int(end_year)
+                            if end_year and end_year.isdigit()
                             else None,
                         }
                     )
 
             logger.debug("Professional experience successfully extracted")
-            return professionalExperience
+            return professional_experience
 
         except Exception as e:
             logger.error(f"Error extracting professional experience: {str(e)}")
