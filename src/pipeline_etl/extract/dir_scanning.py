@@ -21,31 +21,32 @@ class DirectoryScanning:
         SCANS THE DIRECTORY OF LATTES CURRICULA AND SEARCHES FOR ALL ZIPPED CURRICULA
         """
         try:
-            currentDirectory = os.getcwd()
-            logger.info(f"Current directory: {currentDirectory}")
+            current_directory = os.getcwd()
+            logger.info(f"Current directory: {current_directory}")
 
-            curriculumDirectory = os.path.join(currentDirectory, "repo")
-            if not os.path.exists(curriculumDirectory):
+            curriculum_directory = os.path.join(current_directory, "repo")
+            if not os.path.exists(curriculum_directory):
                 logger.error(
-                    f"Curriculum directory does not exist: {curriculumDirectory}"
+                    f"Curriculum directory does not exist: {curriculum_directory}"
                 )
                 return
 
-            subdirectoryList = [
-                os.path.join(curriculumDirectory, sub)
-                for sub in os.listdir(curriculumDirectory)
-                if os.path.isdir(os.path.join(curriculumDirectory, sub))
+            subdirectory_list = [
+                os.path.join(curriculum_directory, sub)
+                for sub in os.listdir(curriculum_directory)
+                if os.path.isdir(os.path.join(curriculum_directory, sub))
             ]
 
             with ThreadPoolExecutor(max_workers=8) as executor:
-                for subdirectoryPath in subdirectoryList:
-                    executor.submit(self.processSubDir, subdirectoryPath)
+                for subdirectory_path in subdirectory_list:
+                    executor.submit(self.process_subdir, subdirectory_path)
 
             logger.info("Complete scan of all subdirectories.")
         except Exception as e:
             logger.error(f"An error occurred during the scan: {e}")
 
-    def processSubDir(self, subdirectory):
+
+    def process_subdir(self, subdirectory):
         """
         Processes a single subdirectory containing curricula files.
         """
@@ -59,37 +60,37 @@ class DirectoryScanning:
             f"Processing subdirectory: {subdirectory} with {len(curricula)} curricula"
         )
 
-        generalDataBuffer = []
-        professionBuffer = []
-        researchAreaBuffer = []
-        educationBuffer = []
+        general_data_buffer = []
+        profession_buffer = []
+        research_area_buffer = []
+        education_buffer = []
 
         flush = False
         count = 0
         for curriculum in curricula:
-            curriculumPath = os.path.join(subdirectory, curriculum)
-            logger.debug(f"Opening curriculum: {curriculumPath}")
+            curriculum_path = os.path.join(subdirectory, curriculum)
+            logger.debug(f"Opening curriculum: {curriculum_path}")
 
             if count == 50:
                 flush = True
                 logger.info("Flushing buffers to database.")
 
             parser.open_curriculum(
-                curriculumPath,
-                generalDataBuffer,
-                professionBuffer,
-                researchAreaBuffer,
-                educationBuffer,
+                curriculum_path,
+                general_data_buffer,
+                profession_buffer,
+                research_area_buffer,
+                education_buffer,
                 flush,
             )
             count += 1
 
         logger.info(f"Subdirectory {subdirectory} processed successfully.")
 
-        generalDataBuffer.clear()
-        professionBuffer.clear()
-        researchAreaBuffer.clear()
-        educationBuffer.clear()
+        general_data_buffer.clear()
+        profession_buffer.clear()
+        research_area_buffer.clear()
+        education_buffer.clear()
 
 
 directory_scanning = DirectoryScanning()
