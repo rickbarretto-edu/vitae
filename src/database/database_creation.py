@@ -1,37 +1,30 @@
-import psycopg2
-from psycopg2 import sql
+import psycopg
+from psycopg import Connection
+from psycopg.sql import SQL, Identifier
 
 from src.utils.load_env import load_env
 
 
-class DatabaseCreation:
-    def __init__(self):
-        self.create_database()
+def new_database() -> None:
+    connection: Connection = psycopg.connect(
+        dbname="postgres",
+        user=load_env.database_user,
+        password=load_env.database_password,
+        host=load_env.database_host,
+        port=load_env.database_port,
+        client_encoding="UTF-8",
+        autocommit=True,
+    )
 
-    def create_database(self):
+    with connection.cursor() as cursor:
+        query = SQL("create database {}").format(
+            Identifier(load_env.database_name or "vitae")
+        )
         try:
-            conn = psycopg2.connect(
-                dbname="postgres",
-                user=load_env.database_user,
-                password=load_env.database_password,
-                host=load_env.database_host,
-                port=load_env.database_port,
-            )
-            conn.autocommit = True
-            cursor = conn.cursor()
-
-            cursor.execute(
-                sql.SQL("CREATE DATABASE {}").format(
-                    sql.Identifier(load_env.database_name)
-                )
-            )
-
-            print(
-                f"Banco de dados '{load_env.database_name}' criado com sucesso!"
-            )
-
-            cursor.close()
-            conn.close()
-
-        except psycopg2.Error as e:
-            print(f"Erro ao criar o banco de dados: {e}")
+            cursor.execute(query)
+            print(f"Banco de dados {load_env.database_name} criado com sucesso!")
+        except psycopg.Error as error:
+            # When no serious error occur, this will report that the database already exist
+            print(error)
+    
+    connection.close()
