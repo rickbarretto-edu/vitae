@@ -11,6 +11,7 @@ class LoadEnv:
         self.database_host = os.getenv("DATABASE_HOST")
         self.database_port = os.getenv("DATABASE_PORT")
         self.database_name = os.getenv("DATABASE_NAME")
+        self.directory = os.getenv("CURRICULA_DIRECTORY")
 
 
 load_env = LoadEnv()
