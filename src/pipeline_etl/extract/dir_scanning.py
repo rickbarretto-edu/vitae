@@ -32,11 +32,13 @@ def scan_directory(curricula_folder: Path):
 
     try:
 
+        # TODO: This should panic.
         if not curricula_folder.exists():
             message = "Curricula directory does not exist: %s"
             logger.error(message, curricula_folder)
             return
         
+        # TODO: This should panic.
         if not curricula_folder.is_dir():
             message = "Curricula's path must be a directory: %s"
             logger.error(message, curricula_folder)
