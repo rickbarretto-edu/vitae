@@ -1,10 +1,10 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from src.database.database_config import database_config
+from src.database.database_config import Model
 
 
-class KnowledgeArea(database_config.base):
+class KnowledgeArea(Model):
     __tablename__ = "knowledge_area"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

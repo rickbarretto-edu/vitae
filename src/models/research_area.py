@@ -1,10 +1,10 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from src.database.database_config import database_config
+from src.database.database_config import Model
 
 
-class ResearchArea(database_config.base):
+class ResearchArea(Model):
     __tablename__ = "research_area"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

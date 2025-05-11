@@ -1,10 +1,10 @@
 from sqlalchemy import Column, DateTime, Integer, String, func
 from sqlalchemy.orm import relationship
 
-from src.database.database_config import database_config
+from src.database.database_config import Model
 
 
-class Researcher(database_config.base):
+class Researcher(Model):
     __tablename__ = "researcher"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

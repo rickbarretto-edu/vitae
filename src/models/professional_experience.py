@@ -1,10 +1,10 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from src.database.database_config import database_config
+from src.database.database_config import Model
 
 
-class ProfessionalExperience(database_config.base):
+class ProfessionalExperience(Model):
     __tablename__ = "professional_experience"
 
     id = Column(Integer, primary_key=True, autoincrement=True)

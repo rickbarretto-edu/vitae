@@ -8,7 +8,9 @@ from sqlalchemy.orm import sessionmaker
 
 from src.utils.settings import VitaeSettings, vitae
 
-__all__ = ["database_config"]
+__all__ = ["Model", "database_config"]
+
+Model = declarative_base()
 
 class DatabaseConfig:
     def __init__(self, vitae: VitaeSettings):
@@ -17,7 +19,6 @@ class DatabaseConfig:
         self.session_local = sessionmaker(
             autocommit=False, autoflush=False, bind=self.engine
         )
-        self.base = declarative_base()
 
     def migrate(self):
         current_dir: str = os.path.dirname(__file__)
