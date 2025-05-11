@@ -89,16 +89,16 @@ class VitaeSettings:
         with open(config_path, "rb") as f:
             data = tomllib.load(f)
 
-            database: dict = data.get("database") or {}
+            postgres: dict = data.get("postgres") or {}
             postgres_settings = PostgresSettings(
                 user=PostgresUser(
-                    name=database["user"]["name"],
-                    password=database["user"]["password"],
+                    name=postgres["user"]["name"],
+                    password=postgres["user"]["password"],
                 ),
                 db=PostgresDatabase(
-                    name=database["name"],
-                    host=database.get("host", "127.0.0.1"),
-                    port=database.get("port", 5433),
+                    name=postgres["name"],
+                    host=postgres.get("host", "127.0.0.1"),
+                    port=postgres.get("port", 5433),
                 ),
             )
 
