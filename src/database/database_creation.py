@@ -1,11 +1,10 @@
 import psycopg
-from psycopg import Connection
 from psycopg.sql import SQL, Identifier
 
-from src.utils.load_env import load_env
+from src.utils.settings import VitaeSettings
 
 
-def new_database() -> None:
+def new_database(vitae: VitaeSettings) -> None:
     """Creates a new database if it not exist.
 
     All database settings is read from ``.env`` file.
@@ -15,22 +14,23 @@ def new_database() -> None:
     By default the database will be called "vitae" if ``DATABASE_NAME`` is not defined.
     """
 
-    database: str = load_env.database_name or "vitae"
+    database = vitae.postgres.db
+    user = vitae.postgres.user
 
     with psycopg.connect(
         dbname="postgres",
-        user=load_env.database_user,
-        password=load_env.database_password,
-        host=load_env.database_host,
-        port=load_env.database_port,
+        user=user.name,
+        password=user.password,
+        host=database.host,
+        port=database.port,
         client_encoding="UTF-8",
         autocommit=True,
     ) as connection:
         with connection.cursor() as cursor:
-            query = SQL("create database {}").format(Identifier(database))
+            query = SQL("create database {}").format(Identifier(database.name))
             try:
                 cursor.execute(query)
-                print(f"{database} database was created!")
+                print(f"{database.name} database was created!")
             except psycopg.Error as error:
                 # When no serious error occur, this will report that the database already exist
                 print(error)
