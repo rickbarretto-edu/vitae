@@ -1,5 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 import os
+from pathlib import Path
 
 from src.pipeline_etl.extract.lattes_parser import parser
 from src.utils.loggers import ConfigLogger
@@ -9,7 +10,7 @@ logger = ConfigLogger(__name__).logger
 __all__ = ["scan_directory"]
 
 
-def scan_directory():
+def scan_directory(curricula_folder: Path):
     """
     Scan the directory containing Lattes curricula and process all subdirectories.
 
@@ -30,24 +31,14 @@ def scan_directory():
     """
 
     try:
-        current_directory = os.getcwd()
-        logger.info("Current directory: %s", current_directory)
 
-        curriculum_directory = os.path.join(current_directory, "repo")
-        if not os.path.exists(curriculum_directory):
-            logger.error(
-                "Curriculum directory does not exist: %s", curriculum_directory
-            )
+        if not curricula_folder.exists():
+            message = "Curricula directory does not exist: %s"
+            logger.error(message, curricula_folder)
             return
-
-        subdirectory_list = [
-            os.path.join(curriculum_directory, sub)
-            for sub in os.listdir(curriculum_directory)
-            if os.path.isdir(os.path.join(curriculum_directory, sub))
-        ]
-
+        
         with ThreadPoolExecutor(max_workers=8) as executor:
-            for subdirectory_path in subdirectory_list:
+            for subdirectory_path in curricula_folder.walk():
                 executor.submit(process_subdir, subdirectory_path)
 
         logger.info("Complete scan of all subdirectories.")
