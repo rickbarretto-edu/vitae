@@ -1,5 +1,5 @@
 [postgres.user]
-user = "postgres_user"
+name = "postgres_user"
 password = "your_secure_password"
 
 [postgres.database]
