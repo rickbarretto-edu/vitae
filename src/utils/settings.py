@@ -52,6 +52,12 @@ class PostgresSettings:
 
 @dataclass(frozen=True, kw_only=True)
 class PathsSettings:
+    """Paths' Settings for Vitae
+    
+    Note
+    ----
+    `_curricula` must exist and be a directory.
+    """
     _curricula: Path = Path("all_files")
 
     def __post_init__(self):
@@ -59,7 +65,7 @@ class PathsSettings:
 
     @property
     def curricula(self) -> Path:
-        """
+        """Absolute curricula's directory.
 
         Note
         ----
