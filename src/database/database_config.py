@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from pathlib import Path
 
 from alembic import command
 from alembic.config import Config

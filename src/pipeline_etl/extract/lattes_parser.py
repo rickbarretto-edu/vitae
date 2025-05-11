@@ -111,8 +111,8 @@ class CurriculumParser:
     def general_data(self, curriculum):
         """Extract general data from the Lattes curriculum XML.
 
-        This function navigates through the provided XML structure to extract 
-        general information about a researcher, such as their name, birthplace, 
+        This function navigates through the provided XML structure to extract
+        general information about a researcher, such as their name, birthplace,
         ORCID ID, and professional institution details.
 
         Parameters
@@ -138,7 +138,7 @@ class CurriculumParser:
         Raises
         ------
         Exception
-            If an error occurs during the extraction process, it is logged, and an 
+            If an error occurs during the extraction process, it is logged, and an
             empty dictionary is returned.
         """
 
@@ -181,7 +181,9 @@ class CurriculumParser:
             )
 
             if address := general_data.find("ENDERECO"):
-                if professional_address := address.find("ENDERECO-PROFISSIONAL"):
+                if professional_address := address.find(
+                    "ENDERECO-PROFISSIONAL"
+                ):
                     institution_name = (
                         professional_address.attrib.get(
                             "NOME-INSTITUICAO-EMPRESA", ""
@@ -189,14 +191,17 @@ class CurriculumParser:
                         or None
                     )
                     institution_state = (
-                        professional_address.attrib.get("UF", "").strip() or None
+                        professional_address.attrib.get("UF", "").strip()
+                        or None
                     )
                     institution_city = (
                         professional_address.attrib.get("CIDADE", "").strip()
                         or None
                     )
                 else:
-                    institution_name = institution_state = institution_city = None
+                    institution_name = institution_state = institution_city = (
+                        None
+                    )
             else:
                 institution_name = institution_state = institution_city = None
 
@@ -406,14 +411,14 @@ class CurriculumParser:
 
         Examples
         --------
-        >>> curriculum = ET.parse('lattes.xml').getroot()
+        >>> curriculum = ET.parse("lattes.xml").getroot()
         >>> parser = LattesParser()
         >>> research_areas = parser.research_area(curriculum)
         >>> print(research_areas)
         [{'major_knowledge_area': 'Engineering', 'knowledge_area': 'Civil Engineering',
           'sub_knowledge_area': 'Structural Engineering', 'specialty': 'Concrete Structures'}, ...]
         """
-       
+
         try:
             general_data = curriculum.find("DADOS-GERAIS")
 
@@ -522,7 +527,9 @@ class CurriculumParser:
                 major_area = knowledgement.attrib.get(
                     "NOME-GRANDE-AREA-DO-CONHECIMENTO", None
                 )
-                area = knowledgement.attrib.get("NOME-DA-AREA-DO-CONHECIMENTO", None)
+                area = knowledgement.attrib.get(
+                    "NOME-DA-AREA-DO-CONHECIMENTO", None
+                )
                 sub_area = knowledgement.attrib.get(
                     "NOME-DA-SUB-AREA-DO-CONHECIMENTO", None
                 )

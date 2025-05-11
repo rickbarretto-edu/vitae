@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
+
 import tomllib
 
 __all__ = ["vitae", "VitaeSettings"]
@@ -53,11 +54,12 @@ class PostgresSettings:
 @dataclass(frozen=True, kw_only=True)
 class PathsSettings:
     """Paths' Settings for Vitae
-    
+
     Note
     ----
     `_curricula` must exist and be a directory.
     """
+
     _curricula: Path = Path("all_files")
     alembic: Path = Path("alembic.ini")
 
