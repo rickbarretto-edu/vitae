@@ -37,6 +37,11 @@ def scan_directory(curricula_folder: Path):
             logger.error(message, curricula_folder)
             return
         
+        if not curricula_folder.is_dir():
+            message = "Curricula's path must be a directory: %s"
+            logger.error(message, curricula_folder)
+            return
+        
         with ThreadPoolExecutor(max_workers=8) as executor:
             for subdirectory_path in curricula_folder.walk():
                 executor.submit(process_subdir, subdirectory_path)
