@@ -6,3 +6,4 @@ logs/
 profiling/
 .env
 .ruff_cache
+vitae.toml
