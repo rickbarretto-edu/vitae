@@ -1,0 +1,11 @@
+[postgres.user]
+user = "postgres_user"
+password = "your_secure_password"
+
+[postgres.database]
+host = "localhost"
+port = 5432
+name = "your_database_name"
+
+[paths]
+curricula = "path/to/your/curricula/files"
