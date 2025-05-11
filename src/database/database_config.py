@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-import os
+from pathlib import Path
 
 from alembic import command
 from alembic.config import Config
@@ -21,10 +21,7 @@ class DatabaseConfig:
     )
 
     def migrate(self):
-        current_dir: str = os.path.dirname(__file__)
-        ini_file: str = "../../alembic.ini"
-
-        command.upgrade(Config(os.path.join(current_dir, ini_file)), "head")
+        command.upgrade(Config(Path("alembic.ini")), "head")
 
 
 database_config = DatabaseConfig()
