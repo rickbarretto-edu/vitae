@@ -13,12 +13,11 @@ __all__ = ["Model", "database_config"]
 
 Model = declarative_base()
 
+
 @dataclass
 class DatabaseConfig:
     engine: Engine = create_engine(vitae.postgres.url)
-    session_local = sessionmaker(
-        autocommit=False, autoflush=False, bind=engine
-    )
+    session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     def migrate(self):
         command.upgrade(Config(Path("alembic.ini")), "head")
