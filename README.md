@@ -13,11 +13,11 @@
 poetry install
 ```
 
-2. **Create a `.env`**
+2. **Create a new Environment Settings**
     
 
 ```bash
-cp .env.example .env
+cp vitae.example.toml vitae.toml
 # Now edit it to use your own settings
 ```
 
