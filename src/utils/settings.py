@@ -96,9 +96,9 @@ class VitaeSettings:
                     password=postgres["user"]["password"],
                 ),
                 db=PostgresDatabase(
-                    name=postgres["name"],
-                    host=postgres.get("host", "127.0.0.1"),
-                    port=postgres.get("port", 5433),
+                    name=postgres["database"]["name"],
+                    host=postgres["database"].get("host", "127.0.0.1"),
+                    port=postgres["database"].get("port", 5433),
                 ),
             )
 
