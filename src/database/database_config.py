@@ -20,7 +20,7 @@ class DatabaseConfig:
     session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     def migrate(self):
-        command.upgrade(Config(Path("alembic.ini")), "head")
+        command.upgrade(Config(vitae.paths.alembic), "head")
 
 
 database_config = DatabaseConfig()

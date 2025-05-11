@@ -9,3 +9,4 @@ name = "your_database_name"
 
 [paths]
 curricula = "path/to/your/curricula/files"
+alembic = "alembic.ini"

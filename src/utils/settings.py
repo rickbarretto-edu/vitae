@@ -59,9 +59,11 @@ class PathsSettings:
     `_curricula` must exist and be a directory.
     """
     _curricula: Path = Path("all_files")
+    alembic: Path = Path("alembic.ini")
 
     def __post_init__(self):
         assert self._curricula.exists() or self._curricula.is_dir()
+        assert self.alembic.is_file()
 
     @property
     def curricula(self) -> Path:
@@ -104,7 +106,8 @@ class VitaeSettings:
 
             paths: dict = data.get("paths") or {}
             paths_settings = PathsSettings(
-                _curricula=Path(paths.get("curricula") or "all_files")
+                _curricula=Path(paths.get("curricula") or "all_files"),
+                alembic=Path(paths.get("alembic", "alembic.ini")),
             )
 
             return cls(postgres=postgres_settings, paths=paths_settings)
