@@ -295,10 +295,6 @@ class CurriculumParser:
         try:
             general_data = find(curriculum, "dados gerais")
 
-            backgrounds = find(general_data, "formacao academica titulacao")
-            if backgrounds is None:
-                return []
-
             academic_background = [
                 {
                     "type": bg.tag,
@@ -307,7 +303,7 @@ class CurriculumParser:
                     "start_year": int(s) if (s := attribute(bg, "ano de inicio")) and s.isdigit() else None,
                     "end_year": int(e) if (e := attribute(bg, "ano de conclusao")) and e.isdigit() else None,
                 }
-                for bg in backgrounds
+                for bg in find(general_data, "formacao academica titulacao") or []
             ]
 
             logger.debug("Academic background successfully extracted")
@@ -357,10 +353,6 @@ class CurriculumParser:
         try:
             general_data = find(curriculum, "dados gerais")
 
-            areas = find(general_data, "areas de atuacao")
-            if areas is None:
-                return []
-
             research_area = [
                 {
                     "major_knowledge_area": attribute(area, "nome grande area do conhecimento"),
@@ -368,7 +360,7 @@ class CurriculumParser:
                     "sub_knowledge_area": attribute(area, "nome da sub-area do conhecimento"),
                     "specialty": attribute(area, "nome da especialidade"),
                 }
-                for area in areas
+                for area in find(general_data, "areas de atuacao") or []
             ]
 
             logger.debug("Research area successfully extracted")
@@ -432,10 +424,6 @@ class CurriculumParser:
         """
 
         try:
-            expertise_area = find(curriculo, "areas de atuacao")
-            if expertise_area is None:
-                return []
-
             knowledge_areas = [
                 {
                     "major_area": attribute(knowledgement, "nome grande area do conhecimento"),
@@ -443,7 +431,7 @@ class CurriculumParser:
                     "sub_area": attribute(knowledgement, "nome da sub-area do conhecimento"),
                     "specialty": attribute(knowledgement, "nome da especialidade"),
                 }
-                for knowledgement in expertise_area
+                for knowledgement in find(curriculo, "areas de atuacao") or []
             ]
 
             logger.debug("Academic background successfully extracted")
