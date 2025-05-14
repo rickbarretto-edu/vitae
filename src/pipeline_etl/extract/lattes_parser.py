@@ -140,31 +140,19 @@ class CurriculumParser:
                 update_date = datetime.strptime(update_date, "%d%m%Y")
 
             if general_data := curriculum.find("DADOS-GERAIS"):
-                full_name = (
-                    general_data.attrib.get("NOME-COMPLETO", "").strip() or None
-                )
-                birth_city = (
-                    general_data.attrib.get("CIDADE-NASCIMENTO", "").strip()
-                    or None
-                )
-                birth_state = (
-                    general_data.attrib.get("UF-NASCIMENTO", "").strip() or None
-                )
-                birth_country = (
-                    general_data.attrib.get("PAIS-DE-NASCIMENTO", "").strip()
-                    or None
-                )
-                citation_names = (
-                    general_data.attrib.get(
-                        "NOME-EM-CITACOES-BIBLIOGRAFICAS", ""
-                    ).strip()
-                    or None
-                )
-                orcid = general_data.attrib.get("ORCID-ID", "").strip() or None
+                full_name = attribute(general_data, "nome completo")
+                birth_city = attribute(general_data, "cidade nascimento")
+                birth_state = attribute(general_data, "UF nascimento")
+                birth_country = attribute(general_data, "pais de nascimento")
+                citation_names = attribute(general_data, "nome em citacoes bibliograficas")
+                orcid = attribute(general_data, "ORCID ID")
             else:
-                full_name = birth_city = birth_state = birth_country = (
-                    citation_names
-                ) = orcid = None
+                full_name = None
+                birth_city = None
+                birth_state = None
+                birth_country = None
+                citation_names = None
+                orcid = None
 
             resume = general_data.find("RESUMO-CV")
             resume_text = (
