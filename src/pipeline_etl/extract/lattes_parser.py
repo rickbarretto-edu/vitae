@@ -130,6 +130,11 @@ class CurriculumParser:
             empty dictionary is returned.
         """
 
+        def attribute(element: ET.Element, tag: str) -> str | None:
+            if attribute := element.attrib.get(tag.upper().replace(" ", "-")):
+                return attribute.strip()
+
+
         try:
             if update_date := curriculum.attrib.get("DATA-ATUALIZACAO"):
                 update_date = datetime.strptime(update_date, "%d%m%Y")
