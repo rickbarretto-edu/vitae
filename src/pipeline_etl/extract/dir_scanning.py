@@ -70,21 +70,6 @@ def process_subdir(subdirectory):
         This function does not return any value. It logs the processing status
         and manages data buffers internally.
 
-    Notes
-    -----
-    - If the specified subdirectory does not exist, a warning is logged, and the
-        function exits without processing.
-    - Buffers are flushed to the database after every 50 files processed.
-    - After processing all files in the subdirectory, the buffers are cleared.
-
-    Logging
-    -------
-    - Logs a warning if the subdirectory does not exist.
-    - Logs information about the number of curricula files being processed.
-    - Logs debug information for each curriculum file being opened.
-    - Logs when buffers are flushed to the database.
-    - Logs a success message upon completing the processing of the subdirectory.
-
     Examples
     --------
     >>> process_subdir("/path/to/subdirectory")
