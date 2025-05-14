@@ -154,12 +154,10 @@ class CurriculumParser:
                 citation_names = None
                 orcid = None
 
-            resume = general_data.find("RESUMO-CV")
-            resume_text = (
-                resume.attrib.get("TEXTO-RESUMO-CV-RH", "").strip() or None
-                if resume is not None
-                else None
-            )
+            if resume := general_data.find("RESUMO-CV"):
+                resume_text = attribute(resume, "texto resumo CV RH")
+            else:
+                resume_text = None
 
             if address := general_data.find("ENDERECO"):
                 if professional_address := address.find(
