@@ -1,5 +1,6 @@
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 import xml.etree.ElementTree as ET
 
 from src.pipeline_etl.load import load
@@ -316,7 +317,7 @@ class CurriculumParser:
             logger.error("Error extracting academic background: %s", str(e))
             return []
 
-    def research_area(self, curriculum):
+    def research_area(self, curriculum: ET.Element[str]) -> list[Any]:
         """Extract research areas from the Lattes curriculum XML.
 
         This function navigates through the XML structure of a Lattes curriculum
