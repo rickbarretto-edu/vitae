@@ -308,7 +308,7 @@ class CurriculumParser:
 
         general_data = find(curriculum, "dados gerais")
 
-        academic_background = [
+        return [
             {
                 "type": bg.tag,
                 "institution": attribute(bg, "nome instituicao"),
@@ -318,8 +318,6 @@ class CurriculumParser:
             }
             for bg in find(general_data, "formacao academica titulacao") or []
         ]
-
-        return academic_background
 
 
     @log("Research Area")
@@ -362,7 +360,7 @@ class CurriculumParser:
 
         general_data = find(curriculum, "dados gerais")
 
-        research_area = [
+        return [
             {
                 "major_knowledge_area": attribute(area, "nome grande area do conhecimento"),
                 "knowledge_area": attribute(area, "nome da area do conhecimento"),
@@ -371,8 +369,6 @@ class CurriculumParser:
             }
             for area in find(general_data, "areas de atuacao") or []
         ]
-
-        return research_area
 
 
     # TODO Ajustar Areas de Conhecimento
@@ -429,7 +425,7 @@ class CurriculumParser:
           'specialty': 'Teoria dos Grupos'}]
         """
 
-        knowledge_areas = [
+        return [
             {
                 "major_area": attribute(knowledgement, "nome grande area do conhecimento"),
                 "area": attribute(knowledgement, "nome da area do conhecimento"),
@@ -438,8 +434,6 @@ class CurriculumParser:
             }
             for knowledgement in find(curriculo, "areas de atuacao") or []
         ]
-
-        return knowledge_areas
 
 
 parser = CurriculumParser()
