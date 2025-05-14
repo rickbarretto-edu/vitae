@@ -148,10 +148,10 @@ class CurriculumParser:
         """
 
         try:
-            if update_date := curriculum.attrib.get("DATA-ATUALIZACAO"):
+            if update_date := attribute(curriculum, "data atualizacao"):
                 update_date = datetime.strptime(update_date, "%d%m%Y")
 
-            general_data = curriculum.find("DADOS-GERAIS")
+            general_data = find(curriculum, "dados gerais")
             full_name = attribute(general_data, "nome completo")
             birth_city = attribute(general_data, "cidade nascimento")
             birth_state = attribute(general_data, "UF nascimento")
@@ -161,11 +161,11 @@ class CurriculumParser:
             )
             orcid = attribute(general_data, "ORCID ID")
 
-            resume = general_data.find("RESUMO-CV")
+            resume = find(general_data, "resumo CV")
             resume_text = attribute(resume, "texto resumo CV RH")
 
-            address = general_data.find("ENDERECO")
-            professional_address = address.find("ENDERECO-PROFISSIONAL")
+            address = find(general_data, "endereco")
+            professional_address = find(address, "endereco profissional")
             institution_name = attribute(
                 professional_address, "nome instituicao empresa"
             )
