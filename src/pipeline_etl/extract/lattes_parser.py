@@ -64,9 +64,8 @@ class CurriculumParser:
         logger.info("Extracting researcher (%s) information", researcher_id)
 
         try:
-            with curriculum_file.open("r", encoding="utf-8") as curriculum_xml:
-                tree = ET.parse(curriculum_xml.read())
-                curriculum = tree.getroot()
+            with curriculum_file.open("r", encoding="utf-8") as file:
+                curriculum = ET.parse(file.read()).getroot()
 
                 # ============= GENERAL DATA ================#
                 general_data = self.general_data(curriculum)
