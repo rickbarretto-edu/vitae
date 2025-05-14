@@ -73,22 +73,17 @@ class CurriculumParser:
                 general_data_buffer.append(general_data)
 
                 # ============= PROFESSIONAL EXPERIENCE ================#
-                professional_experience = self.professional_experience(
-                    document
-                )
-                for experience in professional_experience:
+                for experience in self.professional_experience(document):
                     experience["researcher_id"] = researcher_id
                     profession_buffer.append(experience)
 
                 # ============= ACADEMIC BACKGROUND ================#
-                academic_background = self.academic_background(document)
-                for background in academic_background:
+                for background in self.academic_background(document):
                     background["researcher_id"] = researcher_id
                     education_buffer.append(background)
 
                 # ============= RESEARCH AREA ================#
-                research_area = self.research_area(document)
-                for area in research_area:
+                for area in self.research_area(document):
                     area["researcher_id"] = researcher_id
                     research_area_buffer.append(area)
 
