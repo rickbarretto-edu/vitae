@@ -51,31 +51,11 @@ def scan_directory(curricula_folder: Path):
     logger.info("Complete scan of all subdirectories.")
 
 
-def process_subdir(subdirectory):
-    """Process subdirectory.
+def process_subdir(subdirectory: Path):
+    """Process all curriculum files in a subdirectory.
 
-    This function scans the specified subdirectory for curriculum files, processes
-    each file using a parser, and manages data buffers for general data, professions,
-    research areas, and education. It also handles periodic flushing of buffers to
-    the database after processing a certain number of files.
-
-    Parameters
-    ----------
-    subdirectory : str
-        The path to the subdirectory containing curriculum files to be processed.
-
-    Returns
-    -------
-    None
-        This function does not return any value. It logs the processing status
-        and manages data buffers internally.
-
-    Examples
-    --------
-    >>> process_subdir("/path/to/subdirectory")
-    Processing subdirectory: /path/to/subdirectory with 10 curricula
-    Flushing buffers to database.
-    Subdirectory /path/to/subdirectory processed successfully.
+    Scans the given subdirectory, processes each curriculum file using the parser,
+    manages data buffers, and periodically flushes them to the database.
     """
 
     if not os.path.exists(subdirectory):
