@@ -154,30 +154,11 @@ class CurriculumParser:
             resume = general_data.find("RESUMO-CV")
             resume_text = attribute(resume, "texto resumo CV RH")            
 
-            if address := general_data.find("ENDERECO"):
-                if professional_address := address.find(
-                    "ENDERECO-PROFISSIONAL"
-                ):
-                    institution_name = (
-                        professional_address.attrib.get(
-                            "NOME-INSTITUICAO-EMPRESA", ""
-                        ).strip()
-                        or None
-                    )
-                    institution_state = (
-                        professional_address.attrib.get("UF", "").strip()
-                        or None
-                    )
-                    institution_city = (
-                        professional_address.attrib.get("CIDADE", "").strip()
-                        or None
-                    )
-                else:
-                    institution_name = institution_state = institution_city = (
-                        None
-                    )
-            else:
-                institution_name = institution_state = institution_city = None
+            address = general_data.find("ENDERECO")
+            professional_address = address.find("ENDERECO-PROFISSIONAL")
+            institution_name = attribute(professional_address, "nome instituicao empresa")
+            institution_state = attribute(professional_address, "UF")
+            institution_city = attribute(professional_address, "cidade")
 
             researcher_general_data = {
                 "name": full_name,
