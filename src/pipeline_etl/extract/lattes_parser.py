@@ -1,3 +1,4 @@
+from curses.ascii import isdigit
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -26,6 +27,14 @@ def attribute(element: ET.Element | None, tag: str) -> str | None:
 
     if element_attribute := element.attrib.get(normalized(tag)):
         return element_attribute.strip()
+    
+
+def as_int(text: str | None) -> int | None:
+    if text is None:
+        return None
+
+    if text.isdigit():
+        return int(text)
 
 
 class CurriculumParser:
@@ -248,12 +257,8 @@ class CurriculumParser:
                         {
                             "institution": institution,
                             "employment_relationship": link_type,
-                            "start_year": int(start_year)
-                            if start_year and start_year.isdigit()
-                            else None,
-                            "end_year": int(end_year)
-                            if end_year and end_year.isdigit()
-                            else None,
+                            "start_year": as_int(start_year),
+                            "end_year": as_int(end_year)
                         }
                     )
 
@@ -300,8 +305,8 @@ class CurriculumParser:
                     "type": bg.tag,
                     "institution": attribute(bg, "nome instituicao"),
                     "course": attribute(bg, "nome curso"),
-                    "start_year": int(s) if (s := attribute(bg, "ano de inicio")) and s.isdigit() else None,
-                    "end_year": int(e) if (e := attribute(bg, "ano de conclusao")) and e.isdigit() else None,
+                    "start_year": as_int(attribute(bg, "ano de inicio")),
+                    "end_year": as_int(attribute(bg, "ano de conclusao")),
                 }
                 for bg in find(general_data, "formacao academica titulacao") or []
             ]
