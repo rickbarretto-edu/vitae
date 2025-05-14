@@ -1,7 +1,6 @@
 from datetime import datetime
 from pathlib import Path
 import xml.etree.ElementTree as ET
-import zipfile
 
 from src.pipeline_etl.load import load
 from src.utils.loggers import ConfigLogger
