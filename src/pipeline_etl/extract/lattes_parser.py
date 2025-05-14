@@ -298,27 +298,16 @@ class CurriculumParser:
             if backgrounds is None:
                 return []
 
-            academic_background = []
-            for background in backgrounds:
-
-                institution = attribute(background, "nome instituicao")
-                course = attribute(background, "nome curso")
-                start_year = attribute(background, "ano de inicio")
-                end_year = attribute(background, "ano de conclusao")
-
-                academic_background.append(
-                    {
-                        "type": background.tag,
-                        "institution": institution,
-                        "course": course,
-                        "start_year": int(start_year)
-                        if start_year and start_year.isdigit()
-                        else None,
-                        "end_year": int(end_year)
-                        if end_year and end_year.isdigit()
-                        else None,
-                    }
-                )
+            academic_background = [
+                {
+                    "type": bg.tag,
+                    "institution": attribute(bg, "nome instituicao"),
+                    "course": attribute(bg, "nome curso"),
+                    "start_year": int(s) if (s := attribute(bg, "ano de inicio")) and s.isdigit() else None,
+                    "end_year": int(e) if (e := attribute(bg, "ano de conclusao")) and e.isdigit() else None,
+                }
+                for bg in backgrounds
+            ]
 
             logger.debug("Academic background successfully extracted")
             return academic_background
