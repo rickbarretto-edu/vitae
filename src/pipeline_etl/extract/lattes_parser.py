@@ -292,33 +292,25 @@ class CurriculumParser:
         """
 
         try:
-            general_data = curriculum.find("DADOS-GERAIS")
+            general_data = find(curriculum, "dados gerais")
 
-            backgrounds = general_data.find("FORMACAO-ACADEMICA-TITULACAO")
+            backgrounds = find(general_data, "formacao academica titulacao")
             if backgrounds is None:
                 return []
 
             academic_background = []
             for background in backgrounds:
-                background_type = background.tag
-                if not background_type:
-                    print(f"Background type: {background_type}")
-                institution = (
-                    background.attrib.get("NOME-INSTITUICAO", "").strip()
-                    or None
-                )
-                course = background.attrib.get("NOME-CURSO", "").strip() or None
-                start_year = (
-                    background.attrib.get("ANO-DE-INICIO", "").strip() or None
-                )
-                end_year = (
-                    background.attrib.get("ANO-DE-CONCLUSAO", "").strip()
-                    or None
-                )
+                if not background.tag:
+                    print(f"Background type: {background.tag}")
+
+                institution = attribute(background, "nome instituicao")
+                course = attribute(background, "nome curso")
+                start_year = attribute(background, "ano de inicio")
+                end_year = attribute(background, "ano de conclusao")
 
                 academic_background.append(
                     {
-                        "type": background_type,
+                        "type": background.tag,
                         "institution": institution,
                         "course": course,
                         "start_year": int(start_year)
