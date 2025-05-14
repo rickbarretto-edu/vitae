@@ -8,11 +8,20 @@ from src.utils.loggers import ConfigLogger
 logger = ConfigLogger(__name__).logger
 
 
+def normalized(tag: str) -> str:
+    return tag.upper().replace(" ", "-")
+
+def find(element: ET.Element | None, tag: str) -> ET.Element[str] | None:
+    if element is None:
+        return None
+    
+    return element.find(normalized(tag))
+
 def attribute(element: ET.Element | None, tag: str) -> str | None:
     if element is None:
         return None
 
-    if element_attribute := element.attrib.get(tag.upper().replace(" ", "-")):
+    if element_attribute := element.attrib.get(normalized(tag)):
         return element_attribute.strip()
 
 
