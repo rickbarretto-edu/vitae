@@ -436,21 +436,15 @@ class CurriculumParser:
             if expertise_area is None:
                 return []
 
-            knowledge_areas = []
-            for knowledgement in expertise_area:
-                major_area = attribute(knowledgement, "nome grande area do conhecimento")
-                area = attribute(knowledgement, "nome da area do conhecimento")
-                sub_area = attribute(knowledgement, "nome da sub-area do conhecimento")
-                expertise = attribute(knowledgement, "nome da especialidade")
-
-                knowledge_areas.append(
-                    {
-                        "major_area": major_area,
-                        "area": area,
-                        "sub_area": sub_area,
-                        "specialty": expertise,
-                    }
-                )
+            knowledge_areas = [
+                {
+                    "major_area": attribute(knowledgement, "nome grande area do conhecimento"),
+                    "area": attribute(knowledgement, "nome da area do conhecimento"),
+                    "sub_area": attribute(knowledgement, "nome da sub-area do conhecimento"),
+                    "specialty": attribute(knowledgement, "nome da especialidade"),
+                }
+                for knowledgement in expertise_area
+            ]
 
             logger.debug("Academic background successfully extracted")
             return knowledge_areas
