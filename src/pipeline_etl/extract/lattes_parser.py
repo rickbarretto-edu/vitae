@@ -432,24 +432,16 @@ class CurriculumParser:
         """
 
         try:
-            expertise_area = curriculo.find("AREAS-DE-ATUACAO")
+            expertise_area = find(curriculo, "areas de atuacao")
             if expertise_area is None:
                 return []
 
             knowledge_areas = []
             for knowledgement in expertise_area:
-                major_area = knowledgement.attrib.get(
-                    "NOME-GRANDE-AREA-DO-CONHECIMENTO", None
-                )
-                area = knowledgement.attrib.get(
-                    "NOME-DA-AREA-DO-CONHECIMENTO", None
-                )
-                sub_area = knowledgement.attrib.get(
-                    "NOME-DA-SUB-AREA-DO-CONHECIMENTO", None
-                )
-                expertise = knowledgement.attrib.get(
-                    "NOME-DA-ESPECIALIDADE", None
-                )
+                major_area = attribute(knowledgement, "nome grande area do conhecimento")
+                area = attribute(knowledgement, "nome da area do conhecimento")
+                sub_area = attribute(knowledgement, "nome da sub-area do conhecimento")
+                expertise = attribute(knowledgement, "nome da especialidade")
 
                 knowledge_areas.append(
                     {
