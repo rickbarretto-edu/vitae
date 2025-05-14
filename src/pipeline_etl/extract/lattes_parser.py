@@ -221,34 +221,21 @@ class CurriculumParser:
         """
 
         try:
-            general_data = curriculum.find("DADOS-GERAIS")
+            general_data = find(curriculum, "dados gerais")
 
-            if not (experiences := general_data.find("ATUACOES-PROFISSIONAIS")):
+            if (experiences := find(general_data, "atuacoes profissionais")) is None:
                 return []
 
             professional_experience = []
             for experience in experiences.findall("ATUACAO-PROFISSIONAL"):
-                institution = (
-                    experience.attrib.get("NOME-INSTITUICAO", "").strip()
-                    or None
-                )
+                institution = attribute(experience, "nome instituicao")
                 links = experience.findall("VINCULOS")
 
                 for link in links:
-                    link_type = (
-                        link.attrib.get("TIPO-DE-VINCULO", "").strip() or None
-                    )
-                    if link_type == "LIVRE":
-                        link_type = (
-                            link.attrib.get(
-                                "OUTRO-VINCULO-INFORMADO", ""
-                            ).strip()
-                            or None
-                        )
-                    start_year = (
-                        link.attrib.get("ANO-INICIO", "").strip() or None
-                    )
-                    end_year = link.attrib.get("ANO-FIM", "").strip() or None
+                    if (link_type := attribute(link, "tipo de vinculo")) == "LIVRE":
+                        link_type = attribute(link, "outro vinculo informado")
+                    start_year = attribute(link, "ano inicio")
+                    end_year = attribute(link, "ano fim")
 
                     professional_experience.append(
                         {
