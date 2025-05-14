@@ -1,4 +1,3 @@
-from curses.ascii import isdigit
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -6,6 +5,7 @@ import xml.etree.ElementTree as ET
 
 from src.pipeline_etl.load import load
 from src.utils.loggers import ConfigLogger
+from functools import wraps
 
 logger = ConfigLogger(__name__).logger
 
@@ -35,6 +35,22 @@ def as_int(text: str | None) -> int | None:
 
     if text.isdigit():
         return int(text)
+    
+
+def log(topic: str):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                result = func(*args, **kwargs)
+                logger.debug("%s's data successfully extracted.", topic)
+                return result
+            except Exception as e:
+                logger.error("Error when extracting %s's data...: %s", topic, str(e))
+                # Optionally re-raise or return a default value
+                return [] if func.__annotations__.get('return') == list else {}
+        return wrapper
+    return decorator
 
 
 class CurriculumParser:
@@ -125,6 +141,8 @@ class CurriculumParser:
         except Exception as e:
             logger.error("Error processing file %s: %s", document, str(e))
 
+
+    @log("General Data")
     def general_data(self, curriculum: ET.Element[str]):
         """Extract general data from the Lattes curriculum XML.
 
@@ -159,51 +177,47 @@ class CurriculumParser:
             empty dictionary is returned.
         """
 
-        try:
-            if update_date := attribute(curriculum, "data atualizacao"):
-                update_date = datetime.strptime(update_date, "%d%m%Y")
+        if update_date := attribute(curriculum, "data atualizacao"):
+            update_date = datetime.strptime(update_date, "%d%m%Y")
 
-            general_data = find(curriculum, "dados gerais")
-            full_name = attribute(general_data, "nome completo")
-            birth_city = attribute(general_data, "cidade nascimento")
-            birth_state = attribute(general_data, "UF nascimento")
-            birth_country = attribute(general_data, "pais de nascimento")
-            citation_names = attribute(
-                general_data, "nome em citacoes bibliograficas"
-            )
-            orcid = attribute(general_data, "ORCID ID")
+        general_data = find(curriculum, "dados gerais")
+        full_name = attribute(general_data, "nome completo")
+        birth_city = attribute(general_data, "cidade nascimento")
+        birth_state = attribute(general_data, "UF nascimento")
+        birth_country = attribute(general_data, "pais de nascimento")
+        citation_names = attribute(
+            general_data, "nome em citacoes bibliograficas"
+        )
+        orcid = attribute(general_data, "ORCID ID")
 
-            resume = find(general_data, "resumo CV")
-            resume_text = attribute(resume, "texto resumo CV RH")
+        resume = find(general_data, "resumo CV")
+        resume_text = attribute(resume, "texto resumo CV RH")
 
-            address = find(general_data, "endereco")
-            professional_address = find(address, "endereco profissional")
-            institution_name = attribute(
-                professional_address, "nome instituicao empresa"
-            )
-            institution_state = attribute(professional_address, "UF")
-            institution_city = attribute(professional_address, "cidade")
+        address = find(general_data, "endereco")
+        professional_address = find(address, "endereco profissional")
+        institution_name = attribute(
+            professional_address, "nome instituicao empresa"
+        )
+        institution_state = attribute(professional_address, "UF")
+        institution_city = attribute(professional_address, "cidade")
 
-            researcher_general_data = {
-                "name": full_name,
-                "city": birth_city,
-                "state": birth_state,
-                "country": birth_country,
-                "quotes_names": citation_names,
-                "orcid": orcid,
-                "abstract": resume_text,
-                "professional_institution": institution_name,
-                "institution_state": institution_state,
-                "institution_city": institution_city,
-            }
+        researcher_general_data = {
+            "name": full_name,
+            "city": birth_city,
+            "state": birth_state,
+            "country": birth_country,
+            "quotes_names": citation_names,
+            "orcid": orcid,
+            "abstract": resume_text,
+            "professional_institution": institution_name,
+            "institution_state": institution_state,
+            "institution_city": institution_city,
+        }
 
-            logger.debug("Researcher general data successfully extracted")
-            return researcher_general_data
+        return researcher_general_data
 
-        except Exception as e:
-            logger.error("Error extracting general data: %s", str(e))
-            return {}
 
+    @log("Professional Experience")
     def professional_experience(self, curriculum: ET.Element[str]):
         """Extract professional experience from the Lattes curriculum.
 
@@ -232,43 +246,38 @@ class CurriculumParser:
         returns an empty list.
         """
 
-        try:
-            general_data = find(curriculum, "dados gerais")
+        general_data = find(curriculum, "dados gerais")
 
-            if (
-                experiences := find(general_data, "atuacoes profissionais")
-            ) is None:
-                return []
-
-            professional_experience = []
-            for experience in experiences.findall("ATUACAO-PROFISSIONAL"):
-                institution = attribute(experience, "nome instituicao")
-                links = experience.findall("VINCULOS")
-
-                for link in links:
-                    if (
-                        link_type := attribute(link, "tipo de vinculo")
-                    ) == "LIVRE":
-                        link_type = attribute(link, "outro vinculo informado")
-                    start_year = attribute(link, "ano inicio")
-                    end_year = attribute(link, "ano fim")
-
-                    professional_experience.append(
-                        {
-                            "institution": institution,
-                            "employment_relationship": link_type,
-                            "start_year": as_int(start_year),
-                            "end_year": as_int(end_year)
-                        }
-                    )
-
-            logger.debug("Professional experience successfully extracted")
-            return professional_experience
-
-        except Exception as e:
-            logger.error("Error extracting professional experience: %s", str(e))
+        if (
+            experiences := find(general_data, "atuacoes profissionais")
+        ) is None:
             return []
 
+        professional_experience = []
+        for experience in experiences.findall("ATUACAO-PROFISSIONAL"):
+            institution = attribute(experience, "nome instituicao")
+            links = experience.findall("VINCULOS")
+
+            for link in links:
+                if (
+                    link_type := attribute(link, "tipo de vinculo")
+                ) == "LIVRE":
+                    link_type = attribute(link, "outro vinculo informado")
+                start_year = attribute(link, "ano inicio")
+                end_year = attribute(link, "ano fim")
+
+                professional_experience.append(
+                    {
+                        "institution": institution,
+                        "employment_relationship": link_type,
+                        "start_year": as_int(start_year),
+                        "end_year": as_int(end_year)
+                    }
+                )
+
+        return professional_experience
+
+    @log("Academic Background")
     def academic_background(self, curriculum: ET.Element[str]) -> list:
         """Extracts academic background information from a Lattes curriculum XML.
 
@@ -297,27 +306,23 @@ class CurriculumParser:
         Any errors during extraction are logged, and an empty list is returned in case of exceptions.
         """
 
-        try:
-            general_data = find(curriculum, "dados gerais")
+        general_data = find(curriculum, "dados gerais")
 
-            academic_background = [
-                {
-                    "type": bg.tag,
-                    "institution": attribute(bg, "nome instituicao"),
-                    "course": attribute(bg, "nome curso"),
-                    "start_year": as_int(attribute(bg, "ano de inicio")),
-                    "end_year": as_int(attribute(bg, "ano de conclusao")),
-                }
-                for bg in find(general_data, "formacao academica titulacao") or []
-            ]
+        academic_background = [
+            {
+                "type": bg.tag,
+                "institution": attribute(bg, "nome instituicao"),
+                "course": attribute(bg, "nome curso"),
+                "start_year": as_int(attribute(bg, "ano de inicio")),
+                "end_year": as_int(attribute(bg, "ano de conclusao")),
+            }
+            for bg in find(general_data, "formacao academica titulacao") or []
+        ]
 
-            logger.debug("Academic background successfully extracted")
-            return academic_background
+        return academic_background
 
-        except Exception as e:
-            logger.error("Error extracting academic background: %s", str(e))
-            return []
 
+    @log("Research Area")
     def research_area(self, curriculum: ET.Element[str]) -> list[Any]:
         """Extract research areas from the Lattes curriculum XML.
 
@@ -355,27 +360,23 @@ class CurriculumParser:
           'sub_knowledge_area': 'Structural Engineering', 'specialty': 'Concrete Structures'}, ...]
         """
 
-        try:
-            general_data = find(curriculum, "dados gerais")
+        general_data = find(curriculum, "dados gerais")
 
-            research_area = [
-                {
-                    "major_knowledge_area": attribute(area, "nome grande area do conhecimento"),
-                    "knowledge_area": attribute(area, "nome da area do conhecimento"),
-                    "sub_knowledge_area": attribute(area, "nome da sub-area do conhecimento"),
-                    "specialty": attribute(area, "nome da especialidade"),
-                }
-                for area in find(general_data, "areas de atuacao") or []
-            ]
+        research_area = [
+            {
+                "major_knowledge_area": attribute(area, "nome grande area do conhecimento"),
+                "knowledge_area": attribute(area, "nome da area do conhecimento"),
+                "sub_knowledge_area": attribute(area, "nome da sub-area do conhecimento"),
+                "specialty": attribute(area, "nome da especialidade"),
+            }
+            for area in find(general_data, "areas de atuacao") or []
+        ]
 
-            logger.debug("Research area successfully extracted")
-            return research_area
+        return research_area
 
-        except Exception as e:
-            logger.error("Error extracting research area: %s", str(e))
-            return []
 
     # TODO Ajustar Areas de Conhecimento
+    @log("Academic Background")
     def knowledgment_area(self, curriculo: ET.Element[str]) -> list[Any]:
         """Extracts the areas of expertise from a Lattes curriculum XML.
 
@@ -428,23 +429,17 @@ class CurriculumParser:
           'specialty': 'Teoria dos Grupos'}]
         """
 
-        try:
-            knowledge_areas = [
-                {
-                    "major_area": attribute(knowledgement, "nome grande area do conhecimento"),
-                    "area": attribute(knowledgement, "nome da area do conhecimento"),
-                    "sub_area": attribute(knowledgement, "nome da sub-area do conhecimento"),
-                    "specialty": attribute(knowledgement, "nome da especialidade"),
-                }
-                for knowledgement in find(curriculo, "areas de atuacao") or []
-            ]
+        knowledge_areas = [
+            {
+                "major_area": attribute(knowledgement, "nome grande area do conhecimento"),
+                "area": attribute(knowledgement, "nome da area do conhecimento"),
+                "sub_area": attribute(knowledgement, "nome da sub-area do conhecimento"),
+                "specialty": attribute(knowledgement, "nome da especialidade"),
+            }
+            for knowledgement in find(curriculo, "areas de atuacao") or []
+        ]
 
-            logger.debug("Academic background successfully extracted")
-            return knowledge_areas
-
-        except Exception as e:
-            logger.error("Error extracting area of expertise: %s", str(e))
-            return []
+        return knowledge_areas
 
 
 parser = CurriculumParser()
