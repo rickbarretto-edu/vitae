@@ -2,7 +2,7 @@ from concurrent.futures import ThreadPoolExecutor
 import os
 from pathlib import Path
 
-from src.pipeline_etl.extract.lattes_parser import parser
+from src.parsing.extract.lattes_parser import parser
 from src.utils.loggers import ConfigLogger
 from src.panic import panic
 
