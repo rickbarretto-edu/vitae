@@ -130,7 +130,10 @@ class CurriculumParser:
             empty dictionary is returned.
         """
 
-        def attribute(element: ET.Element, tag: str) -> str | None:
+        def attribute(element: ET.Element | None, tag: str) -> str | None:
+            if element is None:
+                return None
+
             if attribute := element.attrib.get(tag.upper().replace(" ", "-")):
                 return attribute.strip()
 
@@ -139,25 +142,17 @@ class CurriculumParser:
             if update_date := curriculum.attrib.get("DATA-ATUALIZACAO"):
                 update_date = datetime.strptime(update_date, "%d%m%Y")
 
-            if general_data := curriculum.find("DADOS-GERAIS"):
-                full_name = attribute(general_data, "nome completo")
-                birth_city = attribute(general_data, "cidade nascimento")
-                birth_state = attribute(general_data, "UF nascimento")
-                birth_country = attribute(general_data, "pais de nascimento")
-                citation_names = attribute(general_data, "nome em citacoes bibliograficas")
-                orcid = attribute(general_data, "ORCID ID")
-            else:
-                full_name = None
-                birth_city = None
-                birth_state = None
-                birth_country = None
-                citation_names = None
-                orcid = None
+            general_data = curriculum.find("DADOS-GERAIS")
+            full_name = attribute(general_data, "nome completo")
+            birth_city = attribute(general_data, "cidade nascimento")
+            birth_state = attribute(general_data, "UF nascimento")
+            birth_country = attribute(general_data, "pais de nascimento")
+            citation_names = attribute(general_data, "nome em citacoes bibliograficas")
+            orcid = attribute(general_data, "ORCID ID")
 
-            if resume := general_data.find("RESUMO-CV"):
-                resume_text = attribute(resume, "texto resumo CV RH")
-            else:
-                resume_text = None
+
+            resume = general_data.find("RESUMO-CV")
+            resume_text = attribute(resume, "texto resumo CV RH")            
 
             if address := general_data.find("ENDERECO"):
                 if professional_address := address.find(
