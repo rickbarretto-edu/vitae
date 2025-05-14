@@ -58,17 +58,10 @@ def process_subdir(subdirectory: Path):
     manages data buffers, and periodically flushes them to the database.
     """
 
-    if not os.path.exists(subdirectory):
-        logger.warning("Subdirectory does not exist: %s", subdirectory)
-        return
+    if not subdirectory.exists():
+        panic("Subdirectory does not exist: %s", subdirectory, logger=logger)
 
-    curricula = os.listdir(subdirectory)
-
-    logger.info(
-        "Processing subdirectory: %s with %d curricula",
-        subdirectory,
-        len(curricula),
-    )
+    logger.info("Processing subdirectory: %s", subdirectory)
 
     general_data_buffer = []
     profession_buffer = []
