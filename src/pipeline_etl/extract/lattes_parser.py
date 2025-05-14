@@ -1,4 +1,5 @@
 from datetime import datetime
+from pathlib import Path
 import xml.etree.ElementTree as ET
 import zipfile
 
@@ -13,7 +14,7 @@ class CurriculumParser:
 
     def open_curriculum(
         self,
-        curriculum_zip,
+        curriculum_file: Path,
         general_data_buffer,
         profession_buffer,
         research_area_buffer,
@@ -59,54 +60,48 @@ class CurriculumParser:
           `professional_experience`, `academic_background`, and `research_area`.
         - If `flush` is True, the data is inserted into the database using the `load` module.
         """
-        logger.info("Processing file %s", curriculum_zip)
+        researcher_id = curriculum_file.name.removesuffix(".xml")
+        logger.info("Extracting researcher (%s) information", researcher_id)
 
         try:
-            with zipfile.ZipFile(curriculum_zip, "r") as zip_file:
-                name = zip_file.namelist()[0]
-                researcher_id = name.split(".")[0]
-                logger.info(
-                    "Extracting curriculum for researcher ID: %s", researcher_id
+            with curriculum_file.open("r", encoding="utf-8") as curriculum_xml:
+                tree = ET.parse(curriculum_xml.read())
+                curriculum = tree.getroot()
+
+                # ============= GENERAL DATA ================#
+                general_data = self.general_data(curriculum)
+                general_data["id"] = researcher_id
+                general_data_buffer.append(general_data)
+
+                # ============= PROFESSIONAL EXPERIENCE ================#
+                professional_experience = self.professional_experience(
+                    curriculum
                 )
+                for experience in professional_experience:
+                    experience["researcher_id"] = researcher_id
+                    profession_buffer.append(experience)
 
-                with zip_file.open(name) as curriculum_xml:
-                    tree = ET.parse(curriculum_xml)
-                    curriculum = tree.getroot()
+                # ============= ACADEMIC BACKGROUND ================#
+                academic_background = self.academic_background(curriculum)
+                for background in academic_background:
+                    background["researcher_id"] = researcher_id
+                    education_buffer.append(background)
 
-                    # ============= GENERAL DATA ================#
-                    general_data = self.general_data(curriculum)
-                    general_data["id"] = researcher_id
-                    general_data_buffer.append(general_data)
+                # ============= RESEARCH AREA ================#
+                research_area = self.research_area(curriculum)
+                for area in research_area:
+                    area["researcher_id"] = researcher_id
+                    research_area_buffer.append(area)
 
-                    # ============= PROFESSIONAL EXPERIENCE ================#
-                    professional_experience = self.professional_experience(
-                        curriculum
-                    )
-                    for experience in professional_experience:
-                        experience["researcher_id"] = researcher_id
-                        profession_buffer.append(experience)
-
-                    # ============= ACADEMIC BACKGROUND ================#
-                    academic_background = self.academic_background(curriculum)
-                    for background in academic_background:
-                        background["researcher_id"] = researcher_id
-                        education_buffer.append(background)
-
-                    # ============= RESEARCH AREA ================#
-                    research_area = self.research_area(curriculum)
-                    for area in research_area:
-                        area["researcher_id"] = researcher_id
-                        research_area_buffer.append(area)
-
-                    if flush:
-                        logger.info("INSERTING INTO DATABASE")
-                        load.upsert_researcher(general_data_buffer)
-                        load.upsert_professional_experience(profession_buffer)
-                        load.upsert_academic_background(education_buffer)
-                        load.upsert_research_area(research_area_buffer)
+                if flush:
+                    logger.info("INSERTING INTO DATABASE")
+                    load.upsert_researcher(general_data_buffer)
+                    load.upsert_professional_experience(profession_buffer)
+                    load.upsert_academic_background(education_buffer)
+                    load.upsert_research_area(research_area_buffer)
 
         except Exception as e:
-            logger.error("Error processing file %s: %s", curriculum_zip, str(e))
+            logger.error("Error processing file %s: %s", curriculum, str(e))
 
     def general_data(self, curriculum):
         """Extract general data from the Lattes curriculum XML.
