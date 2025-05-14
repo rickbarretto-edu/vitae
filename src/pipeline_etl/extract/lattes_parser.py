@@ -14,7 +14,7 @@ class CurriculumParser:
 
     def open_curriculum(
         self,
-        curriculum_file: Path,
+        curriculum: Path,
         general_data_buffer,
         profession_buffer,
         research_area_buffer,
@@ -60,34 +60,34 @@ class CurriculumParser:
           `professional_experience`, `academic_background`, and `research_area`.
         - If `flush` is True, the data is inserted into the database using the `load` module.
         """
-        researcher_id = curriculum_file.name.removesuffix(".xml")
+        researcher_id = curriculum.name.removesuffix(".xml")
         logger.info("Extracting researcher (%s) information", researcher_id)
 
         try:
-            with curriculum_file.open("r", encoding="utf-8") as file:
-                curriculum = ET.parse(file.read()).getroot()
+            with curriculum.open("r", encoding="utf-8") as file:
+                document = ET.parse(file.read()).getroot()
 
                 # ============= GENERAL DATA ================#
-                general_data = self.general_data(curriculum)
+                general_data = self.general_data(document)
                 general_data["id"] = researcher_id
                 general_data_buffer.append(general_data)
 
                 # ============= PROFESSIONAL EXPERIENCE ================#
                 professional_experience = self.professional_experience(
-                    curriculum
+                    document
                 )
                 for experience in professional_experience:
                     experience["researcher_id"] = researcher_id
                     profession_buffer.append(experience)
 
                 # ============= ACADEMIC BACKGROUND ================#
-                academic_background = self.academic_background(curriculum)
+                academic_background = self.academic_background(document)
                 for background in academic_background:
                     background["researcher_id"] = researcher_id
                     education_buffer.append(background)
 
                 # ============= RESEARCH AREA ================#
-                research_area = self.research_area(curriculum)
+                research_area = self.research_area(document)
                 for area in research_area:
                     area["researcher_id"] = researcher_id
                     research_area_buffer.append(area)
@@ -100,7 +100,7 @@ class CurriculumParser:
                     load.upsert_research_area(research_area_buffer)
 
         except Exception as e:
-            logger.error("Error processing file %s: %s", curriculum, str(e))
+            logger.error("Error processing file %s: %s", document, str(e))
 
     def general_data(self, curriculum):
         """Extract general data from the Lattes curriculum XML.
