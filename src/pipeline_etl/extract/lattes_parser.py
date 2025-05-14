@@ -355,33 +355,18 @@ class CurriculumParser:
         """
 
         try:
-            general_data = curriculum.find("DADOS-GERAIS")
+            general_data = find(curriculum, "dados gerais")
 
-            areas = general_data.find("AREAS-DE-ATUACAO")
+            areas = find(general_data, "areas de atuacao")
             if areas is None:
                 return []
 
             research_area = []
             for area in areas:
-                major_area = (
-                    area.attrib.get(
-                        "NOME-GRANDE-AREA-DO-CONHECIMENTO", ""
-                    ).strip()
-                    or None
-                )
-                knowledge_area = (
-                    area.attrib.get("NOME-DA-AREA-DO-CONHECIMENTO", "").strip()
-                    or None
-                )
-                sub_knowledge_area = (
-                    area.attrib.get(
-                        "NOME-DA-SUB-AREA-DO-CONHECIMENTO", ""
-                    ).strip()
-                    or None
-                )
-                specialty = (
-                    area.attrib.get("NOME-DA-ESPECIALIDADE", "").strip() or None
-                )
+                major_area = attribute(area, "nome grande area do conhecimento")
+                knowledge_area = attribute(area, "nome da area do conhecimento")
+                sub_knowledge_area = attribute(area, "nome da sub-area do conhecimento")
+                specialty = attribute(area, "nome da especialidade")
 
                 research_area.append(
                     {
