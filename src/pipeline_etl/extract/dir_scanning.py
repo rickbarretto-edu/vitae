@@ -4,6 +4,7 @@ from pathlib import Path
 
 from src.pipeline_etl.extract.lattes_parser import parser
 from src.utils.loggers import ConfigLogger
+from src.panic import panic
 
 logger = ConfigLogger(__name__).logger
 
@@ -31,17 +32,19 @@ def scan_directory(curricula_folder: Path):
     """
 
     try:
-        # TODO: This should panic.
         if not curricula_folder.exists():
-            message = "Curricula directory does not exist: %s"
-            logger.error(message, curricula_folder)
-            return
+            panic(
+                "Curricula directory does not exist: %s",
+                curricula_folder,
+                logger=logger,
+            )
 
-        # TODO: This should panic.
         if not curricula_folder.is_dir():
-            message = "Curricula's path must be a directory: %s"
-            logger.error(message, curricula_folder)
-            return
+            panic(
+                "Curricula's path must be a directory: %s",
+                curricula_folder,
+                logger=logger,
+            )
 
         with ThreadPoolExecutor(max_workers=8) as executor:
             for subdirectory_path in curricula_folder.walk():
@@ -117,7 +120,7 @@ def process_subdir(subdirectory):
         curriculum_path = os.path.join(subdirectory, curriculum)
         logger.debug("Opening curriculum: %s", curriculum_path)
 
-        if count == 50:
+        if count % 10 == 0 and count > 10:
             flush = True
             logger.info("Flushing buffers to database.")
 
