@@ -70,7 +70,7 @@ def process_subdir(subdirectory: Path):
 
     flush = False
     count = 0
-    for curriculum in subdirectory.walk():
+    for curriculum, _, _ in subdirectory.walk():
         if count % 10 == 0 and count > 10:
             flush = True
             logger.info("Flushing buffers to database.")
