@@ -379,7 +379,7 @@ class CurriculumParser:
             return []
 
     # TODO Ajustar Areas de Conhecimento
-    def knowledgment_area(self, curriculo):
+    def knowledgment_area(self, curriculo: ET.Element[str]) -> list[Any]:
         """Extracts the areas of expertise from a Lattes curriculum XML.
 
         This function parses the XML structure of a Lattes curriculum to extract
