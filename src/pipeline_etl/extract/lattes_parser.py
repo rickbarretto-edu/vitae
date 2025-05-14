@@ -11,11 +11,13 @@ logger = ConfigLogger(__name__).logger
 def normalized(tag: str) -> str:
     return tag.upper().replace(" ", "-")
 
+
 def find(element: ET.Element | None, tag: str) -> ET.Element[str] | None:
     if element is None:
         return None
-    
+
     return element.find(normalized(tag))
+
 
 def attribute(element: ET.Element | None, tag: str) -> str | None:
     if element is None:
@@ -223,7 +225,9 @@ class CurriculumParser:
         try:
             general_data = find(curriculum, "dados gerais")
 
-            if (experiences := find(general_data, "atuacoes profissionais")) is None:
+            if (
+                experiences := find(general_data, "atuacoes profissionais")
+            ) is None:
                 return []
 
             professional_experience = []
@@ -232,7 +236,9 @@ class CurriculumParser:
                 links = experience.findall("VINCULOS")
 
                 for link in links:
-                    if (link_type := attribute(link, "tipo de vinculo")) == "LIVRE":
+                    if (
+                        link_type := attribute(link, "tipo de vinculo")
+                    ) == "LIVRE":
                         link_type = attribute(link, "outro vinculo informado")
                     start_year = attribute(link, "ano inicio")
                     end_year = attribute(link, "ano fim")
@@ -241,8 +247,12 @@ class CurriculumParser:
                         {
                             "institution": institution,
                             "employment_relationship": link_type,
-                            "start_year": int(start_year) if start_year and start_year.isdigit() else None,
-                            "end_year": int(end_year) if end_year and end_year.isdigit() else None,
+                            "start_year": int(start_year)
+                            if start_year and start_year.isdigit()
+                            else None,
+                            "end_year": int(end_year)
+                            if end_year and end_year.isdigit()
+                            else None,
                         }
                     )
 
