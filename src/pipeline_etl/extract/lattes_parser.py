@@ -194,7 +194,7 @@ class CurriculumParser:
             logger.error("Error extracting general data: %s", str(e))
             return {}
 
-    def professional_experience(self, curriculum):
+    def professional_experience(self, curriculum: ET.Element[str]):
         """Extract professional experience from the Lattes curriculum.
 
         This function navigates through the XML structure of a Lattes curriculum
