@@ -104,7 +104,7 @@ class CurriculumParser:
         except Exception as e:
             logger.error("Error processing file %s: %s", document, str(e))
 
-    def general_data(self, curriculum):
+    def general_data(self, curriculum: ET.Element[str]):
         """Extract general data from the Lattes curriculum XML.
 
         This function navigates through the provided XML structure to extract
