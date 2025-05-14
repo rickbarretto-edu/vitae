@@ -8,6 +8,14 @@ from src.utils.loggers import ConfigLogger
 logger = ConfigLogger(__name__).logger
 
 
+def attribute(element: ET.Element | None, tag: str) -> str | None:
+    if element is None:
+        return None
+
+    if element_attribute := element.attrib.get(tag.upper().replace(" ", "-")):
+        return element_attribute.strip()
+
+
 class CurriculumParser:
     """Parses curriculum from XML."""
 
@@ -130,14 +138,6 @@ class CurriculumParser:
             empty dictionary is returned.
         """
 
-        def attribute(element: ET.Element | None, tag: str) -> str | None:
-            if element is None:
-                return None
-
-            if attribute := element.attrib.get(tag.upper().replace(" ", "-")):
-                return attribute.strip()
-
-
         try:
             if update_date := curriculum.attrib.get("DATA-ATUALIZACAO"):
                 update_date = datetime.strptime(update_date, "%d%m%Y")
@@ -147,16 +147,19 @@ class CurriculumParser:
             birth_city = attribute(general_data, "cidade nascimento")
             birth_state = attribute(general_data, "UF nascimento")
             birth_country = attribute(general_data, "pais de nascimento")
-            citation_names = attribute(general_data, "nome em citacoes bibliograficas")
+            citation_names = attribute(
+                general_data, "nome em citacoes bibliograficas"
+            )
             orcid = attribute(general_data, "ORCID ID")
 
-
             resume = general_data.find("RESUMO-CV")
-            resume_text = attribute(resume, "texto resumo CV RH")            
+            resume_text = attribute(resume, "texto resumo CV RH")
 
             address = general_data.find("ENDERECO")
             professional_address = address.find("ENDERECO-PROFISSIONAL")
-            institution_name = attribute(professional_address, "nome instituicao empresa")
+            institution_name = attribute(
+                professional_address, "nome instituicao empresa"
+            )
             institution_state = attribute(professional_address, "UF")
             institution_city = attribute(professional_address, "cidade")
 
