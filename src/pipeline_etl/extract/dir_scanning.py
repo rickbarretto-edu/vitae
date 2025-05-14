@@ -45,8 +45,8 @@ def scan_directory(curricula_folder: Path):
         )
 
     with ThreadPoolExecutor(max_workers=8) as executor:
-        for subdirectory_path in curricula_folder.walk():
-            executor.submit(process_subdir, subdirectory_path)
+        for folder, _, _ in curricula_folder.walk():
+            executor.submit(process_subdir, folder)
 
     logger.info("Complete scan of all subdirectories.")
 
@@ -70,16 +70,13 @@ def process_subdir(subdirectory: Path):
 
     flush = False
     count = 0
-    for curriculum in curricula:
-        curriculum_path = os.path.join(subdirectory, curriculum)
-        logger.debug("Opening curriculum: %s", curriculum_path)
-
+    for curriculum in subdirectory.walk():
         if count % 10 == 0 and count > 10:
             flush = True
             logger.info("Flushing buffers to database.")
 
         parser.open_curriculum(
-            curriculum_path,
+            curriculum,
             general_data_buffer,
             profession_buffer,
             research_area_buffer,
