@@ -223,12 +223,7 @@ class CurriculumParser:
         try:
             general_data = curriculum.find("DADOS-GERAIS")
 
-            experiences = (
-                general_data.find("ATUACOES-PROFISSIONAIS")
-                if general_data is not None
-                else None
-            )
-            if experiences is None:
+            if not (experiences := general_data.find("ATUACOES-PROFISSIONAIS")):
                 return []
 
             professional_experience = []
