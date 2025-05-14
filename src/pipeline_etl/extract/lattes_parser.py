@@ -300,8 +300,6 @@ class CurriculumParser:
 
             academic_background = []
             for background in backgrounds:
-                if not background.tag:
-                    print(f"Background type: {background.tag}")
 
                 institution = attribute(background, "nome instituicao")
                 course = attribute(background, "nome curso")
