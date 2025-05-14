@@ -263,7 +263,7 @@ class CurriculumParser:
             logger.error("Error extracting professional experience: %s", str(e))
             return []
 
-    def academic_background(self, curriculum) -> list:
+    def academic_background(self, curriculum: ET.Element[str]) -> list:
         """Extracts academic background information from a Lattes curriculum XML.
 
         This function navigates through the XML tags of a Lattes curriculum to extract
