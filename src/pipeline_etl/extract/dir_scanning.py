@@ -30,29 +30,25 @@ def scan_directory(curricula_folder: Path):
     - The function logs the progress and any errors encountered during execution.
     - Subdirectories are processed in parallel to improve performance.
     """
+    if not curricula_folder.exists():
+        panic(
+            "Curricula directory does not exist: %s",
+            curricula_folder,
+            logger=logger,
+        )
 
-    try:
-        if not curricula_folder.exists():
-            panic(
-                "Curricula directory does not exist: %s",
-                curricula_folder,
-                logger=logger,
-            )
+    if not curricula_folder.is_dir():
+        panic(
+            "Curricula's path must be a directory: %s",
+            curricula_folder,
+            logger=logger,
+        )
 
-        if not curricula_folder.is_dir():
-            panic(
-                "Curricula's path must be a directory: %s",
-                curricula_folder,
-                logger=logger,
-            )
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        for subdirectory_path in curricula_folder.walk():
+            executor.submit(process_subdir, subdirectory_path)
 
-        with ThreadPoolExecutor(max_workers=8) as executor:
-            for subdirectory_path in curricula_folder.walk():
-                executor.submit(process_subdir, subdirectory_path)
-
-        logger.info("Complete scan of all subdirectories.")
-    except Exception as e:
-        logger.error("An error occurred during the scan: %s", e)
+    logger.info("Complete scan of all subdirectories.")
 
 
 def process_subdir(subdirectory):
