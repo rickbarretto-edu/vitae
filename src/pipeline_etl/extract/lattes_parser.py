@@ -241,12 +241,8 @@ class CurriculumParser:
                         {
                             "institution": institution,
                             "employment_relationship": link_type,
-                            "start_year": int(start_year)
-                            if start_year and start_year.isdigit()
-                            else None,
-                            "end_year": int(end_year)
-                            if end_year and end_year.isdigit()
-                            else None,
+                            "start_year": int(start_year) if start_year and start_year.isdigit() else None,
+                            "end_year": int(end_year) if end_year and end_year.isdigit() else None,
                         }
                     )
 
