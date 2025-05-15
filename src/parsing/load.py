@@ -125,8 +125,7 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
-            print(f"Erro no upsert_research_area: {exception}")
-            logger.error(f"Erro no upsert_research_area: {exception}")
+            logger.error("Error when upserting Research Area: %s", exception)
             self.session.rollback()
 
     def upsert_knowledge_area(self, batch):
