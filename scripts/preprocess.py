@@ -121,7 +121,7 @@ def optmized() -> None:
     skipped: int = 0
     start = time.time()
 
-    for count, archive in enumerate(all_files.glob("**/*.zip")):
+    for count, archive in enumerate(all_files.glob("**/*.zip"), start = 1):
         archive = Zip(archive)
         extracted = archive.xml()
 
@@ -132,7 +132,7 @@ def optmized() -> None:
         else:
             skipped += 1
 
-    print(f"[FINISHED] {count + 1} files processed, {skipped} skipped. In {time.time() - start} seconds.", file=LOG_FILE)
+    print(f"[FINISHED] {count} files processed, {skipped} skipped. In {time.time() - start} seconds.", file=LOG_FILE)
 
 
 def force(sub_folders: list[str]) -> None:
