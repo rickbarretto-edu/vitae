@@ -86,8 +86,6 @@ class CurriculumParser:
             Buffer to store research area data extracted from the curriculum.
         educationBuffer : list
             Buffer to store academic background data extracted from the curriculum.
-        flush : bool
-            If True, the extracted data is inserted into the database.
 
         Returns
         -------
