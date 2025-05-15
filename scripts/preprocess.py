@@ -19,9 +19,6 @@ from pathlib import Path
 from functools import wraps
 from xml.dom.minidom import parseString as XmlDom
 
-LOG_FILE = open("logs/pre-processing.log", "+a", encoding="utf-8")
-
-
 class File(Protocol):
     file: Path
 
@@ -42,7 +39,7 @@ def log(message: str):
         @wraps(func)
         def wrapper(self: File, *args, **kwargs):
             result = func(self, *args, **kwargs)
-            print(message.format(self.file), file=LOG_FILE)
+            print(message.format(self.file))
             return result
         return wrapper
 
@@ -127,11 +124,11 @@ def optmized(all_files: Path) -> None:
         if not extracted:
             archive.unzip()
             extracted.to_utf_8().prettify()
-            print("", file=LOG_FILE)
+            print("")
         else:
             skipped += 1
 
-    print(f"[FINISHED] {count} files processed, {skipped} skipped. In {time.time() - start} seconds.", file=LOG_FILE)
+    print(f"[FINISHED] {count} files processed, {skipped} skipped. In {time.time() - start} seconds.")
 
 
 def force(all_files: Path, sub_folders: list[str]) -> None:
@@ -148,12 +145,9 @@ def force(all_files: Path, sub_folders: list[str]) -> None:
             Zip(archive).unzip().xml().to_utf_8().prettify()
             count += 1
 
-            print("", file=LOG_FILE)
+            print("")
 
-    print(
-        f"[FINISHED] {count} files forcedly processed in {time.time() - start} seconds",
-        file=LOG_FILE,
-    )
+    print(f"[FINISHED] {count} files forcedly processed in {time.time() - start} seconds")
 
 
 def cli() -> None:
@@ -162,15 +156,15 @@ def cli() -> None:
     Preprocess all files, skipping the already pre-processed ones.
     To force pre-process, pass --force <sub-dirs>.
 
-    The output goes to logs/pre-processing.log
+    Use the `tee` command (Unix and DOS) to log the output.
 
     Usage
     -----
-        $ poetry run pre-process
+        $ poetry run pre-process | tee logs/pre-processing.log
 
         # Forced pre-process of directories 01 and 02
-        # This also softly pre-process all the rest 
-        $ poetry run pre-process --force 01 02
+        # This also softly pre-process all the rest
+        $ poetry run pre-process --force 01 02 | tee logs/pre-processing.log
     """
 
     assert len(sys.argv) >= 2
@@ -182,8 +176,5 @@ def cli() -> None:
             force(all_files, sys.argv[2:])
 
     optmized(all_files)
-    print("", file=LOG_FILE)
-
-    LOG_FILE.close()
-        
+    print("")        
     
