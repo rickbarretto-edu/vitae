@@ -1,6 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+from src.parsing.load import load
 from src.parsing.parser import parser
 from src.utils.loggers import ConfigLogger
 from src.panic import panic
@@ -67,22 +68,24 @@ def process_subdir(subdirectory: Path):
     research_area_buffer = []
     education_buffer = []
 
-    flush = False
     count = 0
     for curriculum, _, _ in subdirectory.walk():
-        if count % 10 == 0 and count > 10:
-            flush = True
-            logger.info("Flushing buffers to database.")
-
         parser.open_curriculum(
             curriculum,
             general_data_buffer,
             profession_buffer,
             research_area_buffer,
-            education_buffer,
-            flush,
+            education_buffer
         )
         count += 1
+
+        if count % 10 == 0 and count > 10:
+            logger.info("Flushing buffers to database.")
+
+            load.upsert_researcher(general_data_buffer)
+            load.upsert_professional_experience(profession_buffer)
+            load.upsert_academic_background(education_buffer)
+            load.upsert_research_area(research_area_buffer)
 
     logger.info("Subdirectory %s processed successfully.", subdirectory)
 

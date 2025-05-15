@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import Any
 import xml.etree.ElementTree as ET
 
-from src.parsing.load import load
 from src.utils.loggers import ConfigLogger
 from functools import wraps
 
@@ -67,7 +66,6 @@ class CurriculumParser:
         profession_buffer,
         research_area_buffer,
         education_buffer,
-        flush,
     ):
         """Opens and processes an XML curriculum file contained within a ZIP archive.
 
@@ -134,13 +132,6 @@ class CurriculumParser:
                 for area in self.research_area(document):
                     area["researcher_id"] = researcher_id
                     research_area_buffer.append(area)
-
-                if flush:
-                    logger.info("INSERTING INTO DATABASE")
-                    load.upsert_researcher(general_data_buffer)
-                    load.upsert_professional_experience(profession_buffer)
-                    load.upsert_academic_background(education_buffer)
-                    load.upsert_research_area(research_area_buffer)
 
         except Exception as e:
             logger.error("Error processing file %s: %s", document, str(e))
