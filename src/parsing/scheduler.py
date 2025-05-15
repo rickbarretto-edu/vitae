@@ -1,5 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Callable, Self
 
 from src.parsing.load import load
 from src.parsing.parser import parser
@@ -9,6 +11,7 @@ from src.panic import panic
 logger = ConfigLogger(__name__).logger
 
 __all__ = ["scan_directory"]
+
 
 @dataclass(kw_only=True)
 class Buffer[T]:
