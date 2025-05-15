@@ -9,6 +9,11 @@ from functools import wraps
 
 logger = ConfigLogger(__name__).logger
 
+# TODO: those smaller functions should be moved to another module 
+# to avoid mixing abstractions.
+
+# TODO: Also, a new Element(Tree) must be created to avoid 
+# mising abstractions and also make our codebase independent from the external XML parser.
 
 def normalized(tag: str) -> str:
     return tag.upper().replace(" ", "-")
@@ -36,7 +41,9 @@ def as_int(text: str | None) -> int | None:
     if text.isdigit():
         return int(text)
 
-
+# TODO: @log should be put into logging module
+#   This also should be called log_raised() or log_exceptional()...
+# TODO: This function must be tested, add pytest for it.
 def log(topic: str):
     def decorator(func):
         @wraps(func)
@@ -56,7 +63,8 @@ def log(topic: str):
 
     return decorator
 
-
+# TODO: This should not be called from open_curriculum, but instanciated.
+# TODO: Each parsing method should be split into multiple Parser classes.
 class CurriculumParser:
     """Parses curriculum from XML."""
 

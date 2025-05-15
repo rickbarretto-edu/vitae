@@ -13,6 +13,14 @@ logger = ConfigLogger(__name__).logger
 __all__ = ["scan_directory"]
 
 
+# TODO: Add function factory to concat functions and make it possible to
+# log the flush action.
+#
+# Example:
+# Buffer(max=64, on_flush=procedure(
+#   lambda data: database.insert(data), 
+#   lambda data: logger.info("Flushed data"))
+# )
 @dataclass(kw_only=True)
 class Buffer[T]:
     """Buffer stores data in batch and then flushes it when reaches it's maximum.

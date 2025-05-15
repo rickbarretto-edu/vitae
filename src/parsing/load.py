@@ -11,11 +11,21 @@ from src.utils.loggers import ConfigLogger
 configLogger = ConfigLogger(__name__)
 logger = configLogger.logger
 
+# TODO: PostgreSQL is not being updated, probably the issues resides in this module.
+
+# TODO: Exceptions should be logged by using a decorator, as it is for ``parsing.parser``.
 
 class Load:
     def __init__(self, session):
         self.session = session
 
+    # TODO: Probably this logic is being too resource consuming without that much effect.
+    # 1st: This checks uniqueness for a small set of data, delimited by the buffer.
+    #  So, this is not actually checking a thing really.
+    # 2nd: This is an O(N) algorithm that checks each field for 40GB of data.
+    #
+    # I guess, the only way of having duplicate fields is by having duplicated XML files,
+    # so, we just need to check for the researcher ID.
     def remove_duplicates(self, batch, unique_keys):
         """
         Removes duplicates from a batch based on unique keys.
@@ -207,5 +217,6 @@ class Load:
             self.session.rollback()
 
 
+# TODO: singleton pattern should be purged from codebase
 session = database_config.session_local()
 load = Load(session)

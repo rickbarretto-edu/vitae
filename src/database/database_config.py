@@ -10,6 +10,8 @@ from src.utils.settings import vitae
 
 __all__ = ["Model", "database_config"]
 
+# TODO: Model should be moved to `models.core`
+#   Or see an alternative to SQLalchemy such as SQLModel.
 Model = declarative_base()
 
 
