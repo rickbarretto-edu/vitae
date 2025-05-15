@@ -10,6 +10,23 @@ logger = ConfigLogger(__name__).logger
 
 __all__ = ["scan_directory"]
 
+@dataclass(kw_only=True)
+class Buffer[T]:
+    data: list[T] = []
+    max: int = 64
+    on_flush: Callable[[list[T]], None] = lambda xs: None
+
+    def push(self, value: T) -> Self:
+        if len(self) >= self.max:
+            self.on_flush(self.data)
+            self.data.clear()
+
+        self.data.append(value)
+        return self
+
+    def __len__(self) -> int:
+        return len(self.data)
+
 
 def scan_directory(curricula_folder: Path):
     """
