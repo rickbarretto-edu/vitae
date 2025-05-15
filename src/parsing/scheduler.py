@@ -1,5 +1,4 @@
 from concurrent.futures import ThreadPoolExecutor
-import os
 from pathlib import Path
 
 from src.parsing.parser import parser

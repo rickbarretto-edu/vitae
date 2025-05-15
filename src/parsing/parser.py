@@ -27,7 +27,7 @@ def attribute(element: ET.Element | None, tag: str) -> str | None:
 
     if element_attribute := element.attrib.get(normalized(tag)):
         return element_attribute.strip()
-    
+
 
 def as_int(text: str | None) -> int | None:
     if text is None:
@@ -35,11 +35,10 @@ def as_int(text: str | None) -> int | None:
 
     if text.isdigit():
         return int(text)
-    
+
 
 def log(topic: str):
     def decorator(func):
-        
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:
@@ -47,11 +46,14 @@ def log(topic: str):
                 logger.debug("%s's data successfully extracted.", topic)
                 return result
             except Exception as e:
-                logger.error("Error when extracting %s's data...: %s", topic, str(e))
+                logger.error(
+                    "Error when extracting %s's data...: %s", topic, str(e)
+                )
                 return_type = func.__annotations__.get("return")
                 return [] if isinstance(return_type, list) else {}
-            
+
         return wrapper
+
     return decorator
 
 
@@ -143,7 +145,6 @@ class CurriculumParser:
         except Exception as e:
             logger.error("Error processing file %s: %s", document, str(e))
 
-
     @log("General Data")
     def general_data(self, curriculum: ET.Element[str]):
         """Extract general data from the Lattes curriculum XML.
@@ -218,7 +219,6 @@ class CurriculumParser:
 
         return researcher_general_data
 
-
     @log("Professional Experience")
     def professional_experience(self, curriculum: ET.Element[str]):
         """Extract professional experience from the Lattes curriculum.
@@ -261,9 +261,7 @@ class CurriculumParser:
             links = experience.findall("VINCULOS")
 
             for link in links:
-                if (
-                    link_type := attribute(link, "tipo de vinculo")
-                ) == "LIVRE":
+                if (link_type := attribute(link, "tipo de vinculo")) == "LIVRE":
                     link_type = attribute(link, "outro vinculo informado")
                 start_year = attribute(link, "ano inicio")
                 end_year = attribute(link, "ano fim")
@@ -273,7 +271,7 @@ class CurriculumParser:
                         "institution": institution,
                         "employment_relationship": link_type,
                         "start_year": as_int(start_year),
-                        "end_year": as_int(end_year)
+                        "end_year": as_int(end_year),
                     }
                 )
 
@@ -321,7 +319,6 @@ class CurriculumParser:
             for bg in find(general_data, "formacao academica titulacao") or []
         ]
 
-
     @log("Research Area")
     def research_area(self, curriculum: ET.Element[str]) -> list[Any]:
         """Extract research areas from the Lattes curriculum XML.
@@ -364,14 +361,19 @@ class CurriculumParser:
 
         return [
             {
-                "major_knowledge_area": attribute(area, "nome grande area do conhecimento"),
-                "knowledge_area": attribute(area, "nome da area do conhecimento"),
-                "sub_knowledge_area": attribute(area, "nome da sub-area do conhecimento"),
+                "major_knowledge_area": attribute(
+                    area, "nome grande area do conhecimento"
+                ),
+                "knowledge_area": attribute(
+                    area, "nome da area do conhecimento"
+                ),
+                "sub_knowledge_area": attribute(
+                    area, "nome da sub-area do conhecimento"
+                ),
                 "specialty": attribute(area, "nome da especialidade"),
             }
             for area in find(general_data, "areas de atuacao") or []
         ]
-
 
     # TODO Ajustar Areas de Conhecimento
     @log("Academic Background")
@@ -429,9 +431,15 @@ class CurriculumParser:
 
         return [
             {
-                "major_area": attribute(knowledgement, "nome grande area do conhecimento"),
-                "area": attribute(knowledgement, "nome da area do conhecimento"),
-                "sub_area": attribute(knowledgement, "nome da sub-area do conhecimento"),
+                "major_area": attribute(
+                    knowledgement, "nome grande area do conhecimento"
+                ),
+                "area": attribute(
+                    knowledgement, "nome da area do conhecimento"
+                ),
+                "sub_area": attribute(
+                    knowledgement, "nome da sub-area do conhecimento"
+                ),
                 "specialty": attribute(knowledgement, "nome da especialidade"),
             }
             for knowledgement in find(curriculo, "areas de atuacao") or []

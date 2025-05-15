@@ -24,15 +24,16 @@ class File(Protocol):
 
 def log(message: str):
     """Logs action for certain `File`.
- 
+
     Into your message, `{}` means the filename of `File`.
-    
+
     Examples
     --------
     >>> @log("Processing file: {}")
     ... def process(self):
     ...     pass
     """
+
     def decorator(func):
         @wraps(func)
         def wrapper(self: File, *args, **kwargs):
