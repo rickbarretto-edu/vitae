@@ -39,6 +39,7 @@ def as_int(text: str | None) -> int | None:
 
 def log(topic: str):
     def decorator(func):
+        
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:
@@ -47,8 +48,9 @@ def log(topic: str):
                 return result
             except Exception as e:
                 logger.error("Error when extracting %s's data...: %s", topic, str(e))
-                # Optionally re-raise or return a default value
-                return [] if func.__annotations__.get('return') == list else {}
+                return_type = func.__annotations__.get("return")
+                return [] if isinstance(return_type, list) else {}
+            
         return wrapper
     return decorator
 
