@@ -9,6 +9,9 @@ packages = [
     { include = "src" }
 ]
 
+[tool.poetry.scripts]
+pre-process = "scripts.preprocess:cli"
+
 [tool.poetry.dependencies]
 python = "^3.12"
 sqlalchemy = "^2.0.40"
