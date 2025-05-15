@@ -108,7 +108,7 @@ class Zip:
         self.file.unlink()
 
 
-def optmized() -> None:
+def optmized(all_files: Path) -> None:
     """Script entry
     
     Preprocess all files, skipping the already pre-processed.
@@ -116,7 +116,6 @@ def optmized() -> None:
     Be careful. Since we can't ensure the file was already converted to UTF-8,
     this script only seeks if the equvalente XML file exists.
     """
-    all_files = Path("all_files")
     count: int = 0
     skipped: int = 0
     start = time.time()
@@ -135,13 +134,12 @@ def optmized() -> None:
     print(f"[FINISHED] {count} files processed, {skipped} skipped. In {time.time() - start} seconds.", file=LOG_FILE)
 
 
-def force(sub_folders: list[str]) -> None:
+def force(all_files: Path, sub_folders: list[str]) -> None:
     """Script Entry
 
     Pre-process all files inside the passed sub-directory.
     Pass each sub-directory you want to force the processing.
     """
-    all_files = Path("all_files")
     count: int = 0
     start = time.time()
 
@@ -175,11 +173,15 @@ def cli() -> None:
         $ poetry run pre-process --force 01 02
     """
 
-    if len(sys.argv) >= 3:
-        if sys.argv[1] == "--force":
-            force(sys.argv[2:])
+    assert len(sys.argv) >= 2
 
-    optmized()
+    all_files = Path(sys.argv[1])
+    
+    if len(sys.argv) >= 4:
+        if sys.argv[2] == "--force":
+            force(all_files, sys.argv[2:])
+
+    optmized(all_files)
     print("", file=LOG_FILE)
 
     LOG_FILE.close()
