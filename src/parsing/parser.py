@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any
 import xml.etree.ElementTree as ET
 
+from src.parsing.scheduler import Buffer
 from src.utils.loggers import ConfigLogger
 from functools import wraps
 
@@ -62,10 +63,10 @@ class CurriculumParser:
     def open_curriculum(
         self,
         curriculum: Path,
-        general_data_buffer,
-        profession_buffer,
-        research_area_buffer,
-        education_buffer,
+        general_data_buffer: Buffer,
+        profession_buffer: Buffer,
+        research_area_buffer: Buffer,
+        education_buffer: Buffer,
     ):
         """Opens and processes an XML curriculum file contained within a ZIP archive.
 
@@ -114,22 +115,22 @@ class CurriculumParser:
                 # ============= GENERAL DATA ================#
                 general_data = self.general_data(document)
                 general_data["id"] = researcher_id
-                general_data_buffer.append(general_data)
+                general_data_buffer.push(general_data)
 
                 # ============= PROFESSIONAL EXPERIENCE ================#
                 for experience in self.professional_experience(document):
                     experience["researcher_id"] = researcher_id
-                    profession_buffer.append(experience)
+                    profession_buffer.push(experience)
 
                 # ============= ACADEMIC BACKGROUND ================#
                 for background in self.academic_background(document):
                     background["researcher_id"] = researcher_id
-                    education_buffer.append(background)
+                    education_buffer.push(background)
 
                 # ============= RESEARCH AREA ================#
                 for area in self.research_area(document):
                     area["researcher_id"] = researcher_id
-                    research_area_buffer.append(area)
+                    research_area_buffer.push(area)
 
         except Exception as e:
             logger.error("Error processing file %s: %s", document, str(e))

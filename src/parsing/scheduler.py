@@ -99,33 +99,13 @@ def process_subdir(subdirectory: Path):
 
     logger.info("Processing subdirectory: %s", subdirectory)
 
-    general_data_buffer = []
-    profession_buffer = []
-    research_area_buffer = []
-    education_buffer = []
-
-    count = 0
     for curriculum, _, _ in subdirectory.walk():
         parser.open_curriculum(
             curriculum,
-            general_data_buffer,
-            profession_buffer,
-            research_area_buffer,
-            education_buffer
+            Buffer(max=10, on_flush=load.upsert_researcher),
+            Buffer(max=10, on_flush=load.upsert_professional_experience),
+            Buffer(max=10, on_flush=load.upsert_academic_background),
+            Buffer(max=10, on_flush=load.upsert_research_area),
         )
-        count += 1
-
-        if count % 10 == 0 and count > 10:
-            logger.info("Flushing buffers to database.")
-
-            load.upsert_researcher(general_data_buffer)
-            load.upsert_professional_experience(profession_buffer)
-            load.upsert_academic_background(education_buffer)
-            load.upsert_research_area(research_area_buffer)
 
     logger.info("Subdirectory %s processed successfully.", subdirectory)
-
-    general_data_buffer.clear()
-    profession_buffer.clear()
-    research_area_buffer.clear()
-    education_buffer.clear()
