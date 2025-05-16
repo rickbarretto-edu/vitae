@@ -19,6 +19,7 @@ from pathlib import Path
 from functools import wraps
 from xml.dom.minidom import parseString as XmlDom
 
+
 class File(Protocol):
     file: Path
 
@@ -41,6 +42,7 @@ def log(message: str):
             result = func(self, *args, **kwargs)
             print(message.format(self.file))
             return result
+
         return wrapper
 
     return decorator
@@ -107,9 +109,9 @@ class Zip:
 
 def optmized(all_files: Path) -> None:
     """Script entry
-    
+
     Preprocess all files, skipping the already pre-processed.
-    
+
     Be careful. Since we can't ensure the file was already converted to UTF-8,
     this script only seeks if the equvalente XML file exists.
     """
@@ -117,7 +119,7 @@ def optmized(all_files: Path) -> None:
     skipped: int = 0
     start = time.time()
 
-    for count, archive in enumerate(all_files.glob("**/*.zip"), start = 1):
+    for count, archive in enumerate(all_files.glob("**/*.zip"), start=1):
         archive = Zip(archive)
         extracted = archive.xml()
 
@@ -128,7 +130,9 @@ def optmized(all_files: Path) -> None:
         else:
             skipped += 1
 
-    print(f"[FINISHED] {count} files processed, {skipped} skipped. In {time.time() - start} seconds.")
+    print(
+        f"[FINISHED] {count} files processed, {skipped} skipped. In {time.time() - start} seconds."
+    )
 
 
 def force(all_files: Path, sub_folders: list[str]) -> None:
@@ -147,7 +151,9 @@ def force(all_files: Path, sub_folders: list[str]) -> None:
 
             print("")
 
-    print(f"[FINISHED] {count} files forcedly processed in {time.time() - start} seconds")
+    print(
+        f"[FINISHED] {count} files forcedly processed in {time.time() - start} seconds"
+    )
 
 
 def cli() -> None:
@@ -170,11 +176,10 @@ def cli() -> None:
     assert len(sys.argv) >= 2
 
     all_files = Path(sys.argv[1])
-    
+
     if len(sys.argv) >= 4:
         if sys.argv[2] == "--force":
             force(all_files, sys.argv[2:])
 
     optmized(all_files)
-    print("")        
-    
+    print("")
