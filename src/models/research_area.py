@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from src.database.database_config import Model
+from src.models.__core__ import Model
 
 
 class ResearchArea(Model):

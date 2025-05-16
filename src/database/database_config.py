@@ -3,16 +3,11 @@ from dataclasses import dataclass
 from alembic import command
 from alembic.config import Config
 from sqlalchemy import Engine, create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 from src.utils.settings import vitae
 
-__all__ = ["Model", "database_config"]
-
-# TODO: Model should be moved to `models.core`
-#   Or see an alternative to SQLalchemy such as SQLModel.
-Model = declarative_base()
+__all__ = ["database_config"]
 
 
 @dataclass

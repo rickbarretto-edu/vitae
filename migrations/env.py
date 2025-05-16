@@ -2,10 +2,10 @@ from logging.config import fileConfig
 
 from alembic import context
 
-from src.database.database_config import (
-    Model, database_config
-)  # Certifique-se de que database.py define `Base`
-from src.models import *  # Importa todos os modelos dentro da pasta models
+
+from src.database.database_config import database_config
+from src.models.__core__ import Model
+from src.models import *
 from src.models.academic_background import AcademicBackground
 from src.models.knowledge_area import KnowledgeArea
 from src.models.professional_experience import ProfessionalExperience
