@@ -8,7 +8,7 @@ class Researcher(Model):
     __tablename__ = "researcher"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    updated_at = Column(DateTime, default=func.now, onupdate=func.now)
     name = Column(String, nullable=False)
     city = Column(String)
     state = Column(String)
