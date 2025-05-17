@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any
 import xml.etree.ElementTree as ET
 
-from src.parsing.scheduler import Buffer
+from src.buffer import Buffer
 from src.utils.loggers import ConfigLogger
 from functools import wraps
 
