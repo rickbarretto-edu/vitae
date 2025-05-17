@@ -1,13 +1,12 @@
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+from loguru import logger
+
 from src.parsing.load import load
 from src.parsing.parser import parser
-from src.utils.loggers import ConfigLogger
 from src.utils.panic import panic
 from src.utils.buffer import Buffer
-
-logger = ConfigLogger(__name__).logger
 
 __all__ = ["scan_directory"]
 
@@ -54,7 +53,7 @@ def process_subdir(subdirectory: Path):
     if not subdirectory.exists():
         panic(f"Subdirectory does not exist: {subdirectory}")
 
-    logger.info("Processing subdirectory: %s", subdirectory)
+    logger.info(f"Processing subdirectory: {subdirectory}")
 
     for curriculum, _, _ in subdirectory.walk():
         parser.open_curriculum(
@@ -65,4 +64,4 @@ def process_subdir(subdirectory: Path):
             Buffer(max=10, on_flush=load.upsert_research_area),
         )
 
-    logger.info("Subdirectory %s processed successfully.", subdirectory)
+    logger.info(f"Subdirectory {subdirectory} processed successfully.")
