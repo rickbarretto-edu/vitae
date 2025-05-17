@@ -32,7 +32,7 @@ testpaths = [
 ]
 python_files = ["*test_*.py", "*_spec", "*_case", "*_usecase"]
 python_classes = ["Test*", "Suite*", "Spec*", "Describe*"]
-python_functions = ["test_*", "should_*", "it_*", "its_*", "has_*", "is_*", "have_*", "are_*"]
+python_functions = ["test_*", "should_*", "it_*", "its_*", "has_*", "is_*", "have_*", "are_*", "when_*"]
 console_output_style = "progress"
 
 [build-system]
