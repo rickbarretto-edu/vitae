@@ -3,13 +3,12 @@ from pathlib import Path
 from typing import Any
 import xml.etree.ElementTree as ET
 
+from loguru import logger
+
 from src.utils.buffer import Buffer
-from src.utils.loggers import ConfigLogger
 from functools import wraps
 
 from src.utils.result import Result, catch
-
-logger = ConfigLogger(__name__).logger
 
 # TODO: those smaller functions should be moved to another module
 # to avoid mixing abstractions.
@@ -54,11 +53,11 @@ def log_parsing(topic: str):
             )
 
             if result:
-                logger.debug("%s's data successfully extracted.", topic)
+                logger.debug("{}'s data successfully extracted.", topic)
                 return result.value
             else:
                 logger.error(
-                    "Error when extracting %s's data...: %s",
+                    "Error when extracting {}'s data...: {}",
                     topic,
                     str(result.error),
                 )
@@ -121,7 +120,7 @@ class CurriculumParser:
         - If `flush` is True, the data is inserted into the database using the `load` module.
         """
         researcher_id = curriculum.name.removesuffix(".xml")
-        logger.info("Extracting researcher (%s) information", researcher_id)
+        logger.info("Extracting researcher ({}) information", researcher_id)
 
         try:
             with curriculum.open("r", encoding="utf-8") as file:
