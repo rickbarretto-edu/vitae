@@ -2,7 +2,7 @@
 
 from abc import ABC
 from dataclasses import dataclass
-from typing import Any, Callable, TypeVar, cast
+from typing import Any, Callable, NoReturn, TypeVar, cast
 
 __all__ = ["Panic", "Either", "Some", "Empty", "Result", "Ok", "Err", "catch"]
 
@@ -96,7 +96,7 @@ class IsResult[T, E](ABC):
 
 
 @dataclass
-class Ok[T, E](IsResult):
+class Ok[T](IsResult):
     def __init__(self, value: T = None):
         self._value: T = value
 
@@ -125,7 +125,7 @@ class Ok[T, E](IsResult):
 
 
 @dataclass
-class Err[T, E](IsResult):
+class Err[E](IsResult):
     def __init__(self, error: E = None):
         self._error: E = error
 
@@ -138,10 +138,10 @@ class Err[T, E](IsResult):
         return self._error
 
     @property
-    def as_either(self) -> Either[T]:
+    def as_either(self) -> Either[None]:
         return Empty()
 
-    def expected(self, message: str) -> T:
+    def expected(self, message: str) -> NoReturn:
         raise Panic(message)
 
     def __bool__(self) -> bool:
@@ -153,11 +153,11 @@ class Err[T, E](IsResult):
         return False
 
 
-type Result[T, E] = Ok[T, E] | Err[T, E]
+type Result[T, E] = Ok[T] | Err[E]
 
 
 def catch[T, E: BaseException](expression: Callable[[], T]) -> Result[T, E]:
     try:
-        return Ok(expression())
+        return Ok[T](expression())
     except BaseException as e:
-        return Err[T, E](cast(E, e))
+        return Err[E](cast(E, e))
