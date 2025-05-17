@@ -1,6 +1,8 @@
 repo/
 csv/
 .venv/
+.vscode/
+.pytest_cache/
 __pycache__/
 logs/
 profiling/
