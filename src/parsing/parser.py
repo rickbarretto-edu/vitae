@@ -54,7 +54,7 @@ def log(topic: str):
                 result = func(*args, **kwargs)
                 logger.debug("%s's data successfully extracted.", topic)
                 return result
-            except Exception as e:
+            except ET.ParseError as e:
                 logger.error(
                     "Error when extracting %s's data...: %s", topic, str(e)
                 )
