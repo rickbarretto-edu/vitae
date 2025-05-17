@@ -2,7 +2,7 @@
 name = "vitae"
 version = "0.1.0"
 description = ""
-authors = ["Author, author@example.com"]
+authors = ["Author <author@example.com>"]
 readme = "README.md"
 
 packages = [
