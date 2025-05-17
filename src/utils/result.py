@@ -148,7 +148,7 @@ class Err[E](IsResult):
         return False
 
     def __eq__(self, other: Any) -> bool:
-        if isinstance(other, Ok):
+        if isinstance(other, Err):
             return self.error == other.error
         return False
 
