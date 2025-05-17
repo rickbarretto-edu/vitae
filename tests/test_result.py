@@ -68,3 +68,21 @@ class DescribeCatch:
 
         assert not result
         assert isinstance(result.error, ZeroDivisionError)
+
+    def test_and(self):
+        e, d = "e", "d"
+        x, y = "x", "y"
+
+        assert Err(e) == (Err(e) and Err(d))
+        assert Err(e) == (Err(e) and Ok(y))
+        assert Err(d) == (Ok(x) and Err(d))
+        assert Ok(y) == (Ok(x) and Ok(y))
+
+    def test_or(self):
+        e, d = "e", "d"
+        x, y = "x", "y"
+
+        assert Err(d) == (Err(e) or Err(d))
+        assert Ok(y) == (Err(e) or Ok(y))
+        assert Ok(x) == (Ok(x) or Err(d))
+        assert Ok(x) == (Ok(x) or Ok(y))
