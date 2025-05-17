@@ -19,10 +19,21 @@ python-dotenv = "^1.1.0"
 alembic = "^1.15.2"
 psycopg = {extras = ["binary"], version = "^3.2.7"}
 loguru = "^0.7.3"
+pytest = "^8.3.5"
 
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.11.8"
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+    "integration",
+]
+python_files = ["*test_*.py", "*_spec", "*_case", "*_usecase"]
+python_classes = ["Test*", "Suite*", "Spec*", "Describe*"]
+python_functions = ["test_*", "should_*", "it_*", "its_*", "has_*", "is_*", "have_*", "are_*"]
+console_output_style = "progress"
 
 [build-system]
 requires = ["poetry-core"]
