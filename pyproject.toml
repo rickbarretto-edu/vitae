@@ -11,6 +11,8 @@ packages = [
 
 [tool.poetry.scripts]
 pre-process = "scripts.preprocess:cli"
+clear-cache = "scripts.clear:cache"
+clear-log = "scripts.clear:log"
 
 [tool.poetry.dependencies]
 python = "^3.12"
