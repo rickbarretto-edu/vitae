@@ -58,13 +58,13 @@ class TestResult:
 
 class DescribeCatch:
     def should_be_ok_when_not_raise(self):
-        result = catch(lambda: 1 // 1)
+        result: Result[int, ZeroDivisionError] = catch(lambda: 1 // 1)
 
         assert result
         assert 1 == result.value
 
     def should_be_err_when_raise(self):
-        result = catch(lambda: 1 // 0)
+        result: Result[int, ZeroDivisionError] = catch(lambda: 1 // 0)
 
         assert not result
         assert isinstance(result.error, ZeroDivisionError)
