@@ -4,8 +4,8 @@ from pathlib import Path
 from src.parsing.load import load
 from src.parsing.parser import parser
 from src.utils.loggers import ConfigLogger
-from src.panic import panic
-from src.buffer import Buffer
+from src.utils.panic import panic
+from src.utils.buffer import Buffer
 
 logger = ConfigLogger(__name__).logger
 
