@@ -1,11 +1,15 @@
 from sqlalchemy.dialects.postgresql import insert
 
 from src.database.database_config import database_config
-from src.models.academic_background import AcademicBackground
-from src.models.knowledge_area import KnowledgeArea
-from src.models.professional_experience import ProfessionalExperience
-from src.models.research_area import ResearchArea
-from src.models.researcher import Researcher
+
+from src.models import (
+    AcademicBackground,
+    KnowledgeArea,
+    ProfessionalExperience,
+    ResearchArea,
+    Researcher,
+)
+
 from src.utils.loggers import ConfigLogger
 
 configLogger = ConfigLogger(__name__)
@@ -14,6 +18,7 @@ logger = configLogger.logger
 # TODO: PostgreSQL is not being updated, probably the issues resides in this module.
 
 # TODO: Exceptions should be logged by using a decorator, as it is for ``parsing.parser``.
+
 
 class Load:
     def __init__(self, session):
