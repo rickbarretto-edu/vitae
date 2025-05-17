@@ -43,10 +43,7 @@ def as_int(text: str | None) -> int | None:
         return int(text)
 
 
-# TODO: @log should be put into logging module
-#   This also should be called log_raised() or log_exceptional()...
-# TODO: This function must be tested, add pytest for it.
-def log(topic: str):
+def log_parsing(topic: str):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -146,7 +143,7 @@ class CurriculumParser:
         except Exception as e:
             logger.error("Error processing file %s: %s", document, str(e))
 
-    @log("General Data")
+    @log_parsing("General Data")
     def general_data(self, curriculum: ET.Element):
         """Extract general data from the Lattes curriculum XML.
 
@@ -220,7 +217,7 @@ class CurriculumParser:
 
         return researcher_general_data
 
-    @log("Professional Experience")
+    @log_parsing("Professional Experience")
     def professional_experience(self, curriculum: ET.Element):
         """Extract professional experience from the Lattes curriculum.
 
@@ -278,7 +275,7 @@ class CurriculumParser:
 
         return professional_experience
 
-    @log("Academic Background")
+    @log_parsing("Academic Background")
     def academic_background(self, curriculum: ET.Element) -> list:
         """Extracts academic background information from a Lattes curriculum XML.
 
@@ -320,7 +317,7 @@ class CurriculumParser:
             for bg in find(general_data, "formacao academica titulacao") or []
         ]
 
-    @log("Research Area")
+    @log_parsing("Research Area")
     def research_area(self, curriculum: ET.Element) -> list[Any]:
         """Extract research areas from the Lattes curriculum XML.
 
@@ -377,7 +374,7 @@ class CurriculumParser:
         ]
 
     # TODO Ajustar Areas de Conhecimento
-    @log("Academic Background")
+    @log_parsing("Academic Background")
     def knowledgment_area(self, curriculo: ET.Element) -> list[Any]:
         """Extracts the areas of expertise from a Lattes curriculum XML.
 
