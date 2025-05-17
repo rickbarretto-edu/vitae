@@ -2,7 +2,7 @@
 
 from abc import ABC
 from dataclasses import dataclass
-from typing import Any, Callable, NoReturn, TypeVar, cast
+from typing import Any, Callable, NoReturn, cast
 
 __all__ = ["Panic", "Either", "Some", "Empty", "Result", "Ok", "Err", "catch"]
 
