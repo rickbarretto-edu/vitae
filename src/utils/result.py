@@ -94,6 +94,12 @@ class IsResult[T, E](ABC):
 
     def __bool__(self) -> bool: ...
 
+    def __and__(self, other: "IsResult[T, E]") -> "IsResult[T, E]":
+        return self if not self else other
+
+    def __or__(self, other: "IsResult[T, E]") -> "IsResult[T, E]":
+        return self if self else other
+
 
 @dataclass
 class Ok[T](IsResult):
