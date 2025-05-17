@@ -32,18 +32,10 @@ def scan_directory(curricula_folder: Path):
     - Subdirectories are processed in parallel to improve performance.
     """
     if not curricula_folder.exists():
-        panic(
-            "Curricula directory does not exist: %s",
-            curricula_folder,
-            logger=logger,
-        )
+        panic(f"Curricula directory does not exist: {curricula_folder}")
 
     if not curricula_folder.is_dir():
-        panic(
-            "Curricula's path must be a directory: %s",
-            curricula_folder,
-            logger=logger,
-        )
+        panic(f"Curricula's path must be a directory: {curricula_folder}")
 
     with ThreadPoolExecutor(max_workers=8) as executor:
         for folder, _, _ in curricula_folder.walk():
@@ -60,7 +52,7 @@ def process_subdir(subdirectory: Path):
     """
 
     if not subdirectory.exists():
-        panic("Subdirectory does not exist: %s", subdirectory, logger=logger)
+        panic(f"Subdirectory does not exist: {subdirectory}")
 
     logger.info("Processing subdirectory: %s", subdirectory)
 
