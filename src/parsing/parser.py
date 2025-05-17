@@ -7,6 +7,8 @@ from src.utils.buffer import Buffer
 from src.utils.loggers import ConfigLogger
 from functools import wraps
 
+from src.utils.result import Result, catch
+
 logger = ConfigLogger(__name__).logger
 
 # TODO: those smaller functions should be moved to another module
@@ -47,13 +49,18 @@ def log_parsing(topic: str):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            try:
-                result = func(*args, **kwargs)
+            result: Result[list | dict, ET.ParseError] = catch(
+                lambda: func(*args, **kwargs)
+            )
+
+            if result:
                 logger.debug("%s's data successfully extracted.", topic)
-                return result
-            except ET.ParseError as e:
+                return result.value
+            else:
                 logger.error(
-                    "Error when extracting %s's data...: %s", topic, str(e)
+                    "Error when extracting %s's data...: %s",
+                    topic,
+                    str(result.error),
                 )
                 return_type = func.__annotations__.get("return")
                 return [] if isinstance(return_type, list) else {}
