@@ -1,34 +1,42 @@
 import pytest
 from src.utils.result import Err, Ok, Panic, Result, Some, catch
+from tests.utils import should
 
 
 class DescribeOk:
-    def has_value(self):
+    def it_has_value(self):
         result: Result[str, str] = Ok("I'm here")
 
         assert result
         assert "I'm here" == result.value
         assert "I'm here" == result.expected("Be there")
 
-    def has_no_error(self):
+    def it_has_no_error(self):
         result: Result[str, str] = Ok("I'm here")
 
         assert result.error is None
 
-    def it_should_be_some(self):
+    @should("be Some")
+    def when_as_either(self):
         result: Result[str, str] = Ok("I'm here")
 
         assert Some("I'm here") == result.as_either
 
 
 class DescribeErr:
-    def has_no_value(self):
+    def it_has_no_value(self):
         result: Result[str, str] = Err("I have no value")
 
         assert not result
         assert result.value is None
 
-    def should_raise_to_expected(self):
+    def it_has_error(self):
+        result: Result[str, str] = Err("I'm an error")
+
+        assert "I'm an error" == result.error
+
+    @should("Panic")
+    def when_expected_value_is_not_there(self):
         result: Result[str, str] = Err("I have no value")
 
         with pytest.raises(Panic) as panic:
@@ -36,20 +44,17 @@ class DescribeErr:
 
         assert "Have no value" == str(panic.value)
 
-    def has_error(self):
-        result: Result[str, str] = Err("I'm an error")
-
-        assert "I'm an error" == result.error
-
 
 class TestResult:
-    def test_ok_variant(self):
+    @should("be instance of Ok")
+    def when_comes_from_ok(self):
         result: Result[str, str] = Ok("Success")
 
         assert isinstance(result, Ok)
         assert not isinstance(result, Err)
 
-    def test_err_variant(self):
+    @should("be instance of Err")
+    def when_comes_from_err(self):
         result: Result[str, str] = Err("Fail")
 
         assert isinstance(result, Err)
@@ -57,13 +62,15 @@ class TestResult:
 
 
 class DescribeCatch:
-    def should_be_ok_when_not_raise(self):
+    @should("return Ok")
+    def when_expression_not_raises(self):
         result: Result[int, ZeroDivisionError] = catch(lambda: 1 // 1)
 
         assert result
         assert 1 == result.value
 
-    def should_be_err_when_raise(self):
+    @should("return Err")
+    def when_expression_raises(self):
         result: Result[int, ZeroDivisionError] = catch(lambda: 1 // 0)
 
         assert not result
