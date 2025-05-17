@@ -9,17 +9,18 @@ from functools import wraps
 
 logger = ConfigLogger(__name__).logger
 
-# TODO: those smaller functions should be moved to another module 
+# TODO: those smaller functions should be moved to another module
 # to avoid mixing abstractions.
 
-# TODO: Also, a new Element(Tree) must be created to avoid 
+# TODO: Also, a new Element(Tree) must be created to avoid
 # mising abstractions and also make our codebase independent from the external XML parser.
+
 
 def normalized(tag: str) -> str:
     return tag.upper().replace(" ", "-")
 
 
-def find(element: ET.Element | None, tag: str) -> ET.Element[str] | None:
+def find(element: ET.Element | None, tag: str) -> ET.Element | None:
     if element is None:
         return None
 
@@ -40,6 +41,7 @@ def as_int(text: str | None) -> int | None:
 
     if text.isdigit():
         return int(text)
+
 
 # TODO: @log should be put into logging module
 #   This also should be called log_raised() or log_exceptional()...
@@ -62,6 +64,7 @@ def log(topic: str):
         return wrapper
 
     return decorator
+
 
 # TODO: This should not be called from open_curriculum, but instanciated.
 # TODO: Each parsing method should be split into multiple Parser classes.
@@ -144,7 +147,7 @@ class CurriculumParser:
             logger.error("Error processing file %s: %s", document, str(e))
 
     @log("General Data")
-    def general_data(self, curriculum: ET.Element[str]):
+    def general_data(self, curriculum: ET.Element):
         """Extract general data from the Lattes curriculum XML.
 
         This function navigates through the provided XML structure to extract
@@ -218,7 +221,7 @@ class CurriculumParser:
         return researcher_general_data
 
     @log("Professional Experience")
-    def professional_experience(self, curriculum: ET.Element[str]):
+    def professional_experience(self, curriculum: ET.Element):
         """Extract professional experience from the Lattes curriculum.
 
         This function navigates through the XML structure of a Lattes curriculum
@@ -276,7 +279,7 @@ class CurriculumParser:
         return professional_experience
 
     @log("Academic Background")
-    def academic_background(self, curriculum: ET.Element[str]) -> list:
+    def academic_background(self, curriculum: ET.Element) -> list:
         """Extracts academic background information from a Lattes curriculum XML.
 
         This function navigates through the XML tags of a Lattes curriculum to extract
@@ -318,7 +321,7 @@ class CurriculumParser:
         ]
 
     @log("Research Area")
-    def research_area(self, curriculum: ET.Element[str]) -> list[Any]:
+    def research_area(self, curriculum: ET.Element) -> list[Any]:
         """Extract research areas from the Lattes curriculum XML.
 
         This function navigates through the XML structure of a Lattes curriculum
@@ -375,7 +378,7 @@ class CurriculumParser:
 
     # TODO Ajustar Areas de Conhecimento
     @log("Academic Background")
-    def knowledgment_area(self, curriculo: ET.Element[str]) -> list[Any]:
+    def knowledgment_area(self, curriculo: ET.Element) -> list[Any]:
         """Extracts the areas of expertise from a Lattes curriculum XML.
 
         This function parses the XML structure of a Lattes curriculum to extract
