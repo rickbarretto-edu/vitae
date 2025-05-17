@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Callable, Self
 
 
@@ -20,7 +20,7 @@ class Buffer[T]:
     since the logic was distributed between two different modules with different purposes.
     """
 
-    data: list[T] = []
+    data: list[T] = field(default_factory=list)
     max: int = 64
     on_flush: Callable[[list[T]], None] = lambda xs: None
 
