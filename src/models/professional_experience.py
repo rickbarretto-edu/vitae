@@ -4,6 +4,9 @@ from sqlalchemy.orm import relationship
 from src.models.__core__ import Model
 
 
+__all__ = ["ProfessionalExperience"]
+
+
 class ProfessionalExperience(Model):
     __tablename__ = "professional_experience"
 

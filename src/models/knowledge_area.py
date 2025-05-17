@@ -4,6 +4,9 @@ from sqlalchemy.orm import relationship
 from src.models.__core__ import Model
 
 
+__all__ = ["KnowledgeArea"]
+
+
 class KnowledgeArea(Model):
     __tablename__ = "knowledge_area"
 

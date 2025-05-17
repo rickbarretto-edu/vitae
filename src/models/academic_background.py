@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 
 from src.models.__core__ import Model
 
+__all__ = ["AcademicBackground"]
 
 class AcademicBackground(Model):
     __tablename__ = "academic_background"
