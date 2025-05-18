@@ -8,7 +8,7 @@ from src.lib.panic import panic
 from src.lib.buffer import Buffer
 from src.processing.buffers import CurriculaBuffer
 from src.processing.commiter import load
-from src.processing.parsing import parser
+from src.processing.parsing import CurriculumParser
 from src.settings import VitaeSettings
 
 __all__ = ["CurriculaScheduler"]
@@ -91,4 +91,4 @@ class CurriculaScheduler:
             educations=buffer(load.upsert_research_area),
         )
 
-        parser.open_curriculum(curriculum, curricula_buffer)
+        CurriculumParser().open_curriculum(curriculum, curricula_buffer)

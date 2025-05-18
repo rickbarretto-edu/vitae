@@ -17,6 +17,9 @@ from src.processing.buffers import CurriculaBuffer
 # mising abstractions and also make our codebase independent from the external XML parser.
 
 
+__all__ = ["CurriculumParser"]
+
+
 def normalized(tag: str) -> str:
     return tag.upper().replace(" ", "-")
 
@@ -439,6 +442,3 @@ class CurriculumParser:
             }
             for knowledgement in find(curriculo, "areas de atuacao") or []
         ]
-
-
-parser = CurriculumParser()
