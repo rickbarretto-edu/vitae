@@ -1,4 +1,4 @@
-from typing import TypedDict, Optional, List
+from typing import TypedDict
 
 import eliot
 
@@ -11,17 +11,17 @@ __all__ = ["professional_experiences", "ProfessionalExperiences"]
 
 class ProfessionalExperiences(TypedDict):
     researcher_id: str
-    institution: Optional[str]
-    employment_relationship: Optional[str]
-    start_year: Optional[int]
-    end_year: Optional[int]
+    institution: str | None
+    employment_relationship: str | None
+    start_year: int | None
+    end_year: int | None
 
 
 @log_parsing("Professional Experience")
 @eliot.log_call(action_type="parsing")
 def professional_experiences(
     id: str, data: xml.Node
-) -> List[ProfessionalExperiences]:
+) -> list[ProfessionalExperiences]:
     """Extract professional experience from the Lattes curriculum.
 
     This function navigates through the XML structure of a Lattes curriculum
