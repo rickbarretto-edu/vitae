@@ -123,24 +123,15 @@ class CurriculumParser:
         """
         logger.info("Extracting researcher ({}) information", self.id)
 
-        # ============= GENERAL DATA ================#
-        general_data = self.general_data()
-        general_data["id"] = self.id
-        self.buffers.general.push(general_data)
+        self.buffers.general.push(self.general_data())
 
-        # ============= PROFESSIONAL EXPERIENCE ================#
         for experience in self.professional_experience():
-            experience["researcher_id"] = self.id
             self.buffers.professions.push(experience)
 
-        # ============= ACADEMIC BACKGROUND ================#
         for background in self.academic_background():
-            background["researcher_id"] = self.id
             self.buffers.educations.push(background)
 
-        # ============= RESEARCH AREA ================#
         for area in self.research_area():
-            area["researcher_id"] = self.id
             self.buffers.research_areas.push(area)
 
     @log_parsing("General Data")
@@ -261,6 +252,7 @@ class CurriculumParser:
 
                 professional_experience.append(
                     {
+                        "researcher_id": self.id,
                         "institution": institution,
                         "employment_relationship": link_type,
                         "start_year": as_int(start_year),
@@ -302,6 +294,7 @@ class CurriculumParser:
 
         return [
             {
+                "researcher_id": self.id,
                 "type": bg.tag,
                 "institution": attribute(bg, "nome instituicao"),
                 "course": attribute(bg, "nome curso"),
@@ -352,6 +345,7 @@ class CurriculumParser:
 
         return [
             {
+                "researcher_id": self.id,
                 "major_knowledge_area": attribute(
                     area, "nome grande area do conhecimento"
                 ),
