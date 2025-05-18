@@ -49,6 +49,9 @@ def log_parsing(topic: str):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
+
+            logger.debug("Parsing {}'s data...", topic)
+
             result: Result[list | dict, ET.ParseError] = catch(
                 lambda: func(*args, **kwargs)
             )
