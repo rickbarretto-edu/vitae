@@ -28,6 +28,7 @@ eliot = "^1.17.5"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.11.8"
+ty = "^0.0.1a5"
 
 [tool.pytest.ini_options]
 testpaths = [
