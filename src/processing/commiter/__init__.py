@@ -58,7 +58,6 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
-            print(f"Erro no upsert_researcher: {exception}")
             logger.error(f"Erro no upsert_researcher: {exception}")
             self.session.rollback()
 
@@ -98,7 +97,6 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
-            print(f"Erro no upsert_professional_experience: {exception}")
             logger.error(f"Erro no upsert_professional_experience: {exception}")
             self.session.rollback()
 
@@ -173,7 +171,6 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
-            print(f"Erro no upsert_knowledge_area: {exception}")
             logger.error(f"Erro no upsert_knowledge_area: {exception}")
             self.session.rollback()
 
@@ -213,7 +210,6 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
-            print(f"Erro no upsert_academic_background: {exception}")
             logger.error(f"Erro no upsert_academic_background: {exception}")
             self.session.rollback()
 
