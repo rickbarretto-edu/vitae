@@ -8,7 +8,7 @@ from src.processing.parsing import xml
 
 @log_parsing("General Data")
 @eliot.log_call(action_type="parsing")
-def general_data(data: xml.Node, document: xml.Node):
+def general_data(data: xml.Node):
     """Extract general data from the Lattes curriculum XML.
 
     This function navigates through the provided XML structure to extract
@@ -44,9 +44,6 @@ def general_data(data: xml.Node, document: xml.Node):
 
     resume = data.first("resumo CV")
     professional_address = data.first("endereco").first("endereco profissional")
-
-    if update_date := document["data atualizacao"]:
-        update_date = datetime.strptime(update_date, "%d%m%Y")
 
     return {
         "name": data["nome completo"],

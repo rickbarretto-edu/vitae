@@ -69,7 +69,7 @@ class CurriculumParser:
         """
         logger.info("Extracting researcher ({}) information", self.id)
 
-        self.buffers.general.push(general_data(self.data, self.document))
+        self.buffers.general.push(general_data(self.data))
 
         for experience in self.professional_experience():
             self.buffers.professions.push(experience)
