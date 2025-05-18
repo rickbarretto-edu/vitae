@@ -2,6 +2,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import eliot
+from loguru import logger
 
 from src.settings import VitaeSettings
 from src.parsing.buffers import CurriculaBuffer
@@ -67,7 +68,11 @@ class CurriculaScheduler:
     def _process_curriculum(self, curriculum: Path):
         def buffer(action) -> Buffer:
             max: int = self._vitae.postgres.db.flush_every
-            return Buffer(max=max).on_flush(action)
+            return (
+                Buffer(max=max)
+                .on_flush(action)
+                .then(lambda xs: logger.info("Flushed {} items", len(xs)))
+            )
 
         curricula_buffer = CurriculaBuffer(
             general=buffer(load.upsert_researcher),
