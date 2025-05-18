@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 import eliot
 from loguru import logger
 
-from src.parsing.buffers import CurriculaBuffer
+from src.processing.parsing.buffers import CurriculaBuffer
 from src.lib.buffer import Buffer
 from functools import wraps
 
