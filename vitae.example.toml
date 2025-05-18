@@ -1,3 +1,6 @@
+[project]
+in_production = false
+
 [postgres.user]
 name = "postgres_user"
 password = "your_secure_password"

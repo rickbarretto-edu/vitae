@@ -86,6 +86,7 @@ class VitaeSettings:
 
     postgres: PostgresSettings
     paths: PathsSettings
+    in_production: bool = False
 
     @classmethod
     def load(cls) -> "VitaeSettings":
@@ -95,6 +96,7 @@ class VitaeSettings:
         with open(config_path, "rb") as f:
             data = tomllib.load(f)
 
+            in_production: bool = data.get("in_production", False)
             postgres: dict = data.get("postgres") or {}
             postgres_settings = PostgresSettings(
                 user=PostgresUser(
@@ -115,7 +117,11 @@ class VitaeSettings:
                 alembic=Path(paths.get("alembic", "alembic.ini")),
             )
 
-            return cls(postgres=postgres_settings, paths=paths_settings)
+            return cls(
+                in_production=in_production,
+                postgres=postgres_settings,
+                paths=paths_settings,
+            )
 
 
 vitae = VitaeSettings.load()
