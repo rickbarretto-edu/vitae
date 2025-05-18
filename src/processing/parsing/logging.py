@@ -1,11 +1,12 @@
 from functools import wraps
-from xml.etree import ElementTree as ET
 
 from loguru import logger
 
 from src.lib.result import Result, catch
+from src.processing.parsing.xml import ParsingError
 
 __all__ = ["log_parsing"]
+
 
 def log_parsing(topic: str):
     def decorator(func):
@@ -13,7 +14,7 @@ def log_parsing(topic: str):
         def wrapper(*args, **kwargs):
             logger.debug("Parsing {}'s data...", topic)
 
-            result: Result[list | dict, ET.ParseError] = catch(
+            result: Result[list | dict, ParsingError] = catch(
                 lambda: func(*args, **kwargs)
             )
 
