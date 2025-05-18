@@ -47,6 +47,9 @@ class VitaeSetup:
             "logs/vitae.log", rotation="200 MB", encoding="utf-8", enqueue=True
         )
 
+        if self.vitae.in_development:
+            logger.add(sys.stdout, level="TRACE", colorize=True)
+
         os.makedirs("logs/exceptions", exist_ok=True)
 
         def exception_filter(record):
