@@ -5,7 +5,7 @@ from alembic.config import Config
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker
 
-from src.utils.settings import vitae
+from src.settings import vitae
 
 __all__ = ["database_config"]
 

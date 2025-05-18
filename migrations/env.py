@@ -11,7 +11,7 @@ from src.models.knowledge_area import KnowledgeArea
 from src.models.professional_experience import ProfessionalExperience
 from src.models.research_area import ResearchArea
 from src.models.researcher import Researcher
-from src.utils.settings import vitae
+from src.settings import vitae
 
 # Configuração do Alembic
 config = context.config

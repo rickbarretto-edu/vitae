@@ -95,7 +95,7 @@ class VitaeSettings:
     @classmethod
     def load(cls) -> "VitaeSettings":
         """Load configuration from vitae.toml file"""
-        config_path = Path(__file__).parent.parent.parent / "vitae.toml"
+        config_path = Path(__file__).parent.parent / "vitae.toml"
 
         with open(config_path, "rb") as f:
             data = tomllib.load(f)

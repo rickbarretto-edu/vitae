@@ -1,7 +1,7 @@
 import psycopg
 from psycopg.sql import SQL, Identifier
 
-from src.utils.settings import VitaeSettings
+from src.settings import VitaeSettings
 
 
 def new_database(vitae: VitaeSettings) -> None:

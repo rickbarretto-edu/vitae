@@ -5,7 +5,7 @@ import sys
 import eliot
 from loguru import logger
 
-from src.utils.settings import VitaeSettings
+from src.settings import VitaeSettings
 
 
 @dataclass
