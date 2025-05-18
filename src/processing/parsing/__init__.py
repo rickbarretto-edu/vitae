@@ -29,6 +29,12 @@ class CurriculumParser:
     -------
     parse() -> None
         Parses the XML document.
+
+    Notes
+    -----
+    - The filename is the ID of the researcher.
+    - The extracted data is processed using helper functions presents into `.parsers`, module.
+    - Flusing to database must be done outside this class. Use ``Buffer.on_flush`` for this.
     """
 
     def __init__(self, file: Path, buffers: CurriculaBuffer) -> None:
@@ -49,14 +55,7 @@ class CurriculumParser:
 
     @eliot.log_call(action_type="parsing")
     def parse(self):
-        """Parse the Curriculum XML file and extract useful information.
-
-        Notes
-        -----
-        - The filename is the ID of the researcher.
-        - The extracted data is processed using helper functions presents into `.parsers`, module.
-        - Flusing to database must be done outside this class. Use ``Buffer.on_flush`` for this.
-        """
+        """Parse the Curriculum XML file and extract useful information."""
         logger.info("Extracting researcher ({}) information", self.id)
 
         self.buffers.general.push(parsers.general_data(self.data))
