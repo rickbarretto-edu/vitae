@@ -11,6 +11,7 @@ from src.processing.parsing.general_data import general_data
 from src.processing.parsing.professional_experiences import (
     professional_experiences,
 )
+from src.processing.parsing.academic_background import academic_background
 from src.processing.parsing.logging import log_parsing
 
 
@@ -70,56 +71,11 @@ class CurriculumParser:
         for experience in professional_experiences(self.id, self.data):
             self.buffers.professions.push(experience)
 
-        for background in self.academic_background():
+        for background in academic_background(self.id, self.data):
             self.buffers.educations.push(background)
 
         for area in self.research_area():
             self.buffers.research_areas.push(area)
-
-    @log_parsing("Academic Background")
-    @eliot.log_call(action_type="parsing")
-    def academic_background(self) -> list:
-        """Extracts academic background information from a Lattes curriculum XML.
-
-        This function navigates through the XML tags of a Lattes curriculum to extract
-        information about the academic background of a researcher.
-
-        Parameters
-        ----------
-        curriculum : xml.etree.ElementTree.Element
-            The Lattes curriculum of a researcher in XML format.
-
-        Returns
-        -------
-        list of dict
-            A list of dictionaries, where each dictionary contains information about
-            an academic background. Each dictionary includes the following keys:
-            - 'type' (str): The type of academic background (e.g., undergraduate, master's, etc.).
-            - 'institution' (str or None): The name of the institution.
-            - 'course' (str or None): The name of the course.
-            - 'start_year' (int or None): The year the course started.
-            - 'end_year' (int or None): The year the course ended.
-
-        Notes
-        -----
-        If no academic background information is found, an empty list is returned.
-        Any errors during extraction are logged, and an empty list is returned in case of exceptions.
-        """
-
-        return [
-            {
-                "researcher_id": self.id,
-                "type": bg.tag,
-                "institution": xml.attribute(bg, "nome instituicao"),
-                "course": xml.attribute(bg, "nome curso"),
-                "start_year": xml.as_int(xml.attribute(bg, "ano de inicio")),
-                "end_year": xml.as_int(xml.attribute(bg, "ano de conclusao")),
-            }
-            for bg in xml.find(
-                self.data.element, "formacao academica titulacao"
-            )
-            or []
-        ]
 
     @log_parsing("Research Area")
     @eliot.log_call(action_type="parsing")
