@@ -88,6 +88,10 @@ class VitaeSettings:
     paths: PathsSettings
     in_production: bool = False
 
+    @property
+    def in_development(self) -> bool:
+        return not self.in_production
+
     @classmethod
     def load(cls) -> "VitaeSettings":
         """Load configuration from vitae.toml file"""
