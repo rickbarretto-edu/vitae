@@ -27,11 +27,12 @@ class Buffer[T]:
     _on_flush: Callable[[list[T]], None] = lambda xs: None
 
     def push(self, value: T) -> Self:
+        self.data.append(value)
+
         if len(self) >= self.max:
             self._on_flush(self.data)
             self.data.clear()
 
-        self.data.append(value)
         return self
 
     def on_flush(self, on_flush: Callable[[list[T]], None]) -> Self:
