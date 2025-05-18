@@ -1,4 +1,4 @@
-from datetime import datetime
+from typing import TypedDict
 
 import eliot
 
@@ -6,9 +6,25 @@ from src.processing.parsing.logging import log_parsing
 from src.processing.parsing import xml
 
 
+__all__ = ["general_data", "GeneralData"]
+
+
+class GeneralData(TypedDict):
+    name: str | None
+    city: str | None
+    state: str | None
+    country: str | None
+    quotes_names: str | None
+    orcid: str | None
+    abstract: str | None
+    professional_institution: str | None
+    institution_state: str | None
+    institution_city: str | None
+
+
 @log_parsing("General Data")
 @eliot.log_call(action_type="parsing")
-def general_data(data: xml.Node):
+def general_data(data: xml.Node) -> GeneralData:
     """Extract general data from the Lattes curriculum XML.
 
     This function navigates through the provided XML structure to extract
