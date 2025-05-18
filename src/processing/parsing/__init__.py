@@ -8,6 +8,9 @@ from loguru import logger
 from src.processing.buffers import CurriculaBuffer
 from src.processing.parsing import xml
 from src.processing.parsing.general_data import general_data
+from src.processing.parsing.professional_experiences import (
+    professional_experiences,
+)
 from src.processing.parsing.logging import log_parsing
 
 
@@ -64,7 +67,7 @@ class CurriculumParser:
 
         self.buffers.general.push(general_data(self.data))
 
-        for experience in self.professional_experience():
+        for experience in professional_experiences(self.id, self.data):
             self.buffers.professions.push(experience)
 
         for background in self.academic_background():
@@ -72,62 +75,6 @@ class CurriculumParser:
 
         for area in self.research_area():
             self.buffers.research_areas.push(area)
-
-    @log_parsing("Professional Experience")
-    @eliot.log_call(action_type="parsing")
-    def professional_experience(self):
-        """Extract professional experience from the Lattes curriculum.
-
-        This function navigates through the XML structure of a Lattes curriculum
-        to extract information about professional experiences.
-
-        Parameters
-        ----------
-        curriculum : xml.etree.ElementTree.Element
-            The Lattes curriculum of a researcher in XML format.
-
-        Returns
-        -------
-        list of dict
-            A list of dictionaries, where each dictionary contains information
-            about a professional experience. Each dictionary has the following keys:
-            - 'institution' (str or None): Name of the institution.
-            - 'employment_relationship' (str or None): Type of employment relationship.
-            - 'start_year' (int or None): Start year of the professional experience.
-            - 'end_year' (int or None): End year of the professional experience.
-
-        Notes
-        -----
-        If no professional experiences are found, an empty list is returned.
-        In case of an error during extraction, the function logs the error and
-        returns an empty list.
-        """
-
-        data = self.data
-
-        if (experiences := data.first("atuacoes profissionais")).exists is None:
-            return []
-
-        professional_experience = []
-        for experience in experiences.all("atuacao profissional"):
-            institution = experience["nome instituicao"]
-            links = experience.all("vinculos")
-
-            for link in links:
-                if (link_type := link["tipo de vinculo"]) == "LIVRE":
-                    link_type = link["outro vinculo informado"]
-
-                professional_experience.append(
-                    {
-                        "researcher_id": self.id,
-                        "institution": institution,
-                        "employment_relationship": link_type,
-                        "start_year": xml.as_int(link["ano inicio"]),
-                        "end_year": xml.as_int(link["ano fim"]),
-                    }
-                )
-
-        return professional_experience
 
     @log_parsing("Academic Background")
     @eliot.log_call(action_type="parsing")
