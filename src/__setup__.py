@@ -30,7 +30,6 @@ class VitaeSetup:
         """
         if self.vitae.in_development:
             eliot.to_file(open("logs/eliot.log", "w+"))
-            eliot.add_destinations(sys.stdout)
             logger.info("Eliot logging to file and stdout")
         else:
             logger.warning("Eliot disabled for production")
