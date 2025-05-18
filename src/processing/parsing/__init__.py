@@ -82,8 +82,17 @@ class Node:
     def __getitem__(self, tag: str) -> str | None:
         return attribute(self.element, tag)
 
-    def sub(self, tag: str) -> "Node":
+    @property
+    def exists(self) -> bool:
+        return self.element is not None
+
+    def first(self, tag: str) -> "Node":
         return Node(find(self.element, tag))
+
+    def all(self, tag: str) -> list["Node"]:
+        if self.element is None:
+            return []
+        return [Node(e) for e in self.element.findall(normalized(tag))]
 
 
 # TODO: This should not be called from open_curriculum, but instanciated.
