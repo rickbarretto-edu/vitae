@@ -1,5 +1,5 @@
 import pytest
-from src.utils.result import Err, Ok, Panic, Result, Some, catch
+from src.lib.result import Err, Ok, Panic, Result, Some, catch
 from tests.utils import should
 
 

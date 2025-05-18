@@ -4,9 +4,10 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import Any, Callable, NoReturn, cast
 
-from src.utils.panic import Panic
+from src.lib.panic import Panic
 
 __all__ = ["Either", "Some", "Empty", "Result", "Ok", "Err", "catch"]
+
 
 @dataclass
 class IsEither[T](ABC):

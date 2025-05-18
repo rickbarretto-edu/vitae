@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Callable, Self
 
-from src.utils.functions import also, then
+from src.lib.functions import also, then
 
 
 @dataclass(kw_only=True)

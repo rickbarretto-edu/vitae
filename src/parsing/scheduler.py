@@ -6,8 +6,8 @@ import eliot
 from src.parsing.buffers import CurriculaBuffer
 from src.parsing.load import load
 from src.parsing.parser import parser
-from src.utils.panic import panic
-from src.utils.buffer import Buffer
+from src.lib.panic import panic
+from src.lib.buffer import Buffer
 
 __all__ = ["scan_directory"]
 

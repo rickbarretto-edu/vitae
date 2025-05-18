@@ -7,10 +7,10 @@ import eliot
 from loguru import logger
 
 from src.parsing.buffers import CurriculaBuffer
-from src.utils.buffer import Buffer
+from src.lib.buffer import Buffer
 from functools import wraps
 
-from src.utils.result import Result, catch
+from src.lib.result import Result, catch
 
 # TODO: those smaller functions should be moved to another module
 # to avoid mixing abstractions.

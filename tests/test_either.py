@@ -1,6 +1,6 @@
 import pytest
 
-from src.utils.result import Either, Empty, Panic, Some
+from src.lib.result import Either, Empty, Panic, Some
 
 
 class DescribeSome:

@@ -10,7 +10,7 @@ from src.models import (
     Researcher,
 )
 
-from src.utils.loggers import ConfigLogger
+from src.lib.loggers import ConfigLogger
 
 configLogger = ConfigLogger(__name__)
 logger = configLogger.logger
