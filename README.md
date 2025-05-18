@@ -42,3 +42,14 @@ export PYTHONPATH="/path/to/your/project/"
 ```bash
 python -m src
 ```
+
+
+---
+
+**Issues with adding eliot-tree?**
+
+```
+pip install --upgrade pkginfo
+pipx inject poetry pkginfo
+pip install eliot-tree
+```
