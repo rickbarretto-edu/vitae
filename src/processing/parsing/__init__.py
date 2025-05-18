@@ -56,7 +56,8 @@ class CurriculumParser:
     @eliot.log_call(action_type="parsing")
     def parse(self):
         """Parse the Curriculum XML file and extract useful information."""
-        logger.info("Extracting researcher ({}) information", self.id)
+
+        logger.info("Parsing researcher ({}) curriculum", self.id)
 
         self.buffers.general.push(parsers.general_data(self.data))
 
