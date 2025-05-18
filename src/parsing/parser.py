@@ -109,7 +109,7 @@ class CurriculumParser:
         Raises
         ------
         Exception
-            If an error occurs while processing the ZIP file or its contents.
+            If an error occurs while processing the XML file or its contents.
 
         Notes
         -----
