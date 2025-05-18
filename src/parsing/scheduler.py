@@ -66,7 +66,8 @@ class CurriculaScheduler:
     @eliot.log_call(action_type="scanning")
     def _process_curriculum(self, curriculum: Path):
         def buffer(action) -> Buffer:
-            return Buffer(max=2).on_flush(action)
+            max: int = self._vitae.postgres.db.flush_every
+            return Buffer(max=max).on_flush(action)
 
         curricula_buffer = CurriculaBuffer(
             general=buffer(load.upsert_researcher),
