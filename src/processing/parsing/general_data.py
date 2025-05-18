@@ -17,7 +17,7 @@ def general_data(data: xml.Node):
 
     Parameters
     ----------
-    curriculum : xml.etree.ElementTree.Element
+    data : xml.Node
         The Lattes curriculum XML element representing a researcher's data.
 
     Returns
