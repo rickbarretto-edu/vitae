@@ -5,10 +5,11 @@ from typing import Any
 import eliot
 from loguru import logger
 
-from src.processing.parsing.logging import log_parsing
-from src.processing.parsing import xml
-
 from src.processing.buffers import CurriculaBuffer
+from src.processing.parsing import xml
+from src.processing.parsing.general_data import general_data
+from src.processing.parsing.logging import log_parsing
+
 
 # TODO: those smaller functions should be moved to another module
 # to avoid mixing abstractions.
@@ -68,7 +69,7 @@ class CurriculumParser:
         """
         logger.info("Extracting researcher ({}) information", self.id)
 
-        self.buffers.general.push(self.general_data())
+        self.buffers.general.push(general_data(self.data, self.document))
 
         for experience in self.professional_experience():
             self.buffers.professions.push(experience)
@@ -78,68 +79,6 @@ class CurriculumParser:
 
         for area in self.research_area():
             self.buffers.research_areas.push(area)
-
-    @log_parsing("General Data")
-    @eliot.log_call(action_type="parsing")
-    def general_data(self):
-        """Extract general data from the Lattes curriculum XML.
-
-        This function navigates through the provided XML structure to extract
-        general information about a researcher, such as their name, birthplace,
-        ORCID ID, and professional institution details.
-
-        Parameters
-        ----------
-        curriculum : xml.etree.ElementTree.Element
-            The Lattes curriculum XML element representing a researcher's data.
-
-        Returns
-        -------
-        dict
-            A dictionary containing the following keys:
-            - 'name' (str or None): Full name of the researcher.
-            - 'city' (str or None): Birth city of the researcher.
-            - 'state' (str or None): Birth state of the researcher.
-            - 'country' (str or None): Birth country of the researcher.
-            - 'quotes_names' (str or None): Names used in bibliographic citations.
-            - 'orcid' (str or None): ORCID ID of the researcher.
-            - 'abstract' (str or None): Abstract text from the researcher's CV.
-            - 'professional_institution' (str or None): Name of the professional institution.
-            - 'institution_state' (str or None): State of the professional institution.
-            - 'institution_city' (str or None): City of the professional institution.
-
-        Raises
-        ------
-        Exception
-            If an error occurs during the extraction process, it is logged, and an
-            empty dictionary is returned.
-        """
-        data = self.data
-
-        resume = data.first("resumo CV")
-        professional_address = data.first("endereco").first(
-            "endereco profissional"
-        )
-
-        if update_date := self.document["data atualizacao"]:
-            update_date = datetime.strptime(update_date, "%d%m%Y")
-
-        researcher_general_data = {
-            "name": data["nome completo"],
-            "city": data["cidade nascimento"],
-            "state": data["UF nascimento"],
-            "country": data["pais de nascimento"],
-            "quotes_names": data["nome em citacoes bibliograficas"],
-            "orcid": data["ORCID ID"],
-            "abstract": resume["texto resumo CV RH"],
-            "professional_institution": professional_address[
-                "nome instituicao"
-            ],
-            "institution_state": professional_address["UF"],
-            "institution_city": professional_address["cidade"],
-        }
-
-        return researcher_general_data
 
     @log_parsing("Professional Experience")
     @eliot.log_call(action_type="parsing")
