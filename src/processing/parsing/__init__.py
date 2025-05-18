@@ -11,11 +11,9 @@ from src.processing.parsing import xml
 __all__ = ["CurriculumParser"]
 
 
-# TODO: This should not be called from open_curriculum, but instanciated.
-# TODO: Each parsing method should be split into multiple Parser classes.
 class CurriculumParser:
     """Parser for XML Curriculum files.
-    
+
     Attributes
     ----------
     id : str
