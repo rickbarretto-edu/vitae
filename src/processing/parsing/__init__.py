@@ -1,19 +1,11 @@
-from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 import eliot
 from loguru import logger
 
+from src.processing.parsing import parsers
 from src.processing.buffers import CurriculaBuffer
 from src.processing.parsing import xml
-from src.processing.parsing.academic_background import academic_background
-from src.processing.parsing.general_data import general_data
-from src.processing.parsing.professional_experiences import (
-    professional_experiences,
-)
-from src.processing.parsing.research_area import research_area
-from src.processing.parsing.logging import log_parsing
 
 
 __all__ = ["CurriculumParser"]
@@ -67,13 +59,13 @@ class CurriculumParser:
         """
         logger.info("Extracting researcher ({}) information", self.id)
 
-        self.buffers.general.push(general_data(self.data))
+        self.buffers.general.push(parsers.general_data(self.data))
 
-        for experience in professional_experiences(self.id, self.data):
+        for experience in parsers.professional_experiences(self.id, self.data):
             self.buffers.professions.push(experience)
 
-        for background in academic_background(self.id, self.data):
+        for background in parsers.academic_background(self.id, self.data):
             self.buffers.educations.push(background)
 
-        for area in research_area(self.id, self.data):
+        for area in parsers.research_area(self.id, self.data):
             self.buffers.research_areas.push(area)

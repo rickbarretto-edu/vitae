@@ -6,7 +6,7 @@ from src.processing.parsing.logging import log_parsing
 from src.processing.parsing import xml
 
 
-__all__ = ["knowledgment_area"]
+__all__ = ["knowledge_areas", "KnowledgmentArea"]
 
 
 # TODO Ajustar Areas de Conhecimento
@@ -19,7 +19,7 @@ class KnowledgmentArea(TypedDict):
 
 @log_parsing("Academic Background")
 @eliot.log_call(action_type="parsing")
-def knowledgment_area(curriculo: xml.Node) -> list[KnowledgmentArea]:
+def knowledge_areas(curriculo: xml.Node) -> list[KnowledgmentArea]:
     """Extracts the areas of expertise from a Lattes curriculum XML.
 
     This function parses the XML structure of a Lattes curriculum to extract
