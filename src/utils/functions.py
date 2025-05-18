@@ -8,7 +8,7 @@ def also(*actions: Callable[[Any], None]) -> Callable[[Any], Any]:
     -------
 
         Buffer(
-            on_flush=piped(process_data, also(print, log)),
+            on_flush=then(process_data, also(print, log)),
             max=64
         )
     """
