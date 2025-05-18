@@ -123,7 +123,7 @@ class CurriculumParser:
         logger.info("Extracting researcher ({}) information", researcher_id)
 
         with curriculum.open("r", encoding="utf-8") as file:
-            document = ET.parse(file.read()).getroot()
+            document = ET.parse(file).getroot()
 
             # ============= GENERAL DATA ================#
             general_data = self.general_data(document)
