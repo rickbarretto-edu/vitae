@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import TypedDict, Optional, List
 
 import eliot
 
@@ -6,12 +6,21 @@ from src.processing.parsing.logging import log_parsing
 from src.processing.parsing import xml
 
 
-__all__ = ["academic_background"]
+__all__ = ["academic_background", "AcademicBackgroun"]
+
+
+class AcademicBackgroun(TypedDict):
+    researcher_id: str
+    type: str
+    institution: Optional[str]
+    course: Optional[str]
+    start_year: Optional[int]
+    end_year: Optional[int]
 
 
 @log_parsing("Academic Background")
 @eliot.log_call(action_type="parsing")
-def academic_background(id: str, data: xml.Node) -> list:
+def academic_background(id: str, data: xml.Node) -> List[AcademicBackgroun]:
     """Extracts academic background information from a Lattes curriculum XML.
 
     This function navigates through the XML tags of a Lattes curriculum to extract
