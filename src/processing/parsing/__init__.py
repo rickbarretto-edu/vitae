@@ -11,13 +11,6 @@ from src.processing.parsing.general_data import general_data
 from src.processing.parsing.logging import log_parsing
 
 
-# TODO: those smaller functions should be moved to another module
-# to avoid mixing abstractions.
-
-# TODO: Also, a new Element(Tree) must be created to avoid
-# mising abstractions and also make our codebase independent from the external XML parser.
-
-
 __all__ = ["CurriculumParser"]
 
 
