@@ -1,3 +1,4 @@
+from loguru import logger
 from sqlalchemy.dialects.postgresql import insert
 
 from src.database.database_config import database_config
@@ -9,11 +10,6 @@ from src.models import (
     ResearchArea,
     Researcher,
 )
-
-from src.lib.loggers import ConfigLogger
-
-configLogger = ConfigLogger(__name__)
-logger = configLogger.logger
 
 # TODO: PostgreSQL is not being updated, probably the issues resides in this module.
 
