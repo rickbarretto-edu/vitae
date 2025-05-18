@@ -1,6 +1,6 @@
 from src.database.database_config import database_config
 from src.database.database_creation import new_database
-from src.processing.scheduler import CurriculaScheduler
+from src.processing import CurriculaScheduler
 from src.settings import vitae
 from src.__setup__ import VitaeSetup
 
@@ -8,7 +8,6 @@ setup = VitaeSetup(vitae)
 
 
 if __name__ == "__main__":
-
     setup.setup_logging()
 
     new_database(vitae)
