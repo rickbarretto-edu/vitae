@@ -1,25 +1,16 @@
-from typing import TypedDict
-
 import eliot
 
+from src.processing.proxies import ResearchArea
 from src.processing.parsing.logging import log_parsing
 from src.processing.parsing import xml
 
 
-__all__ = ["research_area", "ResearchAreas"]
-
-
-class ResearchAreas(TypedDict):
-    researcher_id: str
-    major_knowledge_area: str | None
-    knowledge_area: str | None
-    sub_knowledge_area: str | None
-    specialty: str | None
+__all__ = ["research_area"]
 
 
 @log_parsing("Research Area")
 @eliot.log_call(action_type="parsing")
-def research_area(id: str, data: xml.Node) -> list[ResearchAreas]:
+def research_area(id: str, data: xml.Node) -> list[ResearchArea]:
     """Extract research areas from the Lattes curriculum XML.
 
     This function navigates through the XML structure of a Lattes curriculum

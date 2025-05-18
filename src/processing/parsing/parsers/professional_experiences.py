@@ -1,27 +1,19 @@
-from typing import TypedDict
 
 import eliot
 
+from src.processing.proxies import ProfessionalExperience
 from src.processing.parsing.logging import log_parsing
 from src.processing.parsing import xml
 
 
-__all__ = ["professional_experiences", "ProfessionalExperiences"]
-
-
-class ProfessionalExperiences(TypedDict):
-    researcher_id: str
-    institution: str | None
-    employment_relationship: str | None
-    start_year: int | None
-    end_year: int | None
+__all__ = ["professional_experiences"]
 
 
 @log_parsing("Professional Experience")
 @eliot.log_call(action_type="parsing")
 def professional_experiences(
     id: str, data: xml.Node
-) -> list[ProfessionalExperiences]:
+) -> list[ProfessionalExperience]:
     """Extract professional experience from the Lattes curriculum.
 
     This function navigates through the XML structure of a Lattes curriculum

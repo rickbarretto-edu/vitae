@@ -1,25 +1,12 @@
-from typing import TypedDict
 
 import eliot
 
+from src.processing.proxies import GeneralData
 from src.processing.parsing.logging import log_parsing
 from src.processing.parsing import xml
 
 
-__all__ = ["general_data", "GeneralData"]
-
-
-class GeneralData(TypedDict):
-    name: str | None
-    city: str | None
-    state: str | None
-    country: str | None
-    quotes_names: str | None
-    orcid: str | None
-    abstract: str | None
-    professional_institution: str | None
-    institution_state: str | None
-    institution_city: str | None
+__all__ = ["general_data"]
 
 
 @log_parsing("General Data")
