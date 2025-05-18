@@ -11,9 +11,6 @@ from src.utils.buffer import Buffer
 __all__ = ["scan_directory"]
 
 
-eliot.to_file(open("logs/processing.log", mode="w+"))
-
-
 @eliot.log_call(action_type="scanning")
 def scan_directory(curricula_folder: Path):
     """
