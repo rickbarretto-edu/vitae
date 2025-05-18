@@ -28,22 +28,8 @@ def knowledgment_area(curriculo: xml.Node) -> list[KnowledgmentArea]:
 
     Parameters
     ----------
-    curriculo : xml.etree.ElementTree.Element
+    curriculo : xml.Node
         The XML element representing the Lattes curriculum.
-
-    Returns
-    -------
-    list of dict
-        A list of dictionaries, where each dictionary contains information
-        about an area of expertise with the following keys:
-        - "major_area" : str or None
-            The name of the major area of knowledge.
-        - "area" : str or None
-            The name of the area of knowledge.
-        - "sub_area" : str or None
-            The name of the sub-area of knowledge.
-        - "specialty" : str or None
-            The name of the specialty.
 
     Notes
     -----
