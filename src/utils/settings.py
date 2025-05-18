@@ -29,6 +29,8 @@ class PostgresDatabase:
     host: str = "127.0.0.1"
     port: int = 5433
 
+    flush_every: int = 100
+
     def __post_init__(self):
         assert self.name
         assert self.host
@@ -103,6 +105,7 @@ class VitaeSettings:
                     name=postgres["database"]["name"],
                     host=postgres["database"].get("host", "127.0.0.1"),
                     port=postgres["database"].get("port", 5433),
+                    flush_every=postgres["database"].get("flush_every", 100),
                 ),
             )
 
