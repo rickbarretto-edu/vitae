@@ -59,10 +59,13 @@ def process_subdir(subdirectory: Path):
 
 @eliot.log_call(action_type="scanning")
 def process_curriculum(curriculum: Path):
+    def buffer(action) -> Buffer:
+        return Buffer(max=2).on_flush(action)
+
     parser.open_curriculum(
         curriculum,
-        Buffer(max=10, on_flush=load.upsert_researcher),
-        Buffer(max=10, on_flush=load.upsert_professional_experience),
-        Buffer(max=10, on_flush=load.upsert_academic_background),
-        Buffer(max=10, on_flush=load.upsert_research_area),
+        buffer(load.upsert_researcher),
+        buffer(load.upsert_professional_experience),
+        buffer(load.upsert_academic_background),
+        buffer(load.upsert_research_area),
     )
