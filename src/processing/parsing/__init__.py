@@ -191,8 +191,10 @@ class CurriculumParser:
         """
 
         data = Node(self.data)
-        resume = data.sub("resumo CV")
-        professional_address = data.sub("endereco").sub("endereco profissional")
+        resume = data.first("resumo CV")
+        professional_address = data.first("endereco").first(
+            "endereco profissional"
+        )
 
         if update_date := attribute(self.document, "data atualizacao"):
             update_date = datetime.strptime(update_date, "%d%m%Y")
