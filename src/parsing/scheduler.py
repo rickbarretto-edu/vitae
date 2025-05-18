@@ -1,7 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from loguru import logger
+import eliot
 
 from src.parsing.load import load
 from src.parsing.parser import parser
@@ -11,6 +11,10 @@ from src.utils.buffer import Buffer
 __all__ = ["scan_directory"]
 
 
+eliot.to_file(open("logs/processing.log", mode="w+"))
+
+
+@eliot.log_call(action_type="scanning")
 def scan_directory(curricula_folder: Path):
     """
     Scan the directory containing Lattes curricula and process all subdirectories.
@@ -36,15 +40,12 @@ def scan_directory(curricula_folder: Path):
     if not curricula_folder.is_dir():
         panic(f"Curricula's path must be a directory: {curricula_folder}")
 
-    logger.info(f"Scanning {curricula_folder}")
-
     with ThreadPoolExecutor(max_workers=8) as executor:
         for folder in curricula_folder.iterdir():
             executor.submit(process_subdir, folder)
 
-    logger.info("Complete scan of all subdirectories.")
 
-
+@eliot.log_call(action_type="scanning")
 def process_subdir(subdirectory: Path):
     """Process all curriculum files in a subdirectory.
 
@@ -55,12 +56,16 @@ def process_subdir(subdirectory: Path):
     if not subdirectory.exists():
         panic(f"Subdirectory does not exist: {subdirectory}")
 
-    for curriculum in subdirectory.iterdir():
-        logger.info(f"Processing file: {curriculum}")
-        parser.open_curriculum(
-            curriculum,
-            Buffer(max=10, on_flush=load.upsert_researcher),
-            Buffer(max=10, on_flush=load.upsert_professional_experience),
-            Buffer(max=10, on_flush=load.upsert_academic_background),
-            Buffer(max=10, on_flush=load.upsert_research_area),
-        )
+    for curriculum in subdirectory.glob("*.xml"):
+        process_curriculum(curriculum)
+
+
+@eliot.log_call(action_type="scanning")
+def process_curriculum(curriculum: Path):
+    parser.open_curriculum(
+        curriculum,
+        Buffer(max=10, on_flush=load.upsert_researcher),
+        Buffer(max=10, on_flush=load.upsert_professional_experience),
+        Buffer(max=10, on_flush=load.upsert_academic_background),
+        Buffer(max=10, on_flush=load.upsert_research_area),
+    )
