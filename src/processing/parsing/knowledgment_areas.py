@@ -10,9 +10,16 @@ __all__ = ["knowledgment_area"]
 
 
 # TODO Ajustar Areas de Conhecimento
+class KnowledgmentArea(TypedDict):
+    major_area: str | None
+    area: str | None
+    sub_area: str | None
+    specialty: str | None
+
+
 @log_parsing("Academic Background")
 @eliot.log_call(action_type="parsing")
-def knowledgment_area(curriculo: xml.Node):
+def knowledgment_area(curriculo: xml.Node) -> list[KnowledgmentArea]:
     """Extracts the areas of expertise from a Lattes curriculum XML.
 
     This function parses the XML structure of a Lattes curriculum to extract
