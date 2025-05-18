@@ -1,4 +1,5 @@
 from datetime import datetime
+from functools import wraps
 from pathlib import Path
 from typing import Any
 import xml.etree.ElementTree as ET
@@ -6,10 +7,8 @@ import xml.etree.ElementTree as ET
 import eliot
 from loguru import logger
 
-from src.processing.buffers import CurriculaBuffer
-from functools import wraps
-
 from src.lib.result import Result, catch
+from src.processing.buffers import CurriculaBuffer
 
 # TODO: those smaller functions should be moved to another module
 # to avoid mixing abstractions.
