@@ -89,7 +89,7 @@ class CurriculumParser:
         self.buffers = buffers
 
     @eliot.log_call(action_type="parsing")
-    def open_curriculum(self):
+    def parse(self):
         """Opens and processes an XML curriculum file contained within a ZIP archive.
 
         This method extracts the XML file from the provided ZIP archive, parses it,

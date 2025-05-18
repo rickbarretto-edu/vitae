@@ -91,4 +91,4 @@ class CurriculaScheduler:
             educations=buffer(load.upsert_research_area),
         )
 
-        CurriculumParser(curriculum, buffers).open_curriculum()
+        CurriculumParser(curriculum, buffers).parse()
