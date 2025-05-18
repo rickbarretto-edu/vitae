@@ -36,8 +36,10 @@ def scan_directory(curricula_folder: Path):
     if not curricula_folder.is_dir():
         panic(f"Curricula's path must be a directory: {curricula_folder}")
 
+    logger.info(f"Scanning {curricula_folder}")
+
     with ThreadPoolExecutor(max_workers=8) as executor:
-        for folder, _, _ in curricula_folder.walk():
+        for folder in curricula_folder.iterdir():
             executor.submit(process_subdir, folder)
 
     logger.info("Complete scan of all subdirectories.")
@@ -53,9 +55,8 @@ def process_subdir(subdirectory: Path):
     if not subdirectory.exists():
         panic(f"Subdirectory does not exist: {subdirectory}")
 
-    logger.info(f"Processing subdirectory: {subdirectory}")
-
-    for curriculum, _, _ in subdirectory.walk():
+    for curriculum in subdirectory.iterdir():
+        logger.info(f"Processing file: {curriculum}")
         parser.open_curriculum(
             curriculum,
             Buffer(max=10, on_flush=load.upsert_researcher),
@@ -63,5 +64,3 @@ def process_subdir(subdirectory: Path):
             Buffer(max=10, on_flush=load.upsert_academic_background),
             Buffer(max=10, on_flush=load.upsert_research_area),
         )
-
-    logger.info(f"Subdirectory {subdirectory} processed successfully.")
