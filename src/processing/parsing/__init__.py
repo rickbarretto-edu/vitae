@@ -246,27 +246,27 @@ class CurriculumParser:
         returns an empty list.
         """
 
-        if (experiences := find(self.data, "atuacoes profissionais")) is None:
+        data = Node(self.data)
+
+        if (experiences := data.first("atuacoes profissionais")).exists is None:
             return []
 
         professional_experience = []
-        for experience in experiences.findall("ATUACAO-PROFISSIONAL"):
-            institution = attribute(experience, "nome instituicao")
-            links = experience.findall("VINCULOS")
+        for experience in experiences.all("atuacao profissional"):
+            institution = experience["nome instituicao"]
+            links = experience.all("vinculos")
 
             for link in links:
-                if (link_type := attribute(link, "tipo de vinculo")) == "LIVRE":
-                    link_type = attribute(link, "outro vinculo informado")
-                start_year = attribute(link, "ano inicio")
-                end_year = attribute(link, "ano fim")
+                if (link_type := link["tipo de vinculo"]) == "LIVRE":
+                    link_type = link["outro vinculo informado"]
 
                 professional_experience.append(
                     {
                         "researcher_id": self.id,
                         "institution": institution,
                         "employment_relationship": link_type,
-                        "start_year": as_int(start_year),
-                        "end_year": as_int(end_year),
+                        "start_year": as_int(link["ano inicio"]),
+                        "end_year": as_int(link["ano fim"]),
                     }
                 )
 
