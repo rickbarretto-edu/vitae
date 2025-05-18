@@ -122,32 +122,28 @@ class CurriculumParser:
         researcher_id = curriculum.name.removesuffix(".xml")
         logger.info("Extracting researcher ({}) information", researcher_id)
 
-        try:
-            with curriculum.open("r", encoding="utf-8") as file:
-                document = ET.parse(file.read()).getroot()
+        with curriculum.open("r", encoding="utf-8") as file:
+            document = ET.parse(file.read()).getroot()
 
-                # ============= GENERAL DATA ================#
-                general_data = self.general_data(document)
-                general_data["id"] = researcher_id
-                general_data_buffer.push(general_data)
+            # ============= GENERAL DATA ================#
+            general_data = self.general_data(document)
+            general_data["id"] = researcher_id
+            general_data_buffer.push(general_data)
 
-                # ============= PROFESSIONAL EXPERIENCE ================#
-                for experience in self.professional_experience(document):
-                    experience["researcher_id"] = researcher_id
-                    profession_buffer.push(experience)
+            # ============= PROFESSIONAL EXPERIENCE ================#
+            for experience in self.professional_experience(document):
+                experience["researcher_id"] = researcher_id
+                profession_buffer.push(experience)
 
-                # ============= ACADEMIC BACKGROUND ================#
-                for background in self.academic_background(document):
-                    background["researcher_id"] = researcher_id
-                    education_buffer.push(background)
+            # ============= ACADEMIC BACKGROUND ================#
+            for background in self.academic_background(document):
+                background["researcher_id"] = researcher_id
+                education_buffer.push(background)
 
-                # ============= RESEARCH AREA ================#
-                for area in self.research_area(document):
-                    area["researcher_id"] = researcher_id
-                    research_area_buffer.push(area)
-
-        except Exception as e:
-            logger.error("Error processing file %s: %s", document, str(e))
+            # ============= RESEARCH AREA ================#
+            for area in self.research_area(document):
+                area["researcher_id"] = researcher_id
+                research_area_buffer.push(area)
 
     @log_parsing("General Data")
     def general_data(self, curriculum: ET.Element):
