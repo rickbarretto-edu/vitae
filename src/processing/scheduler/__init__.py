@@ -84,11 +84,11 @@ class CurriculaScheduler:
                 .then(lambda xs: logger.info("Flushed {} items", len(xs)))
             )
 
-        curricula_buffer = CurriculaBuffer(
+        buffers = CurriculaBuffer(
             general=buffer(load.upsert_researcher),
             professions=buffer(load.upsert_professional_experience),
             research_areas=buffer(load.upsert_academic_background),
             educations=buffer(load.upsert_research_area),
         )
 
-        CurriculumParser().open_curriculum(curriculum, curricula_buffer)
+        CurriculumParser(curriculum, buffers).open_curriculum()

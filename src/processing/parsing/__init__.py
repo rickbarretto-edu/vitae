@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime
 from functools import wraps
 from pathlib import Path
@@ -79,8 +80,16 @@ def log_parsing(topic: str):
 class CurriculumParser:
     """Parses curriculum from XML."""
 
+    def __init__(self, file: Path, buffers: CurriculaBuffer) -> None:
+        content = file.read_text(encoding="utf-8")
+
+        self.id = file.name.removesuffix(".xml")
+        self.document = ET.fromstring(content)
+        self.data = find(self.document, "dados gerais")
+        self.buffers = buffers
+
     @eliot.log_call(action_type="parsing")
-    def open_curriculum(self, curriculum: Path, buffers: CurriculaBuffer):
+    def open_curriculum(self):
         """Opens and processes an XML curriculum file contained within a ZIP archive.
 
         This method extracts the XML file from the provided ZIP archive, parses it,
@@ -112,35 +121,31 @@ class CurriculumParser:
           `professional_experience`, `academic_background`, and `research_area`.
         - If `flush` is True, the data is inserted into the database using the `load` module.
         """
-        researcher_id = curriculum.name.removesuffix(".xml")
-        logger.info("Extracting researcher ({}) information", researcher_id)
+        logger.info("Extracting researcher ({}) information", self.id)
 
-        with curriculum.open("r", encoding="utf-8") as file:
-            document = ET.parse(file).getroot()
+        # ============= GENERAL DATA ================#
+        general_data = self.general_data()
+        general_data["id"] = self.id
+        self.buffers.general.push(general_data)
 
-            # ============= GENERAL DATA ================#
-            general_data = self.general_data(document)
-            general_data["id"] = researcher_id
-            buffers.general.push(general_data)
+        # ============= PROFESSIONAL EXPERIENCE ================#
+        for experience in self.professional_experience():
+            experience["researcher_id"] = self.id
+            self.buffers.professions.push(experience)
 
-            # ============= PROFESSIONAL EXPERIENCE ================#
-            for experience in self.professional_experience(document):
-                experience["researcher_id"] = researcher_id
-                buffers.professions.push(experience)
+        # ============= ACADEMIC BACKGROUND ================#
+        for background in self.academic_background():
+            background["researcher_id"] = self.id
+            self.buffers.educations.push(background)
 
-            # ============= ACADEMIC BACKGROUND ================#
-            for background in self.academic_background(document):
-                background["researcher_id"] = researcher_id
-                buffers.educations.push(background)
-
-            # ============= RESEARCH AREA ================#
-            for area in self.research_area(document):
-                area["researcher_id"] = researcher_id
-                buffers.research_areas.push(area)
+        # ============= RESEARCH AREA ================#
+        for area in self.research_area():
+            area["researcher_id"] = self.id
+            self.buffers.research_areas.push(area)
 
     @log_parsing("General Data")
     @eliot.log_call(action_type="parsing")
-    def general_data(self, curriculum: ET.Element):
+    def general_data(self):
         """Extract general data from the Lattes curriculum XML.
 
         This function navigates through the provided XML structure to extract
@@ -174,23 +179,20 @@ class CurriculumParser:
             empty dictionary is returned.
         """
 
-        if update_date := attribute(curriculum, "data atualizacao"):
+        if update_date := attribute(self.document, "data atualizacao"):
             update_date = datetime.strptime(update_date, "%d%m%Y")
 
-        general_data = find(curriculum, "dados gerais")
-        full_name = attribute(general_data, "nome completo")
-        birth_city = attribute(general_data, "cidade nascimento")
-        birth_state = attribute(general_data, "UF nascimento")
-        birth_country = attribute(general_data, "pais de nascimento")
-        citation_names = attribute(
-            general_data, "nome em citacoes bibliograficas"
-        )
-        orcid = attribute(general_data, "ORCID ID")
+        full_name = attribute(self.data, "nome completo")
+        birth_city = attribute(self.data, "cidade nascimento")
+        birth_state = attribute(self.data, "UF nascimento")
+        birth_country = attribute(self.data, "pais de nascimento")
+        citation_names = attribute(self.data, "nome em citacoes bibliograficas")
+        orcid = attribute(self.data, "ORCID ID")
 
-        resume = find(general_data, "resumo CV")
+        resume = find(self.data, "resumo CV")
         resume_text = attribute(resume, "texto resumo CV RH")
 
-        address = find(general_data, "endereco")
+        address = find(self.data, "endereco")
         professional_address = find(address, "endereco profissional")
         institution_name = attribute(
             professional_address, "nome instituicao empresa"
@@ -215,7 +217,7 @@ class CurriculumParser:
 
     @log_parsing("Professional Experience")
     @eliot.log_call(action_type="parsing")
-    def professional_experience(self, curriculum: ET.Element):
+    def professional_experience(self):
         """Extract professional experience from the Lattes curriculum.
 
         This function navigates through the XML structure of a Lattes curriculum
@@ -243,11 +245,7 @@ class CurriculumParser:
         returns an empty list.
         """
 
-        general_data = find(curriculum, "dados gerais")
-
-        if (
-            experiences := find(general_data, "atuacoes profissionais")
-        ) is None:
+        if (experiences := find(self.data, "atuacoes profissionais")) is None:
             return []
 
         professional_experience = []
@@ -274,7 +272,7 @@ class CurriculumParser:
 
     @log_parsing("Academic Background")
     @eliot.log_call(action_type="parsing")
-    def academic_background(self, curriculum: ET.Element) -> list:
+    def academic_background(self) -> list:
         """Extracts academic background information from a Lattes curriculum XML.
 
         This function navigates through the XML tags of a Lattes curriculum to extract
@@ -302,8 +300,6 @@ class CurriculumParser:
         Any errors during extraction are logged, and an empty list is returned in case of exceptions.
         """
 
-        general_data = find(curriculum, "dados gerais")
-
         return [
             {
                 "type": bg.tag,
@@ -312,12 +308,12 @@ class CurriculumParser:
                 "start_year": as_int(attribute(bg, "ano de inicio")),
                 "end_year": as_int(attribute(bg, "ano de conclusao")),
             }
-            for bg in find(general_data, "formacao academica titulacao") or []
+            for bg in find(self.data, "formacao academica titulacao") or []
         ]
 
     @log_parsing("Research Area")
     @eliot.log_call(action_type="parsing")
-    def research_area(self, curriculum: ET.Element) -> list[Any]:
+    def research_area(self) -> list[Any]:
         """Extract research areas from the Lattes curriculum XML.
 
         This function navigates through the XML structure of a Lattes curriculum
@@ -354,8 +350,6 @@ class CurriculumParser:
           'sub_knowledge_area': 'Structural Engineering', 'specialty': 'Concrete Structures'}, ...]
         """
 
-        general_data = find(curriculum, "dados gerais")
-
         return [
             {
                 "major_knowledge_area": attribute(
@@ -369,7 +363,7 @@ class CurriculumParser:
                 ),
                 "specialty": attribute(area, "nome da especialidade"),
             }
-            for area in find(general_data, "areas de atuacao") or []
+            for area in find(self.data, "areas de atuacao") or []
         ]
 
     # TODO Ajustar Areas de Conhecimento
