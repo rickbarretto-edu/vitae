@@ -48,7 +48,7 @@ def general_data(data: xml.Node, document: xml.Node):
     if update_date := document["data atualizacao"]:
         update_date = datetime.strptime(update_date, "%d%m%Y")
 
-    researcher_general_data = {
+    return {
         "name": data["nome completo"],
         "city": data["cidade nascimento"],
         "state": data["UF nascimento"],
@@ -60,5 +60,3 @@ def general_data(data: xml.Node, document: xml.Node):
         "institution_state": professional_address["UF"],
         "institution_city": professional_address["cidade"],
     }
-
-    return researcher_general_data
