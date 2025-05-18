@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any
 import xml.etree.ElementTree as ET
 
+import eliot
 from loguru import logger
 
 from src.utils.buffer import Buffer
@@ -74,6 +75,7 @@ def log_parsing(topic: str):
 class CurriculumParser:
     """Parses curriculum from XML."""
 
+    @eliot.log_call(action_type="parsing")
     def open_curriculum(
         self,
         curriculum: Path,
@@ -146,6 +148,7 @@ class CurriculumParser:
                 research_area_buffer.push(area)
 
     @log_parsing("General Data")
+    @eliot.log_call(action_type="parsing")
     def general_data(self, curriculum: ET.Element):
         """Extract general data from the Lattes curriculum XML.
 
@@ -220,6 +223,7 @@ class CurriculumParser:
         return researcher_general_data
 
     @log_parsing("Professional Experience")
+    @eliot.log_call(action_type="parsing")
     def professional_experience(self, curriculum: ET.Element):
         """Extract professional experience from the Lattes curriculum.
 
@@ -278,6 +282,7 @@ class CurriculumParser:
         return professional_experience
 
     @log_parsing("Academic Background")
+    @eliot.log_call(action_type="parsing")
     def academic_background(self, curriculum: ET.Element) -> list:
         """Extracts academic background information from a Lattes curriculum XML.
 
@@ -320,6 +325,7 @@ class CurriculumParser:
         ]
 
     @log_parsing("Research Area")
+    @eliot.log_call(action_type="parsing")
     def research_area(self, curriculum: ET.Element) -> list[Any]:
         """Extract research areas from the Lattes curriculum XML.
 
@@ -377,6 +383,7 @@ class CurriculumParser:
 
     # TODO Ajustar Areas de Conhecimento
     @log_parsing("Academic Background")
+    @eliot.log_call(action_type="parsing")
     def knowledgment_area(self, curriculo: ET.Element) -> list[Any]:
         """Extracts the areas of expertise from a Lattes curriculum XML.
 
