@@ -91,15 +91,15 @@ class CurriculumParser:
 
         Parameters
         ----------
-        curriculumZIP : str
-            Path to the ZIP file containing the Lattes curriculum XML.
-        generalDataBuffer : list
+        curriculum : str
+            Path to the XML file.
+        general_data_buffer : Buffer
             Buffer to store general data extracted from the curriculum.
-        professionBuffer : list
+        profession_buffer : Buffer
             Buffer to store professional experience data extracted from the curriculum.
-        researchAreaBuffer : list
+        research_area_buffer : Buffer
             Buffer to store research area data extracted from the curriculum.
-        educationBuffer : list
+        education_buffer : Buffer
             Buffer to store academic background data extracted from the curriculum.
 
         Returns
