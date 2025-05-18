@@ -21,7 +21,7 @@ def also(*actions: Callable[[Any], None]) -> Callable[[Any], Any]:
     return function
 
 
-def piped(*actions: Callable[[Any], Any]) -> Callable[[Any], Any]:
+def then(*actions: Callable[[Any], Any]) -> Callable[[Any], Any]:
     """Pipe dependent functions into a single one.
 
     Note
@@ -33,7 +33,7 @@ def piped(*actions: Callable[[Any], Any]) -> Callable[[Any], Any]:
     -------
 
         Buffer(
-            on_flush=piped(process_data, also(print, log)),
+            on_flush=then(process_data, also(print, log)),
             max=64
         )
     """
