@@ -14,9 +14,34 @@ __all__ = ["CurriculumParser"]
 # TODO: This should not be called from open_curriculum, but instanciated.
 # TODO: Each parsing method should be split into multiple Parser classes.
 class CurriculumParser:
-    """Parses curriculum from XML."""
+    """Parser for XML Curriculum files.
+    
+    Attributes
+    ----------
+    id : str
+        Researcher's ID.
+    document: xml.Node
+        Node element containing the whole XML document.
+    data: xml.Node
+        Node element containing the general data.
+    buffers: CurriculaBuffer
+        Buffer to store the parsed data.
+
+    Methods
+    -------
+    parse() -> None
+        Parses the XML document.
+    """
 
     def __init__(self, file: Path, buffers: CurriculaBuffer) -> None:
+        """
+        Parameters
+        ----------
+        file : Path
+            Path to the XML file.
+        buffers : CurriculaBuffer
+            Buffer to store the parsed data.
+        """
         content = file.read_text(encoding="utf-8")
 
         self.id = file.name.removesuffix(".xml")
@@ -26,36 +51,13 @@ class CurriculumParser:
 
     @eliot.log_call(action_type="parsing")
     def parse(self):
-        """Opens and processes an XML curriculum file contained within a ZIP archive.
-
-        This method extracts the XML file from the provided ZIP archive, parses it,
-        and processes its contents to extract general data, professional experience,
-        academic background, and research area information. The extracted data is
-        appended to the respective buffers and optionally flushed to a database.
-
-        Parameters
-        ----------
-        curriculum : str
-            Path to the XML file.
-        buffers : CurriculaBuffer
-            Store and flush data to database.
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        Exception
-            If an error occurs while processing the XML file or its contents.
+        """Parse the Curriculum XML file and extract useful information.
 
         Notes
         -----
-        - The method assumes that the ZIP file contains a single XML file.
-        - The XML file name is used to extract the researcher ID.
-        - The extracted data is processed using helper methods such as `general_data`,
-          `professional_experience`, `academic_background`, and `research_area`.
-        - If `flush` is True, the data is inserted into the database using the `load` module.
+        - The filename is the ID of the researcher.
+        - The extracted data is processed using helper functions presents into `.parsers`, module.
+        - Flusing to database must be done outside this class. Use ``Buffer.on_flush`` for this.
         """
         logger.info("Extracting researcher ({}) information", self.id)
 
