@@ -6,7 +6,7 @@ from loguru import logger
 
 from src.settings import VitaeSettings
 from src.parsing.buffers import CurriculaBuffer
-from src.parsing.load import load
+from src.commiter import load
 from src.parsing.parser import parser
 from src.lib.panic import panic
 from src.lib.buffer import Buffer
