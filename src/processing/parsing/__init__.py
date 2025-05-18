@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from datetime import datetime
-from functools import wraps
 from pathlib import Path
 from typing import Any
 import xml.etree.ElementTree as ET
@@ -8,7 +7,7 @@ import xml.etree.ElementTree as ET
 import eliot
 from loguru import logger
 
-from src.lib.result import Result, catch
+from src.processing.parsing.logging import log_parsing
 from src.processing.buffers import CurriculaBuffer
 
 # TODO: those smaller functions should be moved to another module
@@ -46,33 +45,6 @@ def as_int(text: str | None) -> int | None:
 
     if text.isdigit():
         return int(text)
-
-
-def log_parsing(topic: str):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            logger.debug("Parsing {}'s data...", topic)
-
-            result: Result[list | dict, ET.ParseError] = catch(
-                lambda: func(*args, **kwargs)
-            )
-
-            if result:
-                logger.debug("{}'s data successfully extracted.", topic)
-                return result.value
-            else:
-                logger.error(
-                    "Error when extracting {}'s data...: {}",
-                    topic,
-                    str(result.error),
-                )
-                return_type = func.__annotations__.get("return")
-                return [] if isinstance(return_type, list) else {}
-
-        return wrapper
-
-    return decorator
 
 
 class Node:
