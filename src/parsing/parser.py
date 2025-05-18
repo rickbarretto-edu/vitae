@@ -91,14 +91,8 @@ class CurriculumParser:
         ----------
         curriculum : str
             Path to the XML file.
-        general_data_buffer : Buffer
-            Buffer to store general data extracted from the curriculum.
-        profession_buffer : Buffer
-            Buffer to store professional experience data extracted from the curriculum.
-        research_area_buffer : Buffer
-            Buffer to store research area data extracted from the curriculum.
-        education_buffer : Buffer
-            Buffer to store academic background data extracted from the curriculum.
+        buffers : CurriculaBuffer
+            Store and flush data to database.
 
         Returns
         -------
