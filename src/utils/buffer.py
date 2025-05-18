@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Callable, Self
 
+from src.utils.functions import also, then
+
 
 @dataclass(kw_only=True)
 class Buffer[T]:
@@ -22,14 +24,26 @@ class Buffer[T]:
 
     data: list[T] = field(default_factory=list)
     max: int = 64
-    on_flush: Callable[[list[T]], None] = lambda xs: None
+    _on_flush: Callable[[list[T]], None] = lambda xs: None
 
     def push(self, value: T) -> Self:
         if len(self) >= self.max:
-            self.on_flush(self.data)
+            self._on_flush(self.data)
             self.data.clear()
 
         self.data.append(value)
+        return self
+
+    def on_flush(self, on_flush: Callable[[list[T]], None]) -> Self:
+        self._on_flush = on_flush
+        return self
+
+    def also(self, on_flush: Callable[[list[T]], None]) -> Self:
+        self._on_flush = also(self._on_flush, on_flush)
+        return self
+
+    def then(self, on_flush: Callable[[list[T]], None]) -> Self:
+        self._on_flush = then(self._on_flush, on_flush)
         return self
 
     def __len__(self) -> int:
