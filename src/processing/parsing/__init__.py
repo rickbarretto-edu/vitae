@@ -1,18 +1,12 @@
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-import xml.etree.ElementTree as ET
 
 import eliot
 from loguru import logger
 
 from src.processing.parsing.logging import log_parsing
-from src.processing.parsing.xml import (
-    Node,
-    find,
-    attribute,
-    as_int,
-)
+from src.processing.parsing import xml
 
 from src.processing.buffers import CurriculaBuffer
 
@@ -35,8 +29,8 @@ class CurriculumParser:
         content = file.read_text(encoding="utf-8")
 
         self.id = file.name.removesuffix(".xml")
-        self.document = ET.fromstring(content)
-        self.data = find(self.document, "dados gerais")
+        self.document = xml.parse(content)
+        self.data = self.document.first("dados gerais")
         self.buffers = buffers
 
     @eliot.log_call(action_type="parsing")
@@ -120,14 +114,14 @@ class CurriculumParser:
             If an error occurs during the extraction process, it is logged, and an
             empty dictionary is returned.
         """
+        data = self.data
 
-        data = Node(self.data)
         resume = data.first("resumo CV")
         professional_address = data.first("endereco").first(
             "endereco profissional"
         )
 
-        if update_date := attribute(self.document, "data atualizacao"):
+        if update_date := self.document["data atualizacao"]:
             update_date = datetime.strptime(update_date, "%d%m%Y")
 
         researcher_general_data = {
@@ -177,7 +171,7 @@ class CurriculumParser:
         returns an empty list.
         """
 
-        data = Node(self.data)
+        data = self.data
 
         if (experiences := data.first("atuacoes profissionais")).exists is None:
             return []
@@ -196,8 +190,8 @@ class CurriculumParser:
                         "researcher_id": self.id,
                         "institution": institution,
                         "employment_relationship": link_type,
-                        "start_year": as_int(link["ano inicio"]),
-                        "end_year": as_int(link["ano fim"]),
+                        "start_year": xml.as_int(link["ano inicio"]),
+                        "end_year": xml.as_int(link["ano fim"]),
                     }
                 )
 
@@ -237,12 +231,15 @@ class CurriculumParser:
             {
                 "researcher_id": self.id,
                 "type": bg.tag,
-                "institution": attribute(bg, "nome instituicao"),
-                "course": attribute(bg, "nome curso"),
-                "start_year": as_int(attribute(bg, "ano de inicio")),
-                "end_year": as_int(attribute(bg, "ano de conclusao")),
+                "institution": xml.attribute(bg, "nome instituicao"),
+                "course": xml.attribute(bg, "nome curso"),
+                "start_year": xml.as_int(xml.attribute(bg, "ano de inicio")),
+                "end_year": xml.as_int(xml.attribute(bg, "ano de conclusao")),
             }
-            for bg in find(self.data, "formacao academica titulacao") or []
+            for bg in xml.find(
+                self.data.element, "formacao academica titulacao"
+            )
+            or []
         ]
 
     @log_parsing("Research Area")
@@ -287,24 +284,24 @@ class CurriculumParser:
         return [
             {
                 "researcher_id": self.id,
-                "major_knowledge_area": attribute(
+                "major_knowledge_area": xml.attribute(
                     area, "nome grande area do conhecimento"
                 ),
-                "knowledge_area": attribute(
+                "knowledge_area": xml.attribute(
                     area, "nome da area do conhecimento"
                 ),
-                "sub_knowledge_area": attribute(
+                "sub_knowledge_area": xml.attribute(
                     area, "nome da sub-area do conhecimento"
                 ),
-                "specialty": attribute(area, "nome da especialidade"),
+                "specialty": xml.attribute(area, "nome da especialidade"),
             }
-            for area in find(self.data, "areas de atuacao") or []
+            for area in xml.find(self.data.element, "areas de atuacao") or []
         ]
 
     # TODO Ajustar Areas de Conhecimento
     @log_parsing("Academic Background")
     @eliot.log_call(action_type="parsing")
-    def knowledgment_area(self, curriculo: ET.Element) -> list[Any]:
+    def knowledgment_area(self, curriculo: xml.Node) -> list[Any]:
         """Extracts the areas of expertise from a Lattes curriculum XML.
 
         This function parses the XML structure of a Lattes curriculum to extract
@@ -358,16 +355,10 @@ class CurriculumParser:
 
         return [
             {
-                "major_area": attribute(
-                    knowledgement, "nome grande area do conhecimento"
-                ),
-                "area": attribute(
-                    knowledgement, "nome da area do conhecimento"
-                ),
-                "sub_area": attribute(
-                    knowledgement, "nome da sub-area do conhecimento"
-                ),
-                "specialty": attribute(knowledgement, "nome da especialidade"),
+                "major_area": knowledgement["nome grande area do conhecimento"],
+                "area": knowledgement["nome da area do conhecimento"],
+                "sub_area": knowledgement["nome da sub-area do conhecimento"],
+                "specialty": knowledgement["nome da especialidade"],
             }
-            for knowledgement in find(curriculo, "areas de atuacao") or []
+            for knowledgement in curriculo.all("areas de atuacao")
         ]
