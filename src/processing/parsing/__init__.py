@@ -75,6 +75,17 @@ def log_parsing(topic: str):
     return decorator
 
 
+class Node:
+    def __init__(self, element: ET.Element | None):
+        self.element = element
+
+    def __getitem__(self, tag: str) -> str | None:
+        return attribute(self.element, tag)
+
+    def sub(self, tag: str) -> "Node":
+        return Node(find(self.element, tag))
+
+
 # TODO: This should not be called from open_curriculum, but instanciated.
 # TODO: Each parsing method should be split into multiple Parser classes.
 class CurriculumParser:
@@ -170,38 +181,26 @@ class CurriculumParser:
             empty dictionary is returned.
         """
 
+        data = Node(self.data)
+        resume = data.sub("resumo CV")
+        professional_address = data.sub("endereco").sub("endereco profissional")
+
         if update_date := attribute(self.document, "data atualizacao"):
             update_date = datetime.strptime(update_date, "%d%m%Y")
 
-        full_name = attribute(self.data, "nome completo")
-        birth_city = attribute(self.data, "cidade nascimento")
-        birth_state = attribute(self.data, "UF nascimento")
-        birth_country = attribute(self.data, "pais de nascimento")
-        citation_names = attribute(self.data, "nome em citacoes bibliograficas")
-        orcid = attribute(self.data, "ORCID ID")
-
-        resume = find(self.data, "resumo CV")
-        resume_text = attribute(resume, "texto resumo CV RH")
-
-        address = find(self.data, "endereco")
-        professional_address = find(address, "endereco profissional")
-        institution_name = attribute(
-            professional_address, "nome instituicao empresa"
-        )
-        institution_state = attribute(professional_address, "UF")
-        institution_city = attribute(professional_address, "cidade")
-
         researcher_general_data = {
-            "name": full_name,
-            "city": birth_city,
-            "state": birth_state,
-            "country": birth_country,
-            "quotes_names": citation_names,
-            "orcid": orcid,
-            "abstract": resume_text,
-            "professional_institution": institution_name,
-            "institution_state": institution_state,
-            "institution_city": institution_city,
+            "name": data["nome completo"],
+            "city": data["cidade nascimento"],
+            "state": data["UF nascimento"],
+            "country": data["pais de nascimento"],
+            "quotes_names": data["nome em citacoes bibliograficas"],
+            "orcid": data["ORCID ID"],
+            "abstract": resume["texto resumo CV RH"],
+            "professional_institution": professional_address[
+                "nome instituicao"
+            ],
+            "institution_state": professional_address["UF"],
+            "institution_city": professional_address["cidade"],
         }
 
         return researcher_general_data
