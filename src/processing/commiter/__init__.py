@@ -58,7 +58,7 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
-            logger.error(f"Erro no upsert_researcher: {exception}")
+            logger.error("Erro no upsert_researcher: {}", exception)
             self.session.rollback()
 
     def upsert_professional_experience(self, batch):
@@ -97,7 +97,7 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
-            logger.error(f"Erro no upsert_professional_experience: {exception}")
+            logger.error("Erro no upsert_professional_experience: {}", exception)
             self.session.rollback()
 
     def upsert_research_area(self, batch):
@@ -134,7 +134,7 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
-            logger.error("Error when upserting Research Area: %s", exception)
+            logger.error("Error when upserting Research Area: {}", exception)
             self.session.rollback()
 
     def upsert_knowledge_area(self, batch):
@@ -171,7 +171,7 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
-            logger.error(f"Erro no upsert_knowledge_area: {exception}")
+            logger.error("Erro no upsert_knowledge_area: {}", exception)
             self.session.rollback()
 
     def upsert_academic_background(self, batch):
@@ -210,7 +210,7 @@ class Load:
             self.session.execute(query)
             self.session.commit()
         except Exception as exception:
-            logger.error(f"Erro no upsert_academic_background: {exception}")
+            logger.error("Erro no upsert_academic_background: {}", exception)
             self.session.rollback()
 
 
