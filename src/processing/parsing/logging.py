@@ -1,4 +1,5 @@
 from functools import wraps
+import pprint
 
 from loguru import logger
 
@@ -20,6 +21,7 @@ def log_parsing(topic: str):
 
             if result:
                 logger.debug("{}'s data successfully extracted.", topic)
+                logger.trace("Parsed data:\n{}", pprint.pformat(result.value))
                 return result.value
             else:
                 logger.error(
