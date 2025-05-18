@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 import eliot
 from loguru import logger
 
+from src.parsing.buffers import CurriculaBuffer
 from src.utils.buffer import Buffer
 from functools import wraps
 
@@ -49,7 +50,6 @@ def log_parsing(topic: str):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-
             logger.debug("Parsing {}'s data...", topic)
 
             result: Result[list | dict, ET.ParseError] = catch(
@@ -79,14 +79,7 @@ class CurriculumParser:
     """Parses curriculum from XML."""
 
     @eliot.log_call(action_type="parsing")
-    def open_curriculum(
-        self,
-        curriculum: Path,
-        general_data_buffer: Buffer,
-        profession_buffer: Buffer,
-        research_area_buffer: Buffer,
-        education_buffer: Buffer,
-    ):
+    def open_curriculum(self, curriculum: Path, buffers: CurriculaBuffer):
         """Opens and processes an XML curriculum file contained within a ZIP archive.
 
         This method extracts the XML file from the provided ZIP archive, parses it,
@@ -133,22 +126,22 @@ class CurriculumParser:
             # ============= GENERAL DATA ================#
             general_data = self.general_data(document)
             general_data["id"] = researcher_id
-            general_data_buffer.push(general_data)
+            buffers.general.push(general_data)
 
             # ============= PROFESSIONAL EXPERIENCE ================#
             for experience in self.professional_experience(document):
                 experience["researcher_id"] = researcher_id
-                profession_buffer.push(experience)
+                buffers.professions.push(experience)
 
             # ============= ACADEMIC BACKGROUND ================#
             for background in self.academic_background(document):
                 background["researcher_id"] = researcher_id
-                education_buffer.push(background)
+                buffers.educations.push(background)
 
             # ============= RESEARCH AREA ================#
             for area in self.research_area(document):
                 area["researcher_id"] = researcher_id
-                research_area_buffer.push(area)
+                buffers.research_areas.push(area)
 
     @log_parsing("General Data")
     @eliot.log_call(action_type="parsing")

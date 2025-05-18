@@ -3,6 +3,7 @@ from pathlib import Path
 
 import eliot
 
+from src.parsing.buffers import CurriculaBuffer
 from src.parsing.load import load
 from src.parsing.parser import parser
 from src.utils.panic import panic
@@ -62,10 +63,11 @@ def process_curriculum(curriculum: Path):
     def buffer(action) -> Buffer:
         return Buffer(max=2).on_flush(action)
 
-    parser.open_curriculum(
-        curriculum,
-        buffer(load.upsert_researcher),
-        buffer(load.upsert_professional_experience),
-        buffer(load.upsert_academic_background),
-        buffer(load.upsert_research_area),
+    curricula_buffer = CurriculaBuffer(
+        general=buffer(load.upsert_researcher),
+        professions=buffer(load.upsert_professional_experience),
+        research_areas=buffer(load.upsert_academic_background),
+        educations=buffer(load.upsert_research_area),
     )
+
+    parser.open_curriculum(curriculum, curricula_buffer)
