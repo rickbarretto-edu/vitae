@@ -3,71 +3,76 @@ from pathlib import Path
 
 import eliot
 
+from src.settings import VitaeSettings
 from src.parsing.buffers import CurriculaBuffer
 from src.parsing.load import load
 from src.parsing.parser import parser
 from src.lib.panic import panic
 from src.lib.buffer import Buffer
 
-__all__ = ["scan_directory"]
+__all__ = ["CurriculaScheduler"]
 
 
-@eliot.log_call(action_type="scanning")
-def scan_directory(curricula_folder: Path):
-    """
-    Scan the directory containing Lattes curricula and process all subdirectories.
+class CurriculaScheduler:
+    def __init__(self, vitae: VitaeSettings):
+        self._vitae: VitaeSettings = vitae
+        self._curricula_folder: Path = Path(self._vitae.paths.curricula)
 
-    This function identifies the current working directory, verifies the existence
-    of a "repo" directory containing subdirectories of curricula, and processes
-    each subdirectory concurrently using a thread pool. Each subdirectory is expected
-    to contain zipped curricula files, which are parsed and processed.
+        if not self._curricula_folder.exists():
+            panic(f"Curricula folder does not exist: {self._curricula_folder}")
+        if not self._curricula_folder.is_dir():
+            panic(
+                f"Curricula path is not a directory: {self._curricula_folder}"
+            )
 
-    Raises
-    ------
-    Exception
-        If an error occurs during the scanning or processing of directories.
+    @eliot.log_call(action_type="scanning")
+    def scan(self):
+        """
+        Scan the directory containing Lattes curricula and process all subdirectories.
 
-    Notes
-    -----
-    - The function logs the progress and any errors encountered during execution.
-    - Subdirectories are processed in parallel to improve performance.
-    """
-    if not curricula_folder.exists():
-        panic(f"Curricula directory does not exist: {curricula_folder}")
+        This function identifies the current working directory, verifies the existence
+        of a "repo" directory containing subdirectories of curricula, and processes
+        each subdirectory concurrently using a thread pool. Each subdirectory is expected
+        to contain zipped curricula files, which are parsed and processed.
 
-    if not curricula_folder.is_dir():
-        panic(f"Curricula's path must be a directory: {curricula_folder}")
+        Raises
+        ------
+        Exception
+            If an error occurs during the scanning or processing of directories.
 
-    with ThreadPoolExecutor(max_workers=8) as executor:
-        for folder in curricula_folder.iterdir():
-            executor.submit(process_subdir, folder)
+        Notes
+        -----
+        - The function logs the progress and any errors encountered during execution.
+        - Subdirectories are processed in parallel to improve performance.
+        """
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            for folder in self._curricula_folder.iterdir():
+                executor.submit(self._process_subdir, folder)
 
+    @eliot.log_call(action_type="scanning")
+    def _process_subdir(self, subdirectory: Path):
+        """Process all curriculum files in a subdirectory.
 
-@eliot.log_call(action_type="scanning")
-def process_subdir(subdirectory: Path):
-    """Process all curriculum files in a subdirectory.
+        Scans the given subdirectory, processes each curriculum file using the parser,
+        manages data buffers, and periodically flushes them to the database.
+        """
 
-    Scans the given subdirectory, processes each curriculum file using the parser,
-    manages data buffers, and periodically flushes them to the database.
-    """
+        if not subdirectory.exists():
+            panic(f"Subdirectory does not exist: {subdirectory}")
 
-    if not subdirectory.exists():
-        panic(f"Subdirectory does not exist: {subdirectory}")
+        for curriculum in subdirectory.glob("*.xml"):
+            self._process_curriculum(curriculum)
 
-    for curriculum in subdirectory.glob("*.xml"):
-        process_curriculum(curriculum)
+    @eliot.log_call(action_type="scanning")
+    def _process_curriculum(self, curriculum: Path):
+        def buffer(action) -> Buffer:
+            return Buffer(max=2).on_flush(action)
 
+        curricula_buffer = CurriculaBuffer(
+            general=buffer(load.upsert_researcher),
+            professions=buffer(load.upsert_professional_experience),
+            research_areas=buffer(load.upsert_academic_background),
+            educations=buffer(load.upsert_research_area),
+        )
 
-@eliot.log_call(action_type="scanning")
-def process_curriculum(curriculum: Path):
-    def buffer(action) -> Buffer:
-        return Buffer(max=2).on_flush(action)
-
-    curricula_buffer = CurriculaBuffer(
-        general=buffer(load.upsert_researcher),
-        professions=buffer(load.upsert_professional_experience),
-        research_areas=buffer(load.upsert_academic_background),
-        educations=buffer(load.upsert_research_area),
-    )
-
-    parser.open_curriculum(curriculum, curricula_buffer)
+        parser.open_curriculum(curriculum, curricula_buffer)

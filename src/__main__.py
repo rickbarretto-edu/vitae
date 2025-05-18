@@ -1,6 +1,6 @@
 from src.database.database_config import database_config
 from src.database.database_creation import new_database
-from src.parsing.scheduler import scan_directory
+from src.parsing.scheduler import CurriculaScheduler
 from src.settings import vitae
 from src.__setup__ import VitaeSetup
 
@@ -16,4 +16,4 @@ if __name__ == "__main__":
     # Be careful with circular dependency.
 
     database_config.migrate()
-    scan_directory(vitae.paths.curricula)
+    CurriculaScheduler(vitae).scan()
