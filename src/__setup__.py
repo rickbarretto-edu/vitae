@@ -18,9 +18,9 @@ class VitaeSetup:
 
     def _eliot_for_development(self) -> None:
         """Setups Eliot for development mode.
-        
+
         Eliot is very good for debugging when used with eliot-tree.
-        But I don't think this is a good idea for using it 
+        But I don't think this is a good idea for using it
         in production for my specific case, due to the amount of data.
 
         Note
@@ -36,11 +36,12 @@ class VitaeSetup:
 
     def _loguru(self) -> None:
         """Setups Loguru
-        
+
         - Writes logs to vitae.log with rotation of 200 MB.
         - Writes trace in stdout on development mode.
         - Writes exceptions to exceptions/ folder.
         """
+        logger.remove()
         os.makedirs("logs", exist_ok=True)
         logger.add(
             "logs/vitae.log", rotation="200 MB", encoding="utf-8", enqueue=True
