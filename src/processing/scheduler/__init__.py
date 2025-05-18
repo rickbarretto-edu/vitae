@@ -5,7 +5,7 @@ import eliot
 from loguru import logger
 
 from src.settings import VitaeSettings
-from src.processing.parsing.buffers import CurriculaBuffer
+from src.processing.buffers import CurriculaBuffer
 from src.processing.commiter import load
 from src.processing.parsing.parser import parser
 from src.lib.panic import panic
