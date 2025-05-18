@@ -81,7 +81,7 @@ class CurriculaScheduler:
             return (
                 Buffer(max=max)
                 .on_flush(action)
-                .then(lambda xs: logger.info("Flushed {} items", len(xs)))
+                .also(lambda xs: logger.info("Flushed {} items", len(xs)))
             )
 
         buffers = CurriculaBuffer(
