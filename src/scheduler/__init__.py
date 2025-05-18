@@ -46,6 +46,16 @@ class CurriculaScheduler:
         - The function logs the progress and any errors encountered during execution.
         - Subdirectories are processed in parallel to improve performance.
         """
+        if self._vitae.in_development:
+            self._serial_execution()
+        else:
+            self._parallel_execution()
+
+    def _serial_execution(self):
+        for folder in self._curricula_folder.iterdir():
+            self._process_subdir(folder)
+
+    def _parallel_execution(self):
         with ThreadPoolExecutor(max_workers=8) as executor:
             for folder in self._curricula_folder.iterdir():
                 executor.submit(self._process_subdir, folder)
