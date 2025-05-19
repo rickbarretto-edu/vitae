@@ -1,3 +1,5 @@
+from sqlalchemy import text
+
 from src.database.database_config import DatabaseConfig
 from src.database.database_creation import new_database
 from src.processing.commiter.commiter import UpsertService
@@ -10,14 +12,22 @@ def main():
     setup = VitaeSetup(vitae)
     database = DatabaseConfig()
     commiter = UpsertService(session=database.session, settings=vitae)
-    scheduler = CurriculaScheduler(vitae, commiter)
 
     setup.setup_logging()
 
     new_database(vitae)
     database.migrate()
-    scheduler.scan()
+    CurriculaScheduler(vitae, commiter).scan()
+
+
+def test_connection():
+    session = DatabaseConfig().session
+    session.execute(
+        text("INSERT INTO researcher (id, name) VALUES ('test_id', 'Test Name')")
+    )
+    session.commit()
 
 
 if __name__ == "__main__":
+    # test_connection()
     main()

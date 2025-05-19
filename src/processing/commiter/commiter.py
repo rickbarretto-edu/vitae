@@ -48,14 +48,7 @@ class UpsertService:
             return
         try:
             query = insert(Researcher).values(batch)
-            update_dict = {
-                key: getattr(query.excluded, key)
-                for key in batch[0]
-                if key != "id"
-            }
-            query = query.on_conflict_do_update(
-                index_elements=["id"], set_=update_dict
-            )
+            query = query.on_conflict_do_nothing(index_elements=["id"])
             self.session.execute(query)
             self.session.commit()
         except Exception as e:
@@ -79,14 +72,7 @@ class UpsertService:
             if not batch:
                 return
             query = insert(ProfessionalExperience).values(batch)
-            update_dict = {
-                key: getattr(query.excluded, key)
-                for key in batch[0]
-                if key != "id"
-            }
-            query = query.on_conflict_do_update(
-                index_elements=unique_keys, set_=update_dict
-            )
+            query = query.on_conflict_do_nothing(index_elements=unique_keys)
             self.session.execute(query)
             self.session.commit()
         except Exception as e:
@@ -110,14 +96,7 @@ class UpsertService:
             if not batch:
                 return
             query = insert(ResearchArea).values(batch)
-            update_dict = {
-                key: getattr(query.excluded, key)
-                for key in batch[0]
-                if key != "id"
-            }
-            query = query.on_conflict_do_update(
-                index_elements=unique_keys, set_=update_dict
-            )
+            query = query.on_conflict_do_nothing(index_elements=unique_keys)
             self.session.execute(query)
             self.session.commit()
         except Exception as e:
@@ -141,14 +120,7 @@ class UpsertService:
             if not batch:
                 return
             query = insert(KnowledgeArea).values(batch)
-            update_dict = {
-                key: getattr(query.excluded, key)
-                for key in batch[0]
-                if key != "id"
-            }
-            query = query.on_conflict_do_update(
-                index_elements=unique_keys, set_=update_dict
-            )
+            query = query.on_conflict_do_nothing(index_elements=unique_keys)
             self.session.execute(query)
             self.session.commit()
         except Exception as e:
@@ -173,14 +145,7 @@ class UpsertService:
             if not batch:
                 return
             query = insert(AcademicBackground).values(batch)
-            update_dict = {
-                key: getattr(query.excluded, key)
-                for key in batch[0]
-                if key != "id"
-            }
-            query = query.on_conflict_do_update(
-                index_elements=unique_keys, set_=update_dict
-            )
+            query = query.on_conflict_do_nothing(index_elements=unique_keys)
             self.session.execute(query)
             self.session.commit()
         except Exception as e:
