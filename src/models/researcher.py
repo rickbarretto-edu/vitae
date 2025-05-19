@@ -1,40 +1,38 @@
-from sqlalchemy import Column, DateTime, Integer, String, func
-from sqlalchemy.orm import relationship
+from sqlmodel import SQLModel, Field, Relationship
 
-from src.models.__core__ import Model
+from src.models.academic_background import AcademicBackground
+from src.models.professional_experience import ProfessionalExperience
+from src.models.research_area import ResearchArea
 
 
 __all__ = ["Researcher"]
 
 
-class Researcher(Model):
-    __tablename__ = "researcher"
+class Researcher(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    # updated_at: str | None = Field(
+    #     default=None, sa_column_kwargs={"default": "now()", "onupdate": "now()"}
+    # )
+    name: str = Field(nullable=False)
+    city: str | None = None
+    state: str | None = None
+    country: str | None = None
+    quotes_names: str | None = None
+    orcid: str | None = None
+    abstract: str | None = None
+    # professional_institution: str | None = None
+    # institution_state: str | None = None
+    # institution_city: str | None = None
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    updated_at = Column(DateTime, default=func.now, onupdate=func.now)
-    name = Column(String, nullable=False)
-    city = Column(String)
-    state = Column(String)
-    country = Column(String)
-    quotes_names = Column(String)
-    orcid = Column(String)
-    abstract = Column(String)
-    professional_institution = Column(String)
-    institution_state = Column(String)
-    institution_city = Column(String)
-
-    academic_background = relationship(
-        "AcademicBackground",
-        back_populates="researcher",
-        cascade="all, delete-orphan",
-    )
-    professional_experience = relationship(
-        "ProfessionalExperience",
-        back_populates="researcher",
-        cascade="all, delete-orphan",
-    )
-    research_area = relationship(
-        "ResearchArea",
-        back_populates="researcher",
-        cascade="all, delete-orphan",
-    )
+    # academic_background: list[AcademicBackground] = Relationship(
+    #     back_populates="researcher",
+    #     sa_relationship_kwargs={"cascade": "all, delete-orphan"},
+    # )
+    # professional_experience: list[ProfessionalExperience] = Relationship(
+    #     back_populates="researcher",
+    #     sa_relationship_kwargs={"cascade": "all, delete-orphan"},
+    # )
+    # research_area: list[ResearchArea] = Relationship(
+    #     back_populates="researcher",
+    #     sa_relationship_kwargs={"cascade": "all, delete-orphan"},
+    # )
