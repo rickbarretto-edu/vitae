@@ -24,6 +24,7 @@ loguru = "^0.7.3"
 pytest = "^8.3.5"
 eliot-tree = "^24.0.0"
 eliot = "^1.17.5"
+sqlmodel = "^0.0.24"
 
 
 [tool.poetry.group.dev.dependencies]
