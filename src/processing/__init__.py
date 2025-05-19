@@ -6,8 +6,8 @@ from loguru import logger
 
 from src.lib.panic import panic
 from src.lib.buffer import Buffer
+from src.processing.commiter.commiter import UpsertService
 from src.processing.buffers import CurriculaBuffer
-from src.processing.commiter import load
 from src.processing.parsing import CurriculumParser
 from src.settings import VitaeSettings
 
@@ -15,7 +15,8 @@ __all__ = ["CurriculaScheduler"]
 
 
 class CurriculaScheduler:
-    def __init__(self, vitae: VitaeSettings):
+    def __init__(self, vitae: VitaeSettings, commiter: UpsertService):
+        self._commiter: UpsertService = commiter
         self._vitae: VitaeSettings = vitae
         self._curricula_folder: Path = Path(self._vitae.paths.curricula)
 
@@ -85,10 +86,10 @@ class CurriculaScheduler:
             )
 
         buffers = CurriculaBuffer(
-            general=buffer(load.upsert_researcher),
-            professions=buffer(load.upsert_professional_experience),
-            research_areas=buffer(load.upsert_academic_background),
-            educations=buffer(load.upsert_research_area),
+            general=buffer(self._commiter.upsert_researcher),
+            professions=buffer(self._commiter.upsert_professional_experience),
+            research_areas=buffer(self._commiter.upsert_academic_background),
+            educations=buffer(self._commiter.upsert_research_area),
         )
 
         CurriculumParser(curriculum, buffers).parse()
