@@ -15,22 +15,18 @@ from src.processing import proxies
 def upsert_researchers(engine: Engine, researchers: list[proxies.GeneralData]):
     with Session(engine) as session:
         for researcher in researchers:
-            upsert_researcher(session, researcher)
-
-
-def upsert_researcher(session: Session, researcher: proxies.GeneralData):
-    session.add(
-        models.Researcher(
-            name=researcher["name"] or "Invalid Name",
-            city=researcher["city"],
-            state=researcher["state"],
-            country=researcher["country"],
-            quotes_names=researcher["quotes_names"],
-            orcid=researcher["orcid"],
-            abstract=researcher["abstract"],
-        )
-    )
-    logger.trace("Upserted: {}", researcher)
+            table = models.Researcher(
+                name=researcher["name"] or "Invalid Name",
+                city=researcher["city"],
+                state=researcher["state"],
+                country=researcher["country"],
+                quotes_names=researcher["quotes_names"],
+                orcid=researcher["orcid"],
+                abstract=researcher["abstract"],
+            )
+            session.add(table)
+            logger.trace("Upserted: {}", table)
+        session.commit()
 
 
 @dataclass
