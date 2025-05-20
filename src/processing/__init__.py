@@ -6,10 +6,7 @@ from loguru import logger
 from sqlalchemy import Engine
 
 from src.lib.panic import panic
-from src.processing.commiter.commiter import (
-    upsert_researchers,
-    upsert_experiences,
-)
+from src.processing import commiter
 from src.processing.parsing import CurriculumParser
 from src.settings import VitaeSettings
 
@@ -76,7 +73,7 @@ class CurriculaScheduler:
 
         curricula = subdirectory.glob("*.xml")
 
-        upsert_researchers(
+        commiter.upsert_researchers(
             self.engine,
             (
                 CurriculumParser(curriculum).researcher()
@@ -84,7 +81,7 @@ class CurriculaScheduler:
             ),
         )
 
-        upsert_experiences(
+        commiter.upsert_experiences(
             self.engine,
             (
                 CurriculumParser(curriculum).experiences()
