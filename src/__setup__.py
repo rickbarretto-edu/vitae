@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import os
 import sys
+from pathlib import Path
 
 import eliot
 from loguru import logger
@@ -13,6 +14,7 @@ class VitaeSetup:
     vitae: VitaeSettings
 
     def setup_logging(self) -> None:
+        Path("logs").mkdir(parents=True, exist_ok=True)
         self._eliot_for_development()
         self._loguru()
 
