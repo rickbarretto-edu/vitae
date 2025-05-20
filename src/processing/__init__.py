@@ -3,11 +3,10 @@ from pathlib import Path
 
 import eliot
 from loguru import logger
+from sqlalchemy import Engine
 
 from src.lib.panic import panic
-from src.lib.buffer import Buffer
-from src.processing.commiter.commiter import UpsertService
-from src.processing.buffers import CurriculaBuffer
+from src.processing.commiter.commiter import upsert_researchers
 from src.processing.parsing import CurriculumParser
 from src.settings import VitaeSettings
 
@@ -15,9 +14,9 @@ __all__ = ["CurriculaScheduler"]
 
 
 class CurriculaScheduler:
-    def __init__(self, vitae: VitaeSettings, commiter: UpsertService):
-        self._commiter: UpsertService = commiter
+    def __init__(self, vitae: VitaeSettings, engine: Engine):
         self._vitae: VitaeSettings = vitae
+        self.engine = engine
         self._curricula_folder: Path = Path(self._vitae.paths.curricula)
 
         if not self._curricula_folder.exists():
@@ -72,24 +71,10 @@ class CurriculaScheduler:
         if not subdirectory.exists():
             panic(f"Subdirectory does not exist: {subdirectory}")
 
-        for curriculum in subdirectory.glob("*.xml"):
-            self._process_curriculum(curriculum)
-
-    @eliot.log_call(action_type="scanning")
-    def _process_curriculum(self, curriculum: Path):
-        def buffer(action) -> Buffer:
-            max: int = self._vitae.postgres.db.flush_every
-            return (
-                Buffer(max=max)
-                .on_flush(action)
-                .also(lambda xs: logger.info("Flushed {} items", len(xs)))
-            )
-
-        buffers = CurriculaBuffer(
-            general=buffer(self._commiter.upsert_researcher),
-            professions=buffer(self._commiter.upsert_professional_experience),
-            research_areas=buffer(self._commiter.upsert_academic_background),
-            educations=buffer(self._commiter.upsert_research_area),
+        upsert_researchers(
+            self.engine,
+            [
+                CurriculumParser(curriculum).researcher()
+                for curriculum in subdirectory.glob("*.xml")
+            ],
         )
-
-        CurriculumParser(curriculum, buffers).parse()

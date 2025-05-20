@@ -5,12 +5,32 @@ from loguru import logger
 
 # from sqlalchemy.dialects.postgresql import insert
 # from sqlalchemy.orm import Session
-from sqlmodel import create_engine, Session
+from sqlmodel import Session
 from sqlalchemy.engine import Engine
 
 from src import models
 from src.processing import proxies
-from src.settings import VitaeSettings
+
+
+def upsert_researchers(engine: Engine, researchers: list[proxies.GeneralData]):
+    with Session(engine) as session:
+        for researcher in researchers:
+            upsert_researcher(session, researcher)
+
+
+def upsert_researcher(session: Session, researcher: proxies.GeneralData):
+    session.add(
+        models.Researcher(
+            name=researcher["name"] or "Invalid Name",
+            city=researcher["city"],
+            state=researcher["state"],
+            country=researcher["country"],
+            quotes_names=researcher["quotes_names"],
+            orcid=researcher["orcid"],
+            abstract=researcher["abstract"],
+        )
+    )
+    logger.trace("Upserted: {}", researcher)
 
 
 @dataclass

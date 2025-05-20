@@ -37,7 +37,7 @@ class CurriculumParser:
     - Flusing to database must be done outside this class. Use ``Buffer.on_flush`` for this.
     """
 
-    def __init__(self, file: Path, buffers: CurriculaBuffer) -> None:
+    def __init__(self, file: Path) -> None:
         """
         Parameters
         ----------
@@ -51,21 +51,20 @@ class CurriculumParser:
         self.id = file.name.removesuffix(".xml")
         self.document = xml.parse(content)
         self.data = self.document.first("dados gerais")
-        self.buffers = buffers
 
     @eliot.log_call(action_type="parsing")
-    def parse(self):
+    def researcher(self):
         """Parse the Curriculum XML file and extract useful information."""
 
         logger.info("Parsing researcher ({}) curriculum", self.id)
 
-        self.buffers.general.push(parsers.general_data(self.data))
+        return parsers.general_data(self.data)
 
-        for experience in parsers.professional_experiences(self.id, self.data):
-            self.buffers.professions.push(experience)
+        # for experience in parsers.professional_experiences(self.id, self.data):
+        #     self.buffers.professions.push(experience)
 
-        for background in parsers.academic_background(self.id, self.data):
-            self.buffers.educations.push(background)
+        # for background in parsers.academic_background(self.id, self.data):
+        #     self.buffers.educations.push(background)
 
-        for area in parsers.research_area(self.id, self.data):
-            self.buffers.research_areas.push(area)
+        # for area in parsers.research_area(self.id, self.data):
+        #     self.buffers.research_areas.push(area)
