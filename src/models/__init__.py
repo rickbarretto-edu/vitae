@@ -13,9 +13,9 @@ class Researcher(SQLModel, table=True):
     quotes_names: str | None = None
     orcid: str | None = None
     abstract: str | None = None
-    # professional_institution: str | None = None
-    # institution_state: str | None = None
-    # institution_city: str | None = None
+    professional_institution: str | None = None
+    institution_state: str | None = None
+    institution_city: str | None = None
 
     # academic_background: list[AcademicBackground] = Relationship(
     #     back_populates="researcher",

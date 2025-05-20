@@ -25,6 +25,9 @@ def upsert_researchers(
                 quotes_names=researcher["quotes_names"],
                 orcid=researcher["orcid"],
                 abstract=researcher["abstract"],
+                professional_institution=researcher["professional_institution"],
+                institution_state=researcher["institution_state"],
+                institution_city=researcher["institution_city"],
             )
             session.add(table)
             logger.trace("Upserted: {}", table)
