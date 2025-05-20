@@ -20,14 +20,5 @@ def main():
     CurriculaScheduler(vitae, commiter).scan()
 
 
-def test_connection():
-    session = DatabaseConfig().session
-    session.execute(
-        text("INSERT INTO researcher (id, name) VALUES ('test_id', 'Test Name')")
-    )
-    session.commit()
-
-
 if __name__ == "__main__":
-    # test_connection()
     main()
