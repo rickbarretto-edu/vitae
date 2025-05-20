@@ -1,8 +1,6 @@
 from sqlalchemy import Engine
 from sqlmodel import SQLModel, create_engine
 
-from src.database.database_config import DatabaseConfig
-from src.database.database_creation import new_database
 from src.processing.commiter.commiter import UpsertService
 from src.processing import CurriculaScheduler
 from src.settings import vitae
@@ -16,8 +14,7 @@ def start_database(engine: Engine):
 def main():
     engine = create_engine(vitae.postgres.url, echo=True)
     setup = VitaeSetup(vitae)
-    database = DatabaseConfig()
-    commiter = UpsertService(session=database.session, settings=vitae)
+    commiter = UpsertService(engine)
 
     setup.setup_logging()
 
