@@ -23,7 +23,6 @@ pytest = "^8.3.5"
 eliot-tree = "^24.0.0"
 eliot = "^1.17.5"
 sqlmodel = "^0.0.24"
-alembic = "^1.15.2"
 
 
 [tool.poetry.group.dev.dependencies]
