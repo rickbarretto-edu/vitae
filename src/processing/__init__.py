@@ -6,7 +6,10 @@ from loguru import logger
 from sqlalchemy import Engine
 
 from src.lib.panic import panic
-from src.processing.commiter.commiter import upsert_researchers
+from src.processing.commiter.commiter import (
+    upsert_researchers,
+    upsert_experiences,
+)
 from src.processing.parsing import CurriculumParser
 from src.settings import VitaeSettings
 
@@ -71,10 +74,20 @@ class CurriculaScheduler:
         if not subdirectory.exists():
             panic(f"Subdirectory does not exist: {subdirectory}")
 
+        curricula = subdirectory.glob("*.xml")
+
         upsert_researchers(
             self.engine,
-            [
+            (
                 CurriculumParser(curriculum).researcher()
-                for curriculum in subdirectory.glob("*.xml")
-            ],
+                for curriculum in curricula
+            ),
+        )
+
+        upsert_experiences(
+            self.engine,
+            (
+                CurriculumParser(curriculum).experiences()
+                for curriculum in curricula
+            ),
         )

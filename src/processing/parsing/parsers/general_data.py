@@ -1,4 +1,3 @@
-
 import eliot
 
 from src.processing.proxies import GeneralData
@@ -11,7 +10,7 @@ __all__ = ["general_data"]
 
 @log_parsing("General Data")
 @eliot.log_call(action_type="parsing")
-def general_data(data: xml.Node) -> GeneralData:
+def general_data(id: str, data: xml.Node) -> GeneralData:
     """Extract general data from the Lattes curriculum XML.
 
     This function navigates through the provided XML structure to extract
@@ -49,6 +48,7 @@ def general_data(data: xml.Node) -> GeneralData:
     professional_address = data.first("endereco").first("endereco profissional")
 
     return {
+        "id": id,
         "name": data["nome completo"],
         "city": data["cidade nascimento"],
         "state": data["UF nascimento"],

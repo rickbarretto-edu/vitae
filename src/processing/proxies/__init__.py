@@ -4,6 +4,7 @@ __all__ = ["AcademicBackground"]
 
 
 class GeneralData(TypedDict):
+    id: str
     name: str | None
     city: str | None
     state: str | None

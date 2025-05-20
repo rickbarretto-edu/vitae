@@ -58,13 +58,19 @@ class CurriculumParser:
 
         logger.info("Parsing researcher ({}) curriculum", self.id)
 
-        return parsers.general_data(self.data)
+        return parsers.general_data(self.id, self.data)
 
-        # for experience in parsers.professional_experiences(self.id, self.data):
-        #     self.buffers.professions.push(experience)
+    @eliot.log_call(action_type="parsing")
+    def experiences(self):
+        for experience in parsers.professional_experiences(self.id, self.data):
+            yield experience
 
-        # for background in parsers.academic_background(self.id, self.data):
-        #     self.buffers.educations.push(background)
+    @eliot.log_call(action_type="parsing")
+    def background(self):
+        for background in parsers.academic_background(self.id, self.data):
+            yield background
 
-        # for area in parsers.research_area(self.id, self.data):
-        #     self.buffers.research_areas.push(area)
+    @eliot.log_call(action_type="parsing")
+    def areas(self):
+        for area in parsers.research_area(self.id, self.data):
+            yield area
