@@ -13,4 +13,3 @@ flush_every = 100
 
 [paths]
 curricula = "path/to/your/curricula/files"
-alembic = "alembic.ini"
