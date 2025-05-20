@@ -1,6 +1,9 @@
 from sqlalchemy import Engine
 from sqlmodel import SQLModel, create_engine
 
+# Loads models to register them in SQLModel
+from src import models as models
+
 from src.processing.commiter.commiter import UpsertService
 from src.processing import CurriculaScheduler
 from src.settings import vitae
