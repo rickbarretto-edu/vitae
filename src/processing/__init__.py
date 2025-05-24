@@ -5,7 +5,7 @@ import eliot
 from loguru import logger
 from sqlalchemy import Engine
 
-from src.session import Database
+from src.database import Database
 from src.lib.panic import panic
 from src.processing.parsing import CurriculumParser
 from src.settings import VitaeSettings
