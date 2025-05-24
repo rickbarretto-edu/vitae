@@ -30,7 +30,7 @@ def upsert_researchers(
                 institution_city=researcher["institution_city"],
             )
             session.add(table)
-            logger.trace("Upserted: {}", table)
+            logger.debug("Researcher upserted: {}", table)
         session.commit()
 
 
@@ -47,5 +47,5 @@ def upsert_experiences(
                 end_year=experience["end_year"],
             )
             session.add(table)
-            logger.trace("Upserted: {}", table)
+            logger.debug("Experience upserted: {}", table)
         session.commit()
