@@ -5,8 +5,8 @@ import eliot
 from loguru import logger
 from sqlalchemy import Engine
 
+from src import commiter
 from src.lib.panic import panic
-from src.processing import commiter
 from src.processing.parsing import CurriculumParser
 from src.settings import VitaeSettings
 
