@@ -5,7 +5,7 @@ import eliot
 from loguru import logger
 from sqlalchemy import Engine
 
-from src import session
+from src.session import Database
 from src.lib.panic import panic
 from src.processing.parsing import CurriculumParser
 from src.settings import VitaeSettings
@@ -72,19 +72,15 @@ class CurriculaScheduler:
             panic(f"Subdirectory does not exist: {subdirectory}")
 
         curricula = subdirectory.glob("*.xml")
+        database = Database(self.engine)
 
-        session.upsert_researchers(
-            self.engine,
-            (
-                CurriculumParser(curriculum).researcher()
-                for curriculum in curricula
-            ),
+        database.put.researchers(
+            CurriculumParser(curriculum).researcher() for curriculum in curricula
         )
 
-        session.upsert_experiences(
-            self.engine,
-            (
-                CurriculumParser(curriculum).experiences()
-                for curriculum in curricula
-            ),
+        # Flatten the experiences from all curricula
+        database.put.experiences(
+            experience
+            for curriculum in curricula
+            for experience in CurriculumParser(curriculum).experiences()
         )
