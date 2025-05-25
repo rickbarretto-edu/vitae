@@ -1,6 +1,6 @@
 import eliot
 
-from src.features.ingestion.schema import AcademicBackground
+from ..schema import AcademicBackground
 from . import _xml as xml
 from ._log import log_parsing
 
@@ -39,13 +39,13 @@ def academic_background(id: str, data: xml.Node) -> list[AcademicBackground]:
     """
 
     return [
-        {
-            "researcher_id": id,
-            "type": bg.tag,
-            "institution": xml.attribute(bg, "nome instituicao"),
-            "course": xml.attribute(bg, "nome curso"),
-            "start_year": xml.as_int(xml.attribute(bg, "ano de inicio")),
-            "end_year": xml.as_int(xml.attribute(bg, "ano de conclusao")),
-        }
+        AcademicBackground(
+            researcher_id=id,
+            type=bg.tag,
+            institution=xml.attribute(bg, "nome instituicao"),
+            course=xml.attribute(bg, "nome curso"),
+            start_year=xml.as_int(xml.attribute(bg, "ano de inicio")),
+            end_year=xml.as_int(xml.attribute(bg, "ano de conclusao")),
+        )
         for bg in xml.find(data.element, "formacao academica titulacao") or []
     ]

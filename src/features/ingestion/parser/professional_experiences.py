@@ -45,7 +45,7 @@ def professional_experiences(
     if (experiences := data.first("atuacoes profissionais")).exists is None:
         return []
 
-    professional_experience = []
+    professional_experience: list[ProfessionalExperience] = []
     for experience in experiences.all("atuacao profissional"):
         institution = experience["nome instituicao"]
         links = experience.all("vinculos")
@@ -55,13 +55,13 @@ def professional_experiences(
                 link_type = link["outro vinculo informado"]
 
             professional_experience.append(
-                {
-                    "researcher_id": id,
-                    "institution": institution,
-                    "employment_relationship": link_type,
-                    "start_year": xml.as_int(link["ano inicio"]),
-                    "end_year": xml.as_int(link["ano fim"]),
-                }
+                ProfessionalExperience(
+                    researcher_id=id,
+                    institution=institution,
+                    employment_relationship=link_type,
+                    start_year=xml.as_int(link["ano inicio"]),
+                    end_year=xml.as_int(link["ano fim"]),
+                )
             )
 
     return professional_experience

@@ -1,6 +1,6 @@
 import eliot
 
-from src.features.ingestion.schema import GeneralData
+from ..schema import GeneralData
 from . import _xml as xml
 from ._log import log_parsing
 
@@ -47,16 +47,16 @@ def general_data(id: str, data: xml.Node) -> GeneralData:
     resume = data.first("resumo CV")
     professional_address = data.first("endereco").first("endereco profissional")
 
-    return {
-        "id": id,
-        "name": data["nome completo"],
-        "city": data["cidade nascimento"],
-        "state": data["UF nascimento"],
-        "country": data["pais de nascimento"],
-        "quotes_names": data["nome em citacoes bibliograficas"],
-        "orcid": data["ORCID ID"],
-        "abstract": resume["texto resumo CV RH"],
-        "professional_institution": professional_address["nome instituicao"],
-        "institution_state": professional_address["UF"],
-        "institution_city": professional_address["cidade"],
-    }
+    return GeneralData(
+        id=id,
+        name=data["nome completo"],
+        city=data["cidade nascimento"],
+        state=data["UF nascimento"],
+        country=data["pais de nascimento"],
+        quotes_names=data["nome em citacoes bibliograficas"],
+        orcid=data["ORCID ID"],
+        abstract=resume["texto resumo CV RH"],
+        professional_institution=professional_address["nome instituicao"],
+        institution_state=professional_address["UF"],
+        institution_city=professional_address["cidade"],
+    )

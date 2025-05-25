@@ -49,11 +49,11 @@ def knowledge_areas(curriculo: xml.Node) -> list[KnowledgeArea]:
     """
 
     return [
-        {
-            "major_area": knowledgement["nome grande area do conhecimento"],
-            "area": knowledgement["nome da area do conhecimento"],
-            "sub_area": knowledgement["nome da sub-area do conhecimento"],
-            "specialty": knowledgement["nome da especialidade"],
-        }
+        KnowledgeArea(
+            major_area=knowledgement["nome grande area do conhecimento"],
+            area=knowledgement["nome da area do conhecimento"],
+            sub_area=knowledgement["nome da sub-area do conhecimento"],
+            specialty=knowledgement["nome da especialidade"],
+        )
         for knowledgement in curriculo.all("areas de atuacao")
     ]
