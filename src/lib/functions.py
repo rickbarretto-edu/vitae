@@ -4,6 +4,10 @@ from typing import Any, Callable
 def also(*actions: Callable[[Any], None]) -> Callable[[Any], Any]:
     """Merge independent functions into a single one.
 
+    Returns:
+    -------
+    A new function.
+
     Example:
     -------
         Buffer(
@@ -23,6 +27,10 @@ def also(*actions: Callable[[Any], None]) -> Callable[[Any], Any]:
 
 def then(*actions: Callable[[Any], Any]) -> Callable[[Any], Any]:
     """Pipe dependent functions into a single one.
+
+    Returns:
+    -------
+    A new function.
 
     Note:
     ----
