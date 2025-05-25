@@ -11,41 +11,15 @@ __all__ = ["knowledge_areas"]
 @log_parsing("Academic Background")
 @eliot.log_call(action_type="parsing")
 def knowledge_areas(curriculo: xml.Node) -> list[KnowledgeArea]:
-    """Extracts the areas of expertise from a Lattes curriculum XML.
+    """Extract the areas of expertise from a Lattes curriculum XML.
 
     This function parses the XML structure of a Lattes curriculum to extract
     information about the researcher's areas of expertise, including the
     major area, area, sub-area, and specialty.
 
-    Parameters
-    ----------
-    curriculo : xml.Node
-        The XML element representing the Lattes curriculum.
-
-    Notes
-    -----
-    If the "AREAS-DE-ATUACAO" tag is not found in the XML, an empty list is returned.
-    In case of an exception during parsing, an error is logged, and an empty list is returned.
-
-    Examples
-    --------
-    >>> from xml.etree.ElementTree import fromstring
-    >>> xml_data = '''
-    ... <CURRICULO>
-    ...     <AREAS-DE-ATUACAO>
-    ...         <AREA-DE-ATUACAO NOME-GRANDE-AREA-DO-CONHECIMENTO="Ciências Exatas"
-    ...                         NOME-DA-AREA-DO-CONHECIMENTO="Matemática"
-    ...                         NOME-DA-SUB-AREA-DO-CONHECIMENTO="Álgebra"
-    ...                         NOME-DA-ESPECIALIDADE="Teoria dos Grupos"/>
-    ...     </AREAS-DE-ATUACAO>
-    ... </CURRICULO>
-    ... '''
-    >>> curriculo = fromstring(xml_data)
-    >>> knowledgment_area(curriculo)
-    [{'major_area': 'Ciências Exatas',
-        'area': 'Matemática',
-        'sub_area': 'Álgebra',
-        'specialty': 'Teoria dos Grupos'}]
+    Returns
+    -------
+    Researcher's Knowledge Areas.
 
     """
     return [

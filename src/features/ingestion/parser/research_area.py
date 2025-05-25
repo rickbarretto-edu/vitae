@@ -1,6 +1,7 @@
 import eliot
 
-from ..schema import ResearchArea
+from src.features.ingestion.schema import ResearchArea
+
 from . import _xml as xml
 from ._log import log_parsing
 
@@ -16,34 +17,9 @@ def research_area(id: str, data: xml.Node) -> list[ResearchArea]:
     to extract information about research areas, including major knowledge
     areas, knowledge areas, sub-knowledge areas, and specialties.
 
-    Parameters
-    ----------
-    curriculum : xml.etree.ElementTree.Element
-        The Lattes curriculum XML element.
-
     Returns
     -------
-    list of dict
-        A list of dictionaries, where each dictionary contains information
-        about a research area with the following keys:
-        - 'major_knowledge_area' (str or None): The name of the major knowledge area.
-        - 'knowledge_area' (str or None): The name of the knowledge area.
-        - 'sub_knowledge_area' (str or None): The name of the sub-knowledge area.
-        - 'specialty' (str or None): The name of the specialty.
-
-    Notes
-    -----
-    If no research areas are found, an empty list is returned. In case of an
-    error during extraction, the function logs the error and returns an empty list.
-
-    Examples
-    --------
-    >>> curriculum = ET.parse("lattes.xml").getroot()
-    >>> parser = LattesParser()
-    >>> research_areas = parser.research_area(curriculum)
-    >>> print(research_areas)
-    [{'major_knowledge_area': 'Engineering', 'knowledge_area': 'Civil Engineering',
-        'sub_knowledge_area': 'Structural Engineering', 'specialty': 'Concrete Structures'}, ...]
+    A collection of Research Areas.
 
     """
     return [

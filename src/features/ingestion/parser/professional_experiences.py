@@ -19,28 +19,9 @@ def professional_experiences(
     This function navigates through the XML structure of a Lattes curriculum
     to extract information about professional experiences.
 
-    Parameters
-    ----------
-    id : str
-        The unique identifier of the researcher.
-    data : xml.Node
-        The Lattes curriculum XML element representing a researcher's data.
-
     Returns
     -------
-    list of dict
-        A list of dictionaries, where each dictionary contains information
-        about a professional experience. Each dictionary has the following keys:
-        - 'institution' (str or None): Name of the institution.
-        - 'employment_relationship' (str or None): Type of employment relationship.
-        - 'start_year' (int or None): Start year of the professional experience.
-        - 'end_year' (int or None): End year of the professional experience.
-
-    Notes
-    -----
-    If no professional experiences are found, an empty list is returned.
-    In case of an error during extraction, the function logs the error and
-    returns an empty list.
+    Researcher's Professional experiences.
 
     """
     if (experiences := data.first("atuacoes profissionais")).exists is None:

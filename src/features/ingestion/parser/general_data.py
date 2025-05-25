@@ -1,6 +1,7 @@
 import eliot
 
-from ..schema import GeneralData
+from src.features.ingestion.schema import GeneralData
+
 from . import _xml as xml
 from ._log import log_parsing
 
@@ -16,31 +17,9 @@ def general_data(id: str, data: xml.Node) -> GeneralData:
     general information about a researcher, such as their name, birthplace,
     ORCID ID, and professional institution details.
 
-    Parameters
-    ----------
-    data : xml.Node
-        The Lattes curriculum XML element representing a researcher's data.
-
     Returns
     -------
-    dict
-        A dictionary containing the following keys:
-        - 'name' (str or None): Full name of the researcher.
-        - 'city' (str or None): Birth city of the researcher.
-        - 'state' (str or None): Birth state of the researcher.
-        - 'country' (str or None): Birth country of the researcher.
-        - 'quotes_names' (str or None): Names used in bibliographic citations.
-        - 'orcid' (str or None): ORCID ID of the researcher.
-        - 'abstract' (str or None): Abstract text from the researcher's CV.
-        - 'professional_institution' (str or None): Name of the professional institution.
-        - 'institution_state' (str or None): State of the professional institution.
-        - 'institution_city' (str or None): City of the professional institution.
-
-    Raises
-    ------
-    Exception
-        If an error occurs during the extraction process, it is logged, and an
-        empty dictionary is returned.
+    Researcher's general data.
 
     """
     resume = data.first("resumo CV")
