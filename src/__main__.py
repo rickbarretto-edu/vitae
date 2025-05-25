@@ -2,23 +2,22 @@ from sqlalchemy import Engine
 from sqlmodel import SQLModel, create_engine
 
 # Loads models to register them in SQLModel
-from src import models as models
-
+from src import models as models  # noqa: PLC0414
+from src import settings
+from src.__setup__ import VitaeSetup
 from src.features.database import Database
 from src.features.ingestion.scanner import CurriculaScheduler
-from src.settings import vitae
-from src.__setup__ import VitaeSetup
 
 
-def start_database(engine: Engine):
+def start_database(engine: Engine) -> None:
     SQLModel.metadata.create_all(engine)
 
 
-def main():
-    engine = create_engine(vitae.postgres.url, echo=True)
-    setup = VitaeSetup(vitae)
+def main() -> None:
+    vitae: settings.VitaeSettings = settings.load()
+    engine: Engine = create_engine(vitae.postgres.url, echo=True)
 
-    setup.setup_logging()
+    VitaeSetup(vitae).setup_logging()
     start_database(engine)
 
     database = Database(engine)

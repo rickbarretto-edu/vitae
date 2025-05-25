@@ -60,6 +60,7 @@ class PathsSettings:
     Note
     ----
     `_curricula` must exist and be a directory.
+
     """
 
     _curricula: Path = Path("all_files")
@@ -90,39 +91,41 @@ class VitaeSettings:
     def in_development(self) -> bool:
         return not self.in_production
 
-    @classmethod
-    def load(cls) -> "VitaeSettings":
-        """Load configuration from vitae.toml file"""
-        config_path = Path(__file__).parent.parent / "vitae.toml"
 
-        with open(config_path, "rb") as f:
-            data = tomllib.load(f)
+def load() -> VitaeSettings:
+    """Load configuration from `vitae.toml` file.
 
-            in_production: bool = data.get("in_production", False)
-            postgres: dict = data.get("postgres") or {}
-            postgres_settings = PostgresSettings(
-                user=PostgresUser(
-                    name=postgres["user"]["name"],
-                    password=postgres["user"]["password"],
-                ),
-                db=PostgresDatabase(
-                    name=postgres["database"]["name"],
-                    host=postgres["database"].get("host", "127.0.0.1"),
-                    port=postgres["database"].get("port", 5433),
-                    flush_every=postgres["database"].get("flush_every", 100),
-                ),
-            )
+    Return
+    ------
+    VitaeSettings
+    """
+    config_path = Path(__file__).parent.parent / "vitae.toml"
 
-            paths: dict = data.get("paths") or {}
-            paths_settings = PathsSettings(
-                _curricula=Path(paths.get("curricula") or "all_files")
-            )
+    with open(config_path, "rb") as f:
+        data = tomllib.load(f)
 
-            return cls(
-                in_production=in_production,
-                postgres=postgres_settings,
-                paths=paths_settings,
-            )
+        in_production: bool = data.get("in_production", False)
+        postgres: dict = data.get("postgres") or {}
+        postgres_settings = PostgresSettings(
+            user=PostgresUser(
+                name=postgres["user"]["name"],
+                password=postgres["user"]["password"],
+            ),
+            db=PostgresDatabase(
+                name=postgres["database"]["name"],
+                host=postgres["database"].get("host", "127.0.0.1"),
+                port=postgres["database"].get("port", 5433),
+                flush_every=postgres["database"].get("flush_every", 100),
+            ),
+        )
 
+        paths: dict = data.get("paths") or {}
+        paths_settings = PathsSettings(
+            _curricula=Path(paths.get("curricula") or "all_files")
+        )
 
-vitae = VitaeSettings.load()
+        return VitaeSettings(
+            in_production=in_production,
+            postgres=postgres_settings,
+            paths=paths_settings,
+        )
