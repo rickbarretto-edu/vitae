@@ -4,10 +4,12 @@ from pathlib import Path
 import eliot
 from sqlalchemy import Engine
 
-from src.database import Database
 from src.lib.panic import panic
-from src.processing.parsing import CurriculumParser
 from src.settings import VitaeSettings
+from src.features.database import Database
+
+from .parser import CurriculumParser
+from . import converter as convert
 
 __all__ = ["CurriculaScheduler"]
 
@@ -74,12 +76,12 @@ class CurriculaScheduler:
         database = Database(self.engine)
 
         database.put.researchers(
-            CurriculumParser(curriculum).researcher()
+            convert.researcher_from(CurriculumParser(curriculum).researcher())
             for curriculum in curricula
         )
 
         database.put.experiences(
-            experience
+            convert.professional_experience_from(experience)
             for curriculum in curricula
             for experience in CurriculumParser(curriculum).experiences()
         )

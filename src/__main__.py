@@ -4,7 +4,7 @@ from sqlmodel import SQLModel, create_engine
 # Loads models to register them in SQLModel
 from src import models as models
 
-from src.processing import CurriculaScheduler
+from src.features.ingestion.scanner import CurriculaScheduler
 from src.settings import vitae
 from src.__setup__ import VitaeSetup
 
