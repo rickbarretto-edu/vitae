@@ -3,7 +3,6 @@ from pathlib import Path
 import sys
 
 import eliot
-import loguru
 from loguru import logger
 
 from src.settings import VitaeSettings
@@ -62,7 +61,7 @@ class VitaeSetup:
 
         Path("logs/exceptions").mkdir(parents=True, exist_ok=True)
 
-        def exception_filter(record: loguru.Record) -> bool:
+        def exception_filter(record) -> bool:
             return record["exception"] is not None and record["level"].name in {
                 "ERROR",
                 "CRITICAL",
