@@ -14,7 +14,7 @@ __all__ = ["CurriculaScheduler"]
 
 
 class CurriculaScheduler:
-    def __init__(self, vitae: VitaeSettings, database: Database):
+    def __init__(self, vitae: VitaeSettings, database: Database) -> None:
         self._vitae: VitaeSettings = vitae
         self.database = database
         self._curricula_folder: Path = Path(self._vitae.paths.curricula)
@@ -27,22 +27,21 @@ class CurriculaScheduler:
             )
 
     @eliot.log_call(action_type="scanning")
-    def scan(self):
-        """Scan the directory containing Lattes curricula and process all subdirectories.
+    def scan(self) -> None:
+        """Scan the directory curricula and process all subdirectories.
 
-        This function identifies the current working directory, verifies the existence
-        of a "repo" directory containing subdirectories of curricula, and processes
-        each subdirectory concurrently using a thread pool. Each subdirectory is expected
-        to contain zipped curricula files, which are parsed and processed.
+        This function identifies the current working directory,
+        verifies the existence of a "repo" directory containing subdirectories
+        of curricula, and processes each subdirectory concurrently
+        using a thread pool.
 
-        Raises
-        ------
-        Exception
-            If an error occurs during the scanning or processing of directories.
+        Each subdirectory is expected to contain zipped curricula files,
+        which are parsed and processed.
 
         Notes
         -----
-        - The function logs the progress and any errors encountered during execution.
+        - The function logs the progress and any errors encountered 
+          during execution.
         - Subdirectories are processed in parallel to improve performance.
 
         """
