@@ -28,12 +28,3 @@ class PutOperations:
                 session.add(experience)
                 logger.debug("Experience upserted: {}", experience)
             session.commit()
-
-
-@dataclass
-class Database:
-    engine: Engine
-
-    @property
-    def put(self) -> PutOperations:
-        return PutOperations(self.engine)
