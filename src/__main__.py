@@ -4,6 +4,7 @@ from sqlmodel import SQLModel, create_engine
 # Loads models to register them in SQLModel
 from src import models as models
 
+from src.features.database import Database
 from src.features.ingestion.scanner import CurriculaScheduler
 from src.settings import vitae
 from src.__setup__ import VitaeSetup
@@ -18,9 +19,10 @@ def main():
     setup = VitaeSetup(vitae)
 
     setup.setup_logging()
-
     start_database(engine)
-    CurriculaScheduler(vitae, engine).scan()
+
+    database = Database(engine)
+    CurriculaScheduler(vitae, database).scan()
 
 
 if __name__ == "__main__":

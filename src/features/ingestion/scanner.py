@@ -2,7 +2,6 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import eliot
-from sqlalchemy import Engine
 
 from src.lib.panic import panic
 from src.settings import VitaeSettings
@@ -15,9 +14,9 @@ __all__ = ["CurriculaScheduler"]
 
 
 class CurriculaScheduler:
-    def __init__(self, vitae: VitaeSettings, engine: Engine):
+    def __init__(self, vitae: VitaeSettings, database: Database):
         self._vitae: VitaeSettings = vitae
-        self.engine = engine
+        self.database = database
         self._curricula_folder: Path = Path(self._vitae.paths.curricula)
 
         if not self._curricula_folder.exists():
@@ -73,14 +72,13 @@ class CurriculaScheduler:
             panic(f"Subdirectory does not exist: {subdirectory}")
 
         curricula = subdirectory.glob("*.xml")
-        database = Database(self.engine)
 
-        database.put.researchers(
+        self.database.put.researchers(
             convert.researcher_from(CurriculumParser(curriculum).researcher())
             for curriculum in curricula
         )
 
-        database.put.experiences(
+        self.database.put.experiences(
             convert.professional_experience_from(experience)
             for curriculum in curricula
             for experience in CurriculumParser(curriculum).experiences()
