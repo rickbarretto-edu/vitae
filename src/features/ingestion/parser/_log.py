@@ -10,10 +10,10 @@ from ._xml import ParsingError
 __all__ = ["log_parsing"]
 
 
-def log_parsing(topic: str):
-    def decorator(func):
+def log_parsing(topic: str):  # noqa: ANN202
+    def decorator(func):  # noqa: ANN202
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args, **kwargs):  # noqa: ANN202
             logger.debug("Parsing {}'s data...", topic)
 
             result: Result[list | dict, ParsingError] = catch(

@@ -14,26 +14,24 @@ def normalized(tag: str) -> str:
 
 
 def find(element: ET.Element | None, tag: str) -> ET.Element | None:
-    if element is None:
-        return None
+    if element:
+        return element.find(normalized(tag))
 
-    return element.find(normalized(tag))
+    return None
 
 
 def attribute(element: ET.Element | None, tag: str) -> str | None:
-    if element is None:
-        return None
-
-    if element_attribute := element.attrib.get(normalized(tag)):
+    if element and (element_attribute := element.attrib.get(normalized(tag))):
         return element_attribute.strip()
+
+    return None
 
 
 def as_int(text: str | None) -> int | None:
-    if text is None:
-        return None
-
-    if text.isdigit():
+    if text and text.isdigit():
         return int(text)
+
+    return None
 
 
 class Node:
