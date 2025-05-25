@@ -75,7 +75,8 @@ class CurriculaScheduler:
         database = Database(self.engine)
 
         database.put.researchers(
-            CurriculumParser(curriculum).researcher() for curriculum in curricula
+            CurriculumParser(curriculum).researcher()
+            for curriculum in curricula
         )
 
         # Flatten the experiences from all curricula

@@ -25,8 +25,11 @@ class Buffer[T]:
     -------
         >>> def print_flush(batch):
         ...     print("Flushing:", batch)
-        ...
-        >>> buf = Buffer[int](max=3).on_flush(lambda xs: [float(x) for x in xs]).then(print_flush)
+        >>> buf = (
+        ...     Buffer[int](max=3)
+        ...     .on_flush(lambda xs: [float(x) for x in xs])
+        ...     .then(print_flush)
+        ... )
         >>> buf.push(1).push(2).push(3)
         Flushing: [1.0, 2.0, 3.0]
         >>> buf.push(4).push(5)

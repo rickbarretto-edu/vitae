@@ -11,6 +11,7 @@ from sqlalchemy.engine import Engine
 from src import models
 from src.processing import proxies
 
+
 @dataclass
 class PutOperations:
     engine: Engine
@@ -27,7 +28,9 @@ class PutOperations:
                     quotes_names=researcher["quotes_names"],
                     orcid=researcher["orcid"],
                     abstract=researcher["abstract"],
-                    professional_institution=researcher["professional_institution"],
+                    professional_institution=researcher[
+                        "professional_institution"
+                    ],
                     institution_state=researcher["institution_state"],
                     institution_city=researcher["institution_city"],
                 )
@@ -35,19 +38,25 @@ class PutOperations:
                 logger.debug("Researcher upserted: {}", table)
             session.commit()
 
-    def experiences(self, experiences: Iterable[proxies.ProfessionalExperience]):
+    def experiences(
+        self, experiences: Iterable[proxies.ProfessionalExperience]
+    ):
         with Session(self.engine) as session:
             for experience in experiences:
                 table = models.ProfessionalExperience(
                     researcher_id=experience["researcher_id"],
-                    institution=experience["institution"] or "Unknown Institution",
-                    employment_relationship=experience["employment_relationship"],
+                    institution=experience["institution"]
+                    or "Unknown Institution",
+                    employment_relationship=experience[
+                        "employment_relationship"
+                    ],
                     start_year=experience["start_year"],
                     end_year=experience["end_year"],
                 )
                 session.add(table)
                 logger.debug("Experience upserted: {}", table)
             session.commit()
+
 
 @dataclass
 class Database:

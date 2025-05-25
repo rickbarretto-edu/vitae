@@ -6,7 +6,7 @@ def should(description: str) -> Callable:
     """
     Decorator to label a test function with a descriptive expectation.
 
-    Useful for BDD and readable tests. This also adds the description 
+    Useful for BDD and readable tests. This also adds the description
     to the documentation of the wrapped function as "Should {description}".
 
     Parameters
@@ -17,7 +17,7 @@ def should(description: str) -> Callable:
     Returns
     -------
     Callable
-    
+
     Examples
     --------
     >>> @should("be instance of Err")
@@ -26,6 +26,7 @@ def should(description: str) -> Callable:
     ...     assert isinstance(result, Err)
     ...     assert not isinstance(result, Ok)
     """
+
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args, **kwargs):

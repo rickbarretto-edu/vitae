@@ -10,6 +10,7 @@ lock = threading.Lock()  # Variável de lock global
 # 2. We should not be using threading.lock, use async, instead.
 # 3. Verify external dependencies to make logging work just fine, such as loguru.
 
+
 # Filtros para cada Nível de Log
 class DebugFilter(logging.Filter):
     def filter(self, record):

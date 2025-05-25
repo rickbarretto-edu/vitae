@@ -1,4 +1,3 @@
-
 import eliot
 
 from src.processing.proxies import ProfessionalExperience

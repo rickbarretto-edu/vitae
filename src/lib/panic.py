@@ -4,6 +4,7 @@ from loguru import logger
 
 __all__ = ["panic", "Panic"]
 
+
 class Panic(RuntimeError):
     pass
 
