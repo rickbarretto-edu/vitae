@@ -4,7 +4,7 @@ import pprint
 from loguru import logger
 
 from src.lib.result import Result, catch
-from src.processing.parsing.xml import ParsingError
+from ._xml import ParsingError
 
 __all__ = ["log_parsing"]
 
