@@ -51,7 +51,10 @@ class VitaeSetup:
         logger.remove()
         Path("logs").mkdir(parents=True, exist_ok=True)
         logger.add(
-            "logs/vitae.log", rotation="200 MB", encoding="utf-8", enqueue=True
+            "logs/vitae.log",
+            rotation="200 MB",
+            encoding="utf-8",
+            enqueue=True,
         )
 
         if self.vitae.in_development:

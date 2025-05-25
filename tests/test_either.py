@@ -15,8 +15,8 @@ class DescribeSome:
         result: Either[str] = Some("Value")
 
         assert result
-        assert "Value" == result.value
-        assert "Value" == result.expected("has value")
+        assert result.value == "Value"
+        assert result.expected("has value") == "Value"
         assert isinstance(result.value, str)
 
 
@@ -29,7 +29,7 @@ class DescribeEmpty:
 
         with pytest.raises(Panic) as panic:
             result.expected("There is no value")
-        assert "There is no value" == str(panic.value)
+        assert str(panic.value) == "There is no value"
 
     def has_no_value(self):
         result: Either[str] = Empty()
@@ -43,7 +43,7 @@ class DescribeEmpty:
         with pytest.raises(Panic) as panic:
             result.expected("Is there")
 
-        assert "Is there" == str(panic.value)
+        assert str(panic.value) == "Is there"
 
 
 class TestEither:

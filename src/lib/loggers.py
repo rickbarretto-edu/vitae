@@ -46,7 +46,7 @@ class ListHandler(logging.Handler):
     def emit(self, record):  # Método acionado a cada chamada de log
         with lock:
             logs = self.carregar_logs(
-                self.logfile
+                self.logfile,
             )  # Carrega os logs daquele nível
             log = self.format(record)
             logs.append(log)  # Adicionando o log a lista de logs
@@ -55,7 +55,7 @@ class ListHandler(logging.Handler):
     # Função para carregar logs existentes dado um arquivo de log JSON
     def carregar_logs(self, arquivo):
         try:
-            with open(arquivo, "r") as arquivo:
+            with open(arquivo) as arquivo:
                 return json.load(arquivo).get("logs", [])
         except FileNotFoundError:  # Caso arquivo não exista, criá-lo
             return []
@@ -71,7 +71,7 @@ class JSONFormatter(logging.Formatter):
     def format(self, record):
         data = {
             "timestamp": self.formatTime(
-                record
+                record,
             ),  # Data e Hora de emissão do log
             "level": record.levelname,  # Nível do Log
             "message": record.getMessage(),  # Mensagem do Log
@@ -87,7 +87,7 @@ class ConfigLogger:
         # Logger
         self.logger = logging.getLogger(nome)
         self.logger.setLevel(
-            logging.DEBUG
+            logging.DEBUG,
         )  # Setando o menor nível como o de DEBUG
 
         self.create_handlers()
@@ -111,27 +111,27 @@ class ConfigLogger:
         # Handlers
         self.DebugHandler = ListHandler(logfile="./logs/debug.json")
         self.DebugHandler.setLevel(
-            logging.DEBUG
+            logging.DEBUG,
         )  # Setando o menor nível como o de DEBUG
 
         self.InfoHandler = ListHandler(logfile="./logs/info.json")
         self.InfoHandler.setLevel(
-            logging.INFO
+            logging.INFO,
         )  # Setando o menor nível como o de INFO
 
         self.WarningHandler = ListHandler(logfile="./logs/warning.json")
         self.WarningHandler.setLevel(
-            logging.WARNING
+            logging.WARNING,
         )  # Setando o menor nível como o de WARNING
 
         self.ErrorHandler = ListHandler(logfile="./logs/error.json")
         self.ErrorHandler.setLevel(
-            logging.ERROR
+            logging.ERROR,
         )  # Setando o menor nível como o de ERROR
 
         self.CriticalHandler = ListHandler(logfile="./logs/critical.json")
         self.CriticalHandler.setLevel(
-            logging.CRITICAL
+            logging.CRITICAL,
         )  # Setando o menor nível como o de CRITICAL
 
     def create_json_formatter(self):

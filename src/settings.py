@@ -3,7 +3,7 @@ from pathlib import Path
 
 import tomllib
 
-__all__ = ["vitae", "VitaeSettings"]
+__all__ = ["VitaeSettings", "vitae"]
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -57,7 +57,7 @@ class PostgresSettings:
 class PathsSettings:
     """Paths' Settings for Vitae
 
-    Note
+    Note:
     ----
     `_curricula` must exist and be a directory.
 
@@ -72,9 +72,10 @@ class PathsSettings:
     def curricula(self) -> Path:
         """Absolute curricula's directory.
 
-        Note
+        Note:
         ----
         This property exists to ensure curricula's path is always absolute.
+
         """
         return self._curricula.absolute()
 
@@ -95,9 +96,10 @@ class VitaeSettings:
 def load() -> VitaeSettings:
     """Load configuration from `vitae.toml` file.
 
-    Return
+    Return:
     ------
     VitaeSettings
+
     """
     config_path = Path(__file__).parent.parent / "vitae.toml"
 
@@ -121,7 +123,7 @@ def load() -> VitaeSettings:
 
         paths: dict = data.get("paths") or {}
         paths_settings = PathsSettings(
-            _curricula=Path(paths.get("curricula") or "all_files")
+            _curricula=Path(paths.get("curricula") or "all_files"),
         )
 
         return VitaeSettings(

@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field, Relationship, UniqueConstraint
+from sqlmodel import Field, Relationship, SQLModel, UniqueConstraint
 
 
 class Researcher(SQLModel, table=True):
@@ -42,7 +42,7 @@ class ProfessionalExperience(SQLModel, table=True):
 
     researcher_id: str = Field(foreign_key="researcher.id", nullable=False)
     researcher: Researcher | None = Relationship(
-        back_populates="professional_experience"
+        back_populates="professional_experience",
     )
 
 
@@ -58,7 +58,7 @@ class AcademicBackground(SQLModel, table=True):
     researcher_id: str = Field(foreign_key="researcher.id")
 
     researcher: "Researcher" = Relationship(
-        back_populates="academic_background"
+        back_populates="academic_background",
     )
     knowledge_area: list["KnowledgeArea"] = Relationship(
         back_populates="academic_background",
@@ -89,7 +89,7 @@ class KnowledgeArea(SQLModel, table=True):
     academic_background_id: int = Field(foreign_key="academic_background.id")
 
     academic_background: "AcademicBackground" = Relationship(
-        back_populates="knowledge_area"
+        back_populates="knowledge_area",
     )
 
     __table_args__ = (

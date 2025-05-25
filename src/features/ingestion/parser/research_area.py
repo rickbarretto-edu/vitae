@@ -4,7 +4,6 @@ from ..schema import ResearchArea
 from . import _xml as xml
 from ._log import log_parsing
 
-
 __all__ = ["research_area"]
 
 
@@ -45,19 +44,22 @@ def research_area(id: str, data: xml.Node) -> list[ResearchArea]:
     >>> print(research_areas)
     [{'major_knowledge_area': 'Engineering', 'knowledge_area': 'Civil Engineering',
         'sub_knowledge_area': 'Structural Engineering', 'specialty': 'Concrete Structures'}, ...]
-    """
 
+    """
     return [
         ResearchArea(
             researcher_id=id,
             major_knowledge_area=xml.attribute(
-                area, "nome grande area do conhecimento"
+                area,
+                "nome grande area do conhecimento",
             ),
             knowledge_area=xml.attribute(
-                area, "nome da area do conhecimento"
+                area,
+                "nome da area do conhecimento",
             ),
             sub_knowledge_area=xml.attribute(
-                area, "nome da sub-area do conhecimento"
+                area,
+                "nome da sub-area do conhecimento",
             ),
             specialty=xml.attribute(area, "nome da especialidade"),
         )

@@ -3,12 +3,12 @@ from pathlib import Path
 
 import eliot
 
+from src.features.database import Database
 from src.lib.panic import panic
 from src.settings import VitaeSettings
-from src.features.database import Database
 
-from .parser import CurriculumParser
 from . import converter as convert
+from .parser import CurriculumParser
 
 __all__ = ["CurriculaScheduler"]
 
@@ -23,13 +23,12 @@ class CurriculaScheduler:
             panic(f"Curricula folder does not exist: {self._curricula_folder}")
         if not self._curricula_folder.is_dir():
             panic(
-                f"Curricula path is not a directory: {self._curricula_folder}"
+                f"Curricula path is not a directory: {self._curricula_folder}",
             )
 
     @eliot.log_call(action_type="scanning")
     def scan(self):
-        """
-        Scan the directory containing Lattes curricula and process all subdirectories.
+        """Scan the directory containing Lattes curricula and process all subdirectories.
 
         This function identifies the current working directory, verifies the existence
         of a "repo" directory containing subdirectories of curricula, and processes
@@ -45,6 +44,7 @@ class CurriculaScheduler:
         -----
         - The function logs the progress and any errors encountered during execution.
         - Subdirectories are processed in parallel to improve performance.
+
         """
         if self._vitae.in_development:
             self._serial_execution()
@@ -67,7 +67,6 @@ class CurriculaScheduler:
         Scans the given subdirectory, processes each curriculum file using the parser,
         manages data buffers, and periodically flushes them to the database.
         """
-
         if not subdirectory.exists():
             panic(f"Subdirectory does not exist: {subdirectory}")
 

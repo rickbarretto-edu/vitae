@@ -4,7 +4,6 @@ from ..schema import GeneralData
 from . import _xml as xml
 from ._log import log_parsing
 
-
 __all__ = ["general_data"]
 
 
@@ -42,8 +41,8 @@ def general_data(id: str, data: xml.Node) -> GeneralData:
     Exception
         If an error occurs during the extraction process, it is logged, and an
         empty dictionary is returned.
-    """
 
+    """
     resume = data.first("resumo CV")
     professional_address = data.first("endereco").first("endereco profissional")
 

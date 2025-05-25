@@ -4,7 +4,6 @@ from ..schema import AcademicBackground
 from . import _xml as xml
 from ._log import log_parsing
 
-
 __all__ = ["academic_background"]
 
 
@@ -36,8 +35,8 @@ def academic_background(id: str, data: xml.Node) -> list[AcademicBackground]:
     -----
     If no academic background information is found, an empty list is returned.
     Any errors during extraction are logged, and an empty list is returned in case of exceptions.
-    """
 
+    """
     return [
         AcademicBackground(
             researcher_id=id,

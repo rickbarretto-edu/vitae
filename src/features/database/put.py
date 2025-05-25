@@ -1,10 +1,9 @@
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Iterable
 
 from loguru import logger
-
-from sqlmodel import Session
 from sqlalchemy.engine import Engine
+from sqlmodel import Session
 
 from src import models
 
@@ -21,7 +20,8 @@ class PutOperations:
             session.commit()
 
     def experiences(
-        self, experiences: Iterable[models.ProfessionalExperience]
+        self,
+        experiences: Iterable[models.ProfessionalExperience],
     ):
         with Session(self.engine) as session:
             for experience in experiences:

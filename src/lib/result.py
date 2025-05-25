@@ -2,11 +2,11 @@
 
 from abc import ABC
 from dataclasses import dataclass
-from typing import Any, Callable, NoReturn, cast
+from typing import Callable, NoReturn, cast
 
 from src.lib.panic import Panic
 
-__all__ = ["Either", "Some", "Empty", "Result", "Ok", "Err", "catch"]
+__all__ = ["Either", "Empty", "Err", "Ok", "Result", "Some", "catch"]
 
 
 @dataclass
@@ -14,13 +14,11 @@ class IsEither[T](ABC):
     @property
     def value(self) -> T | None:
         """Returns self._value if there is."""
-        ...
 
     def expected(self, message: str) -> T: ...
 
     def __bool__(self) -> bool:
         """Returns true for Some and false for Empty"""
-        ...
 
     def __and__(self, other: "IsEither") -> "IsEither":
         return other if (bool(self) and bool(other)) else Empty()
@@ -31,8 +29,7 @@ class IsEither[T](ABC):
     def __xor__(self, other: "IsEither") -> "IsEither":
         if bool(self) == bool(other):
             return Empty()
-        else:
-            return self if bool(self) else other
+        return self if bool(self) else other
 
 
 class Some[T](IsEither):
@@ -46,7 +43,7 @@ class Some[T](IsEither):
     def expected(self, message: str) -> T:
         return self.value
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, Some):
             return self.value == other.value
         return False
@@ -67,7 +64,7 @@ class Empty[T](IsEither):
     def expected(self, message: str) -> T:
         raise Panic(message)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         return isinstance(other, Empty)
 
     def __bool__(self) -> bool:
@@ -122,7 +119,7 @@ class Ok[T](IsResult):
     def __bool__(self) -> bool:
         return True
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, Ok):
             return self.value == other.value
         return False
@@ -151,7 +148,7 @@ class Err[E](IsResult):
     def __bool__(self) -> bool:
         return False
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, Err):
             return self.error == other.error
         return False
@@ -164,4 +161,4 @@ def catch[T, E: BaseException](expression: Callable[[], T]) -> Result[T, E]:
     try:
         return Ok[T](expression())
     except BaseException as e:
-        return Err[E](cast(E, e))
+        return Err[E](cast("E", e))

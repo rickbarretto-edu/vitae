@@ -11,13 +11,13 @@ Data Processing Steps
 """
 
 from dataclasses import dataclass
+from functools import wraps
+from pathlib import Path
 import sys
 import time
 from typing import Protocol, Self
-from zipfile import ZipFile
-from pathlib import Path
-from functools import wraps
 from xml.dom.minidom import parseString as XmlDom
+from zipfile import ZipFile
 
 
 class File(Protocol):
@@ -34,6 +34,7 @@ def log(message: str):
     >>> @log("Processing file: {}")
     ... def process(self):
     ...     pass
+
     """
 
     def decorator(func):
@@ -78,7 +79,8 @@ class Xml:
     def prettify(self) -> "Xml":
         content = self.file.read_text(encoding=self.encoding)
         self.file.write_text(
-            XmlDom(content).toprettyxml(indent="  "), encoding=self.encoding
+            XmlDom(content).toprettyxml(indent="  "),
+            encoding=self.encoding,
         )
 
         return self
@@ -126,12 +128,12 @@ def optmized(all_files: Path) -> None:
         if not extracted:
             archive.unzip()
             extracted.to_utf_8().prettify()
-            print("")
+            print()
         else:
             skipped += 1
 
     print(
-        f"[FINISHED] {count} files processed, {skipped} skipped. In {time.time() - start} seconds."
+        f"[FINISHED] {count} files processed, {skipped} skipped. In {time.time() - start} seconds.",
     )
 
 
@@ -149,10 +151,10 @@ def force(all_files: Path, sub_folders: list[str]) -> None:
             Zip(archive).unzip().xml().to_utf_8().prettify()
             count += 1
 
-            print("")
+            print()
 
     print(
-        f"[FINISHED] {count} files forcedly processed in {time.time() - start} seconds"
+        f"[FINISHED] {count} files forcedly processed in {time.time() - start} seconds",
     )
 
 
@@ -172,7 +174,6 @@ def cli() -> None:
         # This also softly pre-process all the rest
         $ poetry run pre-process --force 01 02 | tee logs/pre-processing.log
     """
-
     assert len(sys.argv) >= 2
 
     all_files = Path(sys.argv[1])
@@ -182,4 +183,4 @@ def cli() -> None:
             force(all_files, sys.argv[2:])
 
     optmized(all_files)
-    print("")
+    print()

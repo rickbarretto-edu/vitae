@@ -2,7 +2,7 @@ from typing import Any, NoReturn
 
 from loguru import logger
 
-__all__ = ["panic", "Panic"]
+__all__ = ["Panic", "panic"]
 
 
 class Panic(RuntimeError):
@@ -10,8 +10,7 @@ class Panic(RuntimeError):
 
 
 def panic(message: str, *args: Any) -> NoReturn:
-    """
-    Log an error message and raise a Panic to halt execution.
+    """Log an error message and raise a Panic to halt execution.
 
     Parameters
     ----------
@@ -24,6 +23,7 @@ def panic(message: str, *args: Any) -> NoReturn:
     ------
     Panic
         Always raised with the provided message.
+
     """
     logger.opt(depth=1).critical(f"PANIC: {message}", *args)
     raise Panic(message)

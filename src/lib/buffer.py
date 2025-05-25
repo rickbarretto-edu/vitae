@@ -21,7 +21,7 @@ class Buffer[T]:
     The older code used this approach, which is harder to reason about,
     since the logic was distributed between two different modules with different purposes.
 
-    Example
+    Example:
     -------
         >>> def print_flush(batch):
         ...     print("Flushing:", batch)
@@ -35,6 +35,7 @@ class Buffer[T]:
         >>> buf.push(4).push(5)
         >>> len(buf)
         2
+
     """
 
     data: list[T] = field(default_factory=list)

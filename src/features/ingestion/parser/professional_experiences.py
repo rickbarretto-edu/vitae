@@ -1,9 +1,9 @@
 import eliot
 
 from src.features.ingestion.schema import ProfessionalExperience
+
 from . import _xml as xml
 from ._log import log_parsing
-
 
 __all__ = ["professional_experiences"]
 
@@ -11,7 +11,8 @@ __all__ = ["professional_experiences"]
 @log_parsing("Professional Experience")
 @eliot.log_call(action_type="parsing")
 def professional_experiences(
-    id: str, data: xml.Node
+    id: str,
+    data: xml.Node,
 ) -> list[ProfessionalExperience]:
     """Extract professional experience from the Lattes curriculum.
 
@@ -40,8 +41,8 @@ def professional_experiences(
     If no professional experiences are found, an empty list is returned.
     In case of an error during extraction, the function logs the error and
     returns an empty list.
-    """
 
+    """
     if (experiences := data.first("atuacoes profissionais")).exists is None:
         return []
 
@@ -61,7 +62,7 @@ def professional_experiences(
                     employment_relationship=link_type,
                     start_year=xml.as_int(link["ano inicio"]),
                     end_year=xml.as_int(link["ano fim"]),
-                )
+                ),
             )
 
     return professional_experience

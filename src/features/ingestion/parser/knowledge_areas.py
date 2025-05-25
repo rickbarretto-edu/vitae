@@ -1,9 +1,9 @@
 import eliot
 
 from src.features.ingestion.schema import KnowledgeArea
+
 from . import _xml as xml
 from ._log import log_parsing
-
 
 __all__ = ["knowledge_areas"]
 
@@ -46,8 +46,8 @@ def knowledge_areas(curriculo: xml.Node) -> list[KnowledgeArea]:
         'area': 'Matemática',
         'sub_area': 'Álgebra',
         'specialty': 'Teoria dos Grupos'}]
-    """
 
+    """
     return [
         KnowledgeArea(
             major_area=knowledgement["nome grande area do conhecimento"],

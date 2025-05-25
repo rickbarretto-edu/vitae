@@ -1,4 +1,5 @@
 import pytest
+
 from src.lib.result import Err, Ok, Panic, Result, Some, catch
 from tests.utils import should
 
@@ -8,8 +9,8 @@ class DescribeOk:
         result: Result[str, str] = Ok("I'm here")
 
         assert result
-        assert "I'm here" == result.value
-        assert "I'm here" == result.expected("Be there")
+        assert result.value == "I'm here"
+        assert result.expected("Be there") == "I'm here"
 
     def it_has_no_error(self):
         result: Result[str, str] = Ok("I'm here")
@@ -33,7 +34,7 @@ class DescribeErr:
     def it_has_error(self):
         result: Result[str, str] = Err("I'm an error")
 
-        assert "I'm an error" == result.error
+        assert result.error == "I'm an error"
 
     @should("Panic")
     def when_expected_value_is_not_there(self):
@@ -42,7 +43,7 @@ class DescribeErr:
         with pytest.raises(Panic) as panic:
             result.expected("Have no value")
 
-        assert "Have no value" == str(panic.value)
+        assert str(panic.value) == "Have no value"
 
 
 class TestResult:
@@ -67,7 +68,7 @@ class DescribeCatch:
         result: Result[int, ZeroDivisionError] = catch(lambda: 1 // 1)
 
         assert result
-        assert 1 == result.value
+        assert result.value == 1
 
     @should("return Err")
     def when_expression_raises(self):

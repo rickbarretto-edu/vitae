@@ -2,8 +2,7 @@ from xml.etree import ElementTree as ET
 
 from src.lib.result import catch
 
-
-__all__ = ["Node", "find", "attribute", "as_int", "ParsingError"]
+__all__ = ["Node", "ParsingError", "as_int", "attribute", "find"]
 
 
 class ParsingError(ET.ParseError):
@@ -60,5 +59,4 @@ class Node:
 def parse(content: str) -> Node:
     if result := catch(lambda: ET.fromstring(content)):
         return Node(result.value)
-    else:
-        raise ParsingError(result.error) from result.error
+    raise ParsingError(result.error) from result.error

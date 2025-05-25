@@ -1,16 +1,14 @@
-
 from pathlib import Path
 
 import eliot
 from loguru import logger
 
 from . import _xml as xml
-from .general_data import general_data
 from .academic_background import academic_background
+from .general_data import general_data
 from .knowledge_areas import knowledge_areas
 from .professional_experiences import professional_experiences
 from .research_area import research_area
-
 
 __all__ = ["CurriculumParser"]
 
@@ -39,16 +37,17 @@ class CurriculumParser:
     - The filename is the ID of the researcher.
     - The extracted data is processed using helper functions presents into `.parsers`, module.
     - Flusing to database must be done outside this class. Use ``Buffer.on_flush`` for this.
+
     """
 
     def __init__(self, file: Path) -> None:
-        """
-        Parameters
+        """Parameters
         ----------
         file : Path
             Path to the XML file.
         buffers : CurriculaBuffer
             Buffer to store the parsed data.
+
         """
         content = file.read_text(encoding="utf-8")
 
@@ -59,7 +58,6 @@ class CurriculumParser:
     @eliot.log_call(action_type="parsing")
     def researcher(self):
         """Parse the Curriculum XML file and extract useful information."""
-
         logger.info("Parsing researcher ({}) curriculum", self.id)
 
         return general_data(self.id, self.data)
