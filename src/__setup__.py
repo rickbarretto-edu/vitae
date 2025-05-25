@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-import os
-import sys
 from pathlib import Path
+import sys
 
 import eliot
+import loguru
 from loguru import logger
 
 from src.settings import VitaeSettings
@@ -11,9 +11,12 @@ from src.settings import VitaeSettings
 
 @dataclass
 class VitaeSetup:
+    """Setup for the project."""
+
     vitae: VitaeSettings
 
     def setup_logging(self) -> None:
+        """Setups logging settings."""
         Path("logs").mkdir(parents=True, exist_ok=True)
         self._eliot_for_development()
         self._loguru()
@@ -25,26 +28,28 @@ class VitaeSetup:
         But I don't think this is a good idea for using it
         in production for my specific case, due to the amount of data.
 
-        Note
+        Note:
         ----
         I'm not passing encoding="utf-8" because this was causing
         encoding errors even after processing the XML to be UTF-8.
+
         """
         if self.vitae.in_development:
-            eliot.to_file(open("logs/eliot.log", "w+"))
+            with Path("logs/eliot.log").open("w+", encoding="utf-8") as f:
+                eliot.to_file(f)
             logger.info("Eliot logging to file and stdout")
         else:
             logger.warning("Eliot disabled for production")
 
     def _loguru(self) -> None:
-        """Setups Loguru
+        """Setups Loguru.
 
         - Writes logs to vitae.log with rotation of 200 MB.
         - Writes trace in stdout on development mode.
         - Writes exceptions to exceptions/ folder.
         """
         logger.remove()
-        os.makedirs("logs", exist_ok=True)
+        Path("logs").mkdir(parents=True, exist_ok=True)
         logger.add(
             "logs/vitae.log", rotation="200 MB", encoding="utf-8", enqueue=True
         )
@@ -52,9 +57,9 @@ class VitaeSetup:
         if self.vitae.in_development:
             logger.add(sys.stdout, level="TRACE", colorize=True)
 
-        os.makedirs("logs/exceptions", exist_ok=True)
+        Path("logs/exceptions").mkdir(parents=True, exist_ok=True)
 
-        def exception_filter(record):
+        def exception_filter(record: loguru.Record) -> bool:
             return record["exception"] is not None and record["level"].name in {
                 "ERROR",
                 "CRITICAL",
