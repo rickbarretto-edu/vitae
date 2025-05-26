@@ -43,9 +43,6 @@ export PYTHONPATH="/path/to/your/project/"
 python -m src
 ```
 
-
----
-
 **Issues with adding eliot-tree?**
 
 ```
@@ -53,3 +50,15 @@ pip install --upgrade pkginfo
 pipx inject poetry pkginfo
 pip install eliot-tree
 ```
+
+## Tooling Recomentation
+
+1. **DBA tools**
+  - [Beekeeper Studio](https://www.beekeeperstudio.io/) for SQL Queries. (Community ed. for Free)
+  - [ChartDB](https://github.com/chartdb/chartdb) for Diagram visualization. (Self-hosted for free)
+  - **pgAdmin 4**, general purpose. Comes with PostgreSQL. (Free)
+2. **Python Linters, Formatters, Static Analysis**
+  - (`ruff`)[https://docs.astral.sh/ruff/] linter and code formatter. (lightweight alternative)
+  - (`ty`)[https://github.com/astral-sh/ty] Python type checking. (lightweight alternative)
+  - (Pylance)[https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance] VsCode's Extension 
+    as language server.
