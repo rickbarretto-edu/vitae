@@ -58,7 +58,7 @@ pip install eliot-tree
   - [ChartDB](https://github.com/chartdb/chartdb) for Diagram visualization. (Self-hosted for free)
   - **pgAdmin 4**, general purpose. Comes with PostgreSQL. (Free)
 2. **Python Linters, Formatters, Static Analysis**
-  - (`ruff`)[https://docs.astral.sh/ruff/] linter and code formatter. (lightweight alternative)
-  - (`ty`)[https://github.com/astral-sh/ty] Python type checking. (lightweight alternative)
-  - (Pylance)[https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance] VsCode's Extension 
+  - [`ruff`](https://docs.astral.sh/ruff/) linter and code formatter. (lightweight alternative)
+  - [`ty`](https://github.com/astral-sh/ty) Python type checking. (lightweight alternative)
+  - [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) VsCode's Extension 
     as language server.
