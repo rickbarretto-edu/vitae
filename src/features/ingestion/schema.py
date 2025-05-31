@@ -4,7 +4,13 @@ from __future__ import annotations
 
 from typing import TypedDict
 
-__all__ = ["AcademicBackground"]
+__all__ = [
+    "AcademicBackground",
+    "GeneralData",
+    "KnowledgeArea",
+    "ProfessionalExperience",
+    "ResearchArea",
+]
 
 
 class GeneralData(TypedDict):
