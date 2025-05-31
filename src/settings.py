@@ -1,5 +1,8 @@
+"""Environment Settings."""
+
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import tomllib
 
@@ -8,7 +11,7 @@ __all__ = ["VitaeSettings"]
 
 @dataclass(frozen=True, kw_only=True)
 class PostgresUser:
-    """Postgres' Database User Settings"""
+    """Postgres' Database User Settings."""
 
     name: str = "postgres"
     password: str
@@ -23,7 +26,7 @@ class PostgresUser:
 
 @dataclass(frozen=True, kw_only=True)
 class PostgresDatabase:
-    """Postgres' Database Settings"""
+    """Postgres' Database Settings."""
 
     name: str
     host: str = "127.0.0.1"
@@ -31,10 +34,10 @@ class PostgresDatabase:
 
     flush_every: int = 100
 
-    def __post_init__(self):
-        assert self.name
-        assert self.host
-        assert self.port
+    def __post_init__(self) -> None:
+        if not all((self.name, self.host, self.port)):
+            message: str = f"Missing fields {self:r}"
+            raise ValueError(message)
 
     def __str__(self) -> str:
         return f"{self.host}:{self.port}/{self.name}"
@@ -42,20 +45,20 @@ class PostgresDatabase:
 
 @dataclass(frozen=True, kw_only=True)
 class PostgresSettings:
-    """Postgres' Settings"""
+    """Postgres' Settings."""
 
     user: PostgresUser
     db: PostgresDatabase
 
     @property
     def url(self) -> str:
-        """Postgres URL from vitae.toml file"""
+        """Postgres URL from vitae.toml file."""
         return f"postgresql+psycopg://{self.user}@{self.db}"
 
 
 @dataclass(frozen=True, kw_only=True)
 class PathsSettings:
-    """Paths' Settings for Vitae
+    """Paths' Settings for Vitae.
 
     Note:
     ----
@@ -65,8 +68,14 @@ class PathsSettings:
 
     _curricula: Path = Path("all_files")
 
-    def __post_init__(self):
-        assert self._curricula.exists() or self._curricula.is_dir()
+    def __post_init__(self) -> None:
+        if not self._curricula.exists():
+            message: str = "Curricula must exist"
+            raise ValueError(message)
+
+        if not self._curricula.is_dir():
+            message: str = "Curricula must be a directory"
+            raise ValueError(message)
 
     @property
     def curricula(self) -> Path:
@@ -82,29 +91,30 @@ class PathsSettings:
 
 @dataclass
 class VitaeSettings:
-    """Settings loaded from vitae.toml"""
+    """Settings loaded from `vitae.toml`."""
 
     postgres: PostgresSettings
     paths: PathsSettings
     in_production: bool = False
 
     @property
-    def in_development(self) -> bool:
+    def in_development(self) -> bool:  # noqa: D102
         return not self.in_production
 
 
 def load() -> VitaeSettings:
     """Load configuration from `vitae.toml` file.
 
-    Return:
-    ------
+    Returns
+    -------
     VitaeSettings
+        The loaded settings from the vitae.toml file.
 
     """
     config_path = Path(__file__).parent.parent / "vitae.toml"
 
-    with open(config_path, "rb") as f:
-        data = tomllib.load(f)
+    with config_path.open("rb") as f:
+        data: dict[str, Any] = tomllib.load(f)
 
         in_production: bool = data.get("in_production", False)
         postgres: dict = data.get("postgres") or {}
