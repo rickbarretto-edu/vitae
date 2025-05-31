@@ -1,3 +1,5 @@
+"""Schema objects to be extracted from the XML files."""
+
 from __future__ import annotations
 
 from typing import TypedDict
