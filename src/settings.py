@@ -3,7 +3,7 @@ from pathlib import Path
 
 import tomllib
 
-__all__ = ["VitaeSettings", "vitae"]
+__all__ = ["VitaeSettings"]
 
 
 @dataclass(frozen=True, kw_only=True)
