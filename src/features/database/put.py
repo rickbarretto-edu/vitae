@@ -12,19 +12,27 @@ from src import models
 class PutOperations:
     engine: Engine
 
-    def researchers(self, researchers: Iterable[models.Researcher]):
+    def researchers(self, researchers: Iterable[models.Researcher]) -> None:
         with Session(self.engine) as session:
             for researcher in researchers:
                 session.add(researcher)
-                logger.debug("Researcher upserted: {}", researcher)
+                session.commit()
+
+    def researcher(self, researcher: models.Researcher) -> None:
+        with Session(self.engine) as session:
+            session.add(researcher)
             session.commit()
 
     def experiences(
         self,
         experiences: Iterable[models.ProfessionalExperience],
-    ):
+    ) -> None:
         with Session(self.engine) as session:
             for experience in experiences:
                 session.add(experience)
-                logger.debug("Experience upserted: {}", experience)
+                session.commit()
+
+    def experience(self, experience: models.ProfessionalExperience) -> None:
+        with Session(self.engine) as session:
+            session.add(experience)
             session.commit()
