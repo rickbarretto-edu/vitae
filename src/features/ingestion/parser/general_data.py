@@ -3,7 +3,6 @@ import eliot
 from src.features.ingestion.schema import GeneralData
 
 from . import _xml as xml
-from ._log import log_parsing
 
 __all__ = ["general_data"]
 
