@@ -1,48 +1,82 @@
+from typing import Iterator
+
 import eliot
 
 from src.features.ingestion.schema import ProfessionalExperience
 
 from . import _xml as xml
-from ._log import log_parsing
 
 __all__ = ["professional_experiences"]
 
 
+def link_kind(link: xml.Node):
+    kind: str | None = link["tipo de vinculo"]
+
+    if kind == "LIVRE":
+        kind = link["outro vinculo informado"]
+
+    return kind
+
+
 @eliot.log_call(action_type="parsing")
 def professional_experiences(
-    id: str,
+    researcher_id: str,
     data: xml.Node,
-) -> list[ProfessionalExperience]:
+) -> Iterator[ProfessionalExperience]:
     """Extract professional experience from the Lattes curriculum.
 
     This function navigates through the XML structure of a Lattes curriculum
     to extract information about professional experiences.
 
-    Returns
-    -------
-    Researcher's Professional experiences.
+    Yields
+    ------
+    Researcher's Professional Experience.
+
+    XML Schema
+    ----------
+
+        atuacoes-profissionais: [
+            atuacao-profissional: {
+                codigo-instituicao: string
+                > nome-instituicao: string
+                sequencia-atividade: integer
+                sequencia-importancia: integer
+                vinculos: [
+                    sequencia-historico: integer
+                    > tipo-de-vinculo: string
+                    carga-horaria-semanal: integer
+                    flag-dedicacao-exclusiva: boolean
+                    mes-inicio: integer
+                    > ano-inicio: integer
+                    mes-fim: integer
+                    > ano-fim: integer
+                    outras-informacoes: string
+                    flag-vinculo-empregaticio: boolean
+                    > outro-vinculo-informado: string
+                    outro-enquadramento-funcional-informado: string
+                    outro-enquadramento-funcional-informado-ingles: string
+                    outras-informacoes-ingles: string
+                ]
+                ...
+            }
+        ]
+
+    Notes
+    -----
+    Choosen schema data are marked with ``>``.
 
     """
-    if (experiences := data.first("atuacoes profissionais")).exists is None:
-        return []
+    if not (experiences := data.first("atuacoes profissionais")).exists:
+        return
 
-    professional_experience: list[ProfessionalExperience] = []
     for experience in experiences.all("atuacao profissional"):
-        institution = experience["nome instituicao"]
-        links = experience.all("vinculos")
+        links: list[xml.Node] = experience.all("vinculos")
 
         for link in links:
-            if (link_type := link["tipo de vinculo"]) == "LIVRE":
-                link_type = link["outro vinculo informado"]
-
-            professional_experience.append(
-                ProfessionalExperience(
-                    researcher_id=id,
-                    institution=institution,
-                    employment_relationship=link_type,
-                    start_year=xml.as_int(link["ano inicio"]),
-                    end_year=xml.as_int(link["ano fim"]),
-                ),
+            yield ProfessionalExperience(
+                researcher_id=researcher_id,
+                institution=experience["nome instituicao"],
+                employment_relationship=link_kind(link),
+                start_year=xml.as_int(link["ano inicio"]),
+                end_year=xml.as_int(link["ano fim"]),
             )
-
-    return professional_experience
