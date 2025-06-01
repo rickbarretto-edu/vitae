@@ -9,7 +9,10 @@ from src.features.database import Database
 from src.features.ingestion.scanner import CurriculaScheduler
 
 
-def start_database(engine: Engine) -> None:
+def start_database(vitae: settings.VitaeSettings, engine: Engine) -> None:
+    if vitae.in_development:
+        SQLModel.metadata.drop_all(engine)
+
     SQLModel.metadata.create_all(engine)
 
 
@@ -18,7 +21,7 @@ def main() -> None:
     engine: Engine = create_engine(vitae.postgres.url, echo=True)
 
     VitaeSetup(vitae).setup_logging()
-    start_database(engine)
+    start_database(vitae, engine)
 
     database = Database(engine)
     CurriculaScheduler(vitae, database).scan()
