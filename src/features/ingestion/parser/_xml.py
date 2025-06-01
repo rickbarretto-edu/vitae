@@ -1,3 +1,14 @@
+"""XML parsing helper objects.
+
+Warning:
+-------
+Never use ``if element`` for ``element: ET.Element``,
+this may give you undefined behavior. Instead, explicitly check if this is ``None``.
+
+"""
+
+from __future__ import annotations
+
 from xml.etree import ElementTree as ET
 
 from src.lib.result import catch
@@ -14,17 +25,35 @@ def normalized(tag: str) -> str:
 
 
 def find(element: ET.Element | None, tag: str) -> ET.Element | None:
-    if element:
+    if element is not None:
         return element.find(normalized(tag))
 
     return None
 
 
 def attribute(element: ET.Element | None, tag: str) -> str | None:
-    if element and (element_attribute := element.attrib.get(normalized(tag))):
-        return element_attribute.strip()
+    """Get attribute by tag from ET.Element.
 
-    return None
+    Params
+    ------
+    element: Node element
+    tag: attribute's key
+
+    Returns:
+    -------
+    Attribute or None
+
+    Note:
+    ----
+    If an attribute is an empty string,
+    it is returned as None for data consistency.
+
+    """
+    if element is None:
+        return None
+
+    attribute: str | None = element.attrib.get(normalized(tag))
+    return attribute.strip() if attribute else None
 
 
 def as_int(text: str | None) -> int | None:
@@ -45,10 +74,10 @@ class Node:
     def exists(self) -> bool:
         return self.element is not None
 
-    def first(self, tag: str) -> "Node":
+    def first(self, tag: str) -> Node:
         return Node(find(self.element, tag))
 
-    def all(self, tag: str) -> list["Node"]:
+    def all(self, tag: str) -> list[Node]:
         if self.element is None:
             return []
         return [Node(e) for e in self.element.findall(normalized(tag))]
