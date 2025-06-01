@@ -32,7 +32,7 @@ def general_data(researcher_id: str, data: xml.Node) -> GeneralData:
         quotes_names=data["nome em citacoes bibliograficas"],
         orcid=data["ORCID ID"],
         abstract=resume["texto resumo CV RH"],
-        professional_institution=professional_address["nome instituicao"],
+        professional_institution=professional_address["nome instituicao empresa"],
         institution_state=professional_address["UF"],
         institution_city=professional_address["cidade"],
     )
