@@ -41,9 +41,7 @@ def log_parsing(topic: str):  # noqa: ANN202
     return decorator
 
 
-def log_into(
-    data: dict[Any, Any] | TypedDict, log: Path
-) -> dict[Any, Any] | TypedDict:
+def log_into[T: TypedDict | dict](data: T, log: Path) -> T:
     with log.open("+a", encoding="utf-8") as file:
         for key, val in data.items():
             print(f"{key}: {val}", file=file)
