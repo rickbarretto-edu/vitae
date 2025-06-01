@@ -8,7 +8,6 @@ from ._log import log_parsing
 __all__ = ["general_data"]
 
 
-@log_parsing("General Data")
 @eliot.log_call(action_type="parsing")
 def general_data(id: str, data: xml.Node) -> GeneralData:
     """Extract general data from the Lattes curriculum XML.

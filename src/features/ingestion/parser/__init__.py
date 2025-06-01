@@ -24,6 +24,8 @@ class CurriculumParser:
     """
 
     def __init__(self, file: Path) -> None:
+        logger.info("Parsing file: {}", file)
+
         content = file.read_text(encoding="utf-8")
 
         self.id = file.name.removesuffix(".xml")
@@ -32,7 +34,6 @@ class CurriculumParser:
 
     @eliot.log_call(action_type="parsing")
     def researcher(self) -> schema.GeneralData:
-        logger.info("Parsing researcher ({}) curriculum", self.id)
         return general_data(self.id, self.data)
 
     @eliot.log_call(action_type="parsing")

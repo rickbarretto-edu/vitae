@@ -8,7 +8,6 @@ from ._log import log_parsing
 __all__ = ["professional_experiences"]
 
 
-@log_parsing("Professional Experience")
 @eliot.log_call(action_type="parsing")
 def professional_experiences(
     id: str,

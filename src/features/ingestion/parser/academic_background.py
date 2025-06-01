@@ -7,7 +7,6 @@ from ._log import log_parsing
 __all__ = ["academic_background"]
 
 
-@log_parsing("Academic Background")
 @eliot.log_call(action_type="parsing")
 def academic_background(id: str, data: xml.Node) -> list[AcademicBackground]:
     """Extract academic background information from a Lattes curriculum XML.

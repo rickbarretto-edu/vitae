@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 from functools import wraps
+from pathlib import Path
 import pprint
+from typing import Any, TypedDict
 
 from loguru import logger
 
@@ -35,3 +39,14 @@ def log_parsing(topic: str):  # noqa: ANN202
         return wrapper
 
     return decorator
+
+
+def log_into(
+    data: dict[Any, Any] | TypedDict, log: Path
+) -> dict[Any, Any] | TypedDict:
+    with log.open("+a", encoding="utf-8") as file:
+        for key, val in data.items():
+            print(f"{key}: {val}", file=file)
+        print("-" * 80, file=file, flush=True)
+
+    return data

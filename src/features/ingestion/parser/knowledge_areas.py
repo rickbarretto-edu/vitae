@@ -8,7 +8,6 @@ from ._log import log_parsing
 __all__ = ["knowledge_areas"]
 
 
-@log_parsing("Academic Background")
 @eliot.log_call(action_type="parsing")
 def knowledge_areas(curriculo: xml.Node) -> list[KnowledgeArea]:
     """Extract the areas of expertise from a Lattes curriculum XML.

@@ -1,9 +1,11 @@
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from typing import Iterator
 
 import eliot
 
 from src.features.database import Database
+from src.features.ingestion.parser._log import log_into
 from src.lib.panic import panic
 from src.settings import VitaeSettings
 
@@ -40,7 +42,7 @@ class CurriculaScheduler:
 
         Notes
         -----
-        - The function logs the progress and any errors encountered 
+        - The function logs the progress and any errors encountered
           during execution.
         - Subdirectories are processed in parallel to improve performance.
 
@@ -69,15 +71,25 @@ class CurriculaScheduler:
         if not subdirectory.exists():
             panic(f"Subdirectory does not exist: {subdirectory}")
 
-        curricula = subdirectory.glob("*.xml")
+        logs: Path = Path("logs")
+        curricula: Iterator[Path] = subdirectory.glob("*.xml")
 
+        researcher_log = logs / "researcher.log"
         self.database.put.researchers(
-            convert.researcher_from(CurriculumParser(curriculum).researcher())
+            convert.researcher_from(
+                log_into(
+                    CurriculumParser(curriculum).researcher(),
+                    researcher_log,
+                )
+            )
             for curriculum in curricula
         )
 
+        experience_log = logs / "experience.log"
         self.database.put.experiences(
-            convert.professional_experience_from(experience)
+            convert.professional_experience_from(
+                log_into(experience, experience_log)
+            )
             for curriculum in curricula
             for experience in CurriculumParser(curriculum).experiences()
         )
