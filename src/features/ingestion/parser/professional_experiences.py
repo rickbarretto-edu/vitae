@@ -1,4 +1,6 @@
-from typing import Iterator
+from __future__ import annotations
+
+from typing import Iterator  # noqa: UP035
 
 import eliot
 
@@ -9,13 +11,24 @@ from . import _xml as xml
 __all__ = ["professional_experiences"]
 
 
-def link_kind(link: xml.Node):
-    kind: str | None = link["tipo de vinculo"]
+def link_kind(link: xml.Node) -> str | None:
+    """Determine the type of professional link.
 
-    if kind == "LIVRE":
-        kind = link["outro vinculo informado"]
+    If the researcher has a 'LIVRE' (free) link
+    and another link type is provided, the other link type will be used.
 
-    return kind
+    Returns
+    -------
+    The type of professional link as a string, or None if not available.
+
+    """
+    link_kind: str | None = link["tipo de vinculo"]
+    other_link_kind: str | None = link["outro vinculo informado"]
+
+    if link_kind == "LIVRE" and other_link_kind:
+        return other_link_kind
+
+    return link_kind
 
 
 @eliot.log_call(action_type="parsing")
