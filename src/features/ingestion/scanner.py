@@ -74,22 +74,16 @@ class CurriculaScheduler:
         logs: Path = Path("logs")
         curricula: Iterator[Path] = subdirectory.glob("*.xml")
 
-        researcher_log = logs / "researcher.log"
-        self.database.put.researchers(
-            convert.researcher_from(
-                log_into(
-                    CurriculumParser(curriculum).researcher(),
-                    researcher_log,
-                )
+        researcher_log: Path = logs / "researcher.log"
+        experience_log: Path = logs / "experience.log"
+        for curriculum in curricula:
+            researcher = log_into(
+                CurriculumParser(curriculum).researcher(), researcher_log
             )
-            for curriculum in curricula
-        )
+            model = convert.researcher_from(researcher)
+            self.database.put.researcher(model)
 
-        experience_log = logs / "experience.log"
-        self.database.put.experiences(
-            convert.professional_experience_from(
+            for experience in CurriculumParser(curriculum).experiences():
                 log_into(experience, experience_log)
-            )
-            for curriculum in curricula
-            for experience in CurriculumParser(curriculum).experiences()
-        )
+                model = convert.professional_experience_from(experience)
+                self.database.put.experience(model)
