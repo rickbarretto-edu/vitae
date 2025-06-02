@@ -13,7 +13,7 @@ Usage
 
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import Callable
 
 import eliot
 
@@ -23,9 +23,6 @@ from src.lib.panic import panic
 
 from . import converter as convert
 from .parser import CurriculumParser
-
-if TYPE_CHECKING:
-    from collections.abc import Iterator
 
 __all__ = ["parallel_scanning", "process_directory", "serial_scanning"]
 
@@ -71,31 +68,25 @@ def process_directory(database: Database, directory: Path) -> None:
         panic(f"Subdirectory does not exist: {directory}")
 
     logs: Path = Path("logs")
-    curricula: Iterator[Path] = directory.glob("*.xml")
 
-    researcher_log: Path = logs / "researcher.log"
-    experience_log: Path = logs / "experience.log"
-    academic_log: Path = logs / "academic.log"
-    area_log: Path = logs / "area.log"
-
-    for curriculum in curricula:
+    for curriculum in directory.glob("*.xml"):
         parser = CurriculumParser(curriculum)
 
-        researcher = log_into(parser.researcher(), researcher_log)
+        researcher = log_into(parser.researcher(), logs / "researcher.log")
         model = convert.researcher_from(researcher)
         database.put.researcher(model)
 
         for experience in parser.experiences():
-            log_into(experience, experience_log)
+            log_into(experience, logs / "experience.log")
             model = convert.professional_experience_from(experience)
             database.put.experience(model)
 
         for background in parser.background():
-            log_into(background, academic_log)
+            log_into(background, logs / "academic.log")
             model = convert.academic_background_from(background)
             database.put.academic_background(model)
 
         for area in parser.areas():
-            log_into(area, area_log)
+            log_into(area, logs / "area.log")
             model = convert.research_area_from(area)
             database.put.research_area(model)
