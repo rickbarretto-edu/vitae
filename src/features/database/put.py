@@ -36,3 +36,10 @@ class PutOperations:
         with Session(self.engine) as session:
             session.add(experience)
             session.commit()
+
+    def academic_background(
+        self, background: models.AcademicBackground,
+    ) -> None:
+        with Session(self.engine) as session:
+            session.add(background)
+            session.commit()
