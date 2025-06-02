@@ -1,3 +1,5 @@
+"""Curricula directory scanner."""
+
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
@@ -18,18 +20,22 @@ __all__ = ["CurriculaScheduler"]
 
 @dataclass
 class CurriculaScheduler:
+    """Scan directories and schedules parsing."""
+
     vitae: VitaeSettings
     database: Database
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Initialize curricula_folder and check if this is valid."""
         self.curricula_folder: Path = Path(self.vitae.paths.curricula)
 
         if not self.curricula_folder.exists():
-            panic(f"Curricula folder does not exist: {self.curricula_folder}")
+            msg = f"Curricula folder must exist: {self.curricula_folder}"
+            panic(msg)
+
         if not self.curricula_folder.is_dir():
-            panic(
-                f"Curricula path is not a directory: {self.curricula_folder}",
-            )
+            msg = f"Curricula path must be a directory: {self.curricula_folder}"
+            panic(msg)
 
     @eliot.log_call(action_type="scanning")
     def scan(self) -> None:
@@ -55,17 +61,19 @@ class CurriculaScheduler:
         else:
             self._parallel_execution()
 
-    def _serial_execution(self):
+    def _serial_execution(self) -> None:
+        """Process directories in order."""
         for folder in self.curricula_folder.iterdir():
             self._process_subdir(folder)
 
-    def _parallel_execution(self):
+    def _parallel_execution(self) -> None:
+        """Process directories in parallel."""
         with ThreadPoolExecutor(max_workers=8) as executor:
             for folder in self.curricula_folder.iterdir():
                 executor.submit(self._process_subdir, folder)
 
     @eliot.log_call(action_type="scanning")
-    def _process_subdir(self, subdirectory: Path):
+    def _process_subdir(self, subdirectory: Path) -> None:
         """Process all curriculum files in a subdirectory.
 
         Scans the given subdirectory, processes each curriculum file using the parser,
