@@ -64,7 +64,7 @@ def as_int(text: str | None) -> int | None:
 
 
 class Node:
-    def __init__(self, element: ET.Element | None):
+    def __init__(self, element: ET.Element | None) -> None:
         self.element = element
 
     def __getitem__(self, tag: str) -> str | None:

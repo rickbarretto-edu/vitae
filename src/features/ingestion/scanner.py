@@ -3,7 +3,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterator
+from typing import TYPE_CHECKING
 
 import eliot
 
@@ -14,6 +14,9 @@ from src.settings import VitaeSettings
 
 from . import converter as convert
 from .parser import CurriculumParser
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 __all__ = ["CurriculaScheduler"]
 

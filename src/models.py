@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlmodel import Field, Relationship, SQLModel, UniqueConstraint
+from sqlmodel import Field, SQLModel
 
 
 class Researcher(SQLModel, table=True):

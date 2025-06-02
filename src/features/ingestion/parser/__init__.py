@@ -1,5 +1,5 @@
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Iterator
 
 import eliot
 from loguru import logger
@@ -18,9 +18,10 @@ __all__ = ["CurriculumParser"]
 class CurriculumParser:
     """Parser for XML Curriculum files.
 
-    Notes:
+    Notes
     -----
     - The filename is the ID of the researcher.
+
     """
 
     def __init__(self, file: Path) -> None:

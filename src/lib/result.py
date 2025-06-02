@@ -1,4 +1,5 @@
-"""Rust inspired Result type"""
+"""Rust inspired Result type."""
+from __future__ import annotations
 
 from abc import ABC
 from dataclasses import dataclass
@@ -18,15 +19,15 @@ class IsEither[T](ABC):
     def expected(self, message: str) -> T: ...
 
     def __bool__(self) -> bool:
-        """Returns true for Some and false for Empty"""
+        """Returns true for Some and false for Empty."""
 
-    def __and__(self, other: "IsEither") -> "IsEither":
+    def __and__(self, other: IsEither) -> IsEither:
         return other if (bool(self) and bool(other)) else Empty()
 
-    def __or__(self, other: "IsEither") -> "IsEither":
+    def __or__(self, other: IsEither) -> IsEither:
         return self if self else other
 
-    def __xor__(self, other: "IsEither") -> "IsEither":
+    def __xor__(self, other: IsEither) -> IsEither:
         if bool(self) == bool(other):
             return Empty()
         return self if bool(self) else other
@@ -54,7 +55,7 @@ class Some[T](IsEither):
 
 @dataclass
 class Empty[T](IsEither):
-    def __init__(self, value: T | None = None):
+    def __init__(self, value: T | None = None) -> None:
         pass
 
     @property
@@ -89,16 +90,16 @@ class IsResult[T, E](ABC):
 
     def __bool__(self) -> bool: ...
 
-    def __and__(self, other: "IsResult[T, E]") -> "IsResult[T, E]":
+    def __and__(self, other: IsResult[T, E]) -> IsResult[T, E]:
         return self if not self else other
 
-    def __or__(self, other: "IsResult[T, E]") -> "IsResult[T, E]":
+    def __or__(self, other: IsResult[T, E]) -> IsResult[T, E]:
         return self if self else other
 
 
 @dataclass
 class Ok[T](IsResult):
-    def __init__(self, value: T = None):
+    def __init__(self, value: T = None) -> None:
         self._value: T = value
 
     @property
@@ -127,7 +128,7 @@ class Ok[T](IsResult):
 
 @dataclass
 class Err[E](IsResult):
-    def __init__(self, error: E = None):
+    def __init__(self, error: E = None) -> None:
         self._error: E = error
 
     @property
