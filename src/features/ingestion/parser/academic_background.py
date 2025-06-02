@@ -27,7 +27,74 @@ def academic_background(
     XML Schema
     ----------
         formacao-academica-titulacao: [
-            
+            graduacao: {
+                sequencia-formacao: integer
+                nivel: integer
+                titulo-do-trabalho-de-conclusao-de-curso: string
+                nome-do-orientador: string
+                codigo-instituicao: string
+                nome-instituicao: string
+                codigo-orgao: string
+                nome-orgao: string
+                curso-codigo: string
+                nome-curso: string
+                codigo-area-curso: string
+                status-do-curso: string
+                ano-de-inicio: integer
+                ano-de-conclusao: integer
+                flag-bolsa: boolean
+                codigo-agencia-financiadora: string
+                nome-agencia: string
+                numero-id-orientador: string
+                codigo-curso-capes: string
+                formacao-academica-titulacao: string
+                ...
+            },
+            especializacao: {
+                sequencia-formacao: integer
+                nivel: integer
+                titulo-da-monografia: string
+                nome-do-orientador: string
+                codigo-instituicao: string
+                nome-instituicao: string
+                codigo-orgao: string
+                nome-orgao: string
+                codigo-curso: string
+                nome-curso: string
+                status-do-curso: string
+                ano-de-inicio: integer
+                ano-de-conclusao: integer
+                flag-bolsa: boolean
+                codigo-agencia-financiadora: string
+                nome-agencia: string
+                carga-horaria: integer
+            }
+
+            mestrado: {
+                sequencia-formacao: integer
+                nivel: integer
+                codigo-instituicao: string
+                nome-instituicao: string
+                codigo-orgao: string
+                nome-orgao: string
+                codigo-curso: string
+                nome-curso: string
+                codigo-area-curso: string
+                status-do-curso: string
+                ano-de-inicio: integer
+                ano-de-conclusao: integer
+                flag-bolsa: boolean
+                codigo-agencia-financiadora: string
+                nome-agencia: string
+                ano-de-obtencao-do-titulo: integer
+                titulo-da-dissertacao-tese: string
+                nome-completo-orientador: string
+                tipo-mestrado: string
+                numero-id-orientador: string
+                codigo-curso-capes: string
+                nome-do-co-orientador: string
+                ...
+            }
         ]
 
     """
