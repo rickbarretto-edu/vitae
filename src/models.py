@@ -25,6 +25,9 @@ class Researcher(SQLModel, table=True):
     academic_background: list["AcademicBackground"] = Relationship(
         back_populates="researcher",
     )
+    research_area: list["ResearchArea"] = Relationship(
+        back_populates="researcher",
+    )
 
 
 class ProfessionalExperience(SQLModel, table=True):
@@ -87,6 +90,9 @@ class ResearchArea(SQLModel, table=True):
 
     # Owner
     researcher_id: str = Field(foreign_key="researcher.id")
+    researcher: "Researcher" = Relationship(
+        back_populates="research_area",
+    )
 
     major_knowledge_area: str
     knowledge_area: str | None = None
