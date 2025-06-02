@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
+import shutil
 import sys
 
 import eliot
@@ -16,9 +17,19 @@ class VitaeSetup:
 
     def setup_logging(self) -> None:
         """Setups logging settings."""
-        Path("logs").mkdir(parents=True, exist_ok=True)
+        logs = Path("logs")
+        self._erase_logs(logs)
+        self._create_logs_dir(logs)
+
         self._eliot_for_development()
         self._loguru()
+
+    def _erase_logs(self, path: Path) -> None:
+        if self.vitae.in_development:
+            shutil.rmtree(path)
+
+    def _create_logs_dir(self, path: Path) -> None:
+        path.mkdir(parents=True, exist_ok=True)
 
     def _eliot_for_development(self) -> None:
         """Setups Eliot for development mode.
