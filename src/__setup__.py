@@ -1,3 +1,12 @@
+"""Setup the application settings.
+
+The purpose of this module is to handle and abstract all the initialization
+of the Application system, such as logging and database.
+
+This module deals with external dependencies,
+so the main module should be independent from them.
+"""
+
 from pathlib import Path
 import shutil
 import sys
