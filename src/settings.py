@@ -1,9 +1,12 @@
 """Environment Settings."""
 
 from dataclasses import dataclass
+from functools import cached_property
 from pathlib import Path
 from typing import Any
 
+from sqlalchemy import create_engine
+from sqlalchemy.engine import Engine
 import tomllib
 
 __all__ = ["VitaeSettings"]
@@ -54,6 +57,11 @@ class PostgresSettings:
     def url(self) -> str:
         """Postgres URL from vitae.toml file."""
         return f"postgresql+psycopg://{self.user}@{self.db}"
+
+    @cached_property
+    def engine(self) -> Engine:
+        """SQLAlchemy Engine, cached after first creation."""
+        return create_engine(self.url, echo=True)
 
 
 @dataclass(frozen=True, kw_only=True)
