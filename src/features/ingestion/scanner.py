@@ -60,21 +60,13 @@ class CurriculaScheduler:
         - Subdirectories are processed in parallel to improve performance.
 
         """
+        sub_directories = self.curricula_folder.iterdir()
+        process_files = lambda files: self._process_subdir(files)
+
         if self.vitae.in_development:
-            self._serial_execution()
+            serial_scanning(sub_directories, process_files)
         else:
-            self._parallel_execution()
-
-    def _serial_execution(self) -> None:
-        """Process directories in order."""
-        for folder in self.curricula_folder.iterdir():
-            self._process_subdir(folder)
-
-    def _parallel_execution(self) -> None:
-        """Process directories in parallel."""
-        with ThreadPoolExecutor(max_workers=8) as executor:
-            for folder in self.curricula_folder.iterdir():
-                executor.submit(self._process_subdir, folder)
+            parallel_scanning(sub_directories, process_files)
 
     @eliot.log_call(action_type="scanning")
     def _process_subdir(self, subdirectory: Path) -> None:
