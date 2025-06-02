@@ -39,7 +39,7 @@ class PostgresDatabase:
 
     def __post_init__(self) -> None:
         if not all((self.name, self.host, self.port)):
-            message: str = f"Missing fields {self:r}"
+            message: str = f"Missing fields {self}"
             raise ValueError(message)
 
     def __str__(self) -> str:
