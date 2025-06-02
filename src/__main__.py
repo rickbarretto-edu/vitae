@@ -1,5 +1,5 @@
 from src import settings
-from src.__setup__ import setup_database, setup_vitae
+from src.__setup__ import setup_vitae
 from src.features.database import Database
 from src.features.ingestion.scanner import CurriculaScheduler
 
@@ -8,7 +8,6 @@ def main() -> None:
     vitae: settings.VitaeSettings = settings.load()
 
     setup_vitae(vitae)
-    setup_database(vitae)
 
     database = Database(vitae.postgres.engine)
     CurriculaScheduler(vitae, database).scan()

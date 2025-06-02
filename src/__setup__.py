@@ -9,7 +9,6 @@ from sqlmodel import SQLModel
 from src.settings import VitaeSettings
 
 __all__ = [
-    "setup_database",
     "setup_vitae",
 ]
 
@@ -74,6 +73,7 @@ def setup_database(vitae: VitaeSettings) -> None:
 
 
 def setup_vitae(vitae: VitaeSettings) -> None:
+    """Setups Vitae's Logging and database."""
     LOGS = Path("logs")
 
     if vitae.in_development:
@@ -91,3 +91,5 @@ def setup_vitae(vitae: VitaeSettings) -> None:
         logger.info("Eliot enabled to file.")
 
     redirect_loguru_to(LOGS / "vitae.log")
+
+    setup_database(vitae)
