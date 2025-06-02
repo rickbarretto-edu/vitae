@@ -66,6 +66,10 @@ class AcademicBackground(SQLModel, table=True):
     start_year: int | None = None
     end_year: int | None = None
 
+    knowledge_area: list["KnowledgeArea"] = Relationship(
+        back_populates="academic_background",
+    )
+
 
 class KnowledgeArea(SQLModel, table=True):
     __tablename__: str = "knowledge_area"
@@ -75,6 +79,9 @@ class KnowledgeArea(SQLModel, table=True):
 
     # Owner
     academic_background_id: int = Field(foreign_key="academic_background.id")
+    academic_background: "AcademicBackground" = Relationship(
+        back_populates="knowledge_area",
+    )
 
     major_knowledge_area: str
     knowledge_area: str | None = None
