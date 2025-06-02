@@ -4,12 +4,18 @@ import sys
 
 import eliot
 from loguru import logger
+from sqlalchemy import Engine
+from sqlmodel import SQLModel
 
 from src.settings import VitaeSettings
 
 __all__ = [
+    "setup_database",
     "setup_vitae",
 ]
+
+
+# =~=~=~ Logging related subroutines ~=~=~=
 
 
 def erase_logs(path: Path) -> None:
@@ -45,6 +51,19 @@ def enable_loguru_tracing() -> None:
     I highly recomend to use this for development environment only.
     """
     logger.add(sys.stdout, level="TRACE", colorize=True)
+
+
+# =~=~=~ Database related subroutines ~=~=~=
+
+
+def setup_database(vitae: VitaeSettings, engine: Engine) -> None:
+    if vitae.in_development:
+        SQLModel.metadata.drop_all(engine)
+
+    SQLModel.metadata.create_all(engine)
+
+
+# =~=~=~ Public ~=~=~=
 
 
 def setup_vitae(vitae: VitaeSettings) -> None:
