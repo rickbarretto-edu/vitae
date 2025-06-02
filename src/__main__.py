@@ -16,7 +16,7 @@ def main() -> None:
     engine: Engine = create_engine(vitae.postgres.url, echo=True)
 
     setup_vitae(vitae)
-    setup_database(vitae, engine)
+    setup_database(vitae)
 
     database = Database(engine)
     CurriculaScheduler(vitae, database).scan()
