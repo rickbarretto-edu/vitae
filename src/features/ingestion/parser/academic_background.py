@@ -70,7 +70,7 @@ def academic_background(
                 carga-horaria: integer
             }
 
-            mestrado: {
+            mestrado | doutorado: {
                 sequencia-formacao: integer
                 nivel: integer
                 codigo-instituicao: string
@@ -93,6 +93,20 @@ def academic_background(
                 numero-id-orientador: string
                 codigo-curso-capes: string
                 nome-do-co-orientador: string
+
+                tipo-doutorado: string
+                codigo-instituicao-dout: string
+                nome-instituicao-dout: string
+                codigo-instituicao-outra-dout: string
+                nome-instituicao-outra-dout: string
+                nome-orientador-dout: string
+                nome-do-co-orientador: string
+                nome-do-orientador-sanduiche: string
+                nome-do-orientador-co-tutela: string
+                codigo-instituicao-co-tutela: string
+                codigo-instituicao-sanduiche: string
+                codigo-instituicao-outra-co-tutela: string
+                codigo-instituicao-outra-sanduiche: string
                 ...
             }
         ]
