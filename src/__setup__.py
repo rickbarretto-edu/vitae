@@ -24,11 +24,13 @@ def create_logs(path: Path) -> None:
 
 
 def redirect_eliot_to(log_file: Path) -> None:
+    """Redirect eliot's output to ``log_file``."""
     with log_file.open("w+", encoding="utf-8") as f:
         eliot.to_file(f)
 
 
 def redirect_loguru_to(log_file: Path) -> None:
+    """Redirect loguru's output to ``log_file``."""
     logger.remove()
     logger.add(
         str(log_file),
@@ -39,6 +41,10 @@ def redirect_loguru_to(log_file: Path) -> None:
 
 
 def enable_loguru_tracing() -> None:
+    """Enable TRACE level.
+
+    I highly recomend to use this for development environment only.
+    """
     logger.add(sys.stdout, level="TRACE", colorize=True)
 
 
