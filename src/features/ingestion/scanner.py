@@ -61,52 +61,17 @@ class CurriculaScheduler:
 
         """
         sub_directories = self.curricula_folder.iterdir()
-        process_files = lambda files: self._process_subdir(files)
 
         if self.vitae.in_development:
-            serial_scanning(sub_directories, process_files)
+            serial_scanning(
+                sub_directories,
+                lambda files: process_directory(self.database, files),
+            )
         else:
-            parallel_scanning(sub_directories, process_files)
-
-    @eliot.log_call(action_type="scanning")
-    def _process_subdir(self, subdirectory: Path) -> None:
-        """Process all curriculum files in a subdirectory.
-
-        Scans the given subdirectory, processes each curriculum file using the parser,
-        manages data buffers, and periodically flushes them to the database.
-        """
-        if not subdirectory.exists():
-            panic(f"Subdirectory does not exist: {subdirectory}")
-
-        logs: Path = Path("logs")
-        curricula: Iterator[Path] = subdirectory.glob("*.xml")
-
-        researcher_log: Path = logs / "researcher.log"
-        experience_log: Path = logs / "experience.log"
-        academic_log: Path = logs / "academic.log"
-        area_log: Path = logs / "area.log"
-
-        for curriculum in curricula:
-            parser = CurriculumParser(curriculum)
-
-            researcher = log_into(parser.researcher(), researcher_log)
-            model = convert.researcher_from(researcher)
-            self.database.put.researcher(model)
-
-            for experience in parser.experiences():
-                log_into(experience, experience_log)
-                model = convert.professional_experience_from(experience)
-                self.database.put.experience(model)
-
-            for background in parser.background():
-                log_into(background, academic_log)
-                model = convert.academic_background_from(background)
-                self.database.put.academic_background(model)
-
-            for area in parser.areas():
-                log_into(area, area_log)
-                model = convert.research_area_from(area)
-                self.database.put.research_area(model)
+            parallel_scanning(
+                sub_directories,
+                lambda files: process_directory(self.database, files),
+            )
 
 
 def serial_scanning(
@@ -124,3 +89,44 @@ def parallel_scanning(
     with ThreadPoolExecutor(max_workers=8) as executor:
         for directory in directories:
             executor.submit(action, directory)
+
+
+@eliot.log_call(action_type="scanning")
+def process_directory(database: Database, directory: Path) -> None:
+    """Process all curriculum files in a directory.
+
+    Scans the given directory, processes each curriculum file using the parser,
+    manages data buffers, and periodically flushes them to the database.
+    """
+    if not directory.exists():
+        panic(f"Subdirectory does not exist: {directory}")
+
+    logs: Path = Path("logs")
+    curricula: Iterator[Path] = directory.glob("*.xml")
+
+    researcher_log: Path = logs / "researcher.log"
+    experience_log: Path = logs / "experience.log"
+    academic_log: Path = logs / "academic.log"
+    area_log: Path = logs / "area.log"
+
+    for curriculum in curricula:
+        parser = CurriculumParser(curriculum)
+
+        researcher = log_into(parser.researcher(), researcher_log)
+        model = convert.researcher_from(researcher)
+        database.put.researcher(model)
+
+        for experience in parser.experiences():
+            log_into(experience, experience_log)
+            model = convert.professional_experience_from(experience)
+            database.put.experience(model)
+
+        for background in parser.background():
+            log_into(background, academic_log)
+            model = convert.academic_background_from(background)
+            database.put.academic_background(model)
+
+        for area in parser.areas():
+            log_into(area, area_log)
+            model = convert.research_area_from(area)
+            database.put.research_area(model)
