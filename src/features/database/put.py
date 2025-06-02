@@ -15,26 +15,9 @@ class PutOperations:
 
     engine: Engine
 
-    def researchers(self, researchers: Iterable[models.Researcher]) -> None:
-        """Insert multiple researchers."""
-        with Session(self.engine) as session:
-            for researcher in researchers:
-                session.add(researcher)
-                session.commit()
-
     def researcher(self, researcher: models.Researcher) -> None:
         """Insert a researcher."""
         self._put(researcher)
-
-    def experiences(
-        self,
-        experiences: Iterable[models.ProfessionalExperience],
-    ) -> None:
-        """Insert multiple Researcher's Professional Experience."""
-        with Session(self.engine) as session:
-            for experience in experiences:
-                session.add(experience)
-                session.commit()
 
     def experience(self, experience: models.ProfessionalExperience) -> None:
         """Insert a Researcher's Professional Experience."""
