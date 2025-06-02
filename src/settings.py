@@ -19,9 +19,10 @@ class PostgresUser:
     name: str = "postgres"
     password: str
 
-    def __post_init__(self):
-        assert self.name
-        assert self.password
+    def __post_init__(self) -> None:
+        if not all((self.name, self.password)):
+            message: str = f"Missing fields {self}"
+            raise ValueError(message)
 
     def __str__(self) -> str:
         return f"{self.name}:{self.password}"
