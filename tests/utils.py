@@ -3,7 +3,7 @@ from typing import Callable
 
 
 def should(description: str) -> Callable:
-    """Decorator to label a test function with a descriptive expectation.
+    """Test function with a descriptive expectation.
 
     Useful for BDD and readable tests. This also adds the description
     to the documentation of the wrapped function as "Should {description}".
