@@ -3,7 +3,6 @@
 from pathlib import Path
 from typing import TypedDict
 
-
 __all__ = ["log_into"]
 
 LOG_DIVIDER = "-" * 80
