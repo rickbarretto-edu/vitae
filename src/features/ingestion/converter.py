@@ -1,9 +1,18 @@
+"""Conversion functions from Schema to Model."""
+
 from src import models
 
 from . import schema
 
+__all__ = [
+    "academic_background_from",
+    "professional_experience_from",
+    "research_area_from",
+    "researcher_from",
+]
 
-def researcher_from(data: schema.GeneralData) -> models.Researcher:
+
+def researcher_from(data: schema.GeneralData) -> models.Researcher:  # noqa: D103
     return models.Researcher(
         id=data["id"],
         name=data["name"] or "Invalid Name",
@@ -19,7 +28,7 @@ def researcher_from(data: schema.GeneralData) -> models.Researcher:
     )
 
 
-def academic_background_from(
+def academic_background_from(  # noqa: D103
     data: schema.AcademicBackground,
 ) -> models.AcademicBackground:
     return models.AcademicBackground(
@@ -32,7 +41,7 @@ def academic_background_from(
     )
 
 
-def professional_experience_from(
+def professional_experience_from(  # noqa: D103
     data: schema.ProfessionalExperience,
 ) -> models.ProfessionalExperience:
     return models.ProfessionalExperience(
@@ -45,7 +54,7 @@ def professional_experience_from(
     )
 
 
-def research_area_from(data: schema.ResearchArea) -> models.ResearchArea:
+def research_area_from(data: schema.ResearchArea) -> models.ResearchArea:  # noqa: D103
     return models.ResearchArea(
         researcher_id=data["researcher_id"],
         major_knowledge_area=data["major_knowledge_area"]
