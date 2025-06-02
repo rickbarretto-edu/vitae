@@ -76,6 +76,8 @@ class CurriculaScheduler:
 
         researcher_log: Path = logs / "researcher.log"
         experience_log: Path = logs / "experience.log"
+        academic_log: Path = logs / "academic.log"
+
         for curriculum in curricula:
             parser = CurriculumParser(curriculum)
 
@@ -87,3 +89,8 @@ class CurriculaScheduler:
                 log_into(experience, experience_log)
                 model = convert.professional_experience_from(experience)
                 self.database.put.experience(model)
+
+            for background in parser.background():
+                log_into(background, academic_log)
+                model = convert.academic_background_from(background)
+                self.database.put.academic_background(model)
