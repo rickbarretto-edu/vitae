@@ -100,22 +100,22 @@ def new_vitae() -> VitaeSettings:
 
 def setup_vitae(vitae: VitaeSettings) -> None:
     """Setups Vitae's Logging and database."""
-    LOGS = Path("logs")
+    logs = Path("logs")
 
     if vitae.in_development:
         # Since this will run multiple times, this is better to erase logs
         # to avoid unnecessary confusion with older logs.
-        erase_logs(LOGS)
+        erase_logs(logs)
 
-    create_logs(LOGS)
+    create_logs(logs)
 
     if vitae.in_development:
         # Eliot is only used for development pupose to traceback actions
         # This should not be used in production, since this will produce huge
         # log files that will never be read.
-        redirect_eliot_to(LOGS / "eliot.log")
+        redirect_eliot_to(logs / "eliot.log")
         logger.info("Eliot enabled to file.")
 
-    redirect_loguru_to(LOGS / "vitae.log")
+    redirect_loguru_to(logs / "vitae.log")
 
     setup_database(vitae)
