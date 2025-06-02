@@ -1,4 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator
 
@@ -15,17 +16,19 @@ from .parser import CurriculumParser
 __all__ = ["CurriculaScheduler"]
 
 
+@dataclass
 class CurriculaScheduler:
-    def __init__(self, vitae: VitaeSettings, database: Database) -> None:
-        self._vitae: VitaeSettings = vitae
-        self.database = database
-        self._curricula_folder: Path = Path(self._vitae.paths.curricula)
+    vitae: VitaeSettings
+    database: Database
 
-        if not self._curricula_folder.exists():
-            panic(f"Curricula folder does not exist: {self._curricula_folder}")
-        if not self._curricula_folder.is_dir():
+    def __post_init__(self):
+        self.curricula_folder: Path = Path(self.vitae.paths.curricula)
+
+        if not self.curricula_folder.exists():
+            panic(f"Curricula folder does not exist: {self.curricula_folder}")
+        if not self.curricula_folder.is_dir():
             panic(
-                f"Curricula path is not a directory: {self._curricula_folder}",
+                f"Curricula path is not a directory: {self.curricula_folder}",
             )
 
     @eliot.log_call(action_type="scanning")
@@ -47,18 +50,18 @@ class CurriculaScheduler:
         - Subdirectories are processed in parallel to improve performance.
 
         """
-        if self._vitae.in_development:
+        if self.vitae.in_development:
             self._serial_execution()
         else:
             self._parallel_execution()
 
     def _serial_execution(self):
-        for folder in self._curricula_folder.iterdir():
+        for folder in self.curricula_folder.iterdir():
             self._process_subdir(folder)
 
     def _parallel_execution(self):
         with ThreadPoolExecutor(max_workers=8) as executor:
-            for folder in self._curricula_folder.iterdir():
+            for folder in self.curricula_folder.iterdir():
                 executor.submit(self._process_subdir, folder)
 
     @eliot.log_call(action_type="scanning")
