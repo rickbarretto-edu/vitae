@@ -1,15 +1,16 @@
 from src.__setup__ import new_vitae
 from src.features.database import Database
-from src.features.ingestion import debug
-from src.features.ingestion.scanner import CurriculaScheduler
+from src.features.ingestion import debug, ingestion, serial_scanning
 from src.settings import VitaeSettings
 
 
 def main() -> VitaeSettings:
     vitae: VitaeSettings = new_vitae()
-
     database = Database(vitae.postgres.engine)
-    CurriculaScheduler(vitae, database).scan()
+    serial_scanning(
+        vitae.paths.curricula,
+        ingestion(database),
+    )
 
     return vitae
 

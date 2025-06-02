@@ -1,8 +1,17 @@
-"""Curricula directory scanner."""
+"""Curricula directory scanner.
 
-from collections.abc import Iterable
+Usage
+-----
+
+    def ingestion(database: Database) -> Callable[[Path], None]:
+        return lambda sub: process_directory(database, sub)
+
+    serial_scanning(Path("all_files"), ingestion(database))
+    arallel_scanning(Path("all_files"), ingestion(database))
+
+"""
+
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
@@ -11,7 +20,6 @@ import eliot
 from src.features.database import Database
 from src.features.ingestion.log import log_into
 from src.lib.panic import panic
-from src.settings import VitaeSettings
 
 from . import converter as convert
 from .parser import CurriculumParser
@@ -19,75 +27,36 @@ from .parser import CurriculumParser
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-__all__ = ["CurriculaScheduler"]
-
-
-@dataclass
-class CurriculaScheduler:
-    """Scan directories and schedules parsing."""
-
-    vitae: VitaeSettings
-    database: Database
-
-    def __post_init__(self) -> None:
-        """Initialize curricula_folder and check if this is valid."""
-        self.curricula_folder: Path = Path(self.vitae.paths.curricula)
-
-        if not self.curricula_folder.exists():
-            msg = f"Curricula folder must exist: {self.curricula_folder}"
-            panic(msg)
-
-        if not self.curricula_folder.is_dir():
-            msg = f"Curricula path must be a directory: {self.curricula_folder}"
-            panic(msg)
-
-    @eliot.log_call(action_type="scanning")
-    def scan(self) -> None:
-        """Scan the directory curricula and process all subdirectories.
-
-        This function identifies the current working directory,
-        verifies the existence of a "repo" directory containing subdirectories
-        of curricula, and processes each subdirectory concurrently
-        using a thread pool.
-
-        Each subdirectory is expected to contain zipped curricula files,
-        which are parsed and processed.
-
-        Notes
-        -----
-        - The function logs the progress and any errors encountered
-          during execution.
-        - Subdirectories are processed in parallel to improve performance.
-
-        """
-        sub_directories = self.curricula_folder.iterdir()
-
-        if self.vitae.in_development:
-            serial_scanning(
-                sub_directories,
-                lambda files: process_directory(self.database, files),
-            )
-        else:
-            parallel_scanning(
-                sub_directories,
-                lambda files: process_directory(self.database, files),
-            )
+__all__ = ["parallel_scanning", "process_directory", "serial_scanning"]
 
 
 def serial_scanning(
-    directories: Iterable[Path],
+    all_files: Path,
     action: Callable[[Path], None],
 ) -> None:
-    for directory in directories:
+    """Scan & Process files in order.
+
+    Usage
+    -----
+        serial_scanning(path, lambda sub: process_directory(database, sub)
+    """
+    for directory in all_files.iterdir():
         action(directory)
 
 
 def parallel_scanning(
-    directories: Iterable[Path],
+    all_files: Path,
     action: Callable[[Path], None],
 ) -> None:
+    """Scan & Process files in parallel (I/O bound).
+
+    Usage
+    -----
+        parallel_scanning(path, lambda sub: process_directory(database, sub)
+
+    """
     with ThreadPoolExecutor(max_workers=8) as executor:
-        for directory in directories:
+        for directory in all_files.iterdir():
             executor.submit(action, directory)
 
 
