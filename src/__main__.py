@@ -2,8 +2,6 @@ from typing import TYPE_CHECKING
 
 from sqlmodel import create_engine
 
-# Loads models to register them in SQLModel
-from src import models as models  # noqa: PLC0414
 from src import settings
 from src.__setup__ import setup_database, setup_vitae
 from src.features.database import Database
