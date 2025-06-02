@@ -1,6 +1,5 @@
 """Put database operations."""
 
-from collections.abc import Iterable
 from dataclasses import dataclass
 
 from sqlalchemy.engine import Engine
