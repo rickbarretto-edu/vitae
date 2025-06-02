@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 
 def main() -> None:
     vitae: VitaeSettings = new_vitae()
-    setup_vitae(vitae)
 
     database = Database(vitae.postgres.engine)
     CurriculaScheduler(vitae, database).scan()

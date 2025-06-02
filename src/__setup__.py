@@ -20,7 +20,6 @@ from src.settings import VitaeSettings
 
 __all__ = [
     "new_vitae",
-    "setup_vitae",
 ]
 
 
@@ -84,7 +83,19 @@ def setup_database(vitae: VitaeSettings) -> None:
 
 
 def new_vitae() -> VitaeSettings:
-    return settings.load()
+    """Create a new vitae application.
+
+    This function loads Vitae's settings and sets up the whole application,
+    such as databases and logging systems.
+
+    Returns
+    -------
+    New Vitae's Settings from ``vitae.toml``
+
+    """
+    vitae: settings.VitaeSettings = settings.load()
+    setup_vitae(vitae)
+    return vitae
 
 
 def setup_vitae(vitae: VitaeSettings) -> None:
