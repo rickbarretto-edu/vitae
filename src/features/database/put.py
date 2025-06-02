@@ -4,7 +4,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 from sqlalchemy.engine import Engine
-from sqlmodel import Session
+from sqlmodel import SQLModel, Session
 
 from src import models
 
@@ -24,9 +24,7 @@ class PutOperations:
 
     def researcher(self, researcher: models.Researcher) -> None:
         """Insert a researcher."""
-        with Session(self.engine) as session:
-            session.add(researcher)
-            session.commit()
+        self._put(researcher)
 
     def experiences(
         self,
@@ -40,21 +38,21 @@ class PutOperations:
 
     def experience(self, experience: models.ProfessionalExperience) -> None:
         """Insert a Researcher's Professional Experience."""
-        with Session(self.engine) as session:
-            session.add(experience)
-            session.commit()
+        self._put(experience)
 
     def academic_background(
         self,
         background: models.AcademicBackground,
     ) -> None:
         """Insert a Researcher's Academic Background."""
-        with Session(self.engine) as session:
-            session.add(background)
-            session.commit()
+        self._put(background)
 
     def research_area(self, area: models.ResearchArea) -> None:
         """Insert a Researcher's Area of Research."""
+        self._put(area)
+
+    def _put(self, model: SQLModel) -> None:
+        """Insert SQLModel on database and commit it."""
         with Session(self.engine) as session:
-            session.add(area)
+            session.add(model)
             session.commit()
