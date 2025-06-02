@@ -38,8 +38,14 @@ class PutOperations:
             session.commit()
 
     def academic_background(
-        self, background: models.AcademicBackground,
+        self,
+        background: models.AcademicBackground,
     ) -> None:
         with Session(self.engine) as session:
             session.add(background)
+            session.commit()
+
+    def research_area(self, area: models.ResearchArea) -> None:
+        with Session(self.engine) as session:
+            session.add(area)
             session.commit()
