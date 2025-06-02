@@ -18,12 +18,12 @@ from typing import Callable
 
 import eliot
 
-from src.features.database import Database
 from src.features.ingestion import converter as convert
 from src.features.ingestion import debug
 from src.features.ingestion.log import log_into
 from src.features.ingestion.parser import CurriculumParser
 from src.features.ingestion.scanner import parallel_scanning, serial_scanning
+from src.infra.database import Database
 from src.lib.panic import panic
 
 from . import converter, schema

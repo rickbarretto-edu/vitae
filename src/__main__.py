@@ -1,6 +1,6 @@
 from src.__setup__ import new_vitae
-from src.features.database import Database
 from src.features.ingestion import debug, ingestion, serial_scanning
+from src.infra.database import Database
 from src.settings import VitaeSettings
 
 
