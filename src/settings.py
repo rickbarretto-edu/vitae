@@ -97,7 +97,7 @@ class PathsSettings:
         return self._curricula.absolute()
 
 
-@dataclass
+@dataclass(frozen=True, kw_only=True)
 class VitaeSettings:
     """Settings loaded from `vitae.toml`."""
 
