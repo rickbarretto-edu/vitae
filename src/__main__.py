@@ -4,7 +4,7 @@ from sqlmodel import SQLModel, create_engine
 # Loads models to register them in SQLModel
 from src import models as models  # noqa: PLC0414
 from src import settings
-from src.__setup__ import VitaeSetup
+from src.__setup__ import setup_vitae
 from src.features.database import Database
 from src.features.ingestion.scanner import CurriculaScheduler
 
@@ -20,7 +20,7 @@ def main() -> None:
     vitae: settings.VitaeSettings = settings.load()
     engine: Engine = create_engine(vitae.postgres.url, echo=True)
 
-    VitaeSetup(vitae).setup_logging()
+    setup_vitae(vitae)
     start_database(vitae, engine)
 
     database = Database(engine)

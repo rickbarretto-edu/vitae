@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from pathlib import Path
 import shutil
 import sys
@@ -9,7 +8,7 @@ from loguru import logger
 from src.settings import VitaeSettings
 
 __all__ = [
-    "VitaeSetup",
+    "setup_vitae",
 ]
 
 
@@ -48,23 +47,21 @@ def enable_loguru_tracing() -> None:
     logger.add(sys.stdout, level="TRACE", colorize=True)
 
 
-@dataclass
-class VitaeSetup:
-    """Setup for the project."""
+def setup_vitae(vitae: VitaeSettings) -> None:
+    LOGS = Path("logs")
 
-    vitae: VitaeSettings
+    if vitae.in_development:
+        # Since this will run multiple times, this is better to erase logs
+        # to avoid unnecessary confusion with older logs.
+        erase_logs(LOGS)
 
-    def setup_logging(self) -> None:
-        """Setups logging settings."""
-        logs = Path("logs")
+    create_logs(LOGS)
 
-        if self.vitae.in_development:
-            erase_logs(logs)
+    if vitae.in_development:
+        # Eliot is only used for development pupose to traceback actions
+        # This should not be used in production, since this will produce huge
+        # log files that will never be read.
+        redirect_eliot_to(LOGS / "eliot.log")
+        logger.info("Eliot enabled to file.")
 
-        create_logs(logs)
-
-        if self.vitae.in_development:
-            redirect_eliot_to(logs / "eliot.log")
-            logger.info("Eliot enabled to file.")
-
-        redirect_loguru_to(logs / "vitae.log")
+    redirect_loguru_to(LOGS / "vitae.log")
