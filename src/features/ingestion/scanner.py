@@ -1,9 +1,10 @@
 """Curricula directory scanner."""
 
+from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 import eliot
 
@@ -114,3 +115,20 @@ class CurriculaScheduler:
                 log_into(area, area_log)
                 model = convert.research_area_from(area)
                 self.database.put.research_area(model)
+
+
+def serial_scanning(
+    directories: Iterable[Path],
+    action: Callable[[Path], None],
+) -> None:
+    for directory in directories:
+        action(directory)
+
+
+def parallel_scanning(
+    directories: Iterable[Path],
+    action: Callable[[Path], None],
+) -> None:
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        for directory in directories:
+            executor.submit(action, directory)
