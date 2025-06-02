@@ -3,7 +3,7 @@ import eliot
 from src.features.ingestion.schema import KnowledgeArea
 
 from . import _xml as xml
-from ._log import log_parsing
+from ..log import log_parsing
 
 __all__ = ["knowledge_areas"]
 

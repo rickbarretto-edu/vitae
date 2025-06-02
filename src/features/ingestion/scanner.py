@@ -8,7 +8,7 @@ from typing import Iterator
 import eliot
 
 from src.features.database import Database
-from src.features.ingestion.parser._log import log_into
+from src.features.ingestion.log import log_into
 from src.lib.panic import panic
 from src.settings import VitaeSettings
 
