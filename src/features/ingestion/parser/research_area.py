@@ -3,7 +3,6 @@ import eliot
 from src.features.ingestion.schema import ResearchArea
 
 from . import _xml as xml
-from ..log import log_parsing
 
 __all__ = ["research_area"]
 
