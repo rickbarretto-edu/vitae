@@ -15,9 +15,11 @@ import eliot
 from loguru import logger
 from sqlmodel import SQLModel
 
+from src import settings
 from src.settings import VitaeSettings
 
 __all__ = [
+    "new_vitae",
     "setup_vitae",
 ]
 
@@ -79,6 +81,10 @@ def setup_database(vitae: VitaeSettings) -> None:
 
 
 # =~=~=~ Public ~=~=~=
+
+
+def new_vitae() -> VitaeSettings:
+    return settings.load()
 
 
 def setup_vitae(vitae: VitaeSettings) -> None:

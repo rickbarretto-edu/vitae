@@ -1,12 +1,15 @@
-from src import settings
-from src.__setup__ import setup_vitae
+from typing import TYPE_CHECKING
+
+from src.__setup__ import new_vitae, setup_vitae
 from src.features.database import Database
 from src.features.ingestion.scanner import CurriculaScheduler
 
+if TYPE_CHECKING:
+    from src.settings import VitaeSettings
+
 
 def main() -> None:
-    vitae: settings.VitaeSettings = settings.load()
-
+    vitae: VitaeSettings = new_vitae()
     setup_vitae(vitae)
 
     database = Database(vitae.postgres.engine)
