@@ -1,9 +1,9 @@
-from __future__ import annotations
-
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 
 class Researcher(SQLModel, table=True):
+    __tablename__: str = "researcher"
+
     id: str = Field(primary_key=True, nullable=False)
     # updated_at: str | None = Field(
     #     default=None, sa_column_kwargs={"default": "now()", "onupdate": "now()"}
@@ -19,6 +19,10 @@ class Researcher(SQLModel, table=True):
     institution_state: str | None = None
     institution_city: str | None = None
 
+    professional_experience: list["ProfessionalExperience"] = Relationship(
+        back_populates="researcher",
+    )
+
 
 class ProfessionalExperience(SQLModel, table=True):
     __tablename__: str = "professional_experience"
@@ -27,7 +31,10 @@ class ProfessionalExperience(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
 
     # Owner
-    researcher_id: str = Field(foreign_key="researcher.id", nullable=False)
+    researcher_id: str = Field(foreign_key="researcher.id")
+    researcher: "Researcher" = Relationship(
+        back_populates="professional_experience",
+    )
 
     # Data
     institution: str = Field(nullable=False, index=True)
