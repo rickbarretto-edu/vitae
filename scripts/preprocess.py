@@ -110,7 +110,7 @@ class Zip:
 
 
 def optmized(all_files: Path) -> None:
-    """Script entry
+    """Script entry.
 
     Preprocess all files, skipping the already pre-processed.
 
@@ -138,7 +138,7 @@ def optmized(all_files: Path) -> None:
 
 
 def force(all_files: Path, sub_folders: list[str]) -> None:
-    """Script Entry
+    """Script Entry.
 
     Pre-process all files inside the passed sub-directory.
     Pass each sub-directory you want to force the processing.
@@ -159,7 +159,7 @@ def force(all_files: Path, sub_folders: list[str]) -> None:
 
 
 def cli() -> None:
-    """Script entry
+    """Script entry.
 
     Preprocess all files, skipping the already pre-processed ones.
     To force pre-process, pass --force <sub-dirs>.
@@ -178,9 +178,8 @@ def cli() -> None:
 
     all_files = Path(sys.argv[1])
 
-    if len(sys.argv) >= 4:
-        if sys.argv[2] == "--force":
-            force(all_files, sys.argv[2:])
+    if len(sys.argv) >= 4 and sys.argv[2] == "--force":
+        force(all_files, sys.argv[2:])
 
     optmized(all_files)
     print()
