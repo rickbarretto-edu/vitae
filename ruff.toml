@@ -1,4 +1,4 @@
-extend-exclude = ["migrations/"]
+extend-exclude = ["tests/"]
 fix = true
 line-length = 80
 
