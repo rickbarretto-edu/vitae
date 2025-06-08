@@ -1,8 +1,8 @@
-"""Conversion functions from Schema to Model."""
+"""Conversion functions from parsed to Model."""
 
-from src.infra.database import models
+from src.infra.database import models as infra
 
-from . import schema
+from . import schema as parsed
 
 __all__ = [
     "academic_background_from",
@@ -12,8 +12,8 @@ __all__ = [
 ]
 
 
-def researcher_from(data: schema.GeneralData) -> models.Researcher:  # noqa: D103
-    return models.Researcher(
+def researcher_from(data: parsed.GeneralData) -> infra.Researcher:  # noqa: D103
+    return infra.Researcher(
         id=data["id"],
         name=data["name"] or "Invalid Name",
         city=data["city"],
@@ -29,9 +29,9 @@ def researcher_from(data: schema.GeneralData) -> models.Researcher:  # noqa: D10
 
 
 def academic_background_from(  # noqa: D103
-    data: schema.AcademicBackground,
-) -> models.AcademicBackground:
-    return models.AcademicBackground(
+    data: parsed.AcademicBackground,
+) -> infra.AcademicBackground:
+    return infra.AcademicBackground(
         researcher_id=data["researcher_id"],
         type=data["type"] or "Unknown Type",
         institution=data["institution"] or "Unknown Institution",
@@ -42,9 +42,9 @@ def academic_background_from(  # noqa: D103
 
 
 def professional_experience_from(  # noqa: D103
-    data: schema.ProfessionalExperience,
-) -> models.ProfessionalExperience:
-    return models.ProfessionalExperience(
+    data: parsed.ProfessionalExperience,
+) -> infra.ProfessionalExperience:
+    return infra.ProfessionalExperience(
         researcher_id=data["researcher_id"],
         institution=data["institution"] or "Unknown Institution",
         employment_relationship=data["employment_relationship"]
@@ -54,8 +54,8 @@ def professional_experience_from(  # noqa: D103
     )
 
 
-def research_area_from(data: schema.ResearchArea) -> models.ResearchArea:  # noqa: D103
-    return models.ResearchArea(
+def research_area_from(data: parsed.ResearchArea) -> infra.ResearchArea:  # noqa: D103
+    return infra.ResearchArea(
         researcher_id=data["researcher_id"],
         major_knowledge_area=data["major_knowledge_area"]
         or "Unknown Major Area",
