@@ -39,7 +39,7 @@ __all__ = [
 
 
 def ingestion(database: Database) -> Callable[[Path], None]:
-    """Process a directory containing XML files."""  # noqa: DOC201
+    """Process a directory containing XML files."""
     return lambda subdir: process_directory(database, subdir)
 
 

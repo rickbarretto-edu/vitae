@@ -1,6 +1,6 @@
 """Conversion functions from Schema to Model."""
 
-from src import models
+from src.infra.database import models
 
 from . import schema
 

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from sqlalchemy.engine import Engine
 from sqlmodel import SQLModel, Session
 
-from src import models
+from src.infra.database import models
 
 
 @dataclass

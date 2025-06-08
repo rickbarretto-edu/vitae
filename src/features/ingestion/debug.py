@@ -2,7 +2,7 @@ import pprint
 
 from sqlmodel import Session, create_engine, select
 
-from src.models import Researcher
+from src.infra.database.models import Researcher
 from src.settings import VitaeSettings
 
 __all__ = ["display_first_20th_data"]
