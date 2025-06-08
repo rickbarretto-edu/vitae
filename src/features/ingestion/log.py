@@ -1,14 +1,14 @@
 """Ingestion's Log utils."""
 
+from collections.abc import Mapping
 from pathlib import Path
-from typing import TypedDict
 
 __all__ = ["log_into"]
 
 LOG_DIVIDER = "-" * 80
 
 
-def log_into[T: TypedDict | dict](data: T, log: Path) -> T:
+def log_into[T: Mapping](data: T, log: Path) -> T:
     """Log ``data`` into ``log``.
 
     Returns
