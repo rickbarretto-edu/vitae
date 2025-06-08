@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from sqlalchemy.engine import Engine
 from sqlmodel import SQLModel, Session
 
-from src.infra.database import models
+from src.infra.database import schema
 
 
 @dataclass
@@ -14,22 +14,22 @@ class PutOperations:
 
     engine: Engine
 
-    def researcher(self, researcher: models.Researcher) -> None:
+    def researcher(self, researcher: schema.Researcher) -> None:
         """Insert a researcher."""
         self._put(researcher)
 
-    def experience(self, experience: models.ProfessionalExperience) -> None:
+    def experience(self, experience: schema.ProfessionalExperience) -> None:
         """Insert a Researcher's Professional Experience."""
         self._put(experience)
 
     def academic_background(
         self,
-        background: models.AcademicBackground,
+        background: schema.AcademicBackground,
     ) -> None:
         """Insert a Researcher's Academic Background."""
         self._put(background)
 
-    def research_area(self, area: models.ResearchArea) -> None:
+    def research_area(self, area: schema.ResearchArea) -> None:
         """Insert a Researcher's Area of Research."""
         self._put(area)
 

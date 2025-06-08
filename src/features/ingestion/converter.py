@@ -1,6 +1,6 @@
 """Conversion functions from parsed to Model."""
 
-from src.infra.database import models as infra
+from src.infra.database import schema as infra
 
 from . import schema as parsed
 
