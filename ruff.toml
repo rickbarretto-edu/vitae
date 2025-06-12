@@ -1,0 +1,20 @@
+extend-exclude = ["tests/"]
+fix = true
+line-length = 80
+
+[lint]
+select = ["ALL"]
+
+[format]
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+quote-style = "double"
+
+[lint.isort]
+detect-same-package = true
+case-sensitive = true
+order-by-type = true
+no-sections = false
+force-sort-within-sections = true

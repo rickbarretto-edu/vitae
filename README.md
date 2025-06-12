@@ -1,61 +1,64 @@
-# Guia de Execução do Projeto
+# Vitae
 
-## Pré-requisitos
+## Requirements
 
-- Windows 10/11 com [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) instalado
-- Distribuição do Ubuntu instalada via WSL
-- Python 3 instalado no Ubuntu
-- `requirements.txt` com as dependências do projeto
+- [PostgreSQL](https://www.postgresql.org/)
+- [Python Poetry](https://python-poetry.org/)
 
-## Passo a passo para rodar o projeto
+## How to run it
 
-1. **Abrir o Ubuntu via WSL**
+1. **Install all dependencies**
 
-   No terminal do Windows (CMD ou PowerShell), execute:
+```
+poetry install
+```
 
-   ```bash
-   wsl -d Ubuntu
-    ```
-
-2. **Criar .env com base no .env.example**
+2. **Create a new Environment Settings**
     
-    No terminal do Ubuntu, execute:
 
-    ```bash
-    cp .env.example .env
-    ```
+```bash
+cp vitae.example.toml vitae.toml
+# Now edit it to use your own settings
+```
 
-    e set as as variáveis de ambiente necessárias no arquivo `.env`.
+3. **Enter the virtual environment**
 
-2. **Configurar o PYTHONPATH**
+```bash
+poetry shell
+```
 
-   No terminal do Ubuntu, execute:
+On *Visual Studio Code*: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>,
+then search for: *"Python: Select Interpreter"* and choose the one from Poetry's isolated environment.
 
-   ```bash
-   export PYTHONPATH="${PYTHONPATH}:/path/to/your/project/"
-   ```
+4. **Set PYTHONPATH**
 
-3. **Criar um ambiente virtual**
 
-   No terminal do Ubuntu, execute:
+```bash
+export PYTHONPATH="/path/to/your/project/"
+```
 
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
+5. **Execute**
 
-4. **Instalar as dependências**
-    
-    No terminal do Ubuntu, execute:
-    
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+python -m src
+```
 
-5. **Executar o projeto**  
+**Issues with adding eliot-tree?**
 
-   No terminal do Ubuntu, execute:
+```
+pip install --upgrade pkginfo
+pipx inject poetry pkginfo
+pip install eliot-tree
+```
 
-   ```bash
-   python3 -m src.main
-   ```
+## Tooling Recomentation
+
+1. **DBA tools**
+  - [Beekeeper Studio](https://www.beekeeperstudio.io/) for SQL Queries. (Community ed. for Free)
+  - [ChartDB](https://github.com/chartdb/chartdb) for Diagram visualization. (Self-hosted for free)
+  - **pgAdmin 4**, general purpose. Comes with PostgreSQL. (Free)
+2. **Python Linters, Formatters, Static Analysis**
+  - [`ruff`](https://docs.astral.sh/ruff/) linter and code formatter. (lightweight alternative)
+  - [`ty`](https://github.com/astral-sh/ty) Python type checking. (lightweight alternative)
+  - [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) VsCode's Extension 
+    as language server.
