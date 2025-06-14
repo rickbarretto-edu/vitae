@@ -20,7 +20,6 @@ import eliot
 
 from src.features.ingestion import converter as convert
 from src.features.ingestion import debug
-from src.features.ingestion.log import log_into
 from src.features.ingestion.parser import CurriculumParser
 from src.features.ingestion.scanner import parallel_scanning, serial_scanning
 from src.infra.database import Database
@@ -59,23 +58,18 @@ def process_directory(database: Database, directory: Path) -> None:
 
 def ingest_curriculum(database: Database, curriculum: Path) -> None:
     parser = CurriculumParser(curriculum)
-    logs = Path("logs/")
 
-    researcher = log_into(parser.researcher(), logs / "researcher.log")
-    model = convert.researcher_from(researcher)
+    model = convert.researcher_from(parser.researcher())
     database.put.researcher(model)
 
     for experience in parser.experiences():
-        log_into(experience, logs / "experience.log")
         model = convert.professional_experience_from(experience)
         database.put.experience(model)
 
     for background in parser.background():
-        log_into(background, logs / "academic.log")
         model = convert.academic_background_from(background)
         database.put.academic_background(model)
 
     for area in parser.areas():
-        log_into(area, logs / "area.log")
         model = convert.research_area_from(area)
         database.put.research_area(model)
