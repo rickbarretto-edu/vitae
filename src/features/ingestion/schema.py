@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TypedDict
+from typing import Iterator, TypedDict
 
 from src.infra.database import schema as db_schema
 
@@ -21,9 +21,9 @@ class Curriculum:
     """Mother class to convert XML Schemas to Database schemas."""
 
     _personal_data: GeneralData
-    _academic_background: list[AcademicBackground]
-    _professional_experiences: list[ProfessionalExperience]
-    _research_areas: list[ResearchArea]
+    _academic_background: Iterator[AcademicBackground]
+    _professional_experiences: Iterator[ProfessionalExperience]
+    _research_areas: Iterator[ResearchArea]
 
     @property
     def personal_data(self) -> db_schema.Researcher:
