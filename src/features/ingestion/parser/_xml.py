@@ -3,7 +3,8 @@
 Warning:
 -------
 Never use ``if element`` for ``element: ET.Element``,
-this may give you undefined behavior. Instead, explicitly check if this is ``None``.
+this may give you undefined behavior.
+Instead, explicitly check if this is ``None``.
 
 """
 
