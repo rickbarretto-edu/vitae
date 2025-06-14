@@ -29,6 +29,15 @@ class CurriculumParser:
         self.data = self.document.first("dados gerais")
 
     @property
+    def all(self) -> schema.Curriculum:
+        return schema.Curriculum(
+            _personal_data=self.researcher,
+            _academic_background=self.background,
+            _professional_experiences=self.experiences,
+            _research_areas=self.areas,
+        )
+
+    @property
     def researcher(self) -> schema.GeneralData:
         return general_data(self.id, self.data)
 
