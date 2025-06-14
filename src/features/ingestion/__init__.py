@@ -53,26 +53,29 @@ def process_directory(database: Database, directory: Path) -> None:
     if not directory.exists():
         panic(f"Subdirectory does not exist: {directory}")
 
-    logs: Path = Path("logs")
-
     for curriculum in directory.glob("*.xml"):
-        parser = CurriculumParser(curriculum)
+        ingest_curriculum(database, curriculum)
 
-        researcher = log_into(parser.researcher(), logs / "researcher.log")
-        model = convert.researcher_from(researcher)
-        database.put.researcher(model)
 
-        for experience in parser.experiences():
-            log_into(experience, logs / "experience.log")
-            model = convert.professional_experience_from(experience)
-            database.put.experience(model)
+def ingest_curriculum(database: Database, curriculum: Path) -> None:
+    parser = CurriculumParser(curriculum)
+    logs = Path("logs/")
 
-        for background in parser.background():
-            log_into(background, logs / "academic.log")
-            model = convert.academic_background_from(background)
-            database.put.academic_background(model)
+    researcher = log_into(parser.researcher(), logs / "researcher.log")
+    model = convert.researcher_from(researcher)
+    database.put.researcher(model)
 
-        for area in parser.areas():
-            log_into(area, logs / "area.log")
-            model = convert.research_area_from(area)
-            database.put.research_area(model)
+    for experience in parser.experiences():
+        log_into(experience, logs / "experience.log")
+        model = convert.professional_experience_from(experience)
+        database.put.experience(model)
+
+    for background in parser.background():
+        log_into(background, logs / "academic.log")
+        model = convert.academic_background_from(background)
+        database.put.academic_background(model)
+
+    for area in parser.areas():
+        log_into(area, logs / "area.log")
+        model = convert.research_area_from(area)
+        database.put.research_area(model)
