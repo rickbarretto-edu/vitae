@@ -28,6 +28,7 @@ from src.lib.panic import panic
 from . import converter, schema
 
 __all__ = [
+    "convert",
     "converter",
     "debug",
     "ingestion",
@@ -56,20 +57,16 @@ def process_directory(database: Database, directory: Path) -> None:
         ingest_curriculum(database, curriculum)
 
 
-def ingest_curriculum(database: Database, curriculum: Path) -> None:
-    parser = CurriculumParser(curriculum)
+def ingest_curriculum(database: Database, curriculum_file: Path) -> None:
+    curriculum = CurriculumParser(curriculum_file).all
 
-    model = convert.researcher_from(parser.researcher)
-    database.put.researcher(model)
+    database.put.researcher(curriculum.personal_data)
 
-    for experience in parser.experiences:
-        model = convert.professional_experience_from(experience)
-        database.put.experience(model)
+    for experience in curriculum.professional_experiences:
+        database.put.experience(experience)
 
-    for background in parser.background:
-        model = convert.academic_background_from(background)
-        database.put.academic_background(model)
+    for background in curriculum.academic_background:
+        database.put.academic_background(background)
 
-    for area in parser.areas:
-        model = convert.research_area_from(area)
-        database.put.research_area(model)
+    for area in curriculum.research_areas:
+        database.put.research_area(area)
