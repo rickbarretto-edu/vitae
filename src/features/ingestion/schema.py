@@ -18,6 +18,8 @@ __all__ = [
 
 @dataclass
 class Curriculum:
+    """Mother class to convert XML Schemas to Database schemas."""
+
     _personal_data: GeneralData
     _academic_background: list[AcademicBackground]
     _professional_experiences: list[ProfessionalExperience]
