@@ -101,7 +101,7 @@ class ResearchArea(SQLModel, table=True):
         back_populates="research_area",
     )
 
-    major_knowledge_area: str
+    major_knowledge_area: str | None = None
     knowledge_area: str | None = None
     sub_knowledge_area: str | None = None
     specialty: str | None = None
