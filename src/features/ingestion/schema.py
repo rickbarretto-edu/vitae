@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TypedDict
+
+from src.infra.database import schema as db_schema
 
 __all__ = [
     "AcademicBackground",
@@ -11,6 +14,38 @@ __all__ = [
     "ProfessionalExperience",
     "ResearchArea",
 ]
+
+
+@dataclass
+class Curriculum:
+    _personal_data: GeneralData
+    _academic_background: list[AcademicBackground]
+    _professional_experiences: list[ProfessionalExperience]
+    _research_areas: list[ResearchArea]
+
+    @property
+    def personal_data(self) -> db_schema.Researcher:
+        return db_schema.Researcher(**self._personal_data)
+
+    @property
+    def academic_background(self) -> list[db_schema.AcademicBackground]:
+        return [
+            db_schema.AcademicBackground(**background)
+            for background in self._academic_background
+        ]
+
+    @property
+    def professional_experiences(
+        self,
+    ) -> list[db_schema.ProfessionalExperience]:
+        return [
+            db_schema.ProfessionalExperience(**experience)
+            for experience in self._professional_experiences
+        ]
+
+    @property
+    def research_areas(self) -> list[db_schema.ResearchArea]:
+        return [db_schema.ResearchArea(**area) for area in self._research_areas]
 
 
 class GeneralData(TypedDict):
@@ -26,7 +61,7 @@ class GeneralData(TypedDict):
     id: str
 
     # Researcher's personal data
-    name: str | None
+    name: str
     city: str | None
     state: str | None
     country: str | None
@@ -52,7 +87,7 @@ class AcademicBackground(TypedDict):
     researcher_id: str
 
     type: str
-    institution: str | None
+    institution: str
     course: str | None
     start_year: int | None
     end_year: int | None
@@ -64,7 +99,7 @@ class ProfessionalExperience(TypedDict):
     # Metadata
     researcher_id: str
 
-    institution: str | None
+    institution: str
     employment_relationship: str | None
     start_year: int | None
     end_year: int | None
