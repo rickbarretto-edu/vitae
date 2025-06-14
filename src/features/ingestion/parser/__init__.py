@@ -28,14 +28,18 @@ class CurriculumParser:
         self.document = xml.parse(content)
         self.data = self.document.first("dados gerais")
 
+    @property
     def researcher(self) -> schema.GeneralData:
         return general_data(self.id, self.data)
 
+    @property
     def experiences(self) -> Iterator[schema.ProfessionalExperience]:
         yield from professional_experiences(self.id, self.data)
 
+    @property
     def background(self) -> Iterator[schema.AcademicBackground]:
         yield from academic_background(self.id, self.data)
 
+    @property
     def areas(self) -> Iterator[schema.ResearchArea]:
         yield from research_area(self.id, self.data)

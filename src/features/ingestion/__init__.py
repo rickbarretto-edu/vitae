@@ -59,17 +59,17 @@ def process_directory(database: Database, directory: Path) -> None:
 def ingest_curriculum(database: Database, curriculum: Path) -> None:
     parser = CurriculumParser(curriculum)
 
-    model = convert.researcher_from(parser.researcher())
+    model = convert.researcher_from(parser.researcher)
     database.put.researcher(model)
 
-    for experience in parser.experiences():
+    for experience in parser.experiences:
         model = convert.professional_experience_from(experience)
         database.put.experience(model)
 
-    for background in parser.background():
+    for background in parser.background:
         model = convert.academic_background_from(background)
         database.put.academic_background(model)
 
-    for area in parser.areas():
+    for area in parser.areas:
         model = convert.research_area_from(area)
         database.put.research_area(model)
