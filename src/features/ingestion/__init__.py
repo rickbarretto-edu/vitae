@@ -23,11 +23,10 @@ from src.features.ingestion.scanner import parallel_scanning, serial_scanning
 from src.infra.database import Database
 from src.lib.panic import panic
 
-from . import converter, schema
+from . import schema
 
 __all__ = [
     "convert",
-    "converter",
     "debug",
     "ingestion",
     "parallel_scanning",
