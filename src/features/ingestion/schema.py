@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass
-from typing import Iterator, TypedDict
+from typing import TypedDict
 
 from src.infra.database import schema as db_schema
 
@@ -30,24 +31,24 @@ class Curriculum:
         return db_schema.Researcher(**self._personal_data)
 
     @property
-    def academic_background(self) -> list[db_schema.AcademicBackground]:
-        return [
+    def academic_background(self) -> Iterator[db_schema.AcademicBackground]:
+        return (
             db_schema.AcademicBackground(**background)
             for background in self._academic_background
-        ]
+        )
 
     @property
     def professional_experiences(
         self,
-    ) -> list[db_schema.ProfessionalExperience]:
-        return [
+    ) -> Iterator[db_schema.ProfessionalExperience]:
+        return (
             db_schema.ProfessionalExperience(**experience)
             for experience in self._professional_experiences
-        ]
+        )
 
     @property
-    def research_areas(self) -> list[db_schema.ResearchArea]:
-        return [db_schema.ResearchArea(**area) for area in self._research_areas]
+    def research_areas(self) -> Iterator[db_schema.ResearchArea]:
+        return (db_schema.ResearchArea(**area) for area in self._research_areas)
 
 
 class GeneralData(TypedDict):
