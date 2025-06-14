@@ -16,8 +16,6 @@ Usage
 from pathlib import Path
 from typing import Callable
 
-import eliot
-
 from src.features.ingestion import converter as convert
 from src.features.ingestion import debug
 from src.features.ingestion.parser import CurriculumParser
@@ -43,7 +41,6 @@ def ingestion(database: Database) -> Callable[[Path], None]:
     return lambda subdir: process_directory(database, subdir)
 
 
-@eliot.log_call(action_type="scanning")
 def process_directory(database: Database, directory: Path) -> None:
     """Process all curriculum files in a directory.
 
