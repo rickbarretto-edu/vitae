@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Iterator  # noqa: UP035
 
-import eliot
-
 from src.features.ingestion.schema import ProfessionalExperience
 
 from . import _xml as xml
@@ -31,7 +29,6 @@ def link_kind(link: xml.Node) -> str | None:
     return link_kind
 
 
-@eliot.log_call(action_type="parsing")
 def professional_experiences(
     researcher_id: str,
     data: xml.Node,

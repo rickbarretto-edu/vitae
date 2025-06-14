@@ -1,7 +1,5 @@
 from collections.abc import Iterator
 
-import eliot
-
 from src.features.ingestion.schema import AcademicBackground
 
 from . import _xml as xml
@@ -9,7 +7,6 @@ from . import _xml as xml
 __all__ = ["academic_background"]
 
 
-@eliot.log_call(action_type="parsing")
 def academic_background(
     researcher_id: str,
     data: xml.Node,

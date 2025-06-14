@@ -1,5 +1,3 @@
-import eliot
-
 from src.features.ingestion.schema import ResearchArea
 
 from . import _xml as xml
@@ -7,7 +5,6 @@ from . import _xml as xml
 __all__ = ["research_area"]
 
 
-@eliot.log_call(action_type="parsing")
 def research_area(id: str, data: xml.Node) -> list[ResearchArea]:
     """Extract research areas from the Lattes curriculum XML.
 

@@ -1,5 +1,3 @@
-import eliot
-
 from src.features.ingestion.schema import GeneralData
 
 from . import _xml as xml
@@ -7,7 +5,6 @@ from . import _xml as xml
 __all__ = ["general_data"]
 
 
-@eliot.log_call(action_type="parsing")
 def general_data(researcher_id: str, data: xml.Node) -> GeneralData:
     """Extract general data from the Lattes curriculum XML.
 
