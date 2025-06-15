@@ -5,6 +5,8 @@ import itertools
 from src.features.ingestion.schema import Curriculum
 from src.infra.database import Database
 
+flatten = itertools.chain
+
 
 @dataclass
 class Researchers:
@@ -12,11 +14,54 @@ class Researchers:
     every: int = 50
 
     def put(self, researchers: Iterable[Curriculum]) -> None:
+        """Put Researchers on database.
+
+        This function tries to store them in batch each `every` researcher.
+        When this is not possible to put them at once, this will rollback and
+        try to put one by one, to log the defected one.
+        """
         for group in itertools.batched(researchers, self.every):
-            for researcher in group:
-                self.db.put.each(
-                    researcher.personal_data,
-                    researcher.professional_experiences,
-                    researcher.academic_background,
-                    researcher.research_areas,
-                )
+            if not self._put_all(group):
+                self._put_each_from(group)
+
+    def _put_all(self, group: Iterable[Curriculum]) -> bool:
+        """Put all Researchers at once on database.
+
+        Returns
+        -------
+        If all researchers were sucessfully stored.
+
+        """
+        personal = (r.personal_data for r in group)
+        experiences = (r.professional_experiences for r in group)
+        background = (r.academic_background for r in group)
+        areas = (r.research_areas for r in group)
+
+        return self.db.put.researcher(
+            researcher=personal,
+            experience=flatten(*experiences),
+            background=flatten(*background),
+            area=flatten(*areas),
+        )
+
+    def _put_each_from(self, group: Iterable[Curriculum]) -> None:
+        """Put Researchers one by one on database."""
+        for researcher in group:
+            if not self._put_single(researcher):
+                # TODO: log this
+                pass
+
+    def _put_single(self, researcher: Curriculum) -> bool:
+        """Put a single Researcher on database.
+
+        Returns
+        -------
+        If the researcher was sucessfully stored.
+
+        """
+        return self.db.put.researcher(
+            researcher=researcher.personal_data,
+            experience=researcher.professional_experiences,
+            background=researcher.academic_background,
+            area=researcher.research_areas,
+        )
