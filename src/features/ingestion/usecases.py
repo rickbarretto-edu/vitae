@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Self
 
 from src.features.ingestion.parser import CurriculumParser
 from src.features.ingestion.repository import Researchers
@@ -10,24 +10,39 @@ __all__ = [
     "Ingestion",
 ]
 
+type Scanner = Callable[[Path, Callable[[Path], None]], None]
+
 
 @dataclass
 class Ingestion:
     researchers: Researchers
+    scanner: Scanner | None = None
+    files: Path | None = None
 
-    def new(self) -> Callable[[Path], None]:
-        """Process a directory containing XML files.
+    def using(
+        self,
+        scanner: Callable[[Path, Callable[[Path], None]], None],
+        at: Path,
+    ) -> Self:
+        """Add scanning strategy and file path."""  # noqa: DOC201
+        self.scanner = scanner
+        self.files = at
+        return self
 
-        Returns
-        -------
-        Ingestion function needed by scan.
+    def ingest(self) -> None:
+        """Ingest data using the configured scanner and path.
+
+        Raises
+        ------
+        RuntimeError:
+            If scanner and files are not defined.
 
         """
+        if self.scanner is None or self.files is None:
+            msg = "Scanner function or file path not configured. Use `.using_at(...)` first."
+            raise RuntimeError(msg)
 
-        def fn(subdir: Path) -> None:
-            self.process_directory(subdir)
-
-        return fn
+        self.scanner(self.files, lambda x: self.process_directory(x))
 
     def process_directory(self, directory: Path) -> None:
         """Process all curriculum files in a directory.

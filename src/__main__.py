@@ -10,10 +10,8 @@ def main() -> VitaeSettings:
     database = Database(vitae.postgres.engine)
     researchers = Researchers(db=database, every=50)
 
-    serial_scanning(
-        vitae.paths.curricula,
-        Ingestion(researchers).new(),
-    )
+    ingestion = Ingestion(researchers)
+    ingestion.using(serial_scanning, at=vitae.paths.curricula).ingest()
 
     return vitae
 
