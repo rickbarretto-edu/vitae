@@ -4,12 +4,15 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from sqlalchemy.engine import Engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import Session
 
-from src.infra.database import schema
+if TYPE_CHECKING:
+    from sqlalchemy.engine import Engine
+
+    from src.infra.database import schema
 
 type Some[T] = T | Iterable[T]
 
