@@ -36,7 +36,6 @@ class PutOperations:
                 session.commit()
             except SQLAlchemyError:
                 session.rollback()
-                # TODO: log this somewhere
                 return False
 
         return True
