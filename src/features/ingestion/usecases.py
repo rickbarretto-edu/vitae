@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Self
+from typing import Callable, Protocol, Self
 
+from src.features.ingestion import scanners as strategy
 from src.features.ingestion.parser import CurriculumParser
 from src.features.ingestion.repository import Researchers
 from src.lib.panic import panic
@@ -10,20 +11,19 @@ __all__ = [
     "Ingestion",
 ]
 
-type Scanner = Callable[[Path, Callable[[Path], None]], None]
+
+class Scanner(Protocol):
+    def __call__(self, all_files: Path, action: Callable[[Path], None]) -> None:
+        pass
 
 
 @dataclass
 class Ingestion:
     researchers: Researchers
-    scanner: Scanner | None = None
+    scanner: Scanner = strategy.serial
     files: Path | None = None
 
-    def using(
-        self,
-        scanner: Callable[[Path, Callable[[Path], None]], None],
-        at: Path,
-    ) -> Self:
+    def using(self, scanner: Scanner, at: Path) -> Self:
         """Add scanning strategy and file path."""  # noqa: DOC201
         self.scanner = scanner
         self.files = at

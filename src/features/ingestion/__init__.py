@@ -13,20 +13,13 @@ Usage
 
 """
 
-from src.features.ingestion import debug
+from src.features.ingestion import debug, scanners
 from src.features.ingestion.repository import Researchers
-from src.features.ingestion.scanner import parallel_scanning, serial_scanning
 from src.features.ingestion.usecases import Ingestion
-from src.lib.panic import panic
-
-from . import schema
 
 __all__ = [
     "Ingestion",
     "Researchers",
     "debug",
-    "panic",
-    "parallel_scanning",
-    "schema",
-    "serial_scanning",
+    "scanners",
 ]
