@@ -30,6 +30,13 @@ class PutOperations:
         background: Some[schema.AcademicBackground],
         area: Some[schema.ResearchArea],
     ) -> bool:
+        """Put researcher's data into database.
+
+        Returns
+        -------
+        If could put every single value into database.
+
+        """
         with Session(self.engine) as session:
             try:
                 session.add_all(researcher)
