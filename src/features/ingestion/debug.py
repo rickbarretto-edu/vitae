@@ -1,3 +1,4 @@
+from pathlib import Path
 import pprint
 
 from sqlmodel import Session, create_engine, select
@@ -21,23 +22,26 @@ def display_first_20th_data(vitae: VitaeSettings) -> None:
     with Session(engine) as session:
         researchers = session.exec(select(Researcher).limit(20))
 
-        print(
-            "##############################################################################",
-        )
+        with Path("logs/20th.log").open("+w", encoding="utf-8") as file:
 
-        for researcher in researchers:
-            pprint.pp(researcher)
+            def pp[T](x: T):
+                return pprint.pp(x, file, width=72, indent=4)
 
-            for experience in researcher.professional_experience:
-                pprint.pp(experience)
+            for researcher in researchers:
+                pp(researcher)
 
-            for area in researcher.research_area:
-                pprint.pp(area)
+                for experience in researcher.professional_experience:
+                    pp(experience)
 
-            for background in researcher.academic_background:
-                pprint.pp(background)
+                for area in researcher.research_area:
+                    pp(area)
 
-                for knowledge in background.knowledge_area:
-                    pprint.pp(knowledge)
+                for background in researcher.academic_background:
+                    pp(background)
 
-            print("-------------------------------------------------------")
+                    for knowledge in background.knowledge_area:
+                        pp(knowledge)
+
+                pp(
+                    "-------------------------------------------------------",
+                )
