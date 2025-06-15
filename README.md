@@ -43,14 +43,6 @@ export PYTHONPATH="/path/to/your/project/"
 python -m src
 ```
 
-**Issues with adding eliot-tree?**
-
-```
-pip install --upgrade pkginfo
-pipx inject poetry pkginfo
-pip install eliot-tree
-```
-
 ## Tooling Recomentation
 
 1. **DBA tools**
