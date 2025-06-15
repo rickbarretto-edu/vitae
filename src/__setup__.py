@@ -114,7 +114,6 @@ def setup_vitae(vitae: VitaeSettings) -> None:
         # This should not be used in production, since this will produce huge
         # log files that will never be read.
         redirect_eliot_to(logs / "eliot.log")
-        logger.info("Eliot enabled to file.")
 
     redirect_loguru_to(logs / "vitae.log")
 
