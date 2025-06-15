@@ -1,6 +1,9 @@
 from collections.abc import Iterable
 from dataclasses import dataclass
 import itertools
+from pathlib import Path
+
+import loguru
 
 from src.features.ingestion.schema import Curriculum
 from src.infra.database import Database
@@ -13,6 +16,21 @@ class Researchers:
     db: Database
     every: int = 50
 
+    def __post_init__(self) -> None:
+        """Setups logging.
+
+        There are three levels of logging:
+        - INFO: logs stored data.
+        - WARN: logs rolledback groups.
+        - ERROR: logs failed individual commits.
+        """
+        logfile = lambda x: Path(f"logs/ingestion/{x}.log")  # noqa: E731
+
+        self.log = loguru.logger
+        self.log.add(logfile("processed"), format="{message}", level="INFO")
+        self.log.add(logfile("warning"), format="{message}", level="WARNING")
+        self.log.add(logfile("failed"), format="{message}", level="ERROR")
+
     def put(self, researchers: Iterable[Curriculum]) -> None:
         """Put Researchers on database.
 
@@ -22,7 +40,14 @@ class Researchers:
         """
         for group in itertools.batched(researchers, self.every):
             if not self._put_all(group):
+                self.log.warning(
+                    "Error when putting group into database",
+                    group=group,
+                )
                 self._put_each_from(group)
+            else:
+                for researcher in group:
+                    self.log.info(researcher.personal_data.id)
 
     def _put_all(self, group: Iterable[Curriculum]) -> bool:
         """Put all Researchers at once on database.
@@ -47,9 +72,10 @@ class Researchers:
     def _put_each_from(self, group: Iterable[Curriculum]) -> None:
         """Put Researchers one by one on database."""
         for researcher in group:
-            if not self._put_single(researcher):
-                # TODO: log this
-                pass
+            if self._put_single(researcher):
+                self.log.info(researcher.personal_data.id)
+            else:
+                self.log.error(researcher.personal_data.id)
 
     def _put_single(self, researcher: Curriculum) -> bool:
         """Put a single Researcher on database.
