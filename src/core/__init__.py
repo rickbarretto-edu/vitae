@@ -1,8 +1,9 @@
-from abc import ABC
+from abc import ABC, abstractmethod
+from functools import cached_property
 
 
 class Entity[Key](ABC):
-    pass
+    id: Key
 
 
 class Repository[Entity](ABC):
