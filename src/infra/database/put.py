@@ -29,7 +29,7 @@ class PutOperations:
     ) -> bool:
         with Session(self.engine) as session:
             try:
-                session.add(researcher)
+                session.add_all(researcher)
                 session.add_all(experience)
                 session.add_all(background)
                 session.add_all(area)
