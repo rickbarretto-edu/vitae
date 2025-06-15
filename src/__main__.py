@@ -1,5 +1,6 @@
 from src.__setup__ import new_vitae
 from src.features.ingestion import debug, ingestion, serial_scanning
+from src.features.ingestion.repository import Researchers
 from src.infra.database import Database
 from src.settings import VitaeSettings
 
@@ -9,7 +10,7 @@ def main() -> VitaeSettings:
     database = Database(vitae.postgres.engine)
     serial_scanning(
         vitae.paths.curricula,
-        ingestion(database),
+        ingestion(Researchers(db=database, every=50)),
     )
 
     return vitae

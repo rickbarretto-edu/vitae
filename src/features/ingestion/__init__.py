@@ -18,8 +18,8 @@ from typing import Callable
 
 from src.features.ingestion import debug
 from src.features.ingestion.parser import CurriculumParser
+from src.features.ingestion.repository import Researchers
 from src.features.ingestion.scanner import parallel_scanning, serial_scanning
-from src.infra.database import Database
 from src.lib.panic import panic
 
 from . import schema
@@ -33,12 +33,12 @@ __all__ = [
 ]
 
 
-def ingestion(database: Database) -> Callable[[Path], None]:
+def ingestion(researchers: Researchers) -> Callable[[Path], None]:
     """Process a directory containing XML files."""
-    return lambda subdir: process_directory(database, subdir)
+    return lambda subdir: process_directory(researchers, subdir)
 
 
-def process_directory(database: Database, directory: Path) -> None:
+def process_directory(researchers: Researchers, directory: Path) -> None:
     """Process all curriculum files in a directory.
 
     Scans the given directory, processes each curriculum file using the parser,
@@ -47,20 +47,7 @@ def process_directory(database: Database, directory: Path) -> None:
     if not directory.exists():
         panic(f"Subdirectory does not exist: {directory}")
 
-    for curriculum in directory.glob("*.xml"):
-        ingest_curriculum(database, curriculum)
-
-
-def ingest_curriculum(database: Database, curriculum_file: Path) -> None:
-    curriculum = CurriculumParser(curriculum_file).all
-
-    database.put.researcher(curriculum.personal_data)
-
-    for experience in curriculum.professional_experiences:
-        database.put.experience(experience)
-
-    for background in curriculum.academic_background:
-        database.put.academic_background(background)
-
-    for area in curriculum.research_areas:
-        database.put.research_area(area)
+    researchers.put(
+        CurriculumParser(curriculum).all
+        for curriculum in directory.glob("*.xml")
+    )

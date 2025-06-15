@@ -17,6 +17,20 @@ class PutOperations:
 
     engine: Engine
 
+    def each(
+        self,
+        researcher: schema.Researcher | Iterable[schema.Researcher],
+        experience: schema.ProfessionalExperience
+        | Iterable[schema.ProfessionalExperience],
+        background: schema.AcademicBackground
+        | Iterable[schema.AcademicBackground],
+        area: schema.ResearchArea | Iterable[schema.ResearchArea],
+    ) -> None:
+        self.researcher(researcher)
+        self.experience(experience)
+        self.academic_background(background)
+        self.research_area(area)
+
     def researcher(
         self,
         researcher: schema.Researcher | Iterable[schema.Researcher],
