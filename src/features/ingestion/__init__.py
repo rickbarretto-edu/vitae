@@ -16,7 +16,6 @@ Usage
 from pathlib import Path
 from typing import Callable
 
-from src.features.ingestion import converter as convert
 from src.features.ingestion import debug
 from src.features.ingestion.parser import CurriculumParser
 from src.features.ingestion.scanner import parallel_scanning, serial_scanning
@@ -26,7 +25,6 @@ from src.lib.panic import panic
 from . import schema
 
 __all__ = [
-    "convert",
     "debug",
     "ingestion",
     "parallel_scanning",
