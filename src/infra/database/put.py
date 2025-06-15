@@ -11,6 +11,8 @@ from sqlmodel import Session
 
 from src.infra.database import schema
 
+type Some[T] = T | Iterable[T]
+
 
 @dataclass
 class PutOperations:
@@ -20,12 +22,10 @@ class PutOperations:
 
     def researcher(
         self,
-        researcher: schema.Researcher | Iterable[schema.Researcher],
-        experience: schema.ProfessionalExperience
-        | Iterable[schema.ProfessionalExperience],
-        background: schema.AcademicBackground
-        | Iterable[schema.AcademicBackground],
-        area: schema.ResearchArea | Iterable[schema.ResearchArea],
+        researcher: Some[schema.Researcher],
+        experience: Some[schema.ProfessionalExperience],
+        background: Some[schema.AcademicBackground],
+        area: Some[schema.ResearchArea],
     ) -> bool:
         with Session(self.engine) as session:
             try:
