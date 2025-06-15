@@ -112,10 +112,14 @@ def academic_background(
     for background in (
         xml.find(data.element, "formacao academica titulacao") or []
     ):
+        institution = xml.attribute(background, "nome instituicao")
+        if institution is None:
+            institution = "Unknown Institution"
+
         yield AcademicBackground(
             researcher_id=researcher_id,
             type=background.tag,
-            institution=xml.attribute(background, "nome instituicao"),
+            institution=institution,
             course=xml.attribute(background, "nome curso"),
             start_year=xml.as_int(xml.attribute(background, "ano de inicio")),
             end_year=xml.as_int(xml.attribute(background, "ano de conclusao")),

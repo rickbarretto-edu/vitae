@@ -83,10 +83,13 @@ def general_data(researcher_id: str, data: xml.Node) -> GeneralData:
     """
     resume = data.first("resumo CV")
     professional_address = data.first("endereco").first("endereco profissional")
+    fullname = data["nome completo"]
+    if fullname is None:
+        fullname = "Invalid Name"
 
     return GeneralData(
         id=researcher_id,
-        name=data["nome completo"],
+        name=fullname,
         city=data["cidade nascimento"],
         state=data["UF nascimento"],
         country=data["pais de nascimento"],
