@@ -30,25 +30,10 @@ poetry shell
 On *Visual Studio Code*: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>,
 then search for: *"Python: Select Interpreter"* and choose the one from Poetry's isolated environment.
 
-4. **Set PYTHONPATH**
-
-
-```bash
-export PYTHONPATH="/path/to/your/project/"
-```
-
-5. **Execute**
+4. **Execute**
 
 ```bash
 python -m src
-```
-
-**Issues with adding eliot-tree?**
-
-```
-pip install --upgrade pkginfo
-pipx inject poetry pkginfo
-pip install eliot-tree
 ```
 
 ## Tooling Recomentation

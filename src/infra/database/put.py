@@ -1,40 +1,51 @@
 """Put database operations."""
 
+from __future__ import annotations
+
+from collections.abc import Iterable
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from sqlalchemy.engine import Engine
-from sqlmodel import SQLModel, Session
+from sqlalchemy.exc import SQLAlchemyError
+from sqlmodel import Session
 
-from src.infra.database import schema
+if TYPE_CHECKING:
+    from sqlalchemy.engine import Engine
+
+    from src.infra.database import schema
+
+type Some[T] = T | Iterable[T]
 
 
 @dataclass
 class PutOperations:
-    """Operations that puts data on the database."""
+    """Operations that put data into the database."""
 
     engine: Engine
 
-    def researcher(self, researcher: schema.Researcher) -> None:
-        """Insert a researcher."""
-        self._put(researcher)
-
-    def experience(self, experience: schema.ProfessionalExperience) -> None:
-        """Insert a Researcher's Professional Experience."""
-        self._put(experience)
-
-    def academic_background(
+    def researcher(
         self,
-        background: schema.AcademicBackground,
-    ) -> None:
-        """Insert a Researcher's Academic Background."""
-        self._put(background)
+        researcher: Some[schema.Researcher],
+        experience: Some[schema.ProfessionalExperience],
+        background: Some[schema.AcademicBackground],
+        area: Some[schema.ResearchArea],
+    ) -> bool:
+        """Put researcher's data into database.
 
-    def research_area(self, area: schema.ResearchArea) -> None:
-        """Insert a Researcher's Area of Research."""
-        self._put(area)
+        Returns
+        -------
+        If could put every single value into database.
 
-    def _put(self, model: SQLModel) -> None:
-        """Insert SQLModel on database and commit it."""
+        """
         with Session(self.engine) as session:
-            session.add(model)
-            session.commit()
+            try:
+                session.add_all(researcher)
+                session.add_all(experience)
+                session.add_all(background)
+                session.add_all(area)
+                session.commit()
+            except SQLAlchemyError:
+                session.rollback()
+                return False
+
+        return True

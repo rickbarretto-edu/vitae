@@ -1,13 +1,13 @@
-"""Curricula directory scanner."""
+"""Strategies to be used by the Ingestion Usecase."""
 
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Callable
 
-__all__ = ["parallel_scanning", "serial_scanning"]
+__all__ = ["parallel", "serial"]
 
 
-def serial_scanning(
+def serial(
     all_files: Path,
     action: Callable[[Path], None],
 ) -> None:
@@ -16,7 +16,7 @@ def serial_scanning(
         action(directory)
 
 
-def parallel_scanning(
+def parallel(
     all_files: Path,
     action: Callable[[Path], None],
 ) -> None:

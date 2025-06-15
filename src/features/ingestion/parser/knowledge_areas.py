@@ -1,5 +1,3 @@
-import eliot
-
 from src.features.ingestion.schema import KnowledgeArea
 
 from . import _xml as xml
@@ -7,7 +5,6 @@ from . import _xml as xml
 __all__ = ["knowledge_areas"]
 
 
-@eliot.log_call(action_type="parsing")
 def knowledge_areas(curriculo: xml.Node) -> list[KnowledgeArea]:
     """Extract the areas of expertise from a Lattes curriculum XML.
 

@@ -1,9 +1,6 @@
 from collections.abc import Iterator
 from pathlib import Path
 
-import eliot
-from loguru import logger
-
 from src.features.ingestion import schema
 
 from . import _xml as xml
@@ -25,26 +22,33 @@ class CurriculumParser:
     """
 
     def __init__(self, file: Path) -> None:
-        logger.info("Parsing file: {}", file)
-
         content = file.read_text(encoding="utf-8")
 
         self.id = file.name.removesuffix(".xml")
         self.document = xml.parse(content)
         self.data = self.document.first("dados gerais")
 
-    @eliot.log_call(action_type="parsing")
+    @property
+    def all(self) -> schema.Curriculum:
+        return schema.Curriculum(
+            _personal_data=self.researcher,
+            _academic_background=self.background,
+            _professional_experiences=self.experiences,
+            _research_areas=self.areas,
+        )
+
+    @property
     def researcher(self) -> schema.GeneralData:
         return general_data(self.id, self.data)
 
-    @eliot.log_call(action_type="parsing")
+    @property
     def experiences(self) -> Iterator[schema.ProfessionalExperience]:
         yield from professional_experiences(self.id, self.data)
 
-    @eliot.log_call(action_type="parsing")
+    @property
     def background(self) -> Iterator[schema.AcademicBackground]:
         yield from academic_background(self.id, self.data)
 
-    @eliot.log_call(action_type="parsing")
+    @property
     def areas(self) -> Iterator[schema.ResearchArea]:
         yield from research_area(self.id, self.data)

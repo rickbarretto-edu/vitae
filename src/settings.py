@@ -61,7 +61,15 @@ class PostgresSettings:
 
     @cached_property
     def engine(self) -> Engine:
-        """SQLAlchemy Engine, cached after first creation."""
+        """SQLAlchemy Engine."""
+        return create_engine(self.url)
+
+    @cached_property
+    def verbose_engine(self) -> Engine:
+        """SQLAlchemy Engine.
+
+        The engine is verbose, so every event will be logged on terminal.
+        """
         return create_engine(self.url, echo=True)
 
 

@@ -11,7 +11,6 @@ from pathlib import Path
 import shutil
 import sys
 
-import eliot
 from loguru import logger
 from sqlmodel import SQLModel
 
@@ -34,12 +33,6 @@ def erase_logs(path: Path) -> None:
 def create_logs(path: Path) -> None:
     """Create log directory."""
     path.mkdir(parents=True, exist_ok=True)
-
-
-def redirect_eliot_to(log_file: Path) -> None:
-    """Redirect eliot's output to ``log_file``."""
-    with log_file.open("w+", encoding="utf-8") as f:
-        eliot.to_file(f)
 
 
 def redirect_loguru_to(log_file: Path) -> None:
@@ -108,14 +101,6 @@ def setup_vitae(vitae: VitaeSettings) -> None:
         erase_logs(logs)
 
     create_logs(logs)
-
-    if vitae.in_development:
-        # Eliot is only used for development pupose to traceback actions
-        # This should not be used in production, since this will produce huge
-        # log files that will never be read.
-        redirect_eliot_to(logs / "eliot.log")
-        logger.info("Eliot enabled to file.")
-
     redirect_loguru_to(logs / "vitae.log")
 
     setup_database(vitae)
