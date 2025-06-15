@@ -18,7 +18,7 @@ class PutOperations:
 
     engine: Engine
 
-    def each(
+    def researcher(
         self,
         researcher: schema.Researcher | Iterable[schema.Researcher],
         experience: schema.ProfessionalExperience
