@@ -12,6 +12,21 @@ from src.infra.database import Database
 flatten = itertools.chain
 
 
+def log_with(log, logfile: str, level: str) -> None:
+    file = Path(f"logs/ingestion/{logfile}.log")
+
+    def restrict_level(record):
+        return record["level"].name == level
+
+    log.add(
+        file,
+        format="{message}",
+        level=level,
+        filter=restrict_level,
+        enqueue=True,
+    )
+
+
 @dataclass
 class Researchers(Repository[Curriculum]):
     db: Database
@@ -25,12 +40,10 @@ class Researchers(Repository[Curriculum]):
         - WARN: logs rolledback groups.
         - ERROR: logs failed individual commits.
         """
-        logfile = lambda x: Path(f"logs/ingestion/{x}.log")  # noqa: E731
-
         self.log = loguru.logger
-        self.log.add(logfile("processed"), format="{message}", level="INFO")
-        self.log.add(logfile("warning"), format="{message}", level="WARNING")
-        self.log.add(logfile("failed"), format="{message}", level="ERROR")
+        log_with(self.log, "processed", "INFO")
+        log_with(self.log, "rolledback-group", "WARNING")
+        log_with(self.log, "failed", "ERROR")
 
     def put(self, researchers: Iterable[Curriculum]) -> None:
         """Put Researchers on database.
@@ -42,8 +55,7 @@ class Researchers(Repository[Curriculum]):
         for group in itertools.batched(researchers, self.every):
             if not self._put_all(group):
                 self.log.warning(
-                    "Error when putting group into database",
-                    group=group,
+                    ",".join([r.id for r in group]),
                 )
                 self._put_each_from(group)
             else:
