@@ -6,6 +6,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 from sqlalchemy.engine import Engine
+from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import Session
 
 from src.infra.database import schema
@@ -25,10 +26,17 @@ class PutOperations:
         background: schema.AcademicBackground
         | Iterable[schema.AcademicBackground],
         area: schema.ResearchArea | Iterable[schema.ResearchArea],
-    ) -> None:
+    ) -> bool:
         with Session(self.engine) as session:
-            session.add(researcher)
-            session.add_all(experience)
-            session.add_all(background)
-            session.add_all(area)
-            session.commit()
+            try:
+                session.add(researcher)
+                session.add_all(experience)
+                session.add_all(background)
+                session.add_all(area)
+                session.commit()
+            except SQLAlchemyError:
+                session.rollback()
+                # TODO: log this somewhere
+                return False
+
+        return True
