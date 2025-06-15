@@ -48,7 +48,7 @@ class Researchers(Repository[Curriculum]):
                 self._put_each_from(group)
             else:
                 for researcher in group:
-                    self.log.info(researcher.personal_data.id)
+                    self.log.info(researcher.id)
 
     def _put_all(self, group: Iterable[Curriculum]) -> bool:
         """Put all Researchers at once on database.
@@ -74,9 +74,9 @@ class Researchers(Repository[Curriculum]):
         """Put Researchers one by one on database."""
         for researcher in group:
             if self._put_single(researcher):
-                self.log.info(researcher.personal_data.id)
+                self.log.info(researcher.id)
             else:
-                self.log.error(researcher.personal_data.id)
+                self.log.error(researcher.id)
 
     def _put_single(self, researcher: Curriculum) -> bool:
         """Put a single Researcher on database.
