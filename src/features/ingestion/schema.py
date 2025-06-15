@@ -4,8 +4,10 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass
+from functools import cached_property
 from typing import TypedDict
 
+from src.core import Entity
 from src.infra.database import schema as db_schema
 
 __all__ = [
@@ -18,13 +20,17 @@ __all__ = [
 
 
 @dataclass
-class Curriculum:
+class Curriculum(Entity[str]):
     """Mother class to convert XML Schemas to Database schemas."""
 
     _personal_data: GeneralData
     _academic_background: Iterator[AcademicBackground]
     _professional_experiences: Iterator[ProfessionalExperience]
     _research_areas: Iterator[ResearchArea]
+
+    @cached_property
+    def id(self) -> str:
+        return self._personal_data["id"]
 
     @property
     def personal_data(self) -> db_schema.Researcher:
