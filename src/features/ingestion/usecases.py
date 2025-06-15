@@ -1,11 +1,16 @@
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Callable, Protocol, Self
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Callable, Protocol, Self
 
 from src.features.ingestion import scanners as strategy
 from src.features.ingestion.parser import CurriculumParser
-from src.features.ingestion.repository import Researchers
 from src.lib.panic import panic
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from src.features.ingestion.repository import Researchers
 
 __all__ = [
     "Ingestion",
@@ -22,6 +27,7 @@ class Ingestion:
     researchers: Researchers
     scanner: Scanner = strategy.serial
     files: Path | None = None
+    to_skip: set[str] = field(default_factory=set)
 
     def using(self, scanner: Scanner, at: Path) -> Self:
         """Add scanning strategy and file path."""  # noqa: DOC201
@@ -29,7 +35,7 @@ class Ingestion:
         self.files = at
         return self
 
-    def ingest(self) -> None:
+    def ingest(self, skip: set[str] | None = None) -> None:
         """Ingest data using the configured scanner and path.
 
         Raises
@@ -38,6 +44,9 @@ class Ingestion:
             If scanner and files are not defined.
 
         """
+        if skip is not None:
+            self.to_skip = skip
+
         if self.scanner is None or self.files is None:
             msg = "Scanner function or file path not configured. Use `.using_at(...)` first."
             raise RuntimeError(msg)
@@ -56,4 +65,5 @@ class Ingestion:
         self.researchers.put(
             CurriculumParser(curriculum).all
             for curriculum in directory.glob("*.xml")
+            if curriculum not in self.to_skip
         )

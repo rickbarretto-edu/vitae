@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from src.__setup__ import new_vitae
 from src.features import ingestion as ingestions
 from src.features.ingestion.usecases import Scanner
@@ -20,11 +22,14 @@ def ingest(vitae: VitaeSettings, database: Database) -> None:
     """
     buffer_limit: int = 50
     strategy: Scanner = ingestions.scanners.serial
+    processed_log = Path("logs/ingestion/processed.log")
 
     researchers = ingestions.Researchers(db=database, every=buffer_limit)
 
     ingestion = ingestions.Ingestion(researchers)
-    ingestion.using(strategy, at=vitae.paths.curricula).ingest()
+    ingestion.using(strategy, at=vitae.paths.curricula).ingest(
+        skip=ingestions.processed(processed_log),
+    )
 
 
 def main() -> VitaeSettings:

@@ -13,13 +13,16 @@ Usage
 
 """
 
+from pathlib import Path
+
 from src.features.ingestion import debug, scanners
 from src.features.ingestion.repository import Researchers
 from src.features.ingestion.usecases import Ingestion
 
-__all__ = [
-    "Ingestion",
-    "Researchers",
-    "debug",
-    "scanners",
-]
+__all__ = ["Ingestion", "Researchers", "debug", "processed", "scanners"]
+
+
+def processed(log: Path) -> set[str]:
+    with log.open("r") as file:
+        result: set[str] = {line.strip("\n") + ".xml" for line in file}
+    return result
