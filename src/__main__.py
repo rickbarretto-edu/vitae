@@ -52,7 +52,7 @@ def main() -> VitaeSettings:
         ingestion=ingest(
             vitae=vitae,
             database=database,
-            strategy=ingestions.scanners.parallel,
+            strategy=ingestions.strategy.parallel,
             buffer_limit=50,
             processed_log=Path("logs/ingestion/processed.log"),
         ),
