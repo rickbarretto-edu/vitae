@@ -1,4 +1,4 @@
-from src.features.ingestion.schema import ResearchArea
+from src.features.ingestion.parser.schema import ResearchArea
 
 from . import _xml as xml
 

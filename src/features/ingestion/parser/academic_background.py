@@ -1,6 +1,6 @@
 from collections.abc import Iterator
 
-from src.features.ingestion.schema import AcademicBackground
+from src.features.ingestion.parser.schema import AcademicBackground
 
 from . import _xml as xml
 

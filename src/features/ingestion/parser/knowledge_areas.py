@@ -1,4 +1,4 @@
-from src.features.ingestion.schema import KnowledgeArea
+from src.features.ingestion.parser.schema import KnowledgeArea
 
 from . import _xml as xml
 
