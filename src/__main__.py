@@ -7,7 +7,13 @@ from src.infra.database import Database
 from src.settings import VitaeSettings
 
 
-def ingest(vitae: VitaeSettings, database: Database) -> None:
+def ingest(
+    vitae: VitaeSettings,
+    database: Database,
+    buffer_limit: int = 50,
+    strategy: Scanner = ingestions.scanners.serial,
+    processed_log: Path = Path("logs/ingestion/processed.log"),
+) -> None:
     """Ingest feature manager.
 
     Ingest data based on `vitae`'s settings into `database`.
@@ -20,13 +26,13 @@ def ingest(vitae: VitaeSettings, database: Database) -> None:
         will be properly commited to `database`.
 
     """
-    buffer_limit: int = 50
-    strategy: Scanner = ingestions.scanners.serial
-    processed_log = Path("logs/ingestion/processed.log")
+    ingestion = ingestions.Ingestion(
+        researchers=ingestions.Researchers(
+            db=database,
+            every=buffer_limit,
+        ),
+    )
 
-    researchers = ingestions.Researchers(db=database, every=buffer_limit)
-
-    ingestion = ingestions.Ingestion(researchers)
     ingestion.using(strategy, at=vitae.paths.curricula).ingest(
         skip=ingestions.processed(processed_log),
     )
@@ -36,7 +42,7 @@ def main() -> VitaeSettings:
     vitae: VitaeSettings = new_vitae()
     database = Database(vitae.postgres.engine)
 
-    ingest(vitae, database)
+    ingest(vitae, database, strategy=ingestions.scanners.parallel)
 
     return vitae
 
