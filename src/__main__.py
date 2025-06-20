@@ -65,4 +65,3 @@ def main() -> VitaeSettings:
 
 if __name__ == "__main__":
     vitae = main()
-    ingestions.debug.display_first_20th_data(vitae)
