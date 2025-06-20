@@ -6,7 +6,7 @@ from pathlib import Path
 import loguru
 
 from src.core import Repository
-from src.features.ingestion.schema import Curriculum
+from src.features.ingestion.domain import Curriculum
 from src.infra.database import Database
 
 flatten = itertools.chain
