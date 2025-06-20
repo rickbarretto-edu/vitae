@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- [PostgreSQL](https://www.postgresql.org/)
+- [Python 3.12](https://www.python.org/)
 - [Python Poetry](https://python-poetry.org/)
 
 ## How to run it
