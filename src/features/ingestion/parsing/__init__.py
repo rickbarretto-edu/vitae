@@ -1,7 +1,7 @@
 from collections.abc import Iterator
 from pathlib import Path
 
-from src.features.ingestion.parser import schema
+from src.features.ingestion.parsing import schema
 
 from . import _xml as xml
 from .academic_background import academic_background

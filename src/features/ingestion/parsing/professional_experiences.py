@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Iterator  # noqa: UP035
 
-from src.features.ingestion.parser.schema import ProfessionalExperience
+from src.features.ingestion.parsing.schema import ProfessionalExperience
 
 from . import _xml as xml
 
