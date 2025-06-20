@@ -30,7 +30,10 @@ poetry shell
 On *Visual Studio Code*: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>,
 then search for: *"Python: Select Interpreter"* and choose the one from Poetry's isolated environment.
 
-4. **Execute**
+4. **Bootstrap**
+
+
+5. **Execute**
 
 ```bash
 python -m src
