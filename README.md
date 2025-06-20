@@ -24,7 +24,7 @@ cp vitae.example.toml vitae.toml
 ### 3. Virtual Environment
 
 ```bash
-poetry shell
+poetry env activate
 ```
 
 On *Visual Studio Code*: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>,
