@@ -14,7 +14,7 @@ poetry install
 ```
 
 ### 2. Environment Settings
-    
+
 
 ```bash
 cp vitae.example.toml vitae.toml
@@ -46,7 +46,7 @@ createdb <your-database> -U <your-user>
 
 Place your curricula repository in the root directory of this project (at the same level as the source code).
 
-> [!WARNING] 
+> [!WARNING]
 > Add your curricula repository to `.gitignore` to avoid accidentally uploading it to remote.
 
 3. **Directory Structure**
@@ -61,10 +61,10 @@ root
 |    |-- 02
 |    +-- ...
 |
-|-- logs          
-|-- scripts       
-|-- src           
-|-- ...           .
+|-- logs
+|-- scripts
+|-- src
+|-- ...
 ```
 
 
@@ -83,5 +83,5 @@ python -m src
 2. **Python Linters, Formatters, Static Analysis**
   - [`ruff`](https://docs.astral.sh/ruff/) linter and code formatter. (lightweight alternative)
   - [`ty`](https://github.com/astral-sh/ty) Python type checking. (lightweight alternative)
-  - [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) VsCode's Extension 
+  - [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) VsCode's Extension
     as language server.
