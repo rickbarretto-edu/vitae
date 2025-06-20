@@ -32,6 +32,42 @@ then search for: *"Python: Select Interpreter"* and choose the one from Poetry's
 
 ### 4. Bootstrap
 
+Before running the application for the first time, complete these steps:
+
+1. **Create the Database**
+
+Ensure your PostgreSQL database exists, using the same settings you specified in [Environment Settings](#2-environment-settings):
+
+```bash
+createdb <your-database> -U <your-user>
+```
+
+2. **Add Your Curricula Repository**
+
+Place your curricula repository in the root directory of this project (at the same level as the source code).
+
+> [!WARNING] 
+> Add your curricula repository to `.gitignore` to avoid accidentally uploading it to remote.
+
+3. **Directory Structure**
+
+Your curricula's directory should look like this:
+
+```text
+root
+|-- <curricula>   # Your curricula repository
+|    |-- 00
+|    |-- 01
+|    |-- 02
+|    +-- ...
+|
+|-- logs          
+|-- scripts       
+|-- src           
+|-- ...           .
+```
+
+
 ### 5. Execute
 
 ```bash
