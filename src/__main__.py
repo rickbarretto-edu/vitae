@@ -13,11 +13,15 @@ def ingest(
     buffer_limit: int = 50,
     strategy: Scanner = ingestions.scanners.serial,
     processed_log: Path = Path("logs/ingestion/processed.log"),
-) -> None:
+) -> ingestions.Ingestion:
     """Ingest feature manager.
 
     Ingest data based on `vitae`'s settings into `database`.
     Curriculas are defined there.
+
+    Returns
+    -------
+    A configured instance of Ingestion feature.
 
     Notes
     -----
@@ -26,15 +30,16 @@ def ingest(
         will be properly commited to `database`.
 
     """
-    ingestion = ingestions.Ingestion(
+    processed_xmls = ingestions.processed(processed_log)
+
+    return ingestions.Ingestion(
         researchers=ingestions.Researchers(
             db=database,
             every=buffer_limit,
         ),
-    )
-
-    ingestion.using(strategy, at=vitae.paths.curricula).ingest(
-        skip=ingestions.processed(processed_log),
+        scanner=strategy,
+        files=vitae.paths.curricula,
+        to_skip=processed_xmls,
     )
 
 
@@ -42,7 +47,8 @@ def main() -> VitaeSettings:
     vitae: VitaeSettings = new_vitae()
     database = Database(vitae.postgres.engine)
 
-    ingest(vitae, database, strategy=ingestions.scanners.parallel)
+    ingestion = ingest(vitae, database, strategy=ingestions.scanners.parallel)
+    ingestion.ingest()
 
     return vitae
 
