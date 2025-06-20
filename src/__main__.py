@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from src.__setup__ import new_vitae
+from src.features import Features
 from src.features import ingestion as ingestions
 from src.features.ingestion.usecases import Scanner
 from src.infra.database import Database
@@ -47,8 +48,17 @@ def main() -> VitaeSettings:
     vitae: VitaeSettings = new_vitae()
     database = Database(vitae.postgres.engine)
 
-    ingestion = ingest(vitae, database, strategy=ingestions.scanners.parallel)
-    ingestion.ingest()
+    features = Features(
+        ingestion=ingest(
+            vitae=vitae,
+            database=database,
+            strategy=ingestions.scanners.parallel,
+            buffer_limit=50,
+            processed_log=Path("logs/ingestion/processed.log"),
+        ),
+    )
+
+    features.ingestion.ingest()
 
     return vitae
 
