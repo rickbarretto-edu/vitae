@@ -9,6 +9,8 @@ from . import scanners
 from .repository import Researchers
 from .usecase import Ingestion
 
+__all__ = ["app"]
+
 app = cyclopts.App(name="ingest", help="Ingest XML documents into database.")
 
 
