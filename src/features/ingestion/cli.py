@@ -53,7 +53,7 @@ def ingest(
     _range: IndexRange = None,
     strategy: Literal["serial", "pool"] = "pool",
     buffer: int = 50,
-    cores: PositiveInt = 8,
+    workers: PositiveInt = 8,
 ) -> None:
     """Ingest XML documents into the database.
 
@@ -75,7 +75,7 @@ def ingest(
         Number of researchers to buffer before committing to the database.
         Use higher numbers on production.
 
-    cores: PositiveInt
+    workers: PositiveInt
         Machine available cores. When using `pool` strategy.
 
     """
@@ -84,7 +84,7 @@ def ingest(
     repository = Researchers(db=database, every=buffer)
     scanner = {
         "serial": scanners.Serial(scan_only=scan_only),
-        "pool": scanners.Pool(scan_only=scan_only, max_workers=cores),
+        "pool": scanners.Pool(scan_only=scan_only, max_workers=workers),
     }[strategy]
     processed_curricula = curricula_xml_from(
         Path("logs/ingestion/processed.log"),
