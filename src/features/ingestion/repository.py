@@ -12,13 +12,18 @@ from src.infra.database import Database
 flatten = itertools.chain
 
 
-def log_with(log, logfile: str, level: str) -> None:
+def log_with[T](logger: loguru.Logger, logfile: str, level: str) -> None:
+    """Create logs handlers with strict level policy.
+
+    This allow us to redirect each kind of logging to the right file,
+    and at the same time not mixing levels in those files.
+    """
     file = Path(f"logs/ingestion/{logfile}.log")
 
     def restrict_level(record):
         return record["level"].name == level
 
-    log.add(
+    logger.add(
         file,
         format="{message}",
         level=level,
