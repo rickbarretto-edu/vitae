@@ -26,18 +26,22 @@ from src.lib.panic import panic
 __all__ = [
     "Ingestion",
     "Researchers",
+    "curricula_xml_from",
     "debug",
-    "processed_curricula_from",
     "strategy",
 ]
 
 
-def processed_curricula_from(log: Path) -> set[str]:
-    """Load all processed XML from logfile.
+def curricula_xml_from(log: Path) -> set[str]:
+    """Load curricula from log file.
 
-    Returns
+    Note:
+    ----
+    Its expected that each line contains only one Researcher's ID.
+
+    Returns:
     -------
-    All processed Curricula's ID into a set.
+    All processed Curricula's ID into a set as `<id>.xml` strings.
 
     """
     with log.open("r") as file:

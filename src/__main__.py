@@ -30,7 +30,7 @@ def ingest(
         will be properly commited to `database`.
 
     """
-    processed_curricula = ingestions.processed_curricula_from(processed_log)
+    processed_curricula = ingestions.curricula_xml_from(processed_log)
 
     return ingestions.Ingestion(
         researchers=ingestions.Researchers(
