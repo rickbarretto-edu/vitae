@@ -23,7 +23,6 @@ class Researcher(Orm, table=True):
 
 
 class Expertise(Orm, table=True):
-    id: int | None = key()
     researcher_id: str = foreign("researcher.lattes_id")
     researcher: "Researcher" = link("research_area")
 
