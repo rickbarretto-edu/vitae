@@ -1,5 +1,5 @@
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -22,12 +22,22 @@ class Orm(SQLModel, metaclass=TableNameMeta):
     pass
 
 
+def link(back: str) -> Any:
+    return Relationship(back_populates=back)
+
+
+def key() -> Any:
+    return Field(default=None, primary_key=True)
+
+
+def foreign(key: str) -> Any:
+    return Field(foreign_key=key)
+
+
 class AcademicBackground(Orm, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    researcher_id: str = Field(foreign_key="researcher.id")
-    researcher: "Researcher" = Relationship(
-        back_populates="academic_background",
-    )
+    id: int | None = key()
+    researcher_id: str = foreign("researcher.id")
+    researcher: "Researcher" = link("academic_background")
 
     type: str
     institution: str
@@ -35,17 +45,13 @@ class AcademicBackground(Orm, table=True):
     start_year: int | None = None
     end_year: int | None = None
 
-    knowledge_area: list["KnowledgeArea"] = Relationship(
-        back_populates="academic_background",
-    )
+    knowledge_area: list["KnowledgeArea"] = link("academic_background")
 
 
 class KnowledgeArea(Orm, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    academic_background_id: int = Field(foreign_key="academic_background.id")
-    academic_background: "AcademicBackground" = Relationship(
-        back_populates="knowledge_area",
-    )
+    id: int | None = key()
+    academic_background_id: int = foreign("academic_background.id")
+    academic_background: "AcademicBackground" = link("knowledge_area")
 
     major_knowledge_area: str
     knowledge_area: str | None = None
