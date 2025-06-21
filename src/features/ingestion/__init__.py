@@ -12,6 +12,7 @@ Usage
     arallel_scanning(Path("all_files"), ingestion(database))
 
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -52,6 +53,8 @@ def curricula_xml_from(log: Path) -> set[str]:
 
 @dataclass
 class Ingestion:
+    """Ingest documents to the database using Researchers's Repository."""
+
     researchers: Researchers
     scanner: strategy.Scanner = strategy.serial
     files: Path | None = None
