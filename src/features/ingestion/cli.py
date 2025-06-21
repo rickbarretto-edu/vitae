@@ -17,7 +17,7 @@ app = cyclopts.App(name="ingest")
 
 @app.default
 def ingest(
-    # sub_folders: list[int] | None = None,
+    only: list[str] | None = None,
     strategy: Literal["serial", "pool"] = "pool",
     buffer: int = 50,
     processed: Path = Path("logs/ingestion/processed.log"),
@@ -27,6 +27,10 @@ def ingest(
 
     Parameters
     ----------
+    only : list[int] | None = None
+        Indicate which sub-directories should be scanned.
+        If empty, scans all sub-directories.
+
     strategy : Literal["serial", "pool"], default="pool"
         Method used to scan the directory containing XML files.
         Use "serial" for sequential scanning or "pool" for parallel scanning.
