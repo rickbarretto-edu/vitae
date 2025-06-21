@@ -7,7 +7,9 @@ from functools import cached_property
 from vitae.core import Entity
 from vitae.features.ingestion.adapters.schema import (
     AcademicBackground,
+    Expertise,
     GeneralData,
+    Nationality,
     ProfessionalExperience,
     ResearchArea,
 )
@@ -21,6 +23,8 @@ class Curriculum(Entity[str]):
     """Mother class to convert XML Schemas to Database schemas."""
 
     _personal_data: GeneralData
+    _nationality: Nationality
+    _expertise: Iterator[Expertise]
     _academic_background: Iterator[AcademicBackground]
     _professional_experiences: Iterator[ProfessionalExperience]
     _research_areas: Iterator[ResearchArea]
