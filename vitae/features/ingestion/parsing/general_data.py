@@ -1,4 +1,10 @@
-from vitae.features.ingestion.adapters.schema import GeneralData
+from collections.abc import Iterator
+
+from vitae.features.ingestion.adapters.schema import (
+    Expertise,
+    GeneralData,
+    Nationality,
+)
 
 from . import _xml as xml
 
@@ -89,4 +95,27 @@ def general_data(researcher_id: str, data: xml.Node) -> GeneralData:
         quotes_names=data["nome em citacoes bibliograficas"],
         orcid=data["ORCID ID"],
         abstract=resume["texto resumo CV RH"],
+    )
+
+
+def nationality(researcher_id: str, general_data: xml.Node) -> Nationality:
+    return Nationality(
+        researcher_id=researcher_id,
+        born_country=general_data["pais-de-nascimento"],
+        nationality=general_data["nacionalidade"],
+    )
+
+
+def expertise(researcher_id: str, data: xml.Node) -> Iterator[Expertise]:
+    areas = data.first("areas-de-atuacao").all("area-de-atuacao")
+
+    return (
+        Expertise(
+            researcher_id=researcher_id,
+            major=area["nome-grande-area-do-conhecimento"],
+            area=area["nome-da-area-do-conhecimento"],
+            sub=area["nome-da-sub-area-do-conhecimento"],
+            speciality=area["nome-da-especialidade"],
+        )
+        for area in areas
     )
