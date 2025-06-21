@@ -6,8 +6,10 @@ from typing import TypedDict
 
 __all__ = [
     "AcademicBackground",
+    "Expertise",
     "GeneralData",
     "KnowledgeArea",
+    "Nationality",
     "ProfessionalExperience",
     "ResearchArea",
 ]
@@ -21,6 +23,24 @@ class GeneralData(TypedDict):
     quotes_names: str | None
     orcid: str | None
     abstract: str | None
+
+
+class Nationality(TypedDict):
+    """Researcher's Nationality."""
+
+    researcher_id: str
+    born_country: str
+    nationality: str
+
+
+class Expertise(TypedDict):
+    """Researcher's Expertise."""
+
+    researcher_id: str
+    major: str
+    area: str
+    sub: str
+    speciality: str
 
 
 class AcademicBackground(TypedDict):
