@@ -14,8 +14,8 @@ import sys
 from loguru import logger
 from sqlmodel import SQLModel
 
-from src import settings
-from src.settings import VitaeSettings
+from vitae import settings
+from vitae.settings import VitaeSettings
 
 __all__ = [
     "new_vitae",
@@ -61,7 +61,7 @@ def setup_database(vitae: VitaeSettings) -> None:
     """Setups database."""
     # ``models`` module must be evaluated before create or drop it.
     # That is why this imports an unused variable inside this function.
-    from src.infra.database import schema  # noqa: F401
+    from vitae.infra.database import schema  # noqa: F401
 
     if vitae.in_development:
         # Since the dataset for development is far smaller than the production

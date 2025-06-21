@@ -5,7 +5,7 @@ import cyclopts
 from cyclopts import Parameter
 from cyclopts.types import PositiveInt
 
-from src.shared import database, vitae
+from vitae.shared import database, vitae
 
 from . import scanners
 from .repository import Researchers

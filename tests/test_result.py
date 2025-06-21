@@ -1,6 +1,6 @@
 import pytest
 
-from src.lib.result import Err, Ok, Panic, Result, Some, catch
+from vitae.lib.result import Err, Ok, Panic, Result, Some, catch
 from tests.utils import should
 
 

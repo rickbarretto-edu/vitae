@@ -1,4 +1,4 @@
-from src.features.ingestion.adapters.schema import ResearchArea
+from vitae.features.ingestion.adapters.schema import ResearchArea
 
 from . import _xml as xml
 

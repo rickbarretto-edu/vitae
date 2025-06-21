@@ -1,6 +1,6 @@
 import cyclopts
 
-from src.features.ingestion.cli import app as ingestion_app
+from vitae.features.ingestion.cli import app as ingestion_app
 
 
 def cli() -> None:

@@ -64,7 +64,8 @@ root
 |
 |-- logs
 |-- scripts
-|-- src
+|-- tests
+|-- vitae
 |-- ...
 ```
 
@@ -76,7 +77,7 @@ vitae
 ```
 
 Remember to install with `poetry install` before run as a script.
-Otherwise, you may run as `python -m src`.
+Otherwise, you may run as `python -m vitae`.
 
 ## Tooling Recomentation
 

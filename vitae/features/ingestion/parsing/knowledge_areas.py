@@ -1,4 +1,4 @@
-from src.features.ingestion.adapters.schema import KnowledgeArea
+from vitae.features.ingestion.adapters.schema import KnowledgeArea
 
 from . import _xml as xml
 
