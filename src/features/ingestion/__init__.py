@@ -76,17 +76,13 @@ class Ingestion:
             self.to_skip = skip
 
         if self.scanner is None or self.files is None:
-            msg = "Scanner function or file path not configured. Use `.using_at(...)` first."
+            msg = "Scanner strategy or file path not configured."
             raise RuntimeError(msg)
 
         self.scanner(self.files, lambda x: self.process_directory(x))  # noqa: PLW0108
 
     def process_directory(self, directory: Path) -> None:
-        """Process all curriculum files in a directory.
-
-        Scans the given directory, processes each curriculum file using the parser,
-        manages data buffers, and periodically flushes them to the database.
-        """
+        """Process all curriculum files in a directory."""
         if not directory.exists():
             panic(f"Subdirectory does not exist: {directory}")
 
