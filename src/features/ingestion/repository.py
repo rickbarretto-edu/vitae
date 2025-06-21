@@ -1,3 +1,5 @@
+"""Repository pattern for the Ingestion feature."""
+
 from collections.abc import Iterable
 from dataclasses import dataclass
 import itertools
@@ -6,19 +8,31 @@ from pathlib import Path
 import loguru
 
 from src.core import Repository
-from src.features.ingestion.schema import Curriculum
+from src.features.ingestion.domain import Curriculum
 from src.infra.database import Database
 
 flatten = itertools.chain
 
 
-def log_with(log, logfile: str, level: str) -> None:
+def log_with(logger, logfile: str, level: str) -> None:  # noqa: ANN001
+    """Create logs handlers with strict level policy.
+
+    This allow us to redirect each kind of logging to the right file,
+    and at the same time not mixing levels in those files.
+    """
     file = Path(f"logs/ingestion/{logfile}.log")
 
-    def restrict_level(record):
+    def restrict_level(record) -> bool:  # noqa: ANN001
+        """Create a level strict filter.
+
+        Returns
+        -------
+        If the record has the same level as defined by the outter function.
+
+        """
         return record["level"].name == level
 
-    log.add(
+    logger.add(
         file,
         format="{message}",
         level=level,
@@ -29,6 +43,8 @@ def log_with(log, logfile: str, level: str) -> None:
 
 @dataclass
 class Researchers(Repository[Curriculum]):
+    """Researcher's Curriculum Repository."""
+
     db: Database
     every: int = 50
 
@@ -54,9 +70,8 @@ class Researchers(Repository[Curriculum]):
         """
         for group in itertools.batched(researchers, self.every):
             if not self._put_all(group):
-                self.log.warning(
-                    ",".join([r.id for r in group]),
-                )
+                group_ids: str = ",".join([r.id for r in group])
+                self.log.warning(group_ids)
                 self._put_each_from(group)
             else:
                 for researcher in group:

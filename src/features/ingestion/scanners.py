@@ -1,26 +1,50 @@
 """Strategies to be used by the Ingestion Usecase."""
 
+from __future__ import annotations
+
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING, Callable, Protocol
 
-__all__ = ["parallel", "serial"]
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
-
-def serial(
-    all_files: Path,
-    action: Callable[[Path], None],
-) -> None:
-    """Scan & Process files in order."""
-    for directory in all_files.iterdir():
-        action(directory)
+__all__ = ["Pool", "Scanner", "Serial"]
 
 
-def parallel(
-    all_files: Path,
-    action: Callable[[Path], None],
-) -> None:
-    """Scan & Process files in parallel (I/O bound)."""
-    with ThreadPoolExecutor(max_workers=8) as executor:
+type FileParser = Callable[[Path], None]
+
+
+class Scanner(Protocol):
+    """Scanning Strategy Protocol."""
+
+    scan_only: Iterable[Path] | None
+
+    def __call__(self, all_files: Path, parser: FileParser) -> None:
+        """Scan `all_files` and parse with `parser`."""
+        ...
+
+
+@dataclass
+class Serial:
+    scan_only: Iterable[Path] | None = None
+
+    def __call__(self, all_files: Path, parser: FileParser) -> None:
+        """Scan & Process files in order."""
         for directory in all_files.iterdir():
-            executor.submit(action, directory)
+            if self.scan_only is None or directory in self.scan_only:
+                parser(directory)
+
+
+@dataclass
+class Pool:
+    scan_only: Iterable[Path] | None = None
+    max_workers: int = 8
+
+    def __call__(self, all_files: Path, parser: FileParser) -> None:
+        """Scan & Process files using Thread Pool (I/O bound)."""
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            for directory in all_files.iterdir():
+                if self.scan_only is None or directory in self.scan_only:
+                    executor.submit(parser, directory)

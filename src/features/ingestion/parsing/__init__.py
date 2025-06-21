@@ -1,7 +1,8 @@
 from collections.abc import Iterator
 from pathlib import Path
 
-from src.features.ingestion import schema
+from src.features.ingestion import domain
+from src.features.ingestion.adapters import schema
 
 from . import _xml as xml
 from .academic_background import academic_background
@@ -29,8 +30,8 @@ class CurriculumParser:
         self.data = self.document.first("dados gerais")
 
     @property
-    def all(self) -> schema.Curriculum:
-        return schema.Curriculum(
+    def all(self) -> domain.Curriculum:
+        return domain.Curriculum(
             _personal_data=self.researcher,
             _academic_background=self.background,
             _professional_experiences=self.experiences,
