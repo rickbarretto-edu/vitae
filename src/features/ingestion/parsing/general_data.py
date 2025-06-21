@@ -1,4 +1,4 @@
-from src.features.ingestion.parsing.schema import GeneralData
+from src.features.ingestion.adapters.schema import GeneralData
 
 from . import _xml as xml
 

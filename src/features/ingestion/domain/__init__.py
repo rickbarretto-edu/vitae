@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from functools import cached_property
 
 from src.core import Entity
-from src.features.ingestion.parsing.schema import (
+from src.features.ingestion.adapters.schema import (
     AcademicBackground,
     GeneralData,
     ProfessionalExperience,
