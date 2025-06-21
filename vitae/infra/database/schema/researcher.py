@@ -19,15 +19,15 @@ class Researcher(Orm, table=True):
 
     professional_experience: list["ProfessionalExperience"] = link("researcher")
     academic_background: list["AcademicBackground"] = link("researcher")
-    research_area: list["ResearchArea"] = link("researcher")
+    research_area: list["Expertise"] = link("researcher")
 
 
-class ResearchArea(Orm, table=True):
+class Expertise(Orm, table=True):
     id: int | None = key()
     researcher_id: str = foreign("researcher.lattes_id")
     researcher: "Researcher" = link("research_area")
 
-    major_knowledge_area: str | None = None
-    knowledge_area: str | None = None
-    sub_knowledge_area: str | None = None
+    major: str | None = None
+    area: str | None = None
+    sub: str | None = None
     specialty: str | None = None
