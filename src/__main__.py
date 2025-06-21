@@ -30,7 +30,7 @@ def ingest(
         will be properly commited to `database`.
 
     """
-    processed_xmls = ingestions.processed(processed_log)
+    processed_xmls = ingestions.all_processed_xmls(processed_log)
 
     return ingestions.Ingestion(
         researchers=ingestions.Researchers(

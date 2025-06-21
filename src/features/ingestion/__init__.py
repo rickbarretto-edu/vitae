@@ -23,10 +23,16 @@ from src.features.ingestion.parsing import CurriculumParser
 from src.features.ingestion.repository import Researchers
 from src.lib.panic import panic
 
-__all__ = ["Ingestion", "Researchers", "debug", "processed", "strategy"]
+__all__ = [
+    "Ingestion",
+    "Researchers",
+    "all_processed_xmls",
+    "debug",
+    "strategy",
+]
 
 
-def processed(log: Path) -> set[str]:
+def all_processed_xmls(log: Path) -> set[str]:
     with log.open("r") as file:
         result: set[str] = {line.strip("\n") + ".xml" for line in file}
     return result
