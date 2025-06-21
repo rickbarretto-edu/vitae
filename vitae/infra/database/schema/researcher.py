@@ -13,9 +13,9 @@ class Researcher(Orm, table=True):
     lattes_id: str = required_key()
 
     full_name: str
-    quotes_names: str | None = None
-    orcid: str | None = None
-    abstract: str | None = None
+    quotes_names: str | None
+    orcid: str | None
+    abstract: str | None
 
     professional_experience: list["ProfessionalExperience"] = link("researcher")
     academic_background: list["AcademicBackground"] = link("researcher")
