@@ -1,7 +1,8 @@
 from pathlib import Path
-from typing import Literal
+from typing import Annotated, Literal
 
 import cyclopts
+from cyclopts import Parameter
 from cyclopts.types import PositiveInt
 
 from src.shared import database, vitae
@@ -49,11 +50,17 @@ def merge_indexes(
 
 @app.default
 def ingest(
-    indexes: list[int] | None = None,  # noqa: FA102
-    _range: IndexRange = None,
-    strategy: Literal["serial", "pool"] = "pool",
-    buffer: int = 50,
-    workers: PositiveInt = 8,
+    indexes: Annotated[
+        list[int] | None,  # noqa: FA102
+        Parameter(name=["--indexes", "-i"]),
+    ] = None,
+    _range: Annotated[IndexRange, Parameter(name=["--range", "-r"])] = None,
+    strategy: Annotated[
+        Literal["serial", "pool"],
+        Parameter(name=["--strategy", "-s"]),
+    ] = "pool",
+    buffer: Annotated[int, Parameter(name=["--buffer", "-b"])] = 50,
+    workers: Annotated[PositiveInt, Parameter(name=["--workers", "-w"])] = 8,
 ) -> None:
     """Ingest XML documents into the database.
 
