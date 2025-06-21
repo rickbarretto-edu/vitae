@@ -9,7 +9,9 @@ packages = [
     { include = "src" }
 ]
 
+
 [tool.poetry.scripts]
+vitae = "src.__main__:cli"
 pre-process = "scripts.preprocess:cli"
 clear-cache = "scripts.clear:cache"
 clear-log = "scripts.clear:log"
