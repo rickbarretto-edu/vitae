@@ -15,7 +15,7 @@ app = cyclopts.App(name="ingest", help="Ingest XML documents into database.")
 @app.command
 def ingest(
     sub_folders: list[int] | None = None,
-    strategy: Literal["serial", "pool"] = "serial",
+    strategy: Literal["serial", "pool"] = "pool",
     buffer_limit: int = 50,
     processed_log: Path = Path("logs/ingestion/processed.log"),
 ) -> None:
