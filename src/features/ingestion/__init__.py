@@ -33,6 +33,13 @@ __all__ = [
 
 
 def all_processed_xmls(log: Path) -> set[str]:
+    """Load all processed XML from logfile.
+
+    Returns
+    -------
+    All processed Curricula's ID into a set.
+
+    """
     with log.open("r") as file:
         result: set[str] = {line.strip("\n") + ".xml" for line in file}
     return result
