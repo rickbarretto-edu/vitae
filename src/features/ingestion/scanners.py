@@ -23,7 +23,7 @@ class Scanner(Protocol):
 
 @dataclass
 class Serial:
-    scan_only: list[Path] | None = field(default_factory=list)
+    scan_only: Iterable[Path] | None = None
 
     def __call__(self, all_files: Path, parser: FileParser) -> None:
         """Scan & Process files in order."""
@@ -34,7 +34,7 @@ class Serial:
 
 @dataclass
 class Pool:
-    scan_only: list[Path] | None = field(default_factory=list)
+    scan_only: Iterable[Path] | None = None
     max_workers: int = 8
 
     def __call__(self, all_files: Path, parser: FileParser) -> None:
