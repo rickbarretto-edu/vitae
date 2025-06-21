@@ -6,7 +6,7 @@ from vitae.features.ingestion.adapters import schema
 
 from . import _xml as xml
 from .academic_background import academic_background
-from .general_data import general_data
+from .general_data import expertise, general_data, nationality
 from .professional_experiences import professional_experiences
 from .research_area import research_area
 
@@ -33,6 +33,8 @@ class CurriculumParser:
     def all(self) -> domain.Curriculum:
         return domain.Curriculum(
             _personal_data=self.researcher,
+            _nationality=self.nationality,
+            _expertise=self.expertise,
             _academic_background=self.background,
             _professional_experiences=self.experiences,
             _research_areas=self.areas,
@@ -41,6 +43,14 @@ class CurriculumParser:
     @property
     def researcher(self) -> schema.GeneralData:
         return general_data(self.id, self.data)
+
+    @property
+    def nationality(self) -> schema.Nationality:
+        return nationality(self.id, self.data)
+
+    @property
+    def expertise(self) -> Iterator[schema.Expertise]:
+        yield from expertise(self.id, self.data)
 
     @property
     def experiences(self) -> Iterator[schema.ProfessionalExperience]:
