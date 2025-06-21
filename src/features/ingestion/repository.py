@@ -66,9 +66,8 @@ class Researchers(Repository[Curriculum]):
         """
         for group in itertools.batched(researchers, self.every):
             if not self._put_all(group):
-                self.log.warning(
-                    ",".join([r.id for r in group]),
-                )
+                group_ids: str = ",".join([r.id for r in group])
+                self.log.warning(group_ids)
                 self._put_each_from(group)
             else:
                 for researcher in group:
