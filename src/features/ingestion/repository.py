@@ -20,7 +20,14 @@ def log_with[T](logger: loguru.Logger, logfile: str, level: str) -> None:
     """
     file = Path(f"logs/ingestion/{logfile}.log")
 
-    def restrict_level(record):
+    def restrict_level(record) -> bool:
+        """Create a level strict filter.
+
+        Returns
+        -------
+        If the record has the same level as defined by the outter function.
+
+        """
         return record["level"].name == level
 
     logger.add(
