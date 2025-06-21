@@ -22,7 +22,7 @@ def log_with(logger, logfile: str, level: str) -> None:  # noqa: ANN001
     """
     file = Path(f"logs/ingestion/{logfile}.log")
 
-    def restrict_level(record) -> bool:
+    def restrict_level(record) -> bool:  # noqa: ANN001
         """Create a level strict filter.
 
         Returns
