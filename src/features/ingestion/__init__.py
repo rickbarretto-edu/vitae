@@ -26,13 +26,13 @@ from src.lib.panic import panic
 __all__ = [
     "Ingestion",
     "Researchers",
-    "all_processed_xmls",
     "debug",
+    "processed_curricula_from",
     "strategy",
 ]
 
 
-def all_processed_xmls(log: Path) -> set[str]:
+def processed_curricula_from(log: Path) -> set[str]:
     """Load all processed XML from logfile.
 
     Returns

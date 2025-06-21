@@ -30,7 +30,7 @@ def ingest(
         will be properly commited to `database`.
 
     """
-    processed_xmls = ingestions.all_processed_xmls(processed_log)
+    processed_curricula = ingestions.processed_curricula_from(processed_log)
 
     return ingestions.Ingestion(
         researchers=ingestions.Researchers(
@@ -39,7 +39,7 @@ def ingest(
         ),
         scanner=strategy,
         files=vitae.paths.curricula,
-        to_skip=processed_xmls,
+        to_skip=processed_curricula,
     )
 
 
