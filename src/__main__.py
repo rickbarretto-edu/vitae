@@ -1,66 +1,15 @@
-from pathlib import Path
+import cyclopts
 
-from src.__setup__ import new_vitae
-from src.features import Features
-from src.features import ingestion as ingestions
-from src.infra.database import Database
-from src.settings import VitaeSettings
+from src.features.ingestion.cli import app as ingestion_app
 
 
-def ingest(
-    vitae: VitaeSettings,
-    database: Database,
-    buffer_limit: int = 50,
-    strategy: ingestions.strategy.Scanner = ingestions.strategy.serial,
-    processed_log: Path = Path("logs/ingestion/processed.log"),
-) -> ingestions.Ingestion:
-    """Ingest feature manager.
+def cli() -> cyclopts.App:
+    app = cyclopts.App()
+    app.command(ingestion_app)
 
-    Ingest data based on `vitae`'s settings into `database`.
-    Curriculas are defined there.
-
-    Returns
-    -------
-    A configured instance of Ingestion feature.
-
-    Notes
-    -----
-    - Use `strategy.serial` or `strategy.thread_pool` to define your strategy.
-    - Define `buffer_limit` to define when a researcher
-        will be properly commited to `database`.
-
-    """
-    processed_curricula = ingestions.curricula_xml_from(processed_log)
-
-    return ingestions.Ingestion(
-        researchers=ingestions.Researchers(
-            db=database,
-            every=buffer_limit,
-        ),
-        scanner=strategy,
-        files=vitae.paths.curricula,
-        to_skip=processed_curricula,
-    )
-
-
-def main() -> VitaeSettings:
-    vitae: VitaeSettings = new_vitae()
-    database = Database(vitae.postgres.engine)
-
-    features = Features(
-        ingestion=ingest(
-            vitae=vitae,
-            database=database,
-            strategy=ingestions.strategy.thread_pool,
-            buffer_limit=50,
-            processed_log=Path("logs/ingestion/processed.log"),
-        ),
-    )
-
-    features.ingestion.ingest()
-
-    return vitae
+    return app
 
 
 if __name__ == "__main__":
-    vitae = main()
+    app = cli()
+    app()
