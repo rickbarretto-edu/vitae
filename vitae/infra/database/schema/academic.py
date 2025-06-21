@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 class AcademicBackground(Orm, table=True):
     id: int | None = key()
-    researcher_id: str = foreign("researcher.id")
+    researcher_id: str = foreign("researcher.lattes_id")
     researcher: "Researcher" = link("academic_background")
 
     type: str

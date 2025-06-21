@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from .orm import Orm, foreign, index, key, link, required_key
+from .orm import Orm, foreign, key, link, required_key
 
 __all__ = ["Researcher"]
 
@@ -10,18 +10,12 @@ if TYPE_CHECKING:
 
 
 class Researcher(Orm, table=True):
-    id: str = required_key()
+    lattes_id: str = required_key()
 
-    name: str = index()
-    city: str | None = None
-    state: str | None = None
-    country: str | None = None
+    full_name: str
     quotes_names: str | None = None
     orcid: str | None = None
     abstract: str | None = None
-    professional_institution: str | None = None
-    institution_state: str | None = None
-    institution_city: str | None = None
 
     professional_experience: list["ProfessionalExperience"] = link("researcher")
     academic_background: list["AcademicBackground"] = link("researcher")
@@ -30,7 +24,7 @@ class Researcher(Orm, table=True):
 
 class ResearchArea(Orm, table=True):
     id: int | None = key()
-    researcher_id: str = foreign("researcher.id")
+    researcher_id: str = foreign("researcher.lattes_id")
     researcher: "Researcher" = link("research_area")
 
     major_knowledge_area: str | None = None
