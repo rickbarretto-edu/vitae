@@ -17,7 +17,7 @@ app = cyclopts.App(name="ingest")
 
 @app.default
 def ingest(
-    only: list[str] | None = None,
+    only: list[str] | None = None,  # noqa: FA102
     strategy: Literal["serial", "pool"] = "pool",
     buffer: int = 50,
     processed: Path = Path("logs/ingestion/processed.log"),
