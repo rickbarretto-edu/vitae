@@ -4,7 +4,6 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 import itertools
 from pathlib import Path
-from typing import Protocol
 
 import loguru
 
@@ -15,11 +14,7 @@ from src.infra.database import Database
 flatten = itertools.chain
 
 
-class Logger(Protocol):
-    def add(self, sink, **kwargs) -> None: ...
-
-
-def log_with(logger: Logger, logfile: str, level: str) -> None:
+def log_with(logger, logfile: str, level: str) -> None:  # noqa: ANN001
     """Create logs handlers with strict level policy.
 
     This allow us to redirect each kind of logging to the right file,
