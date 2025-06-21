@@ -51,7 +51,7 @@ def ingest(
     repository = Researchers(db=database, every=buffer)
     scanner = {
         "serial": scanners.Serial(),
-        "pool": scanners.Pool(),
+        "pool": scanners.Pool(max_workers=cores),
     }[strategy]
     processed_curricula = curricula_xml_from(processed)
 

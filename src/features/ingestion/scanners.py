@@ -30,8 +30,10 @@ class Serial:
 
 @dataclass
 class Pool:
+    max_workers: int = 8
+
     def __call__(self, all_files: Path, parser: FileParser) -> None:
         """Scan & Process files using Thread Pool (I/O bound)."""
-        with ThreadPoolExecutor(max_workers=8) as executor:
+        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             for directory in all_files.iterdir():
                 executor.submit(parser, directory)
