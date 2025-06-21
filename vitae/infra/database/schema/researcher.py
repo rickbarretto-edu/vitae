@@ -13,9 +13,7 @@ class Researcher(SQLModel, table=True):
     __tablename__: str = "researcher"
 
     id: str = Field(primary_key=True, nullable=False)
-    # updated_at: str | None = Field(
-    #     default=None, sa_column_kwargs={"default": "now()", "onupdate": "now()"}
-    # )
+
     name: str = Field(nullable=False, index=True)
     city: str | None = None
     state: str | None = None
@@ -41,10 +39,7 @@ class Researcher(SQLModel, table=True):
 class ResearchArea(SQLModel, table=True):
     __tablename__: str = "research_area"
 
-    # Database generated
     id: int | None = Field(default=None, primary_key=True)
-
-    # Owner
     researcher_id: str = Field(foreign_key="researcher.id")
     researcher: "Researcher" = Relationship(
         back_populates="research_area",
