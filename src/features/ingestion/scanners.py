@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Protocol
+from typing import TYPE_CHECKING, Callable, Protocol
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 __all__ = ["Pool", "Scanner", "Serial"]
 
@@ -15,6 +18,8 @@ type FileParser = Callable[[Path], None]
 
 class Scanner(Protocol):
     """Scanning Strategy Protocol."""
+
+    scan_only: Iterable[Path] | None
 
     def __call__(self, all_files: Path, parser: FileParser) -> None:
         """Scan `all_files` and parse with `parser`."""
