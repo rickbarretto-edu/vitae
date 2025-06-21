@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING
 
 from src.features.ingestion import scanners as strategy
 from src.features.ingestion.parsing import CurriculumParser
@@ -21,8 +21,11 @@ class Ingestion:
 
     researchers: Researchers
     files: Path
-    scanner: strategy.Scanner = strategy.serial
+    scanner: strategy.Scanner
+
+    scan_only: list[str] = field(default_factory=list)
     to_skip: set[str] = field(default_factory=set)
+    workers: int = 8
 
     def ingest(self) -> None:
         """Ingest data using the configured scanner and path."""
