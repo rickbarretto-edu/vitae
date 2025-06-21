@@ -27,7 +27,7 @@ class Curriculum(Entity[str]):
 
     @cached_property
     def id(self) -> str:
-        return self._personal_data["id"]
+        return self._personal_data["lattes_id"]
 
     @property
     def personal_data(self) -> db_schema.Researcher:

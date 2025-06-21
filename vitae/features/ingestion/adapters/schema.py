@@ -14,32 +14,13 @@ __all__ = [
 
 
 class GeneralData(TypedDict):
-    """Researcher's personal and general data.
+    """Researcher's personal and general data."""
 
-    Note:
-    ----
-    ``id`` is provided by the Lattes curriculum.
-
-    """
-
-    # Metadata
-    id: str
-
-    # Researcher's personal data
-    name: str
-    city: str | None
-    state: str | None
-    country: str | None
-
-    # Researcher's CV data
+    lattes_id: str
+    full_name: str
     quotes_names: str | None
     orcid: str | None
     abstract: str | None
-
-    # Researcher's Instituition
-    professional_institution: str | None
-    institution_state: str | None
-    institution_city: str | None
 
 
 class AcademicBackground(TypedDict):
