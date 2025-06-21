@@ -31,18 +31,7 @@ class Ingestion:
         return self
 
     def ingest(self) -> None:
-        """Ingest data using the configured scanner and path.
-
-        Raises
-        ------
-        RuntimeError:
-            If scanner and files are not defined.
-
-        """
-        if self.files is None:
-            msg = "Scanner strategy or file path not configured."
-            raise RuntimeError(msg)
-
+        """Ingest data using the configured scanner and path."""
         self.scanner(self.files, lambda x: self.process_directory(x))  # noqa: PLW0108
 
     def process_directory(self, directory: Path) -> None:
