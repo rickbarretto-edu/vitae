@@ -3,19 +3,17 @@ from typing import Literal
 
 import cyclopts
 
-from src.features.ingestion import (
-    Ingestion,
-    Researchers,
-    curricula_xml_from,
-    scanners,
-)
 from src.shared import database, vitae
 
-app = cyclopts.App()
+from . import scanners
+from .repository import Researchers
+from .usecase import Ingestion
+
+app = cyclopts.App(name="ingest")
 
 
 @app.command
-def ingestion(
+def ingest(
     sub_folders: list[int] | None = None,
     strategy: Literal["serial", "pool"] = "serial",
     buffer_limit: int = 50,
@@ -36,3 +34,23 @@ def ingestion(
     )
 
     ingestion.ingest()
+
+
+# =~=~=~=~=~=~ Helper Functions ~=~=~=~=~=~=
+
+
+def curricula_xml_from(log: Path) -> set[str]:
+    """Load curricula from log file.
+
+    Note:
+    ----
+    Its expected that each line contains only one Researcher's ID.
+
+    Returns:
+    -------
+    All processed Curricula's ID into a set as `<id>.xml` strings.
+
+    """
+    with log.open("r") as file:
+        result: set[str] = {line.strip("\n") + ".xml" for line in file}
+    return result
