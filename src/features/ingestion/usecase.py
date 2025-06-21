@@ -24,12 +24,6 @@ class Ingestion:
     scanner: strategy.Scanner = strategy.serial
     to_skip: set[str] = field(default_factory=set)
 
-    def using(self, scanner: strategy.Scanner, at: Path) -> Self:
-        """Add scanning strategy and file path."""  # noqa: DOC201
-        self.scanner = scanner
-        self.files = at
-        return self
-
     def ingest(self) -> None:
         """Ingest data using the configured scanner and path."""
         self.scanner(self.files, lambda x: self.process_directory(x))  # noqa: PLW0108
