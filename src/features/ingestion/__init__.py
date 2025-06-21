@@ -16,14 +16,16 @@ Usage
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
 from src.features.ingestion import debug
 from src.features.ingestion import scanners as strategy
 from src.features.ingestion.parsing import CurriculumParser
 from src.features.ingestion.repository import Researchers
 from src.lib.panic import panic
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 __all__ = [
     "Ingestion",
