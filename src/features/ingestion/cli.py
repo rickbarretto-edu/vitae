@@ -14,16 +14,10 @@ __all__ = ["app"]
 app = cyclopts.App(name="ingest")
 
 
-_strategy = {
-    "serial": scanners.serial,
-    "pool": scanners.thread_pool,
-}
-
-
 @app.default
 def ingest(
     # sub_folders: list[int] | None = None,
-    strategy: Literal[tuple(_strategy)] = "pool",  # type: ignore[arg-type]
+    strategy: Literal["serial", "pool"] = "pool",
     buffer: int = 50,
     processed: Path = Path("logs/ingestion/processed.log"),
 ) -> None:
@@ -46,11 +40,15 @@ def ingest(
 
     """
     repository = Researchers(db=database, every=buffer)
+    scanner = {
+        "serial": scanners.serial,
+        "pool": scanners.thread_pool,
+    }[strategy]
     processed_curricula = curricula_xml_from(processed)
 
     ingestion = Ingestion(
         researchers=repository,
-        scanner=strategy,
+        scanner=scanner,
         files=vitae.paths.curricula,
         to_skip=processed_curricula,
     )
