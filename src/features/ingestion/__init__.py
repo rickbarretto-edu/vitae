@@ -15,7 +15,7 @@ Usage
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, Protocol, Self
+from typing import Self
 
 from src.features.ingestion import debug
 from src.features.ingestion import scanners as strategy
@@ -24,11 +24,6 @@ from src.features.ingestion.repository import Researchers
 from src.lib.panic import panic
 
 __all__ = ["Ingestion", "Researchers", "debug", "processed", "strategy"]
-
-
-class Scanner(Protocol):
-    def __call__(self, all_files: Path, action: Callable[[Path], None]) -> None:
-        pass
 
 
 def processed(log: Path) -> set[str]:
@@ -40,11 +35,11 @@ def processed(log: Path) -> set[str]:
 @dataclass
 class Ingestion:
     researchers: Researchers
-    scanner: Scanner = strategy.serial
+    scanner: strategy.Scanner = strategy.serial
     files: Path | None = None
     to_skip: set[str] = field(default_factory=set)
 
-    def using(self, scanner: Scanner, at: Path) -> Self:
+    def using(self, scanner: strategy.Scanner, at: Path) -> Self:
         """Add scanning strategy and file path."""  # noqa: DOC201
         self.scanner = scanner
         self.files = at

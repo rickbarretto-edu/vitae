@@ -2,9 +2,13 @@
 
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Protocol
 
-__all__ = ["parallel", "serial"]
+__all__ = ["Scanner", "parallel", "serial"]
+
+class Scanner(Protocol):
+    def __call__(self, all_files: Path, action: Callable[[Path], None]) -> None:
+        pass
 
 
 def serial(
