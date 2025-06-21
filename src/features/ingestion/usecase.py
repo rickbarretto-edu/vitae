@@ -39,7 +39,7 @@ class Ingestion:
             If scanner and files are not defined.
 
         """
-        if self.scanner is None or self.files is None:
+        if self.files is None:
             msg = "Scanner strategy or file path not configured."
             raise RuntimeError(msg)
 
