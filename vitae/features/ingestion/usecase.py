@@ -5,13 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from vitae.features.ingestion import scanners as strategy
 from vitae.features.ingestion.parsing import CurriculumParser
 from vitae.lib.panic import panic
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from vitae.features.ingestion import scanners as strategy
     from vitae.features.ingestion.repository import Researchers
 
 
@@ -41,3 +41,5 @@ class Ingestion:
             for curriculum in directory.glob("*.xml")
             if curriculum not in self.to_skip
         )
+
+        print(f"Processed {directory.parent.name}/{directory.name}")  # noqa: T201
