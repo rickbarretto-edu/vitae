@@ -30,7 +30,7 @@ class Ingestion:
         self.files = at
         return self
 
-    def ingest(self, skip: set[str] | None = None) -> None:
+    def ingest(self) -> None:
         """Ingest data using the configured scanner and path.
 
         Raises
@@ -39,9 +39,6 @@ class Ingestion:
             If scanner and files are not defined.
 
         """
-        if skip is not None:
-            self.to_skip = skip
-
         if self.scanner is None or self.files is None:
             msg = "Scanner strategy or file path not configured."
             raise RuntimeError(msg)
