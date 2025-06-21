@@ -79,7 +79,7 @@ class Ingestion:
             msg = "Scanner function or file path not configured. Use `.using_at(...)` first."
             raise RuntimeError(msg)
 
-        self.scanner(self.files, lambda x: self.process_directory(x))
+        self.scanner(self.files, lambda x: self.process_directory(x))  # noqa: PLW0108
 
     def process_directory(self, directory: Path) -> None:
         """Process all curriculum files in a directory.
