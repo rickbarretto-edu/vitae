@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from xml.etree import ElementTree as ET
 
-from src.lib.result import catch
+from vitae.lib.result import catch
 
 __all__ = ["Node", "ParsingError", "as_int", "attribute", "find"]
 

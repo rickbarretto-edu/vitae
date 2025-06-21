@@ -6,10 +6,12 @@ authors = ["Author <author@example.com>"]
 readme = "README.md"
 
 packages = [
-    { include = "src" }
+    { include = "vitae" }
 ]
 
+
 [tool.poetry.scripts]
+vitae = "vitae.__main__:cli"
 pre-process = "scripts.preprocess:cli"
 clear-cache = "scripts.clear:cache"
 clear-log = "scripts.clear:log"

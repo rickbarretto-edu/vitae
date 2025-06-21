@@ -12,7 +12,7 @@ from sqlmodel import Session
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
-    from src.infra.database import schema
+    from vitae.infra.database import schema
 
 type Some[T] = T | Iterable[T]
 

@@ -1,4 +1,4 @@
-from src.features.ingestion.adapters.schema import GeneralData
+from vitae.features.ingestion.adapters.schema import GeneralData
 
 from . import _xml as xml
 

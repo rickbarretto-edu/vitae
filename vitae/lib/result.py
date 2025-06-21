@@ -5,7 +5,7 @@ from abc import ABC
 from dataclasses import dataclass
 from typing import Callable, NoReturn, cast
 
-from src.lib.panic import Panic
+from vitae.lib.panic import Panic
 
 __all__ = ["Either", "Empty", "Err", "Ok", "Result", "Some", "catch"]
 

@@ -1,8 +1,8 @@
 from collections.abc import Iterator
 from pathlib import Path
 
-from src.features.ingestion import domain
-from src.features.ingestion.adapters import schema
+from vitae.features.ingestion import domain
+from vitae.features.ingestion.adapters import schema
 
 from . import _xml as xml
 from .academic_background import academic_background

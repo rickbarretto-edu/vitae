@@ -7,9 +7,9 @@ from pathlib import Path
 
 import loguru
 
-from src.core import Repository
-from src.features.ingestion.domain import Curriculum
-from src.infra.database import Database
+from vitae.core import Repository
+from vitae.features.ingestion.domain import Curriculum
+from vitae.infra.database import Database
 
 flatten = itertools.chain
 

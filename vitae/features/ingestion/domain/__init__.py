@@ -4,14 +4,14 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from functools import cached_property
 
-from src.core import Entity
-from src.features.ingestion.adapters.schema import (
+from vitae.core import Entity
+from vitae.features.ingestion.adapters.schema import (
     AcademicBackground,
     GeneralData,
     ProfessionalExperience,
     ResearchArea,
 )
-from src.infra.database import schema as db_schema
+from vitae.infra.database import schema as db_schema
 
 __all__ = ["Curriculum"]
 

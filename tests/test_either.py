@@ -1,6 +1,6 @@
 import pytest
 
-from src.lib.result import Either, Empty, Panic, Some
+from vitae.lib.result import Either, Empty, Panic, Some
 
 
 class DescribeSome:

@@ -15,7 +15,7 @@ Usage
 
 from __future__ import annotations
 
-from src.features.ingestion import cli
+from vitae.features.ingestion import cli
 
 __all__ = [
     "cli",
