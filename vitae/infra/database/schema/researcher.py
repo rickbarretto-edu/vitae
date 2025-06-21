@@ -22,6 +22,14 @@ class Researcher(Orm, table=True):
     research_area: list["Expertise"] = link("researcher")
 
 
+class Nationality(Orm, table=True):
+    researcher_id: str = foreign("researcher.lattes_id")
+    researcher: "Researcher" = link("nationality")
+
+    born_country: str | None
+    nationality: str | None
+
+
 class Expertise(Orm, table=True):
     researcher_id: str = foreign("researcher.lattes_id")
     researcher: "Researcher" = link("research_area")
