@@ -72,8 +72,11 @@ root
 ### 5. Execute
 
 ```bash
-python -m src
+vitae
 ```
+
+Remember to install with `poetry install` before run as a script.
+Otherwise, you may run as `python -m src`.
 
 ## Tooling Recomentation
 
