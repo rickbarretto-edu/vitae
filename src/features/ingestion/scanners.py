@@ -1,5 +1,7 @@
 """Strategies to be used by the Ingestion Usecase."""
 
+from __future__ import annotations
+
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -21,27 +23,23 @@ class Scanner(Protocol):
 
 @dataclass
 class Serial:
-    scan_only: set[str] = field(default_factory=set)
+    scan_only: list[Path] | None = field(default_factory=list)
 
     def __call__(self, all_files: Path, parser: FileParser) -> None:
         """Scan & Process files in order."""
-        (
-            parser(directory)
-            for directory in all_files.iterdir()
-            if directory in self.scan_only
-        )
+        for directory in all_files.iterdir():
+            if self.scan_only is None or directory in self.scan_only:
+                parser(directory)
 
 
 @dataclass
 class Pool:
-    scan_only: set[str] = field(default_factory=set)
+    scan_only: list[Path] | None = field(default_factory=list)
     max_workers: int = 8
 
     def __call__(self, all_files: Path, parser: FileParser) -> None:
         """Scan & Process files using Thread Pool (I/O bound)."""
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            (
-                executor.submit(parser, directory)
-                for directory in all_files.iterdir()
-                if directory in self.scan_only
-            )
+            for directory in all_files.iterdir():
+                if self.scan_only is None or directory in self.scan_only:
+                    executor.submit(parser, directory)

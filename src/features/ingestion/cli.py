@@ -48,10 +48,15 @@ def ingest(
         Machine available cores. When using `pool` strategy.
 
     """
+    if only:
+        to_scan = [vitae.paths.curricula / subdir for subdir in only]
+    else:
+        to_scan = None
+
     repository = Researchers(db=database, every=buffer)
     scanner = {
-        "serial": scanners.Serial(),
-        "pool": scanners.Pool(max_workers=cores),
+        "serial": scanners.Serial(scan_only=to_scan),
+        "pool": scanners.Pool(scan_only=to_scan, max_workers=cores),
     }[strategy]
     processed_curricula = curricula_xml_from(processed)
 
