@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Callable, Protocol
 
-__all__ = ["Scanner", "parallel", "serial"]
+__all__ = ["Scanner", "serial", "thread_pool"]
 
 
 type FileParser = Callable[[Path], None]
@@ -35,8 +35,8 @@ def serial(all_files: Path, action: FileParser) -> None:
         action(directory)
 
 
-def parallel(all_files: Path, action: FileParser) -> None:
-    """Scan & Process files in parallel (I/O bound)."""
+def thread_pool(all_files: Path, action: FileParser) -> None:
+    """Scan & Process files using Thread Pool (I/O bound)."""
     with ThreadPoolExecutor(max_workers=8) as executor:
         for directory in all_files.iterdir():
             executor.submit(action, directory)

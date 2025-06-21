@@ -3,7 +3,6 @@ from pathlib import Path
 from src.__setup__ import new_vitae
 from src.features import Features
 from src.features import ingestion as ingestions
-from src.features.ingestion.usecases import Scanner
 from src.infra.database import Database
 from src.settings import VitaeSettings
 
@@ -12,7 +11,7 @@ def ingest(
     vitae: VitaeSettings,
     database: Database,
     buffer_limit: int = 50,
-    strategy: Scanner = ingestions.scanners.serial,
+    strategy: ingestions.strategy.Scanner = ingestions.strategy.serial,
     processed_log: Path = Path("logs/ingestion/processed.log"),
 ) -> ingestions.Ingestion:
     """Ingest feature manager.
@@ -26,7 +25,7 @@ def ingest(
 
     Notes
     -----
-    - Use `scanners.serial` or `scanners.parallel` to define your strategy.
+    - Use `strategy.serial` or `strategy.thread_pool` to define your strategy.
     - Define `buffer_limit` to define when a researcher
         will be properly commited to `database`.
 
@@ -52,7 +51,7 @@ def main() -> VitaeSettings:
         ingestion=ingest(
             vitae=vitae,
             database=database,
-            strategy=ingestions.strategy.parallel,
+            strategy=ingestions.strategy.thread_pool,
             buffer_limit=50,
             processed_log=Path("logs/ingestion/processed.log"),
         ),
