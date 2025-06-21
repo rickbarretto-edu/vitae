@@ -29,18 +29,18 @@ class Nationality(TypedDict):
     """Researcher's Nationality."""
 
     researcher_id: str
-    born_country: str
-    nationality: str
+    born_country: str | None
+    nationality: str | None
 
 
 class Expertise(TypedDict):
     """Researcher's Expertise."""
 
     researcher_id: str
-    major: str
-    area: str
-    sub: str
-    speciality: str
+    major: str | None
+    area: str | None
+    sub: str | None
+    speciality: str | None
 
 
 class AcademicBackground(TypedDict):
