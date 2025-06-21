@@ -9,7 +9,7 @@ from . import scanners
 from .repository import Researchers
 from .usecase import Ingestion
 
-app = cyclopts.App(name="ingest")
+app = cyclopts.App(name="ingest", help="Ingest XML documents into database.")
 
 
 @app.command
