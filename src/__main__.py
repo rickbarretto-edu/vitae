@@ -3,13 +3,11 @@ import cyclopts
 from src.features.ingestion.cli import app as ingestion_app
 
 
-def cli() -> cyclopts.App:
+def cli() -> None:
     app = cyclopts.App(name="vitae")
     app.command(ingestion_app)
-
-    return app
+    app()
 
 
 if __name__ == "__main__":
-    app = cli()
-    app()
+    cli()
