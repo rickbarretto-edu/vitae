@@ -1,3 +1,5 @@
+"""Repository pattern for the Ingestion feature."""
+
 from collections.abc import Iterable
 from dataclasses import dataclass
 import itertools
@@ -41,6 +43,8 @@ def log_with[T](logger: loguru.Logger, logfile: str, level: str) -> None:
 
 @dataclass
 class Researchers(Repository[Curriculum]):
+    """Researcher's Curriculum Repository."""
+
     db: Database
     every: int = 50
 
