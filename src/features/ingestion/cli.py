@@ -14,10 +14,43 @@ __all__ = ["app"]
 
 app = cyclopts.App(name="ingest")
 
+type Indexes = frozenset[int]
+type SelectedIndexes = list[int] | None
+type IndexRange = tuple[int, int] | None
+type Directories = frozenset[Path]
+
+
+def merge_indexes(
+    root_path: Path,
+    selected: SelectedIndexes,
+    rng: IndexRange,
+) -> Directories | None:  # noqa: FA102
+    """Merge manually selected with ranged selected indexes into a single one.
+
+    Returns
+    -------
+    A set of directories's Path or Nothing.
+
+    """
+
+    def merge(selected: SelectedIndexes, rng: IndexRange) -> Indexes:
+        selected_set = frozenset(selected) if selected else frozenset()
+        range_set = frozenset(range(rng[0], rng[1] + 1) if rng else {})
+        return selected_set | range_set
+
+    def as_directories(root_path: Path, indices: Indexes) -> Directories:
+        return frozenset(root_path / f"{subdir:0>2}" for subdir in indices)
+
+    indices = merge(selected, rng)
+    if not indices:
+        return None
+    return as_directories(root_path, indices)
+
 
 @app.default
 def ingest(
-    only: set[str] | None = None,  # noqa: FA102
+    indexes: list[int] | None = None,  # noqa: FA102
+    _range: IndexRange = None,
     strategy: Literal["serial", "pool"] = "pool",
     buffer: int = 50,
     processed: Path = Path("logs/ingestion/processed.log"),
@@ -27,9 +60,13 @@ def ingest(
 
     Parameters
     ----------
-    only : set[int] | None = None
+    indexes : list[int] | None = None
         Indicate which sub-directories should be scanned.
         If empty, scans all sub-directories.
+
+    _range : tuple[int, int] | None = None
+        Indicate the range of sub-directories to be scanned.
+        Similar to `--only` and also can be combined.
 
     strategy : Literal["serial", "pool"], default="pool"
         Method used to scan the directory containing XML files.
@@ -48,22 +85,19 @@ def ingest(
         Machine available cores. When using `pool` strategy.
 
     """
-    if only:
-        to_scan = [vitae.paths.curricula / subdir for subdir in only]
-    else:
-        to_scan = None
-
+    root_directory = vitae.paths.curricula
+    scan_only = merge_indexes(root_directory, indexes, _range)
     repository = Researchers(db=database, every=buffer)
     scanner = {
-        "serial": scanners.Serial(scan_only=to_scan),
-        "pool": scanners.Pool(scan_only=to_scan, max_workers=cores),
+        "serial": scanners.Serial(scan_only=scan_only),
+        "pool": scanners.Pool(scan_only=scan_only, max_workers=cores),
     }[strategy]
     processed_curricula = curricula_xml_from(processed)
 
     ingestion = Ingestion(
         researchers=repository,
         scanner=scanner,
-        files=vitae.paths.curricula,
+        files=root_directory,
         to_skip=processed_curricula,
     )
 
