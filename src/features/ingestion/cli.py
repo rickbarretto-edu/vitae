@@ -17,7 +17,7 @@ app = cyclopts.App(name="ingest")
 
 @app.default
 def ingest(
-    only: list[str] | None = None,  # noqa: FA102
+    only: set[str] | None = None,  # noqa: FA102
     strategy: Literal["serial", "pool"] = "pool",
     buffer: int = 50,
     processed: Path = Path("logs/ingestion/processed.log"),
@@ -27,7 +27,7 @@ def ingest(
 
     Parameters
     ----------
-    only : list[int] | None = None
+    only : set[int] | None = None
         Indicate which sub-directories should be scanned.
         If empty, scans all sub-directories.
 
