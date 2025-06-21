@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from src.features.ingestion.repository import Researchers
 
 
-@dataclass
+@dataclass(kw_only=True)
 class Ingestion:
     """Ingest documents to the database using Researchers's Repository."""
 
