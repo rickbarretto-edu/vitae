@@ -20,8 +20,8 @@ class Ingestion:
     """Ingest documents to the database using Researchers's Repository."""
 
     researchers: Researchers
+    files: Path
     scanner: strategy.Scanner = strategy.serial
-    files: Path | None = None
     to_skip: set[str] = field(default_factory=set)
 
     def using(self, scanner: strategy.Scanner, at: Path) -> Self:
