@@ -1,21 +1,17 @@
 from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel
+from .orm import Orm, foreign, index, key, link
 
 if TYPE_CHECKING:
     from .researcher import Researcher
 
 
-class ProfessionalExperience(SQLModel, table=True):
-    __tablename__: str = "professional_experience"
+class ProfessionalExperience(Orm, table=True):
+    id: int | None = key()
+    researcher_id: str = foreign("researcher.id")
+    researcher: "Researcher" = link("professional_experience")
 
-    id: int | None = Field(default=None, primary_key=True)
-    researcher_id: str = Field(foreign_key="researcher.id")
-    researcher: "Researcher" = Relationship(
-        back_populates="professional_experience",
-    )
-
-    institution: str = Field(nullable=False, index=True)
+    institution: str = index()
     employment_relationship: str | None = None
     start_year: int | None = None
     end_year: int | None = None

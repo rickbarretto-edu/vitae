@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlmodel import Field, Relationship, SQLModel
+from .orm import Orm, foreign, index, key, link, required_key
 
 __all__ = ["Researcher"]
 
@@ -9,12 +9,10 @@ if TYPE_CHECKING:
     from .professional import ProfessionalExperience
 
 
-class Researcher(SQLModel, table=True):
-    __tablename__: str = "researcher"
+class Researcher(Orm, table=True):
+    id: str = required_key()
 
-    id: str = Field(primary_key=True, nullable=False)
-
-    name: str = Field(nullable=False, index=True)
+    name: str = index()
     city: str | None = None
     state: str | None = None
     country: str | None = None
@@ -25,25 +23,15 @@ class Researcher(SQLModel, table=True):
     institution_state: str | None = None
     institution_city: str | None = None
 
-    professional_experience: list["ProfessionalExperience"] = Relationship(
-        back_populates="researcher",
-    )
-    academic_background: list["AcademicBackground"] = Relationship(
-        back_populates="researcher",
-    )
-    research_area: list["ResearchArea"] = Relationship(
-        back_populates="researcher",
-    )
+    professional_experience: list["ProfessionalExperience"] = link("researcher")
+    academic_background: list["AcademicBackground"] = link("researcher")
+    research_area: list["ResearchArea"] = link("researcher")
 
 
-class ResearchArea(SQLModel, table=True):
-    __tablename__: str = "research_area"
-
-    id: int | None = Field(default=None, primary_key=True)
-    researcher_id: str = Field(foreign_key="researcher.id")
-    researcher: "Researcher" = Relationship(
-        back_populates="research_area",
-    )
+class ResearchArea(Orm, table=True):
+    id: int | None = key()
+    researcher_id: str = foreign("researcher.id")
+    researcher: "Researcher" = link("research_area")
 
     major_knowledge_area: str | None = None
     knowledge_area: str | None = None

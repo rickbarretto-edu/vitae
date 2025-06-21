@@ -3,7 +3,7 @@ from typing import Any
 
 from sqlmodel import Field, Relationship, SQLModel
 
-__all__ = ["Orm", "foreign", "key", "link"]
+__all__ = ["Orm", "foreign", "index", "key", "link", "required_key"]
 
 
 def to_snake(name: str) -> str:
@@ -11,13 +11,13 @@ def to_snake(name: str) -> str:
 
 
 class TableNameMeta(type(SQLModel)):
-    def __new__(cls, name, bases, namespace, **kwargs):
+    def __new__(cls, name, bases, namespace, **kwargs):  # noqa: ANN001, ANN003, ANN204
         if "__tablename__" not in namespace:
             namespace["__tablename__"] = to_snake(name)
         return super().__new__(cls, name, bases, namespace, **kwargs)
 
 
-class Orm(SQLModel, metaclass=TableNameMeta):
+class Orm(SQLModel, metaclass=TableNameMeta):  # noqa: D101
     pass
 
 
@@ -29,5 +29,13 @@ def key() -> Any:
     return Field(default=None, primary_key=True)
 
 
+def required_key() -> Any:
+    return Field(primary_key=True, nullable=False)
+
+
 def foreign(key: str) -> Any:
     return Field(foreign_key=key)
+
+
+def index() -> Any:
+    return Field(nullable=False, index=True)
