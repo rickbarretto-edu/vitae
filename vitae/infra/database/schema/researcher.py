@@ -26,7 +26,7 @@ class Expertise(Orm, table=True):
     researcher_id: str = foreign("researcher.lattes_id")
     researcher: "Researcher" = link("research_area")
 
-    major: str | None = None
-    area: str | None = None
-    sub: str | None = None
-    specialty: str | None = None
+    major: str | None = key()
+    area: str | None = key()
+    sub: str | None = key()
+    specialty: str | None = key()
