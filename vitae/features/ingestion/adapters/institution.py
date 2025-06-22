@@ -29,6 +29,7 @@ class Institution:
 
     @property
     def as_table(self) -> db.Institution:
+        """Itself as a Databse Schema."""
         return db.Institution(
             lattes_id=self.lattes_id,
             name=self.name,
