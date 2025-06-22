@@ -25,6 +25,7 @@ class Address:
 
     @property
     def as_table(self) -> db.Address:
+        """Itself as a Database Schema."""
         return db.Address(
             researcher_id=self.researcher_id,
             business_id=self.business_id,
@@ -49,6 +50,7 @@ class Experience:
 
     @property
     def as_table(self) -> db.Experience:
+        """Itself as Database Schema."""
         return db.Experience(
             researcher_id=self.researcher_id,
             institution_id=self.institution.lattes_id,
@@ -59,4 +61,5 @@ class Experience:
 
     @property
     def institution_as_table(self) -> db.Institution:
+        """Its Institution as Database Schema."""
         return self.institution.as_table

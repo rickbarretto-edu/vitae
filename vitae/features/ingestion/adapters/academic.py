@@ -1,3 +1,5 @@
+"""Academic Adapters."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -34,6 +36,7 @@ class Education:
 
     @property
     def as_table(self) -> db.Education:
+        """Itself as Database Table."""
         return db.Education(
             id=self.id,
             researcher_id=self.researcher_id,
@@ -46,10 +49,12 @@ class Education:
 
     @property
     def institution_as_table(self) -> db.Institution:
+        """Its Institution as Database Table."""
         return self.institution.as_table
 
     @property
     def fields_as_table(self) -> Iterable[db.StudyField]:
+        """Its Study Field as Database Table."""
         return (field.as_table(str(self.id)) for field in self.fields)
 
 
