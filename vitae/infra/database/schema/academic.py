@@ -9,13 +9,13 @@ from .orm import Orm, foreign, key, link, required_key
 if TYPE_CHECKING:
     from .researcher import Researcher
 
-__all__ = ["Education", "Institution", "StudyField"]
+__all__ = ["Education", "StudyField"]
 
 
 class Education(Orm, table=True):
     id: str = required_key()
     researcher_id: str = foreign("researcher.lattes_id")
-    institution_id: str = foreign("institution.lattes_id")
+    institution_id: str = foreign("institution.id")
 
     category: str
     course: str | None
@@ -36,13 +36,3 @@ class StudyField(Orm, table=True):
     specialty: str | None
 
     education: "Education" = link("fields")
-
-
-class Institution(Orm, table=True):
-    id: str = required_key()
-
-    lattes_id: str | None
-    name: str | None
-    country: str | None
-    state: str | None
-    abbr: str | None
