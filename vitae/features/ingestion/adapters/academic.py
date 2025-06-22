@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from vitae.infra.database import tables as tables
+from vitae.infra.database import tables
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
     from .institution import Institution
 
-__all__ = ["Education"]
+__all__ = ["Education", "StudyField"]
 
 
 @dataclass

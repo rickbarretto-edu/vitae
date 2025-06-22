@@ -8,7 +8,7 @@ from vitae.infra.database import tables
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
-__all__ = ["Researcher"]
+__all__ = ["Expertise", "Nationality", "Researcher"]
 
 
 @dataclass

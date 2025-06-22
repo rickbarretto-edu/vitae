@@ -9,16 +9,20 @@ from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from functools import cached_property
 
-from .academic import Education
+from .academic import Education, StudyField
 from .institution import Institution
 from .professional import Address, Experience
-from .researcher import Researcher
+from .researcher import Expertise, Nationality, Researcher
 
 __all__ = [
     "Address",
     "Education",
     "Experience",
+    "Expertise",
+    "Institution",
+    "Nationality",
     "Researcher",
+    "StudyField",
 ]
 
 
