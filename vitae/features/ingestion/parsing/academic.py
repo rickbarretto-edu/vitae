@@ -1,3 +1,5 @@
+"""Academic related parsing."""
+
 from collections.abc import Iterator
 import uuid
 

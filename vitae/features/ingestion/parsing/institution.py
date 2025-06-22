@@ -1,3 +1,5 @@
+"""Institution related parsing."""
+
 from __future__ import annotations
 
 from vitae.features.ingestion.adapters import Institution
@@ -12,6 +14,16 @@ def institution_from_xml(
     institution_name: str | None,
     data: xml.Node,
 ) -> Institution:
+    """Extract Institution from XML.
+
+    Notice that we need to pass its ID and name,
+    and this function will fetch any aditional information.
+
+    Returns
+    -------
+    Institution from XML.
+
+    """
     found: xml.Node = xml.Node(None)
 
     for inst in data.all("informacao adicional instituicao"):

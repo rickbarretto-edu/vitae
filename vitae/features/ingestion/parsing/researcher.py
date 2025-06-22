@@ -1,3 +1,5 @@
+"""Researcher's related parsing."""
+
 from collections.abc import Iterator
 
 from vitae.features.ingestion.adapters import (
