@@ -1,15 +1,16 @@
 from sqlmodel import SQLModel
 
-from .academic import AcademicBackground, KnowledgeArea
+from .academic import Education, Institution, StudyField
 from .professional import ProfessionalExperience
 from .researcher import Expertise, Nationality, Researcher
 
 __all__ = [
-    "AcademicBackground",
+    "Education",
     "Expertise",
-    "KnowledgeArea",
+    "Institution",
     "Nationality",
     "ProfessionalExperience",
     "Researcher",
     "SQLModel",
+    "StudyField",
 ]
