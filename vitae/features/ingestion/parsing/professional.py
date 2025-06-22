@@ -17,7 +17,7 @@ __all__ = ["address_from_xml", "experience_from_xml"]
 
 def experience_from_xml(
     researcher_id: str,
-    data: xml.Node,
+    document: xml.Node,
 ) -> Iterator[Experience]:
     """Extract professional experience from the Lattes curriculum.
 
@@ -29,6 +29,8 @@ def experience_from_xml(
     Researcher's Professional Experience.
 
     """
+    data = document.first("dados gerais")
+
     if not (experiences := data.first("atuacoes profissionais")).exists:
         return
 
@@ -42,14 +44,14 @@ def experience_from_xml(
                 institution=institution_from_xml(
                     experience["codigo instituicao"],
                     experience["nome instituicao"],
-                    data.first("informacoes adicionais instituicoes"),
+                    document,
                 ),
                 start=xml.as_int(link["ano inicio"]),
                 end=xml.as_int(link["ano fim"]),
             )
 
 
-def address_from_xml(researcher_id: str, data: xml.Node) -> Address:
+def address_from_xml(researcher_id: str, document: xml.Node) -> Address:
     """Extract Researcher's Professional Address from XML.
 
     Returns
@@ -57,6 +59,7 @@ def address_from_xml(researcher_id: str, data: xml.Node) -> Address:
     Researcher's Address.
 
     """
+    data = document.first("dados gerais")
     addr = data.first("endereco profissional")
 
     return Address(
@@ -70,7 +73,7 @@ def address_from_xml(researcher_id: str, data: xml.Node) -> Address:
         institution=institution_from_xml(
             addr["codigo instituicao empresa"],
             addr["nome instituicao empresa"],
-            data,
+            document,
         ),
     )
 

@@ -13,7 +13,7 @@ from . import _xml as xml
 __all__ = ["researcher_from_xml"]
 
 
-def researcher_from_xml(researcher_id: str, data: xml.Node) -> Researcher:
+def researcher_from_xml(researcher_id: str, document: xml.Node) -> Researcher:
     """Extract general data from the Lattes curriculum XML.
 
     This function navigates through the provided XML structure to extract
@@ -25,6 +25,7 @@ def researcher_from_xml(researcher_id: str, data: xml.Node) -> Researcher:
     Researcher's general data.
 
     """
+    data = document.first("dados gerais")
     resume = data.first("resumo CV")
 
     return Researcher(

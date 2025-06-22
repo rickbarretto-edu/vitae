@@ -27,20 +27,19 @@ class CurriculumParser:
 
         self.id = file.name.removesuffix(".xml")
         self.document = xml.parse(content)
-        self.data = self.document.first("dados gerais")
 
     @property
     def researcher(self) -> adapters.Researcher:
-        return researcher_from_xml(self.id, self.data)
+        return researcher_from_xml(self.id, self.document)
 
     @property
     def address(self) -> adapters.Address:
-        return address_from_xml(self.id, self.data)
+        return address_from_xml(self.id, self.document)
 
     @property
     def academic(self) -> Iterator[adapters.Education]:
-        return education_from_xml(self.id, self.data)
+        return education_from_xml(self.id, self.document)
 
     @property
     def experience(self) -> Iterator[adapters.Experience]:
-        return experience_from_xml(self.id, self.data)
+        return experience_from_xml(self.id, self.document)

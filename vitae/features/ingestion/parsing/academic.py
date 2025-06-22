@@ -14,7 +14,7 @@ __all__ = ["education_from_xml"]
 
 def education_from_xml(
     researcher_id: str,
-    data: xml.Node,
+    document: xml.Node,
 ) -> Iterator[Education]:
     """Extract education information from a Lattes curriculum XML.
 
@@ -23,6 +23,7 @@ def education_from_xml(
     Researcher's Education Background.
 
     """
+    data = document.first("dados gerais")
     education_summary = data.first("formacao academica titulacao").element
 
     if education_summary is not None:
@@ -39,7 +40,7 @@ def education_from_xml(
                     institution=institution_from_xml(
                         education["codigo instituicao"],
                         education["nome instituicao"],
-                        data.first("informacoes adicionais instituicoes"),
+                        document,
                     ),
                     fields=list(fields_from_education(education)),
                 )

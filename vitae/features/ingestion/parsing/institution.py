@@ -24,13 +24,28 @@ def institution_from_xml(
     Institution from XML.
 
     """
+    default_value = Institution(
+        lattes_id=institution_id,
+        name=institution_name,
+        country=None,
+        state=None,
+        abbr=None,
+    )
+
     found: xml.Node = xml.Node(None)
 
-    if (extra := data.first("informacoes adicionais instituicoes")).exists:
-        for inst in extra.all("informacao adicional instituicao"):
-            if inst["codigo instituicao"] == institution_id:
-                found = inst
-                break
+    if not (extra := data.first("dados complementares")).exists:
+        return default_value
+
+    if not (institutions := extra.first("informacoes adicionais instituicoes")).exists:
+        return default_value
+
+    for inst in institutions.all("informacao adicional instituicao"):
+        if inst["codigo instituicao"] == institution_id:
+            found = inst
+            break
+    else:
+        return default_value
 
     return Institution(
         lattes_id=institution_id,
