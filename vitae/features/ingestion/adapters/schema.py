@@ -8,7 +8,6 @@ __all__ = [
     "AcademicBackground",
     "Expertise",
     "GeneralData",
-    "KnowledgeArea",
     "Nationality",
     "ProfessionalExperience",
 ]
@@ -71,13 +70,3 @@ class ProfessionalExperience(TypedDict):
     employment_relationship: str | None
     start_year: int | None
     end_year: int | None
-
-
-# TODO Ajustar Areas de Conhecimento
-class KnowledgeArea(TypedDict):
-    """Academic Background's Knowledge Area."""
-
-    major_area: str | None
-    area: str | None
-    sub_area: str | None
-    specialty: str | None
