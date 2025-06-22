@@ -1,15 +1,19 @@
 from __future__ import annotations
 
-from typing import Iterator  # noqa: UP035
+from typing import TYPE_CHECKING
 
-from vitae.features.ingestion.adapters.schema import ProfessionalExperience
+from vitae.features.ingestion.adapters import Experience
 
 from . import _xml as xml
+from .institution import institution
 
-__all__ = ["professional_experiences"]
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+__all__ = ["experience"]
 
 
-def link_kind(link: xml.Node) -> str | None:
+def relationship(link: xml.Node) -> str | None:
     """Determine the type of professional link.
 
     If the researcher has a 'LIVRE' (free) link
@@ -29,10 +33,10 @@ def link_kind(link: xml.Node) -> str | None:
     return link_kind
 
 
-def professional_experiences(
+def experience(
     researcher_id: str,
     data: xml.Node,
-) -> Iterator[ProfessionalExperience]:
+) -> Iterator[Experience]:
     """Extract professional experience from the Lattes curriculum.
 
     This function navigates through the XML structure of a Lattes curriculum
@@ -42,39 +46,6 @@ def professional_experiences(
     ------
     Researcher's Professional Experience.
 
-    XML Schema
-    ----------
-
-        atuacoes-profissionais: [
-            atuacao-profissional: {
-                codigo-instituicao: string
-                > nome-instituicao: string
-                sequencia-atividade: integer
-                sequencia-importancia: integer
-                vinculos: [
-                    sequencia-historico: integer
-                    > tipo-de-vinculo: string
-                    carga-horaria-semanal: integer
-                    flag-dedicacao-exclusiva: boolean
-                    mes-inicio: integer
-                    > ano-inicio: integer
-                    mes-fim: integer
-                    > ano-fim: integer
-                    outras-informacoes: string
-                    flag-vinculo-empregaticio: boolean
-                    > outro-vinculo-informado: string
-                    outro-enquadramento-funcional-informado: string
-                    outro-enquadramento-funcional-informado-ingles: string
-                    outras-informacoes-ingles: string
-                ]
-                ...
-            }
-        ]
-
-    Notes
-    -----
-    Choosen schema data are marked with ``>``.
-
     """
     if not (experiences := data.first("atuacoes profissionais")).exists:
         return
@@ -82,15 +53,14 @@ def professional_experiences(
     for experience in experiences.all("atuacao profissional"):
         links: list[xml.Node] = experience.all("vinculos")
 
-        institution = experience["nome instituicao"]
-        if institution is None:
-            institution = "Unknown Institution"
-
         for link in links:
-            yield ProfessionalExperience(
+            yield Experience(
                 researcher_id=researcher_id,
-                institution=institution,
-                employment_relationship=link_kind(link),
-                start_year=xml.as_int(link["ano inicio"]),
-                end_year=xml.as_int(link["ano fim"]),
+                relationship=relationship(link),
+                institution=institution(
+                    experience,
+                    data.first("informacoes adicionais instituicoes"),
+                ),
+                start=xml.as_int(link["ano inicio"]),
+                end=xml.as_int(link["ano fim"]),
             )
