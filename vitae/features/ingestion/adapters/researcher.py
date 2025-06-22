@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 
-from src.infra.database import schema as db
+from vitae.infra.database import schema as db
+
+__all__ = ["Researcher"]
 
 
 @dataclass
@@ -46,7 +50,7 @@ class Nationality:
     nationality: str | None
 
     def as_table(self, researcher_id: str) -> db.Nationality:
-        db.Nationality(
+        return db.Nationality(
             researcher_id=researcher_id,
             born_country=self.born_country,
             nationality=self.nationality,
