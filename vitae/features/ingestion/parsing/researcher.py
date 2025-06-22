@@ -1,6 +1,6 @@
 from collections.abc import Iterator
 
-from vitae.features.ingestion.adapters.schema import (
+from vitae.features.ingestion.adapters import (
     Expertise,
     Nationality,
     Researcher,
@@ -95,23 +95,23 @@ def general_data(researcher_id: str, data: xml.Node) -> Researcher:
         quotes_names=data["nome em citacoes bibliograficas"],
         orcid=data["ORCID ID"],
         abstract=resume["texto resumo CV RH"],
+        nationality=nationality(data),
+        expertise=expertise(data),
     )
 
 
-def nationality(researcher_id: str, general_data: xml.Node) -> Nationality:
+def nationality(data: xml.Node) -> Nationality:
     return Nationality(
-        researcher_id=researcher_id,
-        born_country=general_data["pais-de-nascimento"],
-        nationality=general_data["nacionalidade"],
+        born_country=data["pais-de-nascimento"],
+        nationality=data["nacionalidade"],
     )
 
 
-def expertise(researcher_id: str, data: xml.Node) -> Iterator[Expertise]:
+def expertise(data: xml.Node) -> Iterator[Expertise]:
     areas = data.first("areas-de-atuacao").all("area-de-atuacao")
 
     return (
         Expertise(
-            researcher_id=researcher_id,
             major=area["nome-grande-area-do-conhecimento"],
             area=area["nome-da-area-do-conhecimento"],
             sub=area["nome-da-sub-area-do-conhecimento"],

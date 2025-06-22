@@ -1,15 +1,16 @@
 from collections.abc import Iterator
 from pathlib import Path
 
-from vitae.features.ingestion import domain
-from vitae.features.ingestion.adapters import schema
+from vitae.features.ingestion import adapters
 
 from . import _xml as xml
-from .academic import academic_background
-from .researcher import expertise, general_data, nationality
-from .professional import professional_experiences
+from .academic import education_from_xml
+from .professional import address, experience
+from .researcher import general_data
 
-__all__ = ["CurriculumParser", "schema"]
+__all__ = [
+    "CurriculumParser",
+]
 
 
 class CurriculumParser:
@@ -29,17 +30,17 @@ class CurriculumParser:
         self.data = self.document.first("dados gerais")
 
     @property
-    def all(self) -> domain.Curriculum:
-        researcher = researcher(self.id, self.data)
-        nationality_ = nationality(self.id, self.data)
-        expertise_ = expertise(self.id, self.data)
-        experiences = professional(self.id, self.data)
-        background = academic(self.id, self.data)
+    def researcher(self) -> adapters.Researcher:
+        return general_data(self.id, self.data)
 
-        return domain.Curriculum(
-            _personal_data=researcher,
-            _nationality=nationality_,
-            _expertise=expertise_,
-            _academic_background=background,
-            _professional_experiences=experiences,
-        )
+    @property
+    def address(self) -> adapters.Address:
+        return address(self.id, self.data)
+
+    @property
+    def academic(self) -> Iterator[adapters.Education]:
+        return education_from_xml(self.id, self.data)
+
+    @property
+    def experience(self) -> Iterator[adapters.Experience]:
+        return experience(self.id, self.data)

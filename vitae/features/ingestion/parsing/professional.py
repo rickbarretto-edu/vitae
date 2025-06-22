@@ -58,7 +58,8 @@ def experience(
                 researcher_id=researcher_id,
                 relationship=relationship(link),
                 institution=institution(
-                    experience,
+                    experience["codigo instituicao"] or "",
+                    experience["nome instituicao"],
                     data.first("informacoes adicionais instituicoes"),
                 ),
                 start=xml.as_int(link["ano inicio"]),
