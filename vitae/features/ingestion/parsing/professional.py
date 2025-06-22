@@ -74,11 +74,15 @@ def address_from_xml(researcher_id: str, data: xml.Node) -> Address:
 
     return Address(
         researcher_id=researcher_id,
-        business_id=addr["codigo instituicao empresa"],
         country=addr["pais"],
         state=addr["uf"],
         city=addr["cidade"],
         neighborhood=addr["bairro"],
         cep=addr["cep"],
         public_place=addr["logradouro completo"],
+        institution=institution_from_xml(
+            addr["codigo instituicao empresa"],
+            addr["nome instituicao empresa"],
+            data,
+        ),
     )

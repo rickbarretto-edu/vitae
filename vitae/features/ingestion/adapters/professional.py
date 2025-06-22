@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from vitae.infra.database import tables as tables
+from vitae.infra.database import tables
 
-from .institution import Institution
+if TYPE_CHECKING:
+    from .institution import Institution
 
-__all__ = ["Address", "Experience", "Institution"]
+__all__ = ["Address", "Experience"]
 
 
 @dataclass
@@ -16,8 +18,6 @@ class Address:
     """Researcher's professional address."""
 
     researcher_id: str
-    business_id: str | None
-
     country: str | None
     state: str | None
     city: str | None
@@ -25,12 +25,14 @@ class Address:
     cep: str | None
     public_place: str | None
 
+    institution: Institution
+
     @property
     def as_table(self) -> tables.Address:
         """Itself as a Database Schema."""
         return tables.Address(
             researcher_id=self.researcher_id,
-            business_id=self.business_id,
+            institution_id=self.institution.id,
             country=self.country,
             state=self.state,
             city=self.city,
