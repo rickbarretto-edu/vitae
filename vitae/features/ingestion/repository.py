@@ -4,12 +4,29 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 import itertools
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import loguru
 
-from vitae.infra.database import Database
+from vitae.features.ingestion.adapters import Curriculum
+from vitae.infra.database import Database, transactions
 
-flatten = itertools.chain
+if TYPE_CHECKING:
+    from vitae.features.ingestion.adapters.academic import Education
+    from vitae.features.ingestion.adapters.institution import Institution
+    from vitae.features.ingestion.adapters.professional import Experience
+    from vitae.features.ingestion.adapters.researcher import Researcher
+
+
+def flatten[T](xs: Iterable[Iterable[T]]) -> Iterable[T]:
+    """Unnest nested iterable.
+
+    Returns
+    -------
+    A flatten Iterable.
+
+    """
+    return itertools.chain(*xs)
 
 
 def log_with(logger, logfile: str, level: str) -> None:  # noqa: ANN001
@@ -67,15 +84,24 @@ class Researchers:
         try to put one by one, to log the defected one.
         """
         for group in itertools.batched(researchers, self.every):
-            if not self._put_all(group):
-                group_ids: str = ",".join([r.id for r in group])
-                self.log.warning(group_ids)
-                self._put_each_from(group)
+            if self._try_put_at_once(group):
+                self._log_success(group)
             else:
-                for researcher in group:
-                    self.log.info(researcher.id)
+                self._re_insert(group)
 
-    def _put_all(self, group: Iterable[Curriculum]) -> bool:
+    def _log_success(self, batch: Iterable[Curriculum]) -> None:
+        for curriculum in batch:
+            self.log.info(curriculum.id)
+
+    def _re_insert(self, batch: Iterable[Curriculum]) -> None:
+        self._log_fail(batch)
+        self._put_each_from(batch)
+
+    def _log_fail(self, batch: Iterable[Curriculum]) -> None:
+        ids_to_log: str = ",".join(curriculum.id for curriculum in batch)
+        self.log.warning(ids_to_log)
+
+    def _try_put_at_once(self, batch: Iterable[Curriculum]) -> bool:
         """Put all Researchers at once on database.
 
         Returns
@@ -83,19 +109,32 @@ class Researchers:
         If all researchers were sucessfully stored.
 
         """
-        personal = (r.personal_data for r in group)
-        nationality = (r.nationality for r in group)
+        researchers: Iterable[Researcher] = (cv.researcher for cv in batch)
+        education: Iterable[Education] = flatten(cv.education for cv in batch)
+        experience_batch: Iterable[Experience] = flatten(
+            cv.experience for cv in batch
+        )
+        institutions: Iterable[Institution] = flatten(
+            cv.all_institutions for cv in batch
+        )
 
-        expertise = (r.expertise for r in group)
-        experiences = (r.professional_experiences for r in group)
-        background = (r.academic_background for r in group)
-
-        return self.db.put.researcher(
-            researcher=personal,
-            nationality=nationality,
-            experience=flatten(*experiences),
-            background=flatten(*background),
-            expertise=flatten(*expertise),
+        return self.db.put.batch_transaction(
+            transactions.Curricula(
+                researchers=transactions.Researchers(
+                    researchers=(r.as_table for r in researchers),
+                    nationality=(r.nationality_table for r in researchers),
+                    expertise=flatten(r.expertise_tables for r in researchers),
+                ),
+                academic=transactions.Academic(
+                    education=(edu.as_table for edu in education),
+                    fields=flatten(edu.fields_as_table for edu in education),
+                ),
+                professional=transactions.Experience(
+                    experience=(xp.as_table for xp in experience_batch),
+                    address=(cv.address for cv in batch),
+                ),
+                institutions=(inst.as_table for inst in institutions),
+            ),
         )
 
     def _put_each_from(self, group: Iterable[Curriculum]) -> None:
@@ -106,7 +145,7 @@ class Researchers:
             else:
                 self.log.error(researcher.id)
 
-    def _put_single(self, researcher: Curriculum) -> bool:
+    def _put_single(self, cv: Curriculum) -> bool:
         """Put a single Researcher on database.
 
         Returns
@@ -114,10 +153,21 @@ class Researchers:
         If the researcher was sucessfully stored.
 
         """
-        return self.db.put.researcher(
-            researcher=researcher.personal_data,
-            nationality=researcher.nationality,
-            experience=researcher.professional_experiences,
-            background=researcher.academic_background,
-            expertise=researcher.expertise,
+        return self.db.put.batch_transaction(
+            transactions.Curricula(
+                researchers=transactions.Researchers(
+                    researchers=[cv.researcher.as_table],
+                    nationality=[cv.researcher.nationality_table],
+                    expertise=cv.researcher.expertise_tables,
+                ),
+                academic=transactions.Academic(
+                    education=(edu.as_table for edu in cv.education),
+                    fields=flatten(edu.fields_as_table for edu in cv.education),
+                ),
+                professional=transactions.Experience(
+                    experience=(xp.as_table for xp in cv.experience),
+                    address=[cv.address],
+                ),
+                institutions=(inst.as_table for inst in cv.all_institutions),
+            ),
         )
