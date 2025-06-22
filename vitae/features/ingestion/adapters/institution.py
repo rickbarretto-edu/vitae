@@ -28,13 +28,10 @@ class Institution:
     country: str | None
     state: str | None
 
-    id: uuid.UUID = dt.field(default_factory=uuid.uuid1)
-
     @property
     def as_table(self) -> tables.Institution:
         """Itself as a Databse Schema."""
         return tables.Institution(
-            id=self.id,
             lattes_id=self.lattes_id,
             name=self.name,
             country=self.country,

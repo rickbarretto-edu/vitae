@@ -32,7 +32,7 @@ class Education:
     end: int | None
 
     institution: Institution
-    fields: Iterable[StudyField]
+    fields: list[StudyField]
 
     @property
     def as_table(self) -> tables.Education:

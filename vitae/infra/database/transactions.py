@@ -24,7 +24,13 @@ from vitae.infra.database.tables import (
     StudyField,
 )
 
-__all__ = ["Academic", "Curricula", "Professional", "Researchers"]
+__all__ = [
+    "Academic",
+    "Curricula",
+    "Institutions",
+    "Professional",
+    "Researchers",
+]
 
 
 class Transaction(abc.ABC):
@@ -70,11 +76,17 @@ class Curricula(Transaction):
     researchers: Researchers
     academic: Academic
     professional: Professional
-    institutions: Iterable[Institution]
 
     def __iter__(self) -> Iterator[SQLModel]:
         """Iterate each internal Tables."""  # noqa: DOC402
         yield from self.researchers
         yield from self.academic
         yield from self.professional
-        yield from self.institutions
+
+
+@dataclass
+class Institutions(Transaction):
+    all: Iterable[Institution]
+
+    def __iter__(self) -> Iterator[Institution]:
+        yield from self.all

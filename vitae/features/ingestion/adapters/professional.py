@@ -32,7 +32,7 @@ class Address:
         """Itself as a Database Schema."""
         return tables.Address(
             researcher_id=self.researcher_id,
-            institution_id=self.institution.id,
+            institution_id=self.institution.lattes_id,
             country=self.country,
             state=self.state,
             city=self.city,

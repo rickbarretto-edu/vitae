@@ -1,6 +1,7 @@
 import cyclopts
 
 from vitae.features.ingestion.cli import app as ingestion_app
+from vitae.features.ingestion.cli import ingest
 
 
 def cli() -> None:
@@ -10,4 +11,4 @@ def cli() -> None:
 
 
 if __name__ == "__main__":
-    cli()
+    ingest(buffer=5, strategy="serial")

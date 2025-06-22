@@ -38,7 +38,7 @@ class Ingestion:
         if not directory.exists():
             panic(f"Subdirectory does not exist: {directory}")
 
-        self.researchers.put(self.all_curricula(directory))
+        self.researchers.put(cv for cv in self.all_curricula(directory))
         print(f"Processed {directory.parent.name}/{directory.name}")  # noqa: T201
 
     def all_curricula(self, directory: Path) -> Iterator[Curriculum]:
@@ -52,9 +52,10 @@ class Ingestion:
         for curriculum in directory.glob("*.xml"):
             if curriculum not in self.to_skip:
                 parser = CurriculumParser(curriculum)
-                yield Curriculum(
+                cv = Curriculum(
                     researcher=parser.researcher,
                     address=parser.address,
-                    education=parser.academic,
-                    experience=parser.experience,
+                    education=list(parser.academic),
+                    experience=list(parser.experience),
                 )
+                yield cv

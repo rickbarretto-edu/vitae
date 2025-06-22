@@ -28,21 +28,21 @@ def education_from_xml(
     if education_summary is not None:
         for edu in education_summary.iter():
             education = xml.Node(edu)
-
-            yield Education(
-                id=uuid.uuid1(),
-                researcher_id=researcher_id,
-                category=edu.tag,
-                course=education["nome curso"],
-                start=xml.as_int(education["ano de inicio"]),
-                end=xml.as_int(education["ano de conclusao"]),
-                institution=institution_from_xml(
-                    education["codigo instituicao"],
-                    education["nome instituicao"],
-                    data.first("informacoes adicionais instituicoes"),
-                ),
-                fields=fields_from_education(education),
-            )
+            if edu.tag != "FORMACAO-ACADEMICA-TITULACAO":
+                yield Education(
+                    id=uuid.uuid1(),
+                    researcher_id=researcher_id,
+                    category=edu.tag,
+                    course=education["nome curso"],
+                    start=xml.as_int(education["ano de inicio"]),
+                    end=xml.as_int(education["ano de conclusao"]),
+                    institution=institution_from_xml(
+                        education["codigo instituicao"],
+                        education["nome instituicao"],
+                        data.first("informacoes adicionais instituicoes"),
+                    ),
+                    fields=list(fields_from_education(education)),
+                )
 
 
 def fields_from_education(education: xml.Node) -> Iterator[StudyField]:

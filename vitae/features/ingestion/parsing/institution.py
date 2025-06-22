@@ -26,10 +26,11 @@ def institution_from_xml(
     """
     found: xml.Node = xml.Node(None)
 
-    for inst in data.all("informacao adicional instituicao"):
-        if inst["codigo instituicao"] == institution_id:
-            found = inst
-            break
+    if (extra := data.first("informacoes adicionais instituicoes")).exists:
+        for inst in extra.all("informacao adicional instituicao"):
+            if inst["codigo instituicao"] == institution_id:
+                found = inst
+                break
 
     return Institution(
         lattes_id=institution_id,

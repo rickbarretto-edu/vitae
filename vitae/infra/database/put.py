@@ -5,13 +5,16 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.exc import SQLAlchemyError
-from sqlmodel import Session
+from sqlmodel import SQLModel, Session
+
+from vitae.infra.database.tables.institution import Institution
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
-    from .transactions import Curricula
+    from .transactions import Curricula, Institutions
 
 
 @dataclass
@@ -20,7 +23,11 @@ class PutOperations:
 
     engine: Engine
 
-    def batch_transaction(self, curricula: Curricula) -> bool:
+    def batch_transaction(
+        self,
+        institutions: Institutions,
+        curricula: Curricula,
+    ) -> bool:
         """Put a batch of Curriulum into database.
 
         Use this method when you need to push a huge amount of data.
@@ -33,7 +40,14 @@ class PutOperations:
         """
         with Session(self.engine) as session:
             try:
-                session.add_all(curricula)
+                for institution in institutions:
+                    postgresql.insert(Institution).values(
+                        **institution.model_dump(exclude_unset=True),
+                    ).on_conflict_do_nothing()
+
+                session.add_all(
+                    table for table in curricula if isinstance(table, SQLModel)
+                )
                 session.commit()
             except SQLAlchemyError:
                 session.rollback()

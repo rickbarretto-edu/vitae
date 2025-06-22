@@ -25,8 +25,8 @@ def link(back: str) -> Any:
     return Relationship(back_populates=back)
 
 
-def key() -> Any:
-    return Field(default=None, primary_key=True)
+def key(**kargs) -> Any:
+    return Field(default=None, primary_key=True, **kargs)
 
 
 def required_key() -> Any:

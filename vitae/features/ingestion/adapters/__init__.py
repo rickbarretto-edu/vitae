@@ -8,6 +8,7 @@ parent data to complete the Table.
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from functools import cached_property
+import itertools
 
 from .academic import Education, StudyField
 from .institution import Institution
@@ -30,19 +31,17 @@ __all__ = [
 class Curriculum:
     researcher: Researcher
     address: Address
-    education: Iterable[Education]
-    experience: Iterable[Experience]
+    education: list[Education]
+    experience: list[Experience]
 
     @cached_property
     def id(self) -> str:
         return self.researcher.lattes_id
 
     @property
-    def all_institutions(self) -> Iterator[Institution]:
-        yield self.address.institution
+    def all_institutions(self) -> list[Institution]:
+        from_address = [self.address.institution]
+        from_institutions = [edu.institution for edu in self.education]
+        from_experiences = [xp.institution for xp in self.experience]
 
-        for education in self.education:
-            yield education.institution
-
-        for experience in self.experience:
-            yield experience.institution
+        return from_address + from_institutions + from_experiences

@@ -34,7 +34,7 @@ def researcher_from_xml(researcher_id: str, data: xml.Node) -> Researcher:
         orcid=data["ORCID ID"],
         abstract=resume["texto resumo CV RH"],
         nationality=nationality_from_xml(data),
-        expertise=expertise_from_xml(data),
+        expertise=list(expertise_from_xml(data)),
     )
 
 

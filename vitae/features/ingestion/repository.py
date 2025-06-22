@@ -4,18 +4,11 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 import itertools
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import loguru
 
 from vitae.features.ingestion.adapters import Curriculum
 from vitae.infra.database import Database, transactions
-
-if TYPE_CHECKING:
-    from vitae.features.ingestion.adapters.academic import Education
-    from vitae.features.ingestion.adapters.institution import Institution
-    from vitae.features.ingestion.adapters.professional import Experience
-    from vitae.features.ingestion.adapters.researcher import Researcher
 
 
 def flatten[T](xs: Iterable[Iterable[T]]) -> Iterable[T]:
@@ -109,32 +102,47 @@ class Researchers:
         If all researchers were sucessfully stored.
 
         """
-        researchers: Iterable[Researcher] = (cv.researcher for cv in batch)
-        education: Iterable[Education] = flatten(cv.education for cv in batch)
-        experience_batch: Iterable[Experience] = flatten(
-            cv.experience for cv in batch
+        # Prepare lists from the batch for each entity type
+        curricula = list(batch)
+        researchers = [cv.researcher for cv in curricula]
+        education = list(flatten(cv.education for cv in curricula))
+        experiences = list(flatten(cv.experience for cv in curricula))
+        institutions = list(
+            flatten(list(cv.all_institutions) for cv in curricula),
         )
-        institutions: Iterable[Institution] = flatten(
-            cv.all_institutions for cv in batch
+
+        researcher_tables = [re.as_table for re in researchers]
+        nationality_tables = [re.nationality_table for re in researchers]
+        expertise_tables = list(
+            flatten(re.expertise_tables for re in researchers),
+        )
+        education_tables = [edu.as_table for edu in education]
+        field_tables = list(flatten(edu.fields_as_table for edu in education))
+        experience_tables = [xp.as_table for xp in experiences]
+        address_tables = [cv.address.as_table for cv in curricula]
+        institution_tables = [
+            inst.as_table for inst in institutions if inst.lattes_id is not None
+        ]
+
+        ct = transactions.Curricula(
+            researchers=transactions.Researchers(
+                researchers=researcher_tables,
+                nationality=nationality_tables,
+                expertise=expertise_tables,
+            ),
+            academic=transactions.Academic(
+                education=education_tables,
+                fields=field_tables,
+            ),
+            professional=transactions.Professional(
+                experience=experience_tables,
+                address=address_tables,
+            ),
         )
 
         return self.db.put.batch_transaction(
-            transactions.Curricula(
-                researchers=transactions.Researchers(
-                    researchers=(r.as_table for r in researchers),
-                    nationality=(r.nationality_table for r in researchers),
-                    expertise=flatten(r.expertise_tables for r in researchers),
-                ),
-                academic=transactions.Academic(
-                    education=(edu.as_table for edu in education),
-                    fields=flatten(edu.fields_as_table for edu in education),
-                ),
-                professional=transactions.Experience(
-                    experience=(xp.as_table for xp in experience_batch),
-                    address=(cv.address for cv in batch),
-                ),
-                institutions=(inst.as_table for inst in institutions),
-            ),
+            transactions.Institutions(institution_tables),
+            ct,
         )
 
     def _put_each_from(self, group: Iterable[Curriculum]) -> None:
@@ -153,21 +161,24 @@ class Researchers:
         If the researcher was sucessfully stored.
 
         """
-        return self.db.put.batch_transaction(
-            transactions.Curricula(
-                researchers=transactions.Researchers(
-                    researchers=[cv.researcher.as_table],
-                    nationality=[cv.researcher.nationality_table],
-                    expertise=cv.researcher.expertise_tables,
-                ),
-                academic=transactions.Academic(
-                    education=(edu.as_table for edu in cv.education),
-                    fields=flatten(edu.fields_as_table for edu in cv.education),
-                ),
-                professional=transactions.Experience(
-                    experience=(xp.as_table for xp in cv.experience),
-                    address=[cv.address],
-                ),
-                institutions=(inst.as_table for inst in cv.all_institutions),
+        ct = transactions.Curricula(
+            researchers=transactions.Researchers(
+                researchers=[cv.researcher.as_table],
+                nationality=[cv.researcher.nationality_table],
+                expertise=cv.researcher.expertise_tables,
             ),
+            academic=transactions.Academic(
+                education=(edu.as_table for edu in cv.education),
+                fields=flatten(edu.fields_as_table for edu in cv.education),
+            ),
+            professional=transactions.Experience(
+                experience=(xp.as_table for xp in cv.experience),
+                address=[cv.address],
+            ),
+        )
+        return self.db.put.batch_transaction(
+            transactions.Institutions(
+                inst.as_table for inst in cv.all_institutions
+            ),
+            ct
         )

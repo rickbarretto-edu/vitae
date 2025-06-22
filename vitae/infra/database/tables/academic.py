@@ -15,7 +15,7 @@ __all__ = ["Education", "StudyField"]
 class Education(Orm, table=True):
     id: str = required_key()
     researcher_id: str = foreign("researcher.lattes_id")
-    institution_id: str = foreign("institution.id")
+    institution_id: str | None = foreign("institution.lattes_id")
 
     category: str
     course: str | None

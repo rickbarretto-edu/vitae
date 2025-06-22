@@ -13,8 +13,8 @@ __all__ = ["Address", "Experience"]
 
 
 class Address(Orm, table=True):
-    researcher_id: str = foreign("researcher.lattes_id")
-    institution_id: str = foreign("institution.id")
+    researcher_id: str = foreign("researcher.lattes_id", primary_key=True)
+    institution_id: str | None = foreign("institution.lattes_id")
 
     country: str | None
     state: str | None
@@ -29,7 +29,7 @@ class Address(Orm, table=True):
 class Experience(Orm, table=True):
     id: int | None = key()
     researcher_id: str = foreign("researcher.lattes_id")
-    institution_id: str = foreign("institution.id")
+    institution_id: str | None = foreign("institution.lattes_id")
 
     relationship: str | None
     start: int | None

@@ -8,9 +8,7 @@ __all__ = ["Institution"]
 
 
 class Institution(Orm, table=True):
-    id: str = required_key()
-
-    lattes_id: str | None
+    lattes_id: str = required_key()
     name: str | None
     country: str | None
     state: str | None

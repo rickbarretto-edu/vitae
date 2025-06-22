@@ -24,7 +24,7 @@ class Researcher:
     abstract: str | None
 
     nationality: Nationality
-    expertise: Iterable[Expertise]
+    expertise: list[Expertise]
 
     @property
     def as_table(self) -> tables.Researcher:
