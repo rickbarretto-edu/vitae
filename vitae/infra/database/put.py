@@ -40,10 +40,15 @@ class PutOperations:
         """
         with Session(self.engine) as session:
             try:
+                print(list(institutions))
                 for institution in institutions:
-                    postgresql.insert(Institution).values(
-                        **institution.model_dump(exclude_unset=True),
-                    ).on_conflict_do_nothing()
+                    session.execute(
+                        postgresql.insert(Institution)
+                        .values(
+                            **institution.model_dump(),
+                        )
+                        .on_conflict_do_nothing()
+                    )
 
                 session.add_all(
                     table for table in curricula if isinstance(table, SQLModel)
