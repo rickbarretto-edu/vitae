@@ -1,9 +1,12 @@
 from __future__ import annotations
 
-from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
-from vitae.infra.database import tables as tables
+from vitae.infra.database import tables
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
 
 __all__ = ["Researcher"]
 
