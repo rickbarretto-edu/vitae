@@ -15,6 +15,9 @@ __all__ = [
 ]
 
 
+# =~=~=~=~=~=~ Researcher ~=~=~=~=~=~=
+
+
 class GeneralData(TypedDict):
     """Researcher's personal and general data."""
 
