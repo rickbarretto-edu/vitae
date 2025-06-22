@@ -41,8 +41,8 @@ class Experience:
 
     researcher_id: str
     relationship: str
-    start: str | None
-    end: str | None
+    start: int | None
+    end: int | None
     business: Business
 
     @property
