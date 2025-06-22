@@ -2,9 +2,10 @@ from collections.abc import Iterator
 import uuid
 
 from vitae.features.ingestion.adapters import Education
-from vitae.features.ingestion.adapters.academic import Institution, StudyField
+from vitae.features.ingestion.adapters.academic import StudyField
 
 from . import _xml as xml
+from .institution import institution
 
 __all__ = ["education_from_xml"]
 
@@ -39,24 +40,6 @@ def education_from_xml(
                 ),
                 fields=fields(education),
             )
-
-
-def institution(education: xml.Node, extra_data: xml.Node) -> Institution:
-    lattes_id: str = education["codigo instituicao"] or ""
-    found: xml.Node = xml.Node(None)
-
-    for inst in extra_data.all("informacao adicional instituicao"):
-        if inst["codigo instituicao"] == lattes_id:
-            found = inst
-            break
-
-    return Institution(
-        lattes_id=lattes_id,
-        name=education["nome instituicao"],
-        country=found["nome pais instituicao"],
-        state=found["sigla uf instituicao"],
-        abbr=found["sigla instituicao"],
-    )
 
 
 def fields(education: xml.Node) -> Iterator[StudyField]:
