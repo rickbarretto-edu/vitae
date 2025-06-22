@@ -15,26 +15,6 @@ if TYPE_CHECKING:
 __all__ = ["experience_from_xml"]
 
 
-def relationship_from_link(link: xml.Node) -> str | None:
-    """Determine the type of professional link.
-
-    If the researcher has a 'LIVRE' (free) link
-    and another link type is provided, the other link type will be used.
-
-    Returns
-    -------
-    The type of professional link as a string, or None if not available.
-
-    """
-    link_kind: str | None = link["tipo de vinculo"]
-    other_link_kind: str | None = link["outro vinculo informado"]
-
-    if link_kind == "LIVRE" and other_link_kind:
-        return other_link_kind
-
-    return link_kind
-
-
 def experience_from_xml(
     researcher_id: str,
     data: xml.Node,
@@ -67,6 +47,26 @@ def experience_from_xml(
                 start=xml.as_int(link["ano inicio"]),
                 end=xml.as_int(link["ano fim"]),
             )
+
+
+def relationship_from_link(link: xml.Node) -> str | None:
+    """Determine the type of professional link.
+
+    If the researcher has a 'LIVRE' (free) link
+    and another link type is provided, the other link type will be used.
+
+    Returns
+    -------
+    The type of professional link as a string, or None if not available.
+
+    """
+    link_kind: str | None = link["tipo de vinculo"]
+    other_link_kind: str | None = link["outro vinculo informado"]
+
+    if link_kind == "LIVRE" and other_link_kind:
+        return other_link_kind
+
+    return link_kind
 
 
 def address_from_xml(researcher_id: str, data: xml.Node) -> Address:
