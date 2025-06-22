@@ -11,7 +11,6 @@ __all__ = [
     "KnowledgeArea",
     "Nationality",
     "ProfessionalExperience",
-    "ResearchArea",
 ]
 
 
