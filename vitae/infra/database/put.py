@@ -12,7 +12,7 @@ from sqlmodel import Session
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
-    from vitae.infra.database import schema
+    from vitae.infra.database import tables
 
 type Some[T] = T | Iterable[T]
 
@@ -25,11 +25,11 @@ class PutOperations:
 
     def researcher(
         self,
-        researcher: Some[schema.Researcher],
-        nationality: Some[schema.Nationality],
-        experience: Some[schema.ProfessionalExperience],
-        background: Some[schema.AcademicBackground],
-        expertise: Some[schema.Expertise],
+        researcher: Some[tables.Researcher],
+        nationality: Some[tables.Nationality],
+        experience: Some[tables.ProfessionalExperience],
+        background: Some[tables.AcademicBackground],
+        expertise: Some[tables.Expertise],
     ) -> bool:
         """Put researcher's data into database.
 

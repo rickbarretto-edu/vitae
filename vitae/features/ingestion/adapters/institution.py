@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from vitae.infra.database import schema as db
+from vitae.infra.database import tables as db
 
 __all__ = ["Institution"]
 

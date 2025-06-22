@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from vitae.infra.database import schema as db
+from vitae.infra.database import tables as db
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
