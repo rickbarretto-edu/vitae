@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from vitae.infra.database import schema as db
 
-from .institution import Institution
-
 if TYPE_CHECKING:
+    from collections.abc import Iterable
     import uuid
+
+    from .institution import Institution
 
 __all__ = ["Education"]
 
