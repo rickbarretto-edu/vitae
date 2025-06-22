@@ -5,15 +5,15 @@ from typing import TYPE_CHECKING
 from vitae.features.ingestion.adapters import Address, Experience
 
 from . import _xml as xml
-from .institution import institution
+from .institution import institution_from_xml
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-__all__ = ["experience"]
+__all__ = ["experience_from_xml"]
 
 
-def relationship(link: xml.Node) -> str | None:
+def relationship_from_link(link: xml.Node) -> str | None:
     """Determine the type of professional link.
 
     If the researcher has a 'LIVRE' (free) link
@@ -33,7 +33,7 @@ def relationship(link: xml.Node) -> str | None:
     return link_kind
 
 
-def experience(
+def experience_from_xml(
     researcher_id: str,
     data: xml.Node,
 ) -> Iterator[Experience]:
@@ -56,8 +56,8 @@ def experience(
         for link in links:
             yield Experience(
                 researcher_id=researcher_id,
-                relationship=relationship(link),
-                institution=institution(
+                relationship=relationship_from_link(link),
+                institution=institution_from_xml(
                     experience["codigo instituicao"] or "",
                     experience["nome instituicao"],
                     data.first("informacoes adicionais instituicoes"),
@@ -67,7 +67,7 @@ def experience(
             )
 
 
-def address(researcher_id: str, data: xml.Node) -> Address:
+def address_from_xml(researcher_id: str, data: xml.Node) -> Address:
     addr = data.first("endereco profissional")
 
     return Address(

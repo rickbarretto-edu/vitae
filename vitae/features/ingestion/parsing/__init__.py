@@ -5,8 +5,8 @@ from vitae.features.ingestion import adapters
 
 from . import _xml as xml
 from .academic import education_from_xml
-from .professional import address, experience
-from .researcher import general_data
+from .professional import address_from_xml, experience_from_xml
+from .researcher import researcher_from_xml
 
 __all__ = [
     "CurriculumParser",
@@ -31,11 +31,11 @@ class CurriculumParser:
 
     @property
     def researcher(self) -> adapters.Researcher:
-        return general_data(self.id, self.data)
+        return researcher_from_xml(self.id, self.data)
 
     @property
     def address(self) -> adapters.Address:
-        return address(self.id, self.data)
+        return address_from_xml(self.id, self.data)
 
     @property
     def academic(self) -> Iterator[adapters.Education]:
@@ -43,4 +43,4 @@ class CurriculumParser:
 
     @property
     def experience(self) -> Iterator[adapters.Experience]:
-        return experience(self.id, self.data)
+        return experience_from_xml(self.id, self.data)

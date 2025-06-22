@@ -4,10 +4,10 @@ from vitae.features.ingestion.adapters import Institution
 
 from . import _xml as xml
 
-__all__ = ["institution"]
+__all__ = ["institution_from_xml"]
 
 
-def institution(
+def institution_from_xml(
     institution_id: str,
     institution_name: str | None,
     data: xml.Node,

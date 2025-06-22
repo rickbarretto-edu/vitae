@@ -8,10 +8,10 @@ from vitae.features.ingestion.adapters import (
 
 from . import _xml as xml
 
-__all__ = ["expertise", "general_data", "nationality"]
+__all__ = ["researcher_from_xml"]
 
 
-def general_data(researcher_id: str, data: xml.Node) -> Researcher:
+def researcher_from_xml(researcher_id: str, data: xml.Node) -> Researcher:
     """Extract general data from the Lattes curriculum XML.
 
     This function navigates through the provided XML structure to extract
@@ -95,19 +95,19 @@ def general_data(researcher_id: str, data: xml.Node) -> Researcher:
         quotes_names=data["nome em citacoes bibliograficas"],
         orcid=data["ORCID ID"],
         abstract=resume["texto resumo CV RH"],
-        nationality=nationality(data),
-        expertise=expertise(data),
+        nationality=nationality_from_xml(data),
+        expertise=expertise_from_xml(data),
     )
 
 
-def nationality(data: xml.Node) -> Nationality:
+def nationality_from_xml(data: xml.Node) -> Nationality:
     return Nationality(
         born_country=data["pais-de-nascimento"],
         nationality=data["nacionalidade"],
     )
 
 
-def expertise(data: xml.Node) -> Iterator[Expertise]:
+def expertise_from_xml(data: xml.Node) -> Iterator[Expertise]:
     areas = data.first("areas-de-atuacao").all("area-de-atuacao")
 
     return (
