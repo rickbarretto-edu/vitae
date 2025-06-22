@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING
 
 from vitae.infra.database import schema as db
 
+from .institution import Institution
+
 if TYPE_CHECKING:
     import uuid
 
@@ -49,25 +51,6 @@ class Education:
     @property
     def fields_as_table(self) -> Iterable[db.StudyField]:
         return (field.as_table(str(self.id)) for field in self.fields)
-
-
-@dataclass
-class Institution:
-    lattes_id: str
-    name: str | None
-    abbr: str | None
-    country: str | None
-    state: str | None
-
-    @property
-    def as_table(self) -> db.Institution:
-        return db.Institution(
-            lattes_id=self.lattes_id,
-            name=self.name,
-            country=self.country,
-            state=self.state,
-            abbr=self.abbr,
-        )
 
 
 @dataclass
