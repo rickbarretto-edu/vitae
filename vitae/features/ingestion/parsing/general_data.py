@@ -8,7 +8,7 @@ from vitae.features.ingestion.adapters.schema import (
 
 from . import _xml as xml
 
-__all__ = ["general_data"]
+__all__ = ["expertise", "general_data", "nationality"]
 
 
 def general_data(researcher_id: str, data: xml.Node) -> GeneralData:
