@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from .orm import Orm, foreign, key, link, required_key
 
-__all__ = ["Researcher"]
+__all__ = ["Expertise", "Nationality", "Researcher"]
 
 if TYPE_CHECKING:
     from .academic import Education
