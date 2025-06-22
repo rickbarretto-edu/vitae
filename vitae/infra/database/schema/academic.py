@@ -39,8 +39,9 @@ class StudyField(Orm, table=True):
 
 
 class Institution(Orm, table=True):
-    lattes_id: str = required_key()
+    id: str = required_key()
 
+    lattes_id: str | None
     name: str | None
     country: str | None
     state: str | None
