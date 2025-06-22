@@ -74,18 +74,6 @@ class ProfessionalExperience(TypedDict):
     end_year: int | None
 
 
-class ResearchArea(TypedDict):
-    """Researcher's Area of Researching."""
-
-    # Metadata
-    researcher_id: str
-
-    major_knowledge_area: str | None
-    knowledge_area: str | None
-    sub_knowledge_area: str | None
-    specialty: str | None
-
-
 # TODO Ajustar Areas de Conhecimento
 class KnowledgeArea(TypedDict):
     """Academic Background's Knowledge Area."""

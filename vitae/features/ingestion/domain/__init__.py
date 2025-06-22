@@ -11,7 +11,6 @@ from vitae.features.ingestion.adapters.schema import (
     GeneralData,
     Nationality,
     ProfessionalExperience,
-    ResearchArea,
 )
 from vitae.infra.database import schema as db_schema
 
@@ -27,7 +26,6 @@ class Curriculum(Entity[str]):
     _expertise: Iterator[Expertise]
     _academic_background: Iterator[AcademicBackground]
     _professional_experiences: Iterator[ProfessionalExperience]
-    _research_areas: Iterator[ResearchArea]
 
     @cached_property
     def id(self) -> str:

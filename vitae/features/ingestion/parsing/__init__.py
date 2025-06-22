@@ -8,7 +8,6 @@ from . import _xml as xml
 from .academic_background import academic_background
 from .general_data import expertise, general_data, nationality
 from .professional_experiences import professional_experiences
-from .research_area import research_area
 
 __all__ = ["CurriculumParser"]
 
@@ -37,7 +36,6 @@ class CurriculumParser:
             _expertise=self.expertise,
             _academic_background=self.background,
             _professional_experiences=self.experiences,
-            _research_areas=self.areas,
         )
 
     @property
@@ -59,7 +57,3 @@ class CurriculumParser:
     @property
     def background(self) -> Iterator[schema.AcademicBackground]:
         yield from academic_background(self.id, self.data)
-
-    @property
-    def areas(self) -> Iterator[schema.ResearchArea]:
-        yield from research_area(self.id, self.data)
