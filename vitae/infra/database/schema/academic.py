@@ -18,7 +18,7 @@ class Education(Orm, table=True):
     start: int | None
     end: int | None
 
-    researcher: "Researcher" = link("academic_background")
+    researcher: "Researcher" = link("education")
     fields: list["StudyField"] = link("education")
 
 

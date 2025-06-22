@@ -19,6 +19,8 @@ class Address(Orm, table=True):
     cep: str | None
     public_place: str | None
 
+    researcher: "Researcher" = link("address")
+
 
 class Experience(Orm, table=True):
     id: int | None = key()
