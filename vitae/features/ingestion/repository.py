@@ -8,7 +8,6 @@ from pathlib import Path
 import loguru
 
 from vitae.core import Repository
-from vitae.features.ingestion.domain import Curriculum
 from vitae.infra.database import Database
 
 flatten = itertools.chain
@@ -42,7 +41,7 @@ def log_with(logger, logfile: str, level: str) -> None:  # noqa: ANN001
 
 
 @dataclass
-class Researchers(Repository[Curriculum]):
+class Researchers:
     """Researcher's Curriculum Repository."""
 
     db: Database
