@@ -1,12 +1,12 @@
 from sqlmodel import SQLModel
 
-from .academic import Education, Institution, StudyField
-from .professional import Address, Business, Experience
+from .academic import Education, StudyField
+from .institution import Institution
+from .professional import Address, Experience
 from .researcher import Expertise, Nationality, Researcher
 
 __all__ = [
     "Address",
-    "Business",
     "Education",
     "Experience",
     "Expertise",
