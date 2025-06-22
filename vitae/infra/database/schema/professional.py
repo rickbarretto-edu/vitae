@@ -31,9 +31,9 @@ class Experience(Orm, table=True):
     researcher_id: str = foreign("researcher.lattes_id")
     business_id: str = foreign("business.lattes_id")
 
-    relationship: str | None = None
-    start: int | None = None
-    end: int | None = None
+    relationship: str | None
+    start: int | None
+    end: int | None
 
     researcher: "Researcher" = link("experience")
 
