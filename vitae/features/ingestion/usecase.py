@@ -5,10 +5,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from vitae.features.ingestion.adapters import Curriculum
 from vitae.features.ingestion.parsing import CurriculumParser
 from vitae.lib.panic import panic
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
     from pathlib import Path
 
     from vitae.features.ingestion import scanners as strategy
@@ -36,10 +38,23 @@ class Ingestion:
         if not directory.exists():
             panic(f"Subdirectory does not exist: {directory}")
 
-        self.researchers.put(
-            CurriculumParser(curriculum).all
-            for curriculum in directory.glob("*.xml")
-            if curriculum not in self.to_skip
-        )
-
+        self.researchers.put(self.all_curricula(directory))
         print(f"Processed {directory.parent.name}/{directory.name}")  # noqa: T201
+
+    def all_curricula(self, directory: Path) -> Iterator[Curriculum]:
+        """Iterate all curricula from `directory`.
+
+        Yields
+        ------
+        Iterator of Curriculum.
+
+        """
+        for curriculum in directory.glob("*.xml"):
+            if curriculum not in self.to_skip:
+                parser = CurriculumParser(curriculum)
+                yield Curriculum(
+                    researcher=parser.researcher,
+                    address=parser.address,
+                    education=parser.academic,
+                    experience=parser.experience,
+                )
