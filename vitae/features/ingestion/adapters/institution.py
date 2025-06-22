@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import dataclasses as dt
+import uuid
 
-from vitae.infra.database import tables as db
+from vitae.infra.database import tables
 
 __all__ = ["Institution"]
 
 
-@dataclass
+@dt.dataclass
 class Institution:
     """Institution is a registered entity on Lattes.
 
@@ -21,16 +22,19 @@ class Institution:
     and non-Business Institution, so let's consider the same.
     """
 
-    lattes_id: str
+    lattes_id: str | None
     name: str | None
     abbr: str | None
     country: str | None
     state: str | None
 
+    id: uuid.UUID = dt.field(default_factory=uuid.uuid1)
+
     @property
-    def as_table(self) -> db.Institution:
+    def as_table(self) -> tables.Institution:
         """Itself as a Databse Schema."""
-        return db.Institution(
+        return tables.Institution(
+            id=self.id,
             lattes_id=self.lattes_id,
             name=self.name,
             country=self.country,

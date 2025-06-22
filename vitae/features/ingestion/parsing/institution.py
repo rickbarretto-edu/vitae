@@ -10,7 +10,7 @@ __all__ = ["institution_from_xml"]
 
 
 def institution_from_xml(
-    institution_id: str,
+    institution_id: str | None,
     institution_name: str | None,
     data: xml.Node,
 ) -> Institution:

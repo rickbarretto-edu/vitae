@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 
-from vitae.infra.database import tables as db
+from vitae.infra.database import tables as tables
 
 __all__ = ["Researcher"]
 
@@ -22,8 +22,8 @@ class Researcher:
     expertise: Iterable[Expertise]
 
     @property
-    def as_table(self) -> db.Researcher:
-        return db.Researcher(
+    def as_table(self) -> tables.Researcher:
+        return tables.Researcher(
             lattes_id=self.lattes_id,
             full_name=self.full_name,
             quotes_names=self.quotes_names,
@@ -32,11 +32,11 @@ class Researcher:
         )
 
     @property
-    def nationality_table(self) -> db.Nationality:
+    def nationality_table(self) -> tables.Nationality:
         return self.nationality.as_table(self.lattes_id)
 
     @property
-    def expertise_tables(self) -> Iterator[db.Expertise]:
+    def expertise_tables(self) -> Iterator[tables.Expertise]:
         return (
             expertise.as_table(self.lattes_id) for expertise in self.expertise
         )
@@ -49,8 +49,8 @@ class Nationality:
     born_country: str | None
     nationality: str | None
 
-    def as_table(self, researcher_id: str) -> db.Nationality:
-        return db.Nationality(
+    def as_table(self, researcher_id: str) -> tables.Nationality:
+        return tables.Nationality(
             researcher_id=researcher_id,
             born_country=self.born_country,
             nationality=self.nationality,
@@ -66,8 +66,8 @@ class Expertise:
     sub: str | None
     speciality: str | None
 
-    def as_table(self, researcher_id: str) -> db.Expertise:
-        return db.Expertise(
+    def as_table(self, researcher_id: str) -> tables.Expertise:
+        return tables.Expertise(
             researcher_id=researcher_id,
             major=self.major,
             area=self.area,

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from vitae.infra.database import tables as db
+from vitae.infra.database import tables as tables
 
 from .institution import Institution
 
@@ -16,7 +16,7 @@ class Address:
     """Researcher's professional address."""
 
     researcher_id: str
-    business_id: str
+    business_id: str | None
 
     country: str | None
     state: str | None
@@ -26,9 +26,9 @@ class Address:
     public_place: str | None
 
     @property
-    def as_table(self) -> db.Address:
+    def as_table(self) -> tables.Address:
         """Itself as a Database Schema."""
-        return db.Address(
+        return tables.Address(
             researcher_id=self.researcher_id,
             business_id=self.business_id,
             country=self.country,
@@ -51,9 +51,9 @@ class Experience:
     institution: Institution
 
     @property
-    def as_table(self) -> db.Experience:
+    def as_table(self) -> tables.Experience:
         """Itself as Database Schema."""
-        return db.Experience(
+        return tables.Experience(
             researcher_id=self.researcher_id,
             institution_id=self.institution.lattes_id,
             relationship=self.relationship,
@@ -62,6 +62,6 @@ class Experience:
         )
 
     @property
-    def institution_as_table(self) -> db.Institution:
+    def institution_as_table(self) -> tables.Institution:
         """Its Institution as Database Schema."""
         return self.institution.as_table

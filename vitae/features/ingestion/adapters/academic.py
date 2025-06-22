@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from vitae.infra.database import tables as db
+from vitae.infra.database import tables as tables
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -35,9 +35,9 @@ class Education:
     fields: Iterable[StudyField]
 
     @property
-    def as_table(self) -> db.Education:
+    def as_table(self) -> tables.Education:
         """Itself as Database Table."""
-        return db.Education(
+        return tables.Education(
             id=self.id,
             researcher_id=self.researcher_id,
             category=self.category,
@@ -48,12 +48,12 @@ class Education:
         )
 
     @property
-    def institution_as_table(self) -> db.Institution:
+    def institution_as_table(self) -> tables.Institution:
         """Its Institution as Database Table."""
         return self.institution.as_table
 
     @property
-    def fields_as_table(self) -> Iterable[db.StudyField]:
+    def fields_as_table(self) -> Iterable[tables.StudyField]:
         """Its Study Field as Database Table."""
         return (field.as_table(str(self.id)) for field in self.fields)
 
@@ -65,8 +65,8 @@ class StudyField:
     sub: str | None
     specialty: str | None
 
-    def as_table(self, education_id: str) -> db.StudyField:
-        return db.StudyField(
+    def as_table(self, education_id: str) -> tables.StudyField:
+        return tables.StudyField(
             education_id=education_id,
             major=self.major,
             area=self.area,

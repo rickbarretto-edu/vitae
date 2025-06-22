@@ -37,7 +37,7 @@ def education_from_xml(
                 start=xml.as_int(education["ano de inicio"]),
                 end=xml.as_int(education["ano de conclusao"]),
                 institution=institution_from_xml(
-                    education["codigo instituicao"] or "",
+                    education["codigo instituicao"],
                     education["nome instituicao"],
                     data.first("informacoes adicionais instituicoes"),
                 ),

@@ -60,7 +60,7 @@ def experience_from_xml(
                 researcher_id=researcher_id,
                 relationship=relationship_from_link(link),
                 institution=institution_from_xml(
-                    experience["codigo instituicao"] or "",
+                    experience["codigo instituicao"],
                     experience["nome instituicao"],
                     data.first("informacoes adicionais instituicoes"),
                 ),
@@ -74,7 +74,7 @@ def address_from_xml(researcher_id: str, data: xml.Node) -> Address:
 
     return Address(
         researcher_id=researcher_id,
-        business_id=addr["codigo instituicao empresa"] or "Unknown",
+        business_id=addr["codigo instituicao empresa"],
         country=addr["pais"],
         state=addr["uf"],
         city=addr["cidade"],
