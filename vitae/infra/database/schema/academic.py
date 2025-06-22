@@ -40,4 +40,4 @@ class Institution(Orm, table=True):
     name: str | None
     country: str | None
     state: str | None
-    city: str | None
+    abbr: str | None

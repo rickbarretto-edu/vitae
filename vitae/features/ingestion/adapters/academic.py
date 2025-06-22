@@ -55,9 +55,9 @@ class Education:
 class Institution:
     lattes_id: str
     name: str | None
+    abbr: str | None
     country: str | None
     state: str | None
-    city: str | None
 
     @property
     def as_table(self) -> db.Institution:
@@ -66,7 +66,7 @@ class Institution:
             name=self.name,
             country=self.country,
             state=self.state,
-            city=self.city,
+            abbr=self.abbr,
         )
 
 
