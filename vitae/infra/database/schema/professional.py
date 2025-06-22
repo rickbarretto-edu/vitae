@@ -5,7 +5,19 @@ from .orm import Orm, foreign, key, link, required_key
 if TYPE_CHECKING:
     from .researcher import Researcher
 
-__all__ = ["Business", "Experience"]
+__all__ = ["Address", "Business", "Experience"]
+
+
+class Address(Orm, table=True):
+    researcher_id: str = foreign("researcher.lattes_id")
+    business_id: str = foreign("business.lattes_id")
+
+    country: str | None
+    state: str | None
+    city: str | None
+    neighborhood: str | None
+    cep: str | None
+    public_place: str | None
 
 
 class Experience(Orm, table=True):

@@ -6,6 +6,34 @@ from vitae.infra.database import schema as db
 
 
 @dataclass
+class Address:
+    """Researcher's professional address."""
+
+    researcher_id: str
+    business_id: str
+
+    country: str | None
+    state: str | None
+    city: str | None
+    neighborhood: str | None
+    cep: str | None
+    public_place: str | None
+
+    @property
+    def as_table(self) -> db.Address:
+        return db.Address(
+            researcher_id=self.researcher_id,
+            business_id=self.business_id,
+            country=self.country,
+            state=self.state,
+            city=self.city,
+            neighborhood=self.neighborhood,
+            cep=self.cep,
+            public_place=self.public_place,
+        )
+
+
+@dataclass
 class Experience:
     """Researcher's professional experience."""
 
