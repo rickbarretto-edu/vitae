@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -12,9 +11,7 @@ from sqlmodel import Session
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
-    from vitae.infra.database import tables
-
-type Some[T] = T | Iterable[T]
+    from .transactions import Curricula
 
 
 @dataclass
@@ -23,15 +20,11 @@ class PutOperations:
 
     engine: Engine
 
-    def researcher(
-        self,
-        researcher: Some[tables.Researcher],
-        nationality: Some[tables.Nationality],
-        experience: Some[tables.ProfessionalExperience],
-        background: Some[tables.AcademicBackground],
-        expertise: Some[tables.Expertise],
-    ) -> bool:
-        """Put researcher's data into database.
+    def batch_transaction(self, curricula: Curricula) -> bool:
+        """Put a batch of Curriulum into database.
+
+        Use this method when you need to push a huge amount of data.
+        Group them into `Curricula`.
 
         Returns
         -------
@@ -40,11 +33,7 @@ class PutOperations:
         """
         with Session(self.engine) as session:
             try:
-                session.add_all(researcher)
-                session.add_all(nationality)
-                session.add_all(expertise)
-                session.add_all(experience)
-                session.add_all(background)
+                session.add_all(curricula)
                 session.commit()
             except SQLAlchemyError:
                 session.rollback()
