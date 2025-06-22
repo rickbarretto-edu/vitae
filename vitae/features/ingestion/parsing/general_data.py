@@ -2,8 +2,8 @@ from collections.abc import Iterator
 
 from vitae.features.ingestion.adapters.schema import (
     Expertise,
-    GeneralData,
     Nationality,
+    Researcher,
 )
 
 from . import _xml as xml
@@ -11,7 +11,7 @@ from . import _xml as xml
 __all__ = ["expertise", "general_data", "nationality"]
 
 
-def general_data(researcher_id: str, data: xml.Node) -> GeneralData:
+def general_data(researcher_id: str, data: xml.Node) -> Researcher:
     """Extract general data from the Lattes curriculum XML.
 
     This function navigates through the provided XML structure to extract
@@ -89,7 +89,7 @@ def general_data(researcher_id: str, data: xml.Node) -> GeneralData:
     """
     resume = data.first("resumo CV")
 
-    return GeneralData(
+    return Researcher(
         lattes_id=researcher_id,
         full_name=data["nome completo"] or "Invalid Name",
         quotes_names=data["nome em citacoes bibliograficas"],
