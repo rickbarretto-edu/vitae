@@ -1,31 +1,43 @@
 from typing import TYPE_CHECKING
 
-from .orm import Orm, foreign, key, link
+from .orm import Orm, foreign, key, link, required_key
 
 if TYPE_CHECKING:
     from .researcher import Researcher
 
+__all__ = ["Education", "Institution", "StudyField"]
 
-class AcademicBackground(Orm, table=True):
-    id: int | None = key()
+
+class Education(Orm, table=True):
+    id: str = required_key()
     researcher_id: str = foreign("researcher.lattes_id")
+    institution_id: str = foreign("institution.lattes_id")
+
+    category: str
+    course: str | None
+    start: int | None
+    end: int | None
+
     researcher: "Researcher" = link("academic_background")
-
-    type: str
-    institution: str
-    course: str | None = None
-    start_year: int | None = None
-    end_year: int | None = None
-
-    knowledge_area: list["KnowledgeArea"] = link("academic_background")
+    fields: list["StudyField"] = link("education")
 
 
-class KnowledgeArea(Orm, table=True):
+class StudyField(Orm, table=True):
     id: int | None = key()
-    academic_background_id: int = foreign("academic_background.id")
-    academic_background: "AcademicBackground" = link("knowledge_area")
+    education_id: str = foreign("education.id")
 
-    major_knowledge_area: str
-    knowledge_area: str | None = None
-    sub_knowledge_area: str | None = None
-    specialty: str | None = None
+    major: str | None
+    area: str | None
+    sub: str | None
+    specialty: str | None
+
+    education: "Education" = link("fields")
+
+
+class Institution(Orm, table=True):
+    lattes_id: str = required_key()
+
+    name: str | None
+    country: str | None
+    state: str | None
+    city: str | None
