@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 from vitae.infra.database import schema as db
 
+__all__ = ["Address", "Business", "Experience"]
+
 
 @dataclass
 class Address:
