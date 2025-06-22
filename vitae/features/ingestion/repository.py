@@ -7,7 +7,6 @@ from pathlib import Path
 
 import loguru
 
-from vitae.core import Repository
 from vitae.infra.database import Database
 
 flatten = itertools.chain
