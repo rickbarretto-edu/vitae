@@ -2,7 +2,7 @@ from collections.abc import Iterator
 import uuid
 
 from vitae.features.ingestion.adapters import Education
-from vitae.features.ingestion.adapters.academic import Institution
+from vitae.features.ingestion.adapters.academic import Institution, StudyField
 
 from . import _xml as xml
 
@@ -37,7 +37,7 @@ def education_from_xml(
                     education,
                     data.first("informacoes adicionais instituicoes"),
                 ),
-                fields=[],
+                fields=fields(education),
             )
 
 
@@ -57,3 +57,16 @@ def institution(education: xml.Node, extra_data: xml.Node) -> Institution:
         state=found["sigla uf instituicao"],
         abbr=found["sigla instituicao"],
     )
+
+
+def fields(education: xml.Node) -> Iterator[StudyField]:
+    areas = education.first("areas do conhecimento").element
+    if areas is not None:
+        for a in areas.iter():
+            area = xml.Node(a)
+            yield StudyField(
+                major=area["nome grande area do conhecimento"],
+                area=area["nome da area do conhecimento"],
+                sub=area["nome da sub area do conhecimento"],
+                specialty=area["nome da especialidade"],
+            )
