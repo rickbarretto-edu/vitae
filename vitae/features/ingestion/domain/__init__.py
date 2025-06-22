@@ -38,6 +38,14 @@ class Curriculum(Entity[str]):
         return db_schema.Researcher(**self._personal_data)
 
     @property
+    def nationality(self) -> db_schema.Nationality:
+        return db_schema.Nationality(**self._nationality)
+
+    @property
+    def expertise(self) -> Iterator[db_schema.Expertise]:
+        return (db_schema.Expertise(**exp) for exp in self._expertise)
+
+    @property
     def academic_background(self) -> Iterator[db_schema.AcademicBackground]:
         return (
             db_schema.AcademicBackground(**background)
@@ -52,7 +60,3 @@ class Curriculum(Entity[str]):
             db_schema.ProfessionalExperience(**experience)
             for experience in self._professional_experiences
         )
-
-    @property
-    def research_areas(self) -> Iterator[db_schema.ResearchArea]:
-        return (db_schema.ResearchArea(**area) for area in self._research_areas)

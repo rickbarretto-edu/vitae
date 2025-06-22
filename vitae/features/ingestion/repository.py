@@ -86,15 +86,18 @@ class Researchers(Repository[Curriculum]):
 
         """
         personal = (r.personal_data for r in group)
+        nationality = (r.nationality for r in group)
+
+        expertise = (r.expertise for r in group)
         experiences = (r.professional_experiences for r in group)
         background = (r.academic_background for r in group)
-        areas = (r.research_areas for r in group)
 
         return self.db.put.researcher(
             researcher=personal,
+            nationality=nationality,
             experience=flatten(*experiences),
             background=flatten(*background),
-            area=flatten(*areas),
+            expertise=flatten(*expertise),
         )
 
     def _put_each_from(self, group: Iterable[Curriculum]) -> None:
@@ -115,7 +118,8 @@ class Researchers(Repository[Curriculum]):
         """
         return self.db.put.researcher(
             researcher=researcher.personal_data,
+            nationality=researcher.nationality,
             experience=researcher.professional_experiences,
             background=researcher.academic_background,
-            area=researcher.research_areas,
+            expertise=researcher.expertise,
         )

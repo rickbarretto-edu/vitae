@@ -26,9 +26,10 @@ class PutOperations:
     def researcher(
         self,
         researcher: Some[schema.Researcher],
+        nationality: Some[schema.Nationality],
         experience: Some[schema.ProfessionalExperience],
         background: Some[schema.AcademicBackground],
-        area: Some[schema.ResearchArea],
+        expertise: Some[schema.Expertise],
     ) -> bool:
         """Put researcher's data into database.
 
@@ -40,9 +41,10 @@ class PutOperations:
         with Session(self.engine) as session:
             try:
                 session.add_all(researcher)
+                session.add_all(nationality)
+                session.add_all(expertise)
                 session.add_all(experience)
                 session.add_all(background)
-                session.add_all(area)
                 session.commit()
             except SQLAlchemyError:
                 session.rollback()
