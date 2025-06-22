@@ -33,8 +33,8 @@ def required_key() -> Any:
     return Field(primary_key=True, nullable=False)
 
 
-def foreign(key: str) -> Any:
-    return Field(foreign_key=key)
+def foreign(key: str, **kargs) -> Any:
+    return Field(foreign_key=key, **kargs)
 
 
 def index() -> Any:

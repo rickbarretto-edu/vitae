@@ -17,13 +17,15 @@ class Researcher(Orm, table=True):
     orcid: str | None
     abstract: str | None
 
+    nationality: "Nationality" = link("researcher")
+    expertise: list["Expertise"] = link("researcher")
+
     professional_experience: list["ProfessionalExperience"] = link("researcher")
     academic_background: list["AcademicBackground"] = link("researcher")
-    research_area: list["Expertise"] = link("researcher")
 
 
 class Nationality(Orm, table=True):
-    researcher_id: str = foreign("researcher.lattes_id")
+    researcher_id: str = foreign("researcher.lattes_id", primary_key=True)
     researcher: "Researcher" = link("nationality")
 
     born_country: str | None
@@ -33,7 +35,7 @@ class Nationality(Orm, table=True):
 class Expertise(Orm, table=True):
     id: int | None = key()
     researcher_id: str = foreign("researcher.lattes_id")
-    researcher: "Researcher" = link("research_area")
+    researcher: "Researcher" = link("expertise")
 
     major: str | None
     area: str | None
