@@ -12,7 +12,7 @@ from .institution import institution_from_xml
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-__all__ = ["experience_from_xml"]
+__all__ = ["address_from_xml", "experience_from_xml"]
 
 
 def experience_from_xml(
@@ -49,6 +49,32 @@ def experience_from_xml(
             )
 
 
+def address_from_xml(researcher_id: str, data: xml.Node) -> Address:
+    """Extract Researcher's Professional Address from XML.
+
+    Returns
+    -------
+    Researcher's Address.
+
+    """
+    addr = data.first("endereco profissional")
+
+    return Address(
+        researcher_id=researcher_id,
+        country=addr["pais"],
+        state=addr["uf"],
+        city=addr["cidade"],
+        neighborhood=addr["bairro"],
+        cep=addr["cep"],
+        public_place=addr["logradouro completo"],
+        institution=institution_from_xml(
+            addr["codigo instituicao empresa"],
+            addr["nome instituicao empresa"],
+            data,
+        ),
+    )
+
+
 def relationship_from_link(link: xml.Node) -> str | None:
     """Determine the type of professional link.
 
@@ -67,22 +93,3 @@ def relationship_from_link(link: xml.Node) -> str | None:
         return other_link_kind
 
     return link_kind
-
-
-def address_from_xml(researcher_id: str, data: xml.Node) -> Address:
-    addr = data.first("endereco profissional")
-
-    return Address(
-        researcher_id=researcher_id,
-        country=addr["pais"],
-        state=addr["uf"],
-        city=addr["cidade"],
-        neighborhood=addr["bairro"],
-        cep=addr["cep"],
-        public_place=addr["logradouro completo"],
-        institution=institution_from_xml(
-            addr["codigo instituicao empresa"],
-            addr["nome instituicao empresa"],
-            data,
-        ),
-    )
