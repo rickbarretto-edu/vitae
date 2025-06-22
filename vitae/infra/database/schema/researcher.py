@@ -1,3 +1,7 @@
+"""Researcher's related Database Table."""
+
+# ruff: noqa: FA102, D101
+
 from typing import TYPE_CHECKING
 
 from .orm import Orm, foreign, key, link, required_key
