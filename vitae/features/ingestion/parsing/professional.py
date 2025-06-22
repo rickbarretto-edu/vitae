@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from vitae.features.ingestion.adapters import Experience
+from vitae.features.ingestion.adapters import Address, Experience
 
 from . import _xml as xml
 from .institution import institution
@@ -64,3 +64,18 @@ def experience(
                 start=xml.as_int(link["ano inicio"]),
                 end=xml.as_int(link["ano fim"]),
             )
+
+
+def address(researcher_id: str, data: xml.Node) -> Address:
+    addr = data.first("endereco profissional")
+
+    return Address(
+        researcher_id=researcher_id,
+        business_id=addr["codigo instituicao empresa"] or "Unknown",
+        country=addr["pais"],
+        state=addr["uf"],
+        city=addr["cidade"],
+        neighborhood=addr["bairro"],
+        cep=addr["cep"],
+        public_place=addr["logradouro completo"],
+    )
