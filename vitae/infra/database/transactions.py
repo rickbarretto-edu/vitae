@@ -24,7 +24,7 @@ from vitae.infra.database.tables import (
     StudyField,
 )
 
-__all__ = ["Curricula"]
+__all__ = ["Academic", "Curricula", "Professional", "Researchers"]
 
 
 class Transaction(abc.ABC):
