@@ -31,10 +31,11 @@ class Nationality(Orm, table=True):
 
 
 class Expertise(Orm, table=True):
+    id: int | None = key()
     researcher_id: str = foreign("researcher.lattes_id")
     researcher: "Researcher" = link("research_area")
 
-    major: str | None = key()
-    area: str | None = key()
-    sub: str | None = key()
-    specialty: str | None = key()
+    major: str | None
+    area: str | None
+    sub: str | None
+    specialty: str | None
