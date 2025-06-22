@@ -10,22 +10,6 @@ __all__ = [
 ]
 
 
-class AcademicBackground(TypedDict):
-    """Researcher's Academic Background.
-
-    For instance: Undergraduee, Master...
-    """
-
-    # Metadata
-    researcher_id: str
-
-    type: str
-    institution: str
-    course: str | None
-    start_year: int | None
-    end_year: int | None
-
-
 class ProfessionalExperience(TypedDict):
     """Researcher's Professional Experience."""
 
