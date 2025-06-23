@@ -120,18 +120,18 @@ class Researchers:
             inst.as_table for inst in institutions if inst.lattes_id is not None
         ]
 
+        researchers = bulk.Researchers(
+            researchers=[cv.researcher.as_table for cv in curricula],
+            nationality=[cv.researcher.nationality_table for cv in curricula],
+            expertise=flatten(
+                [cv.researcher.expertise_tables for cv in curricula],
+            ),
+        )
+
         return self.db.put.batch_transaction(
             bulk.Institutions(institution_tables),
             bulk.Curricula(
-                researchers=bulk.Researchers(
-                    researchers=[cv.researcher.as_table for cv in curricula],
-                    nationality=[
-                        cv.researcher.nationality_table for cv in curricula
-                    ],
-                    expertise=flatten(
-                        [cv.researcher.expertise_tables for cv in curricula],
-                    ),
-                ),
+                researchers=researchers,
                 academic=bulk.Academic(
                     education=education_tables,
                     fields=field_tables,
