@@ -11,7 +11,7 @@ def cli() -> None:
 
 
 def debug_ingest() -> None:
-    ingest(buffer=5, strategy="serial")
+    ingest(buffer=5)
 
 
 if __name__ == "__main__":

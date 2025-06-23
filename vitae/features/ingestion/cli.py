@@ -1,9 +1,8 @@
 from pathlib import Path
-from typing import Annotated, Literal
+from typing import Annotated
 
 import cyclopts
 from cyclopts import Parameter
-from cyclopts.types import PositiveInt
 
 from vitae.shared import database, vitae
 
@@ -55,12 +54,7 @@ def ingest(
         Parameter(name=["--indexes", "-i"]),
     ] = None,
     _range: Annotated[IndexRange, Parameter(name=["--range", "-r"])] = None,
-    strategy: Annotated[
-        Literal["serial", "pool"],
-        Parameter(name=["--strategy", "-s"]),
-    ] = "pool",
     buffer: Annotated[int, Parameter(name=["--buffer", "-b"])] = 50,
-    workers: Annotated[PositiveInt, Parameter(name=["--workers", "-w"])] = 8,
 ) -> None:
     """Ingest XML documents into the database.
 
@@ -74,32 +68,21 @@ def ingest(
         Indicate the range of sub-directories to be scanned.
         Similar to `--only` and also can be combined.
 
-    strategy : Literal["serial", "pool"], default="pool"
-        Method used to scan the directory containing XML files.
-        Use "serial" for sequential scanning or "pool" for parallel scanning.
-
     buffer : int, default=50
         Number of researchers to buffer before committing to the database.
         Use higher numbers on production.
-
-    workers: PositiveInt
-        Machine available cores. When using `pool` strategy.
 
     """
     root_directory = vitae.paths.curricula
     scan_only = merge_indexes(root_directory, indexes, _range)
     repository = Researchers(db=database, every=buffer)
-    scanner = {
-        "serial": scanners.Serial(scan_only=scan_only),
-        "pool": scanners.Pool(scan_only=scan_only, max_workers=workers),
-    }[strategy]
     processed_curricula = curricula_xml_from(
         Path("logs/ingestion/processed.log"),
     )
 
     ingestion = Ingestion(
         researchers=repository,
-        scanner=scanner,
+        scanner=scanners.Serial(scan_only),
         files=root_directory,
         to_skip=processed_curricula,
     )

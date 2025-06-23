@@ -35,16 +35,3 @@ class Serial:
         for directory in all_files.iterdir():
             if self.scan_only is None or directory in self.scan_only:
                 parser(directory)
-
-
-@dataclass
-class Pool:
-    scan_only: Iterable[Path] | None = None
-    max_workers: int = 8
-
-    def __call__(self, all_files: Path, parser: FileParser) -> None:
-        """Scan & Process files using Thread Pool (I/O bound)."""
-        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            for directory in all_files.iterdir():
-                if self.scan_only is None or directory in self.scan_only:
-                    executor.submit(parser, directory)
