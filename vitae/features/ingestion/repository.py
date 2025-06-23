@@ -103,7 +103,6 @@ class Researchers:
         If all researchers were sucessfully stored.
 
         """
-        # Prepare lists from the batch for each entity type
         curricula = list(batch)
 
         researchers = bulk.Researchers(
