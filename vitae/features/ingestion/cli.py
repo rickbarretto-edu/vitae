@@ -19,33 +19,6 @@ type IndexRange = tuple[int, int] | None
 type Directories = frozenset[Path]
 
 
-def merge_indexes(
-    root_path: Path,
-    selected: SelectedIndexes,
-    rng: IndexRange,
-) -> Directories | None:  # noqa: FA102
-    """Merge manually selected with ranged selected indexes into a single one.
-
-    Returns
-    -------
-    A set of directories's Path or Nothing.
-
-    """
-
-    def merge(selected: SelectedIndexes, rng: IndexRange) -> Indexes:
-        selected_set = frozenset(selected) if selected else frozenset()
-        range_set = frozenset(range(rng[0], rng[1] + 1) if rng else {})
-        return selected_set | range_set
-
-    def as_directories(root_path: Path, indices: Indexes) -> Directories:
-        return frozenset(root_path / f"{subdir:0>2}" for subdir in indices)
-
-    indices = merge(selected, rng)
-    if not indices:
-        return None
-    return as_directories(root_path, indices)
-
-
 @app.default
 def ingest(
     indexes: Annotated[
@@ -90,6 +63,33 @@ def ingest(
 
 
 # =~=~=~=~=~=~ Helper Functions ~=~=~=~=~=~=
+
+
+def merge_indexes(
+    root_path: Path,
+    selected: SelectedIndexes,
+    rng: IndexRange,
+) -> Directories | None:  # noqa: FA102
+    """Merge manually selected with ranged selected indexes into a single one.
+
+    Returns
+    -------
+    A set of directories's Path or Nothing.
+
+    """
+
+    def merge(selected: SelectedIndexes, rng: IndexRange) -> Indexes:
+        selected_set = frozenset(selected) if selected else frozenset()
+        range_set = frozenset(range(rng[0], rng[1] + 1) if rng else {})
+        return selected_set | range_set
+
+    def as_directories(root_path: Path, indices: Indexes) -> Directories:
+        return frozenset(root_path / f"{subdir:0>2}" for subdir in indices)
+
+    indices = merge(selected, rng)
+    if not indices:
+        return None
+    return as_directories(root_path, indices)
 
 
 def curricula_xml_from(log: Path) -> set[str]:
