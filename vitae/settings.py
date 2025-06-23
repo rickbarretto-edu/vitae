@@ -114,12 +114,16 @@ class VitaeSettings:
     paths: PathsSettings
     in_production: bool = False
 
+    @staticmethod
+    def from_toml(file: Path) -> "VitaeSettings":
+        return from_file(file)
+
     @property
     def in_development(self) -> bool:  # noqa: D102
         return not self.in_production
 
 
-def load(config_file: Path) -> VitaeSettings:
+def from_file(config_file: Path) -> VitaeSettings:
     """Load configuration from `vitae.toml` file.
 
     Returns
