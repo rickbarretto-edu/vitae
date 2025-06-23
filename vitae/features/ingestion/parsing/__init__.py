@@ -29,6 +29,15 @@ class CurriculumParser:
         self.document = xml.parse(content)
 
     @property
+    def as_schema(self) -> adapters.Curriculum:
+        return adapters.Curriculum(
+            researcher=self.researcher,
+            address=self.address,
+            education=list(self.academic),
+            experience=list(self.experience),
+        )
+
+    @property
     def researcher(self) -> adapters.Researcher:
         return researcher_from_xml(self.id, self.document)
 

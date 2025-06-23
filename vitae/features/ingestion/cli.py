@@ -5,8 +5,6 @@ import cyclopts
 from cyclopts import Parameter
 
 from vitae.shared import database, vitae
-
-from . import scanners
 from .repository import Researchers
 from .usecase import Ingestion
 
@@ -82,9 +80,9 @@ def ingest(
 
     ingestion = Ingestion(
         researchers=repository,
-        scanner=scanners.Serial(scan_only),
         files=root_directory,
         to_skip=processed_curricula,
+        scan_only=scan_only,
     )
 
     ingestion.ingest()
