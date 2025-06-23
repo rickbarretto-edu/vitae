@@ -8,7 +8,8 @@ from pathlib import Path
 import loguru
 
 from vitae.features.ingestion.adapters import Curriculum
-from vitae.infra.database import Database, bulk_transactions
+from vitae.infra.database import Database
+from vitae.infra.database.transactions import bulk
 
 
 def flatten[T](xs: Iterable[Iterable[T]]) -> Iterable[T]:
@@ -124,24 +125,24 @@ class Researchers:
             inst.as_table for inst in institutions if inst.lattes_id is not None
         ]
 
-        ct = bulk_transactions.Curricula(
-            researchers=bulk_transactions.Researchers(
+        ct = bulk.Curricula(
+            researchers=bulk.Researchers(
                 researchers=researcher_tables,
                 nationality=nationality_tables,
                 expertise=expertise_tables,
             ),
-            academic=bulk_transactions.Academic(
+            academic=bulk.Academic(
                 education=education_tables,
                 fields=field_tables,
             ),
-            professional=bulk_transactions.Professional(
+            professional=bulk.Professional(
                 experience=experience_tables,
                 address=address_tables,
             ),
         )
 
         return self.db.put.batch_transaction(
-            bulk_transactions.Institutions(institution_tables),
+            bulk.Institutions(institution_tables),
             ct,
         )
 
@@ -161,23 +162,23 @@ class Researchers:
         If the researcher was sucessfully stored.
 
         """
-        ct = bulk_transactions.Curricula(
-            researchers=bulk_transactions.Researchers(
+        ct = bulk.Curricula(
+            researchers=bulk.Researchers(
                 researchers=[cv.researcher.as_table],
                 nationality=[cv.researcher.nationality_table],
                 expertise=cv.researcher.expertise_tables,
             ),
-            academic=bulk_transactions.Academic(
+            academic=bulk.Academic(
                 education=(edu.as_table for edu in cv.education),
                 fields=flatten(edu.fields_as_table for edu in cv.education),
             ),
-            professional=bulk_transactions.Experience(
+            professional=bulk.Experience(
                 experience=(xp.as_table for xp in cv.experience),
                 address=[cv.address],
             ),
         )
         return self.db.put.batch_transaction(
-            bulk_transactions.Institutions(
+            bulk.Institutions(
                 inst.as_table for inst in cv.all_institutions
             ),
             ct,
