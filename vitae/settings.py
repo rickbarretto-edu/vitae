@@ -118,27 +118,27 @@ class VitaeSettings:
     @staticmethod
     def from_toml(file: Path | str) -> VitaeSettings:
         if isinstance(file, Path):
-            return _from_file(file)
+            return _vitae_from_file(file)
 
-        return _from_toml(file)
+        return _vitae_from_str(file)
 
     @property
     def in_development(self) -> bool:  # noqa: D102
         return not self.in_production
 
 
-def _from_file(toml_file: Path) -> VitaeSettings:
+def _vitae_from_file(toml_file: Path) -> VitaeSettings:
     """Load configuration from `config_file` TOML file."""  # noqa: DOC201
     with toml_file.open("rb") as f:
-        return _from_dict(tomllib.load(f))
+        return _vitae_from_parsed(tomllib.load(f))
 
 
-def _from_toml(content: str) -> VitaeSettings:
+def _vitae_from_str(content: str) -> VitaeSettings:
     """Load configuration from TOML string."""  # noqa: DOC201
-    return _from_dict(tomllib.loads(content))
+    return _vitae_from_parsed(tomllib.loads(content))
 
 
-def _from_dict(data: dict[str, Any]) -> VitaeSettings:
+def _vitae_from_parsed(data: dict[str, Any]) -> VitaeSettings:
     """Parse data from dictionary.
 
     Use the functions `_from_file` or `_from_toml` to get `data`.
