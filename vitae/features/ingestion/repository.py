@@ -106,13 +106,10 @@ class Researchers:
         # Prepare lists from the batch for each entity type
         curricula = list(batch)
 
-        experiences = list(flatten(cv.experience for cv in curricula))
         institutions = list(
             flatten(list(cv.all_institutions) for cv in curricula),
         )
 
-        experience_tables = [xp.as_table for xp in experiences]
-        address_tables = [cv.address.as_table for cv in curricula]
         institution_tables = [
             inst.as_table for inst in institutions if inst.lattes_id is not None
         ]
@@ -142,8 +139,11 @@ class Researchers:
                 researchers=researchers,
                 academic=academic,
                 professional=bulk.Professional(
-                    experience=experience_tables,
-                    address=address_tables,
+                    experience=(
+                        xp.as_table
+                        for xp in flatten([cv.experience for cv in curricula])
+                    ),
+                    address=[cv.address.as_table for cv in curricula],
                 ),
             ),
         )
