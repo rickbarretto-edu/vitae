@@ -124,23 +124,21 @@ class VitaeSettings:
 
 
 def _from_file(config_file: Path) -> VitaeSettings:
-    """Load configuration from `vitae.toml` file.
-
-    Returns
-    -------
-    VitaeSettings
-        The loaded settings from the vitae.toml file.
-
-    """
+    """Load configuration from `config_file` TOML file."""  # noqa: DOC201
     with config_file.open("rb") as f:
         return _from_dict(tomllib.load(f))
 
 
 def _from_toml(content: str) -> VitaeSettings:
+    """Load configuration from TOML string."""  # noqa: DOC201
     return _from_dict(tomllib.loads(content))
 
 
 def _from_dict(data: dict[str, Any]) -> VitaeSettings:
+    """Parse data from dictionary.
+
+    Use the functions `_from_file` or `_from_toml` to get `data`.
+    """  # noqa: DOC201
     in_production: bool = data.get("in_production", False)
     postgres: dict = data.get("postgres") or {}
     postgres_settings = PostgresSettings(
