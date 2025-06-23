@@ -1,4 +1,5 @@
 """Environment Settings."""
+from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import cached_property
@@ -115,8 +116,11 @@ class VitaeSettings:
     in_production: bool = False
 
     @staticmethod
-    def from_toml(file: Path) -> "VitaeSettings":
-        return _from_file(file)
+    def from_toml(file: Path | str) -> VitaeSettings:
+        if isinstance(file, Path):
+            return _from_file(file)
+
+        return _from_toml(file)
 
     @property
     def in_development(self) -> bool:  # noqa: D102
