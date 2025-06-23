@@ -160,21 +160,27 @@ class Researchers:
         If the researcher was sucessfully stored.
 
         """
+        researchers = bulk.Researchers(
+            researchers=[cv.researcher.as_table],
+            nationality=[cv.researcher.nationality_table],
+            expertise=cv.researcher.expertise_tables,
+        )
+
+        academic = bulk.Academic(
+            education=(edu.as_table for edu in cv.education),
+            fields=flatten(edu.fields_as_table for edu in cv.education),
+        )
+
+        professional = bulk.Experience(
+            experience=(xp.as_table for xp in cv.experience),
+            address=[cv.address],
+        )
+
         return self.db.put.batch_transaction(
             bulk.Institutions(inst.as_table for inst in cv.all_institutions),
             bulk.Curricula(
-                researchers=bulk.Researchers(
-                    researchers=[cv.researcher.as_table],
-                    nationality=[cv.researcher.nationality_table],
-                    expertise=cv.researcher.expertise_tables,
-                ),
-                academic=bulk.Academic(
-                    education=(edu.as_table for edu in cv.education),
-                    fields=flatten(edu.fields_as_table for edu in cv.education),
-                ),
-                professional=bulk.Experience(
-                    experience=(xp.as_table for xp in cv.experience),
-                    address=[cv.address],
-                ),
+                researchers=researchers,
+                academic=academic,
+                professional=professional,
             ),
         )
