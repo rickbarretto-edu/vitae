@@ -42,12 +42,10 @@ class PutOperations:
             try:
                 print(list(institutions))
                 for institution in institutions:
+                    dump = institution.model_dump()
+                    statement = postgresql.insert(Institution).values(**dump)
                     session.execute(
-                        postgresql.insert(Institution)
-                        .values(
-                            **institution.model_dump(),
-                        )
-                        .on_conflict_do_nothing()
+                        statement.on_conflict_do_nothing(),
                     )
 
                 session.add_all(
