@@ -5,7 +5,7 @@ this is good to have a Batch structure to fit all together
 and send to database.
 """
 
-# ruff: noqa: D101
+# ruff: noqa: D101, D105
 
 import abc
 from collections.abc import Iterable, Iterator
@@ -78,7 +78,6 @@ class Curricula(Transaction):
     professional: Professional
 
     def __iter__(self) -> Iterator[SQLModel]:
-        """Iterate each internal Tables."""  # noqa: DOC402
         yield from self.researchers
         yield from self.academic
         yield from self.professional
