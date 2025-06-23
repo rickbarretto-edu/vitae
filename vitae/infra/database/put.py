@@ -40,7 +40,6 @@ class PutOperations:
         """
         with Session(self.engine) as session:
             try:
-                print(list(institutions))
                 for institution in institutions:
                     dump = institution.model_dump()
                     statement = postgresql.insert(Institution).values(**dump)

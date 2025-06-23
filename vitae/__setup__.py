@@ -37,7 +37,7 @@ def create_logs(path: Path) -> None:
 
 def redirect_loguru_to(log_file: Path) -> None:
     """Redirect loguru's output to ``log_file``."""
-    # logger.remove()
+    logger.remove()
     logger.add(
         str(log_file),
         rotation="200 MB",
