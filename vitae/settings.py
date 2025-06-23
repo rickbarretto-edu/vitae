@@ -116,14 +116,14 @@ class VitaeSettings:
 
     @staticmethod
     def from_toml(file: Path) -> "VitaeSettings":
-        return from_file(file)
+        return _from_file(file)
 
     @property
     def in_development(self) -> bool:  # noqa: D102
         return not self.in_production
 
 
-def from_file(config_file: Path) -> VitaeSettings:
+def _from_file(config_file: Path) -> VitaeSettings:
     """Load configuration from `vitae.toml` file.
 
     Returns
@@ -133,14 +133,14 @@ def from_file(config_file: Path) -> VitaeSettings:
 
     """
     with config_file.open("rb") as f:
-        return from_dict(tomllib.load(f))
+        return _from_dict(tomllib.load(f))
 
 
-def from_toml(content: str) -> VitaeSettings:
-    return from_dict(tomllib.loads(content))
+def _from_toml(content: str) -> VitaeSettings:
+    return _from_dict(tomllib.loads(content))
 
 
-def from_dict(data: dict[str, Any]) -> VitaeSettings:
+def _from_dict(data: dict[str, Any]) -> VitaeSettings:
     in_production: bool = data.get("in_production", False)
     postgres: dict = data.get("postgres") or {}
     postgres_settings = PostgresSettings(
