@@ -5,6 +5,7 @@ import cyclopts
 from cyclopts import Parameter
 
 from vitae.shared import database, vitae
+
 from .repository import Researchers
 from .usecase import Ingestion
 
