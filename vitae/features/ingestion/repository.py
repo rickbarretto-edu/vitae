@@ -177,8 +177,10 @@ class Researchers:
         )
 
         return self.db.put.batch_transaction(
-            bulk.Institutions(inst.as_table for inst in cv.all_institutions),
-            bulk.Curricula(
+            institutions=bulk.Institutions(
+                inst.as_table for inst in cv.all_institutions
+            ),
+            curricula=bulk.Curricula(
                 researchers=researchers,
                 academic=academic,
                 professional=professional,
