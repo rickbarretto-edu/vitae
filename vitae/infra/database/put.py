@@ -14,7 +14,7 @@ from vitae.infra.database.tables.institution import Institution
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
-    from .transactions import Curricula, Institutions
+    from .bulk_transactions import Curricula, Institutions
 
 
 @dataclass
