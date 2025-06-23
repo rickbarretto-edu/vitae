@@ -125,25 +125,23 @@ class Researchers:
             inst.as_table for inst in institutions if inst.lattes_id is not None
         ]
 
-        ct = bulk.Curricula(
-            researchers=bulk.Researchers(
-                researchers=researcher_tables,
-                nationality=nationality_tables,
-                expertise=expertise_tables,
-            ),
-            academic=bulk.Academic(
-                education=education_tables,
-                fields=field_tables,
-            ),
-            professional=bulk.Professional(
-                experience=experience_tables,
-                address=address_tables,
-            ),
-        )
-
         return self.db.put.batch_transaction(
             bulk.Institutions(institution_tables),
-            ct,
+            bulk.Curricula(
+                researchers=bulk.Researchers(
+                    researchers=researcher_tables,
+                    nationality=nationality_tables,
+                    expertise=expertise_tables,
+                ),
+                academic=bulk.Academic(
+                    education=education_tables,
+                    fields=field_tables,
+                ),
+                professional=bulk.Professional(
+                    experience=experience_tables,
+                    address=address_tables,
+                ),
+            ),
         )
 
     def _put_each_from(self, group: Iterable[Curriculum]) -> None:
@@ -162,24 +160,21 @@ class Researchers:
         If the researcher was sucessfully stored.
 
         """
-        ct = bulk.Curricula(
-            researchers=bulk.Researchers(
-                researchers=[cv.researcher.as_table],
-                nationality=[cv.researcher.nationality_table],
-                expertise=cv.researcher.expertise_tables,
-            ),
-            academic=bulk.Academic(
-                education=(edu.as_table for edu in cv.education),
-                fields=flatten(edu.fields_as_table for edu in cv.education),
-            ),
-            professional=bulk.Experience(
-                experience=(xp.as_table for xp in cv.experience),
-                address=[cv.address],
-            ),
-        )
         return self.db.put.batch_transaction(
-            bulk.Institutions(
-                inst.as_table for inst in cv.all_institutions
+            bulk.Institutions(inst.as_table for inst in cv.all_institutions),
+            bulk.Curricula(
+                researchers=bulk.Researchers(
+                    researchers=[cv.researcher.as_table],
+                    nationality=[cv.researcher.nationality_table],
+                    expertise=cv.researcher.expertise_tables,
+                ),
+                academic=bulk.Academic(
+                    education=(edu.as_table for edu in cv.education),
+                    fields=flatten(edu.fields_as_table for edu in cv.education),
+                ),
+                professional=bulk.Experience(
+                    experience=(xp.as_table for xp in cv.experience),
+                    address=[cv.address],
+                ),
             ),
-            ct,
         )
