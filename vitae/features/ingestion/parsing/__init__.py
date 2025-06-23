@@ -9,11 +9,11 @@ from .professional import address_from_xml, experience_from_xml
 from .researcher import researcher_from_xml
 
 __all__ = [
-    "CurriculumParser",
+    "CurriculumDocument",
 ]
 
 
-class CurriculumParser:
+class CurriculumDocument:
     """Parser for XML Curriculum files.
 
     Notes

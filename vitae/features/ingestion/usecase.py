@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from vitae.features.ingestion.parsing import CurriculumParser
+from vitae.features.ingestion.parsing import CurriculumDocument
 from vitae.lib.panic import panic
 
 if TYPE_CHECKING:
@@ -37,7 +37,7 @@ class Ingestion:
 
         self.researchers.put(
             [
-                CurriculumParser(curriculum).as_schema
+                CurriculumDocument(curriculum).as_schema
                 for curriculum in directory.glob("*.xml")
                 if curriculum not in self.to_skip
             ],
