@@ -68,7 +68,7 @@ class StudyField:
     specialty: str | None
 
     def as_table(self, education_id: str) -> tables.StudyField:
-        """Itself as Database Table."""
+        """Itself as Database Table."""  # noqa: DOC201
         return tables.StudyField(
             education_id=education_id,
             major=self.major,

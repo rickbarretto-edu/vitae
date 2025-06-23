@@ -58,7 +58,7 @@ class Nationality:
     nationality: str | None
 
     def as_table(self, researcher_id: str) -> tables.Nationality:
-        """Itself as database table."""
+        """Itself as database table."""  # noqa: DOC201
         return tables.Nationality(
             researcher_id=researcher_id,
             born_country=self.born_country,
@@ -76,7 +76,7 @@ class Expertise:
     speciality: str | None
 
     def as_table(self, researcher_id: str) -> tables.Expertise:
-        """Itself as database table."""
+        """Itself as database table."""  # noqa: DOC201
         return tables.Expertise(
             researcher_id=researcher_id,
             major=self.major,

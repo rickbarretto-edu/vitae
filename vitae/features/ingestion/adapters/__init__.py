@@ -5,10 +5,8 @@ Internal schemas may implement this as a method because this is needed
 parent data to complete the Table.
 """
 
-from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from functools import cached_property
-import itertools
 
 from .academic import Education, StudyField
 from .institution import Institution
