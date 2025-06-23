@@ -125,20 +125,22 @@ class Researchers:
             ),
         )
 
+        academic = bulk.Academic(
+            education=(
+                edu.as_table
+                for edu in flatten([cv.education for cv in curricula])
+            ),
+            fields=flatten(
+                edu.fields_as_table
+                for edu in flatten([cv.education for cv in curricula])
+            ),
+        )
+
         return self.db.put.batch_transaction(
             bulk.Institutions(institution_tables),
             bulk.Curricula(
                 researchers=researchers,
-                academic=bulk.Academic(
-                    education=(
-                        edu.as_table
-                        for edu in flatten([cv.education for cv in curricula])
-                    ),
-                    fields=flatten(
-                        edu.fields_as_table
-                        for edu in flatten([cv.education for cv in curricula])
-                    ),
-                ),
+                academic=academic,
                 professional=bulk.Professional(
                     experience=experience_tables,
                     address=address_tables,
