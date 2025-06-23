@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+import uuid
 
 from vitae.infra.database import tables
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
-    import uuid
 
     from .institution import Institution
 
@@ -23,7 +23,6 @@ class Education:
     For instance: Undergraduee, Master...
     """
 
-    id: uuid.UUID
     researcher_id: str
 
     category: str
@@ -33,6 +32,8 @@ class Education:
 
     institution: Institution
     fields: list[StudyField]
+
+    id: uuid.UUID = field(default_factory=uuid.uuid1)
 
     @property
     def as_table(self) -> tables.Education:
