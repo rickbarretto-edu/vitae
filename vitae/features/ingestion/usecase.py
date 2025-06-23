@@ -21,7 +21,7 @@ class Ingestion:
     researchers: Researchers
     files: Path
 
-    scan_only: frozenset[Path] = field(default_factory=frozenset)
+    scan_only: frozenset[Path] | None = field(default_factory=frozenset)
     to_skip: set[str] = field(default_factory=set)
 
     def ingest(self) -> None:
