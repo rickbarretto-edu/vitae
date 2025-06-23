@@ -180,5 +180,5 @@ class Researchers:
             bulk_transactions.Institutions(
                 inst.as_table for inst in cv.all_institutions
             ),
-            ct
+            ct,
         )

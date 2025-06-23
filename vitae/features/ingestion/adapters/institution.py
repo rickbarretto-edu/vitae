@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import dataclasses as dt
-import uuid
 
 from vitae.infra.database import tables
 
