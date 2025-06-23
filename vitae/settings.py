@@ -123,9 +123,9 @@ class VitaeSettings:
         return not self.in_production
 
 
-def _from_file(config_file: Path) -> VitaeSettings:
+def _from_file(toml_file: Path) -> VitaeSettings:
     """Load configuration from `config_file` TOML file."""  # noqa: DOC201
-    with config_file.open("rb") as f:
+    with toml_file.open("rb") as f:
         return _from_dict(tomllib.load(f))
 
 
