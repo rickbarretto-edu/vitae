@@ -133,30 +133,36 @@ def from_file(config_file: Path) -> VitaeSettings:
 
     """
     with config_file.open("rb") as f:
-        data: dict[str, Any] = tomllib.load(f)
+        return from_dict(tomllib.load(f))
 
-        in_production: bool = data.get("in_production", False)
-        postgres: dict = data.get("postgres") or {}
-        postgres_settings = PostgresSettings(
-            user=PostgresUser(
-                name=postgres["user"]["name"],
-                password=postgres["user"]["password"],
-            ),
-            db=PostgresDatabase(
-                name=postgres["database"]["name"],
-                host=postgres["database"].get("host", "127.0.0.1"),
-                port=postgres["database"].get("port", 5433),
-                flush_every=postgres["database"].get("flush_every", 100),
-            ),
-        )
 
-        paths: dict = data.get("paths") or {}
-        paths_settings = PathsSettings(
-            _curricula=Path(paths.get("curricula") or "all_files"),
-        )
+def from_toml(content: str) -> VitaeSettings:
+    return from_dict(tomllib.loads(content))
 
-        return VitaeSettings(
-            in_production=in_production,
-            postgres=postgres_settings,
-            paths=paths_settings,
-        )
+
+def from_dict(data: dict[str, Any]) -> VitaeSettings:
+    in_production: bool = data.get("in_production", False)
+    postgres: dict = data.get("postgres") or {}
+    postgres_settings = PostgresSettings(
+        user=PostgresUser(
+            name=postgres["user"]["name"],
+            password=postgres["user"]["password"],
+        ),
+        db=PostgresDatabase(
+            name=postgres["database"]["name"],
+            host=postgres["database"].get("host", "127.0.0.1"),
+            port=postgres["database"].get("port", 5433),
+            flush_every=postgres["database"].get("flush_every", 100),
+        ),
+    )
+
+    paths: dict = data.get("paths") or {}
+    paths_settings = PathsSettings(
+        _curricula=Path(paths.get("curricula") or "all_files"),
+    )
+
+    return VitaeSettings(
+        in_production=in_production,
+        postgres=postgres_settings,
+        paths=paths_settings,
+    )
