@@ -119,7 +119,7 @@ class VitaeSettings:
         return not self.in_production
 
 
-def load() -> VitaeSettings:
+def load(config_file: Path) -> VitaeSettings:
     """Load configuration from `vitae.toml` file.
 
     Returns
@@ -128,9 +128,7 @@ def load() -> VitaeSettings:
         The loaded settings from the vitae.toml file.
 
     """
-    config_path = Path(__file__).parent.parent / "vitae.toml"
-
-    with config_path.open("rb") as f:
+    with config_file.open("rb") as f:
         data: dict[str, Any] = tomllib.load(f)
 
         in_production: bool = data.get("in_production", False)

@@ -86,7 +86,7 @@ def new_vitae() -> VitaeSettings:
     New Vitae's Settings from ``vitae.toml``
 
     """
-    vitae: settings.VitaeSettings = settings.load()
+    vitae: settings.VitaeSettings = settings.load(Path("vitae.toml"))
     setup_vitae(vitae)
     return vitae
 
