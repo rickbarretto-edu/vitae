@@ -105,18 +105,13 @@ class Researchers:
         """
         # Prepare lists from the batch for each entity type
         curricula = list(batch)
-        researchers = [cv.researcher for cv in curricula]
+
         education = list(flatten(cv.education for cv in curricula))
         experiences = list(flatten(cv.experience for cv in curricula))
         institutions = list(
             flatten(list(cv.all_institutions) for cv in curricula),
         )
 
-        researcher_tables = [re.as_table for re in researchers]
-        nationality_tables = [re.nationality_table for re in researchers]
-        expertise_tables = list(
-            flatten(re.expertise_tables for re in researchers),
-        )
         education_tables = [edu.as_table for edu in education]
         field_tables = list(flatten(edu.fields_as_table for edu in education))
         experience_tables = [xp.as_table for xp in experiences]
@@ -129,9 +124,13 @@ class Researchers:
             bulk.Institutions(institution_tables),
             bulk.Curricula(
                 researchers=bulk.Researchers(
-                    researchers=researcher_tables,
-                    nationality=nationality_tables,
-                    expertise=expertise_tables,
+                    researchers=[cv.researcher.as_table for cv in curricula],
+                    nationality=[
+                        cv.researcher.nationality_table for cv in curricula
+                    ],
+                    expertise=flatten(
+                        [cv.researcher.expertise_tables for cv in curricula],
+                    ),
                 ),
                 academic=bulk.Academic(
                     education=education_tables,
