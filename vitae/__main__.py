@@ -10,5 +10,9 @@ def cli() -> None:
     app()
 
 
-if __name__ == "__main__":
+def debug_ingest() -> None:
     ingest(buffer=5, strategy="serial")
+
+
+if __name__ == "__main__":
+    cli()
