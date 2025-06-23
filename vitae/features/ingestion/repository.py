@@ -133,18 +133,20 @@ class Researchers:
             ),
         )
 
+        professional = bulk.Professional(
+            experience=(
+                xp.as_table
+                for xp in flatten([cv.experience for cv in curricula])
+            ),
+            address=[cv.address.as_table for cv in curricula],
+        )
+
         return self.db.put.batch_transaction(
             bulk.Institutions(institution_tables),
             bulk.Curricula(
                 researchers=researchers,
                 academic=academic,
-                professional=bulk.Professional(
-                    experience=(
-                        xp.as_table
-                        for xp in flatten([cv.experience for cv in curricula])
-                    ),
-                    address=[cv.address.as_table for cv in curricula],
-                ),
+                professional=professional,
             ),
         )
 
