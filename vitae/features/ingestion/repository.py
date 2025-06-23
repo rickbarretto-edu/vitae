@@ -106,14 +106,6 @@ class Researchers:
         # Prepare lists from the batch for each entity type
         curricula = list(batch)
 
-        institutions = list(
-            flatten(list(cv.all_institutions) for cv in curricula),
-        )
-
-        institution_tables = [
-            inst.as_table for inst in institutions if inst.lattes_id is not None
-        ]
-
         researchers = bulk.Researchers(
             researchers=[cv.researcher.as_table for cv in curricula],
             nationality=[cv.researcher.nationality_table for cv in curricula],
@@ -141,8 +133,14 @@ class Researchers:
             address=[cv.address.as_table for cv in curricula],
         )
 
+        institutions = [
+            inst.as_table
+            for inst in flatten(list(cv.all_institutions) for cv in curricula)
+            if inst.lattes_id is not None
+        ]
+
         return self.db.put.batch_transaction(
-            bulk.Institutions(institution_tables),
+            bulk.Institutions(institutions),
             bulk.Curricula(
                 researchers=researchers,
                 academic=academic,
