@@ -37,7 +37,9 @@ def institution_from_xml(
     if not (extra := data.first("dados complementares")).exists:
         return default_value
 
-    if not (institutions := extra.first("informacoes adicionais instituicoes")).exists:
+    if not (
+        institutions := extra.first("informacoes adicionais instituicoes")
+    ).exists:
         return default_value
 
     for inst in institutions.all("informacao adicional instituicao"):
