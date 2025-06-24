@@ -1,3 +1,11 @@
+"""Lower level settings for database that deals with details.
+
+This module should not be imported from your features,
+instead, use `vitae.settings` one.
+
+This one deals with external database dependencies.
+"""
+
 from sqlmodel import SQLModel
 
 from vitae.settings.vitae import Vitae
