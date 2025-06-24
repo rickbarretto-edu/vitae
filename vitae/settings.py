@@ -5,11 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import cached_property
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import create_engine
-from sqlalchemy.engine import Engine
 import tomllib
+
+if TYPE_CHECKING:
+    from sqlalchemy.engine import Engine
 
 __all__ = ["Vitae"]
 
