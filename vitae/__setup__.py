@@ -9,33 +9,13 @@ so the main module should be independent from them.
 
 from pathlib import Path
 
-from sqlmodel import SQLModel
-
+from vitae.settings.database import setup_database
 from vitae.settings.logging import create_logs, erase_logs, redirect_loguru_to
 from vitae.settings.vitae import Vitae
 
 __all__ = [
     "new_vitae",
 ]
-
-
-# =~=~=~ Database related subroutines ~=~=~=
-
-
-def setup_database(vitae: Vitae) -> None:
-    """Setups database."""
-    # ``models`` module must be evaluated before create or drop it.
-    # That is why this imports an unused variable inside this function.
-    from vitae.infra.database import tables  # noqa: F401
-
-    if vitae.in_development:
-        # Since the dataset for development is far smaller than the production
-        # and we run it multiple times to check everything before the ingestion,
-        # was decided to rewrite the whole database instead.
-        SQLModel.metadata.drop_all(vitae.postgres.engine)
-
-    SQLModel.metadata.create_all(vitae.postgres.engine)
-
 
 # =~=~=~ Public ~=~=~=
 
