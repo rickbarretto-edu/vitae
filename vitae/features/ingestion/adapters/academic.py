@@ -41,11 +41,11 @@ class Education:
         return tables.Education(
             id=self.id,
             researcher_id=self.researcher_id,
+            institution_id=self.institution.lattes_id,
             category=self.category,
             course=self.course,
             start=self.start,
             end=self.end,
-            instituion_id=self.institution.lattes_id,
         )
 
     @property
