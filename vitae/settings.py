@@ -145,17 +145,6 @@ class Vitae:
         return not self.in_production
 
 
-def _vitae_from_file(toml_file: Path) -> Vitae:
-    """Load configuration from `config_file` TOML file."""  # noqa: DOC201
-    with toml_file.open("rb") as f:
-        return _vitae_from_parsed(tomllib.load(f))
-
-
-def _vitae_from_str(content: str) -> Vitae:
-    """Load configuration from TOML string."""  # noqa: DOC201
-    return _vitae_from_parsed(tomllib.loads(content))
-
-
 def _vitae_from_parsed(data: dict[str, Any]) -> Vitae:
     """Parse data from dictionary.
 
