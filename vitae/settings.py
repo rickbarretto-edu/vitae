@@ -118,10 +118,27 @@ class VitaeSettings:
 
     @staticmethod
     def from_toml(file: Path | str) -> VitaeSettings:
-        if isinstance(file, Path):
-            return _vitae_from_file(file)
+        """Load data from TOML file.
 
-        return _vitae_from_str(file)
+        Parameters
+        ----------
+        file: Path | str
+            This parameter is smarth enough to know when this is a file path,
+            or a content of one.
+
+            If you pass a string that ends with `.toml` this will be transformed
+            into a Path.
+
+        Returns
+        -------
+        Parsed data.
+
+        """
+        if isinstance(file, str) and not file.endswith(".toml"):
+            return _vitae_from_parsed(tomllib.loads(file))
+
+        with Path(file).open("rb") as f:
+            return _vitae_from_parsed(tomllib.load(f))
 
     @property
     def in_development(self) -> bool:  # noqa: D102
