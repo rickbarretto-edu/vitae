@@ -15,7 +15,7 @@ from loguru import logger
 from sqlmodel import SQLModel
 
 from vitae import settings
-from vitae.settings import VitaeSettings
+from vitae.settings import Vitae
 
 __all__ = [
     "new_vitae",
@@ -57,7 +57,7 @@ def enable_loguru_tracing() -> None:
 # =~=~=~ Database related subroutines ~=~=~=
 
 
-def setup_database(vitae: VitaeSettings) -> None:
+def setup_database(vitae: Vitae) -> None:
     """Setups database."""
     # ``models`` module must be evaluated before create or drop it.
     # That is why this imports an unused variable inside this function.
@@ -75,7 +75,7 @@ def setup_database(vitae: VitaeSettings) -> None:
 # =~=~=~ Public ~=~=~=
 
 
-def new_vitae() -> VitaeSettings:
+def new_vitae() -> Vitae:
     """Create a new vitae application.
 
     This function loads Vitae's settings and sets up the whole application,
@@ -86,12 +86,12 @@ def new_vitae() -> VitaeSettings:
     New Vitae's Settings from ``vitae.toml``
 
     """
-    vitae = settings.VitaeSettings.from_toml(Path("vitae.toml"))
+    vitae = settings.Vitae.from_toml(Path("vitae.toml"))
     setup_vitae(vitae)
     return vitae
 
 
-def setup_vitae(vitae: VitaeSettings) -> None:
+def setup_vitae(vitae: Vitae) -> None:
     """Setups Vitae's Logging and database."""
     logs = Path("logs")
 

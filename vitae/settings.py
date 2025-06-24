@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 import tomllib
 
-__all__ = ["VitaeSettings"]
+__all__ = ["Vitae"]
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -109,7 +109,7 @@ class PathsSettings:
 
 
 @dataclass(frozen=True, kw_only=True)
-class VitaeSettings:
+class Vitae:
     """Settings loaded from `vitae.toml`."""
 
     postgres: PostgresSettings
@@ -117,7 +117,7 @@ class VitaeSettings:
     in_production: bool = False
 
     @staticmethod
-    def from_toml(file: Path | str) -> VitaeSettings:
+    def from_toml(file: Path | str) -> Vitae:
         """Load data from TOML file.
 
         Parameters
@@ -145,18 +145,18 @@ class VitaeSettings:
         return not self.in_production
 
 
-def _vitae_from_file(toml_file: Path) -> VitaeSettings:
+def _vitae_from_file(toml_file: Path) -> Vitae:
     """Load configuration from `config_file` TOML file."""  # noqa: DOC201
     with toml_file.open("rb") as f:
         return _vitae_from_parsed(tomllib.load(f))
 
 
-def _vitae_from_str(content: str) -> VitaeSettings:
+def _vitae_from_str(content: str) -> Vitae:
     """Load configuration from TOML string."""  # noqa: DOC201
     return _vitae_from_parsed(tomllib.loads(content))
 
 
-def _vitae_from_parsed(data: dict[str, Any]) -> VitaeSettings:
+def _vitae_from_parsed(data: dict[str, Any]) -> Vitae:
     """Parse data from dictionary.
 
     Use the functions `_from_file` or `_from_toml` to get `data`.
@@ -178,7 +178,7 @@ def _vitae_from_parsed(data: dict[str, Any]) -> VitaeSettings:
         password=postgres["user"]["password"],
     )
 
-    return VitaeSettings(
+    return Vitae(
         in_production=in_production,
         postgres=PostgresSettings(user=pg_user, db=pg_db),
         paths=PathsSettings(
