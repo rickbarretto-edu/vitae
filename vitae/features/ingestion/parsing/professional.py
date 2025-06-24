@@ -65,6 +65,9 @@ def address_from_xml(researcher_id: str, document: xml.Node) -> Address | None:
     if addr is None:
         return None
 
+    if not addr["cep"]:
+        return None
+
     return Address(
         researcher_id=researcher_id,
         country=addr["pais"],
