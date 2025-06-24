@@ -5,6 +5,8 @@ Internal schemas may implement this as a method because this is needed
 parent data to complete the Table.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from functools import cached_property
 
@@ -28,7 +30,7 @@ __all__ = [
 @dataclass
 class Curriculum:
     researcher: Researcher
-    address: Address
+    address: Address | None
     education: list[Education]
     experience: list[Experience]
 
@@ -38,7 +40,7 @@ class Curriculum:
 
     @property
     def all_institutions(self) -> list[Institution]:
-        from_address = [self.address.institution]
+        from_address = [self.address.institution] if self.address else []
         from_institutions = [edu.institution for edu in self.education]
         from_experiences = [xp.institution for xp in self.experience]
 

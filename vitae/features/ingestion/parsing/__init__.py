@@ -1,5 +1,7 @@
-from collections.abc import Iterator
+from __future__ import annotations
+
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from vitae.features.ingestion import adapters
 
@@ -7,6 +9,9 @@ from . import _xml as xml
 from .academic import education_from_xml
 from .professional import address_from_xml, experience_from_xml
 from .researcher import researcher_from_xml
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 __all__ = [
     "CurriculumDocument",
@@ -42,7 +47,7 @@ class CurriculumDocument:
         return researcher_from_xml(self.id, self.document)
 
     @property
-    def address(self) -> adapters.Address:
+    def address(self) -> adapters.Address | None:
         return address_from_xml(self.id, self.document)
 
     @property

@@ -51,7 +51,7 @@ def experience_from_xml(
             )
 
 
-def address_from_xml(researcher_id: str, document: xml.Node) -> Address:
+def address_from_xml(researcher_id: str, document: xml.Node) -> Address | None:
     """Extract Researcher's Professional Address from XML.
 
     Returns
@@ -61,6 +61,9 @@ def address_from_xml(researcher_id: str, document: xml.Node) -> Address:
     """
     data = document.first("dados gerais")
     addr = data.first("endereco").first("endereco profissional")
+
+    if addr is None:
+        return None
 
     return Address(
         researcher_id=researcher_id,

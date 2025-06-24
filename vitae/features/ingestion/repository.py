@@ -129,7 +129,11 @@ class Researchers:
                 xp.as_table
                 for xp in flatten([cv.experience for cv in curricula])
             ),
-            address=[cv.address.as_table for cv in curricula],
+            address=[
+                cv.address.as_table
+                for cv in curricula
+                if cv.address is not None
+            ],
         )
 
         institutions = [
