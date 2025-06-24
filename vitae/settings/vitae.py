@@ -119,7 +119,7 @@ class Vitae:
     in_production: bool = False
 
     @staticmethod
-    def from_toml(file: Path | str) -> Vitae:
+    def from_toml(file: Path | str = Path("vitae.toml")) -> Vitae:
         """Load data from TOML file.
 
         Parameters
