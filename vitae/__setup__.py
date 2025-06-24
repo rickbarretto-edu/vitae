@@ -14,8 +14,7 @@ import sys
 from loguru import logger
 from sqlmodel import SQLModel
 
-from vitae import settings
-from vitae.settings import Vitae
+from vitae.settings.vitae import Vitae
 
 __all__ = [
     "new_vitae",
@@ -86,7 +85,7 @@ def new_vitae() -> Vitae:
     New Vitae's Settings from ``vitae.toml``
 
     """
-    vitae = settings.Vitae.from_toml(Path("vitae.toml"))
+    vitae = Vitae.from_toml(Path("vitae.toml"))
     setup_vitae(vitae)
     return vitae
 
