@@ -1,4 +1,5 @@
 """Environment Settings."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -145,26 +146,25 @@ def _vitae_from_parsed(data: dict[str, Any]) -> VitaeSettings:
     """  # noqa: DOC201
     in_production: bool = data.get("in_production", False)
     postgres: dict = data.get("postgres") or {}
-    postgres_settings = PostgresSettings(
-        user=PostgresUser(
-            name=postgres["user"]["name"],
-            password=postgres["user"]["password"],
-        ),
-        db=PostgresDatabase(
-            name=postgres["database"]["name"],
-            host=postgres["database"].get("host", "127.0.0.1"),
-            port=postgres["database"].get("port", 5433),
-            flush_every=postgres["database"].get("flush_every", 100),
-        ),
-    )
 
     paths: dict = data.get("paths") or {}
-    paths_settings = PathsSettings(
-        _curricula=Path(paths.get("curricula") or "all_files"),
+
+    pg_db = PostgresDatabase(
+        name=postgres["database"]["name"],
+        host=postgres["database"].get("host", "127.0.0.1"),
+        port=postgres["database"].get("port", 5433),
+        flush_every=postgres["database"].get("flush_every", 100),
+    )
+
+    pg_user = PostgresUser(
+        name=postgres["user"]["name"],
+        password=postgres["user"]["password"],
     )
 
     return VitaeSettings(
         in_production=in_production,
-        postgres=postgres_settings,
-        paths=paths_settings,
+        postgres=PostgresSettings(user=pg_user, db=pg_db),
+        paths=PathsSettings(
+            _curricula=Path(paths.get("curricula") or "all_files"),
+        ),
     )
