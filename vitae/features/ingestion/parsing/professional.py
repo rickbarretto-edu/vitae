@@ -60,7 +60,7 @@ def address_from_xml(researcher_id: str, document: xml.Node) -> Address:
 
     """
     data = document.first("dados gerais")
-    addr = data.first("endereco profissional")
+    addr = data.first("endereco").first("endereco profissional")
 
     return Address(
         researcher_id=researcher_id,
