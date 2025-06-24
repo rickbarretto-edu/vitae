@@ -7,11 +7,20 @@ from pathlib import Path
 
 import loguru
 
-from vitae.core import Repository
-from vitae.features.ingestion.domain import Curriculum
+from vitae.features.ingestion.adapters import Curriculum
 from vitae.infra.database import Database
+from vitae.infra.database.transactions import bulk
 
-flatten = itertools.chain
+
+def flatten[T](xs: Iterable[Iterable[T]]) -> Iterable[T]:
+    """Unnest nested iterable.
+
+    Returns
+    -------
+    A flatten Iterable.
+
+    """
+    return itertools.chain(*xs)
 
 
 def log_with(logger, logfile: str, level: str) -> None:  # noqa: ANN001
@@ -42,7 +51,7 @@ def log_with(logger, logfile: str, level: str) -> None:  # noqa: ANN001
 
 
 @dataclass
-class Researchers(Repository[Curriculum]):
+class Researchers:
     """Researcher's Curriculum Repository."""
 
     db: Database
@@ -69,15 +78,24 @@ class Researchers(Repository[Curriculum]):
         try to put one by one, to log the defected one.
         """
         for group in itertools.batched(researchers, self.every):
-            if not self._put_all(group):
-                group_ids: str = ",".join([r.id for r in group])
-                self.log.warning(group_ids)
-                self._put_each_from(group)
+            if self._try_put_at_once(group):
+                self._log_success(group)
             else:
-                for researcher in group:
-                    self.log.info(researcher.id)
+                self._re_insert(group)
 
-    def _put_all(self, group: Iterable[Curriculum]) -> bool:
+    def _log_success(self, batch: Iterable[Curriculum]) -> None:
+        for curriculum in batch:
+            self.log.info(curriculum.id)
+
+    def _re_insert(self, batch: Iterable[Curriculum]) -> None:
+        self._log_fail(batch)
+        self._put_each_from(batch)
+
+    def _log_fail(self, batch: Iterable[Curriculum]) -> None:
+        ids_to_log: str = ",".join(curriculum.id for curriculum in batch)
+        self.log.warning(ids_to_log)
+
+    def _try_put_at_once(self, batch: Iterable[Curriculum]) -> bool:
         """Put all Researchers at once on database.
 
         Returns
@@ -85,16 +103,52 @@ class Researchers(Repository[Curriculum]):
         If all researchers were sucessfully stored.
 
         """
-        personal = (r.personal_data for r in group)
-        experiences = (r.professional_experiences for r in group)
-        background = (r.academic_background for r in group)
-        areas = (r.research_areas for r in group)
+        curricula = list(batch)
 
-        return self.db.put.researcher(
-            researcher=personal,
-            experience=flatten(*experiences),
-            background=flatten(*background),
-            area=flatten(*areas),
+        researchers = bulk.Researchers(
+            researchers=[cv.researcher.as_table for cv in curricula],
+            nationality=[cv.researcher.nationality_table for cv in curricula],
+            expertise=flatten(
+                [cv.researcher.expertise_tables for cv in curricula],
+            ),
+        )
+
+        academic = bulk.Academic(
+            education=(
+                edu.as_table
+                for edu in flatten([cv.education for cv in curricula])
+            ),
+            fields=flatten(
+                edu.fields_as_table
+                for edu in flatten([cv.education for cv in curricula])
+            ),
+        )
+
+        professional = bulk.Professional(
+            experience=(
+                xp.as_table
+                for xp in flatten([cv.experience for cv in curricula])
+            ),
+            address=[
+                cv.address.as_table
+                for cv in curricula
+                if cv.address is not None
+            ],
+        )
+
+        institutions = [
+            inst.as_table
+            for inst in flatten(list(cv.all_institutions) for cv in curricula)
+            if inst.lattes_id is not None
+        ]
+
+        return self.db.put.batch_transaction(
+            bulk.Institutions(institutions),
+            bulk.Curricula(
+                researchers=researchers,
+                academic=academic,
+                professional=professional,
+            ),
         )
 
     def _put_each_from(self, group: Iterable[Curriculum]) -> None:
@@ -105,7 +159,7 @@ class Researchers(Repository[Curriculum]):
             else:
                 self.log.error(researcher.id)
 
-    def _put_single(self, researcher: Curriculum) -> bool:
+    def _put_single(self, cv: Curriculum) -> bool:
         """Put a single Researcher on database.
 
         Returns
@@ -113,9 +167,29 @@ class Researchers(Repository[Curriculum]):
         If the researcher was sucessfully stored.
 
         """
-        return self.db.put.researcher(
-            researcher=researcher.personal_data,
-            experience=researcher.professional_experiences,
-            background=researcher.academic_background,
-            area=researcher.research_areas,
+        researchers = bulk.Researchers(
+            researchers=[cv.researcher.as_table],
+            nationality=[cv.researcher.nationality_table],
+            expertise=cv.researcher.expertise_tables,
+        )
+
+        academic = bulk.Academic(
+            education=(edu.as_table for edu in cv.education),
+            fields=flatten(edu.fields_as_table for edu in cv.education),
+        )
+
+        professional = bulk.Experience(
+            experience=(xp.as_table for xp in cv.experience),
+            address=[cv.address],
+        )
+
+        return self.db.put.batch_transaction(
+            institutions=bulk.Institutions(
+                inst.as_table for inst in cv.all_institutions
+            ),
+            curricula=bulk.Curricula(
+                researchers=researchers,
+                academic=academic,
+                professional=professional,
+            ),
         )

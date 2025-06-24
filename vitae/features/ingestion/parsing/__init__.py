@@ -1,19 +1,24 @@
-from collections.abc import Iterator
-from pathlib import Path
+from __future__ import annotations
 
-from vitae.features.ingestion import domain
-from vitae.features.ingestion.adapters import schema
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+from vitae.features.ingestion import adapters
 
 from . import _xml as xml
-from .academic_background import academic_background
-from .general_data import general_data
-from .professional_experiences import professional_experiences
-from .research_area import research_area
+from .academic import education_from_xml
+from .professional import address_from_xml, experience_from_xml
+from .researcher import researcher_from_xml
 
-__all__ = ["CurriculumParser"]
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+__all__ = [
+    "CurriculumDocument",
+]
 
 
-class CurriculumParser:
+class CurriculumDocument:
     """Parser for XML Curriculum files.
 
     Notes
@@ -27,29 +32,28 @@ class CurriculumParser:
 
         self.id = file.name.removesuffix(".xml")
         self.document = xml.parse(content)
-        self.data = self.document.first("dados gerais")
 
     @property
-    def all(self) -> domain.Curriculum:
-        return domain.Curriculum(
-            _personal_data=self.researcher,
-            _academic_background=self.background,
-            _professional_experiences=self.experiences,
-            _research_areas=self.areas,
+    def as_schema(self) -> adapters.Curriculum:
+        return adapters.Curriculum(
+            researcher=self.researcher,
+            address=self.address,
+            education=list(self.academic),
+            experience=list(self.experience),
         )
 
     @property
-    def researcher(self) -> schema.GeneralData:
-        return general_data(self.id, self.data)
+    def researcher(self) -> adapters.Researcher:
+        return researcher_from_xml(self.id, self.document)
 
     @property
-    def experiences(self) -> Iterator[schema.ProfessionalExperience]:
-        yield from professional_experiences(self.id, self.data)
+    def address(self) -> adapters.Address | None:
+        return address_from_xml(self.id, self.document)
 
     @property
-    def background(self) -> Iterator[schema.AcademicBackground]:
-        yield from academic_background(self.id, self.data)
+    def academic(self) -> Iterator[adapters.Education]:
+        return education_from_xml(self.id, self.document)
 
     @property
-    def areas(self) -> Iterator[schema.ResearchArea]:
-        yield from research_area(self.id, self.data)
+    def experience(self) -> Iterator[adapters.Experience]:
+        return experience_from_xml(self.id, self.document)

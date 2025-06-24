@@ -1,8 +1,6 @@
-
-
 from vitae.__setup__ import new_vitae
 from vitae.infra.database import Database
-from vitae.settings import VitaeSettings
+from vitae.settings.vitae import Vitae
 
-vitae: VitaeSettings = new_vitae()
+vitae: Vitae = new_vitae()
 database = Database(vitae.postgres.engine)

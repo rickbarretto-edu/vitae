@@ -8,74 +8,19 @@ so the main module should be independent from them.
 """
 
 from pathlib import Path
-import shutil
-import sys
 
-from loguru import logger
-from sqlmodel import SQLModel
-
-from vitae import settings
-from vitae.settings import VitaeSettings
+from vitae.settings.database import setup_database
+from vitae.settings.logging import create_logs, erase_logs, redirect_loguru_to
+from vitae.settings.vitae import Vitae
 
 __all__ = [
     "new_vitae",
 ]
 
-
-# =~=~=~ Logging related subroutines ~=~=~=
-
-
-def erase_logs(path: Path) -> None:
-    """Erase log directory."""
-    shutil.rmtree(path)
-
-
-def create_logs(path: Path) -> None:
-    """Create log directory."""
-    path.mkdir(parents=True, exist_ok=True)
-
-
-def redirect_loguru_to(log_file: Path) -> None:
-    """Redirect loguru's output to ``log_file``."""
-    logger.remove()
-    logger.add(
-        str(log_file),
-        rotation="200 MB",
-        encoding="utf-8",
-        enqueue=True,
-    )
-
-
-def enable_loguru_tracing() -> None:
-    """Enable TRACE level.
-
-    I highly recomend to use this for development environment only.
-    """
-    logger.add(sys.stdout, level="TRACE", colorize=True)
-
-
-# =~=~=~ Database related subroutines ~=~=~=
-
-
-def setup_database(vitae: VitaeSettings) -> None:
-    """Setups database."""
-    # ``models`` module must be evaluated before create or drop it.
-    # That is why this imports an unused variable inside this function.
-    from vitae.infra.database import schema  # noqa: F401
-
-    if vitae.in_development:
-        # Since the dataset for development is far smaller than the production
-        # and we run it multiple times to check everything before the ingestion,
-        # was decided to rewrite the whole database instead.
-        SQLModel.metadata.drop_all(vitae.postgres.engine)
-
-    SQLModel.metadata.create_all(vitae.postgres.engine)
-
-
 # =~=~=~ Public ~=~=~=
 
 
-def new_vitae() -> VitaeSettings:
+def new_vitae() -> Vitae:
     """Create a new vitae application.
 
     This function loads Vitae's settings and sets up the whole application,
@@ -86,12 +31,12 @@ def new_vitae() -> VitaeSettings:
     New Vitae's Settings from ``vitae.toml``
 
     """
-    vitae: settings.VitaeSettings = settings.load()
+    vitae = Vitae.from_toml(Path("vitae.toml"))
     setup_vitae(vitae)
     return vitae
 
 
-def setup_vitae(vitae: VitaeSettings) -> None:
+def setup_vitae(vitae: Vitae) -> None:
     """Setups Vitae's Logging and database."""
     logs = Path("logs")
 

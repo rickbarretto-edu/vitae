@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.exc import SQLAlchemyError
-from sqlmodel import Session
+from sqlmodel import SQLModel, Session
+
+from vitae.infra.database.tables.institution import Institution
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
-    from vitae.infra.database import schema
-
-type Some[T] = T | Iterable[T]
+    from .transactions.bulk import Curricula, Institutions
 
 
 @dataclass
@@ -23,14 +23,15 @@ class PutOperations:
 
     engine: Engine
 
-    def researcher(
+    def batch_transaction(
         self,
-        researcher: Some[schema.Researcher],
-        experience: Some[schema.ProfessionalExperience],
-        background: Some[schema.AcademicBackground],
-        area: Some[schema.ResearchArea],
+        institutions: Institutions,
+        curricula: Curricula,
     ) -> bool:
-        """Put researcher's data into database.
+        """Put a batch of Curriulum into database.
+
+        Use this method when you need to push a huge amount of data.
+        Group them into `Curricula`.
 
         Returns
         -------
@@ -39,10 +40,16 @@ class PutOperations:
         """
         with Session(self.engine) as session:
             try:
-                session.add_all(researcher)
-                session.add_all(experience)
-                session.add_all(background)
-                session.add_all(area)
+                for institution in institutions:
+                    dump = institution.model_dump()
+                    statement = postgresql.insert(Institution).values(**dump)
+                    session.execute(
+                        statement.on_conflict_do_nothing(),
+                    )
+
+                session.add_all(
+                    table for table in curricula if isinstance(table, SQLModel)
+                )
                 session.commit()
             except SQLAlchemyError:
                 session.rollback()

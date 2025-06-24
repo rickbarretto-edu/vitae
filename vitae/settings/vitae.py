@@ -1,15 +1,19 @@
 """Environment Settings."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from functools import cached_property
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import create_engine
-from sqlalchemy.engine import Engine
 import tomllib
 
-__all__ = ["VitaeSettings"]
+if TYPE_CHECKING:
+    from sqlalchemy.engine import Engine
+
+__all__ = ["Vitae"]
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -107,54 +111,68 @@ class PathsSettings:
 
 
 @dataclass(frozen=True, kw_only=True)
-class VitaeSettings:
+class Vitae:
     """Settings loaded from `vitae.toml`."""
 
     postgres: PostgresSettings
     paths: PathsSettings
     in_production: bool = False
 
+    @staticmethod
+    def from_toml(file: Path | str = Path("vitae.toml")) -> Vitae:
+        """Load data from TOML file.
+
+        Parameters
+        ----------
+        file: Path | str
+            This parameter is smarth enough to know when this is a file path,
+            or a content of one.
+
+            If you pass a string that ends with `.toml` this will be transformed
+            into a Path.
+
+        Returns
+        -------
+        Parsed data.
+
+        """
+        if isinstance(file, str) and not file.endswith(".toml"):
+            return _vitae_from_parsed(tomllib.loads(file))
+
+        with Path(file).open("rb") as f:
+            return _vitae_from_parsed(tomllib.load(f))
+
     @property
     def in_development(self) -> bool:  # noqa: D102
         return not self.in_production
 
 
-def load() -> VitaeSettings:
-    """Load configuration from `vitae.toml` file.
+def _vitae_from_parsed(data: dict[str, Any]) -> Vitae:
+    """Parse data from dictionary.
 
-    Returns
-    -------
-    VitaeSettings
-        The loaded settings from the vitae.toml file.
+    Use the functions `_from_file` or `_from_toml` to get `data`.
+    """  # noqa: DOC201
+    in_production: bool = data.get("in_production", False)
+    postgres: dict = data.get("postgres") or {}
 
-    """
-    config_path = Path(__file__).parent.parent / "vitae.toml"
+    paths: dict = data.get("paths") or {}
 
-    with config_path.open("rb") as f:
-        data: dict[str, Any] = tomllib.load(f)
+    pg_db = PostgresDatabase(
+        name=postgres["database"]["name"],
+        host=postgres["database"].get("host", "127.0.0.1"),
+        port=postgres["database"].get("port", 5433),
+        flush_every=postgres["database"].get("flush_every", 100),
+    )
 
-        in_production: bool = data.get("in_production", False)
-        postgres: dict = data.get("postgres") or {}
-        postgres_settings = PostgresSettings(
-            user=PostgresUser(
-                name=postgres["user"]["name"],
-                password=postgres["user"]["password"],
-            ),
-            db=PostgresDatabase(
-                name=postgres["database"]["name"],
-                host=postgres["database"].get("host", "127.0.0.1"),
-                port=postgres["database"].get("port", 5433),
-                flush_every=postgres["database"].get("flush_every", 100),
-            ),
-        )
+    pg_user = PostgresUser(
+        name=postgres["user"]["name"],
+        password=postgres["user"]["password"],
+    )
 
-        paths: dict = data.get("paths") or {}
-        paths_settings = PathsSettings(
+    return Vitae(
+        in_production=in_production,
+        postgres=PostgresSettings(user=pg_user, db=pg_db),
+        paths=PathsSettings(
             _curricula=Path(paths.get("curricula") or "all_files"),
-        )
-
-        return VitaeSettings(
-            in_production=in_production,
-            postgres=postgres_settings,
-            paths=paths_settings,
-        )
+        ),
+    )
