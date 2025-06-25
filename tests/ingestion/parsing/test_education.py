@@ -1,9 +1,10 @@
 from collections.abc import Iterable, Iterator
+from typing import Final
 from vitae.features.ingestion.adapters.academic import Education, StudyField
 from vitae.features.ingestion.adapters.institution import Institution
+from vitae.features.ingestion.parsing._xml import Node
 from vitae.features.ingestion.parsing.academic import education_from_xml
 from .utils import Document, XmlString
-from dataclasses import dataclass
 import pytest
 
 @pytest.fixture
@@ -11,11 +12,9 @@ def sample_researcher() -> str:
     return "123456789"
 
 
-class DescribeEducationFromXml:
-    """Describe education_from_xml function's behavior."""
-
-    def it_parses_valid_education(self, sample_researcher):
-        sample = Document.of("""
+@pytest.fixture
+def document_sample() -> Node:
+    return Document.of("""
         <DADOS-GERAIS>
         <FORMACAO-ACADEMICA-TITULACAO>
             <GRADUACAO
@@ -83,11 +82,15 @@ class DescribeEducationFromXml:
         </DADOS-GERAIS>
         """).as_node
 
-        educations: list[Education] = list(education_from_xml(sample_researcher, sample))
+class DescribeEducationFromXml:
+    """Describe education_from_xml function's behavior."""
 
+    def it_parses_all_entries(self, sample_researcher, document_sample):
+        educations: list[Education] = list(education_from_xml(sample_researcher, document_sample))
         assert len(educations) == 4
 
-        # Test Graduação
+    def it_parses_graduation(self, sample_researcher, document_sample):
+        educations: list[Education] = list(education_from_xml(sample_researcher, document_sample))
         grad = educations[0]
         assert grad.category == "GRADUACAO"
         assert grad.course == "Computer Science"
@@ -96,7 +99,8 @@ class DescribeEducationFromXml:
         assert grad.institution.lattes_id == "UNI001"
         assert grad.institution.name == "Tech University"
 
-        # Test Mestrado
+    def it_parses_master(self, sample_researcher, document_sample):
+        educations: list[Education] = list(education_from_xml(sample_researcher, document_sample))
         master = educations[1]
         assert master.category == "MESTRADO"
         assert master.course == "Artificial Intelligence"
@@ -104,16 +108,16 @@ class DescribeEducationFromXml:
         assert master.end == 2017
         assert master.institution.lattes_id == "UNI002"
         assert master.institution.name == "Institute of Technology"
-
         assert len(master.fields) == 2
         assert any(sf.area == "Ciência da Computação" for sf in master.fields)
         assert any(
-            fields.specialty == "Redes Neurais" 
-            or fields.specialty == "Aprendizado de Máquina" 
+            fields.specialty == "Redes Neurais"
+            or fields.specialty == "Aprendizado de Máquina"
             for fields in master.fields
         )
 
-        # Test Doutorado
+    def it_parses_phd(self, sample_researcher, document_sample):
+        educations: list[Education] = list(education_from_xml(sample_researcher, document_sample))
         phd = educations[2]
         assert phd.category == "DOUTORADO"
         assert phd.course == "Data Science"
@@ -122,14 +126,14 @@ class DescribeEducationFromXml:
         assert phd.institution.lattes_id == "UNI003"
         assert phd.institution.name == "Advanced Computing Institute"
 
-        # Test Pós-Doutorado
+    def it_parses_posdoc(self, sample_researcher, document_sample):
+        educations: list[Education] = list(education_from_xml(sample_researcher, document_sample))
         postdoc = educations[3]
         assert postdoc.category == "POS-DOUTORADO"
         assert postdoc.start == 2022
         assert postdoc.end == 2024
         assert postdoc.institution.lattes_id == "UNI004"
         assert postdoc.institution.name == "Global Tech Lab"
-
         assert len(postdoc.fields) == 3
         assert any(field.area == "Engenharia de Software" for field in postdoc.fields)
         assert any(field.specialty == "Big Data" for field in postdoc.fields)
