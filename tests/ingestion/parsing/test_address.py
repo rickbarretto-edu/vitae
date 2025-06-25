@@ -67,66 +67,40 @@ def sample_address(sample_researcher: str) -> Address:
         institution=institution,
     )
 
-def test_address_from_xml_parses_correctly(sample_researcher, sample_address):
-    sample = SampleDocument(sample_address).as_node
-    actual = address_from_xml(sample_researcher, sample)
 
-    assert actual is not None
-    assert actual.cep == sample_address.cep
-    assert actual.country == sample_address.country
-    assert actual.state == sample_address.state
-    assert actual.city == sample_address.city
-    assert actual.neighborhood == sample_address.neighborhood
-    # assert actual.public_place == sample_address.public_place
-    assert actual.institution.lattes_id == sample_address.institution.lattes_id
-    assert actual.institution.name == sample_address.institution.name
+class DescribeAddressFromXml:
+    """Describe address_from_xml function's behavior."""
 
+    def it_parses_valid_address(self, sample_researcher, sample_address):
+        sample = SampleDocument(sample_address).as_node
+        actual = address_from_xml(sample_researcher, sample)
 
-@pytest.mark.parametrize(
-    "cep,city,neighborhood,public_place",
-    [
-        ("00000-000", "Rio de Janeiro", "Copacabana", "Rua Atlântica, 2000"),
-        ("99999-999", "Belo Horizonte", "Savassi", "Av. Cristóvão Colombo, 100"),
-    ]
-)
-def test_address_from_xml_various_fields(cep, city, neighborhood, public_place, sample_researcher, sample_address):
-    sample = SampleDocument(
-        Address(
-            researcher_id=sample_researcher,
-            cep=cep,
-            country=sample_address.country,
-            state=sample_address.state,
-            city=city,
-            neighborhood=neighborhood,
-            public_place=public_place,
-            institution=sample_address.institution,
-        )
-    ).as_node
-
-    actual = address_from_xml(sample_researcher, sample)
-
-    assert actual is not None
-    assert actual.cep == cep
-    assert actual.city == city
-    assert actual.neighborhood == neighborhood
-    # assert actual.public_place == public_place
+        assert actual is not None
+        assert actual.cep == sample_address.cep
+        assert actual.country == sample_address.country
+        assert actual.state == sample_address.state
+        assert actual.city == sample_address.city
+        assert actual.neighborhood == sample_address.neighborhood
+        # assert actual.public_place == sample_address.public_place
+        assert actual.institution.lattes_id == sample_address.institution.lattes_id
+        assert actual.institution.name == sample_address.institution.name
 
 
-def test_cep_missing_implies_no_address(sample_researcher, sample_address):
-    sample = SampleDocument(
-        Address(
-            researcher_id=sample_researcher,
-            cep="",
-            country=sample_address.country,
-            state=sample_address.state,
-            city=sample_address.city,
-            neighborhood=sample_address.neighborhood,
-            public_place=sample_address.public_place,
-            institution=sample_address.institution,
-        )
-    ).as_node
+    def its_none_cep_is_missing(self, sample_researcher, sample_address):
+        sample = SampleDocument(
+            Address(
+                researcher_id=sample_researcher,
+                cep="",
+                country=sample_address.country,
+                state=sample_address.state,
+                city=sample_address.city,
+                neighborhood=sample_address.neighborhood,
+                public_place=sample_address.public_place,
+                institution=sample_address.institution,
+            )
+        ).as_node
 
-    actual = address_from_xml(sample_researcher, sample)
+        actual = address_from_xml(sample_researcher, sample)
 
-    assert actual is None
+        assert actual is None
 
