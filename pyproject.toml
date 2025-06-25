@@ -23,6 +23,7 @@ loguru = "^0.7.3"
 pytest = "^8.3.5"
 sqlmodel = "^0.0.24"
 cyclopts = "^3.19.0"
+pytest-cov = "^6.2.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -36,7 +37,7 @@ testpaths = [
 ]
 python_files = ["*test_*.py", "*_spec", "*_case", "*_usecase"]
 python_classes = ["Test*", "Suite*", "Spec*", "Describe*"]
-python_functions = ["test_*", "should_*", "it_*", "its_*", "has_*", "is_*", "have_*", "are_*", "when_*"]
+python_functions = ["test_*", "should_*", "it_*", "its_*", "has_*", "is_*", "have_*", "are_*", "when_*", "and_"]
 console_output_style = "progress"
 
 [build-system]

@@ -12,3 +12,4 @@ vitae.toml
 all_files/
 all_files copy/
 *.xml
+.coverage

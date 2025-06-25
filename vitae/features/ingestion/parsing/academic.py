@@ -27,7 +27,7 @@ def education_from_xml(
     education_summary = data.first("formacao academica titulacao").element
 
     if education_summary is not None:
-        for edu in education_summary.iter():
+        for edu in education_summary:
             education = xml.Node(edu)
             if edu.tag != "FORMACAO-ACADEMICA-TITULACAO":
                 yield Education(
@@ -49,7 +49,7 @@ def education_from_xml(
 def fields_from_education(education: xml.Node) -> Iterator[StudyField]:
     areas = education.first("areas do conhecimento").element
     if areas is not None:
-        for a in areas.iter():
+        for a in areas:
             area = xml.Node(a)
             yield StudyField(
                 major=area["nome grande area do conhecimento"],
