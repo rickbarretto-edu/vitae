@@ -54,7 +54,11 @@ def ingest(
 
     root_directory = vitae.paths.curricula
     scan_only = merge_indexes(root_directory, indexes, _range)
-    repository = Researchers(db=database, every=buffer)
+    repository = Researchers(
+        log_directory=vitae.paths.logs,
+        db=database,
+        every=buffer,
+    )
     processed_curricula = curricula_xml_from(
         Path("logs/ingestion/processed.log"),
     )

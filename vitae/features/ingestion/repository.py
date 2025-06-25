@@ -10,6 +10,7 @@ import loguru
 from vitae.features.ingestion.adapters import Curriculum
 from vitae.infra.database import Database
 from vitae.infra.database.transactions import bulk
+from vitae.settings.vitae import Vitae
 
 
 def flatten[T](xs: Iterable[Iterable[T]]) -> Iterable[T]:
@@ -23,13 +24,13 @@ def flatten[T](xs: Iterable[Iterable[T]]) -> Iterable[T]:
     return itertools.chain(*xs)
 
 
-def log_with(logger, logfile: str, level: str) -> None:  # noqa: ANN001
+def log_with(into: Path, logger, logfile: str, level: str) -> None:  # noqa: ANN001
     """Create logs handlers with strict level policy.
 
     This allow us to redirect each kind of logging to the right file,
     and at the same time not mixing levels in those files.
     """
-    file = Path(f"logs/ingestion/{logfile}.log")
+    file = into / f"ingestion/{logfile}.log"
 
     def restrict_level(record) -> bool:  # noqa: ANN001
         """Create a level strict filter.
@@ -55,6 +56,7 @@ class Researchers:
     """Researcher's Curriculum Repository."""
 
     db: Database
+    log_directory: Path
     every: int = 50
 
     def __post_init__(self) -> None:
@@ -66,9 +68,9 @@ class Researchers:
         - ERROR: logs failed individual commits.
         """
         self.log = loguru.logger
-        log_with(self.log, "processed", "INFO")
-        log_with(self.log, "rolledback-group", "WARNING")
-        log_with(self.log, "failed", "ERROR")
+        log_with(self.log_directory, self.log, "processed", "INFO")
+        log_with(self.log_directory, self.log, "rolledback-group", "WARNING")
+        log_with(self.log_directory, self.log, "failed", "ERROR")
 
     def put(self, researchers: Iterable[Curriculum]) -> None:
         """Put Researchers on database.

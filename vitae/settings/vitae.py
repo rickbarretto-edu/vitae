@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import cached_property
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -87,6 +87,7 @@ class PathsSettings:
 
     """
 
+    logs: Path = Path("logs/")
     _curricula: Path = Path("all_files")
 
     def __post_init__(self) -> None:
@@ -141,6 +142,16 @@ class Vitae:
 
         with Path(file).open("rb") as f:
             return _vitae_from_parsed(tomllib.load(f))
+
+    def with_logs(self, directory: Path = Path("logs")) -> Vitae:
+        """Change the current log directory.
+
+        Returns
+        -------
+        New modified instance of itself.
+
+        """
+        return replace(self, paths=replace(self.paths, logs=directory))
 
     @property
     def in_development(self) -> bool:  # noqa: D102
