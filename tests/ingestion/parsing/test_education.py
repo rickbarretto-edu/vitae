@@ -1,11 +1,10 @@
-from collections.abc import Iterable, Iterator
-from typing import Final
-from vitae.features.ingestion.adapters.academic import Education, StudyField
-from vitae.features.ingestion.adapters.institution import Institution
+import pytest
+
+from vitae.features.ingestion.adapters.academic import Education
 from vitae.features.ingestion.parsing._xml import Node
 from vitae.features.ingestion.parsing.academic import education_from_xml
-from .utils import Document, XmlString
-import pytest
+
+from .utils import Document
 
 
 @pytest.fixture
