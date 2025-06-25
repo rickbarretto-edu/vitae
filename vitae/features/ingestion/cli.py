@@ -4,7 +4,10 @@ from typing import Annotated
 import cyclopts
 from cyclopts import Parameter
 
-from vitae.shared import database, vitae
+from vitae.infra.database import Database
+from vitae.infra.database.settings import setup_database
+from vitae.settings.logging import create_logs, erase_logs, redirect_loguru_to
+from vitae.settings.vitae import Vitae
 
 from .repository import Researchers
 from .usecase import Ingestion
@@ -45,6 +48,10 @@ def ingest(
         Use higher numbers on production.
 
     """
+    vitae = Vitae.from_toml(Path("vitae.toml"))
+    setup(vitae)
+    database = Database(vitae.postgres.engine)
+
     root_directory = vitae.paths.curricula
     scan_only = merge_indexes(root_directory, indexes, _range)
     repository = Researchers(db=database, every=buffer)
@@ -107,3 +114,17 @@ def curricula_xml_from(log: Path) -> set[str]:
     with log.open("r") as file:
         result: set[str] = {line.strip("\n") + ".xml" for line in file}
     return result
+
+
+def setup(vitae: Vitae) -> None:
+    """Set environment."""
+    logs = Path("logs")
+
+    if vitae.in_development:
+        # Since this will run multiple times, this is better to erase logs
+        # to avoid unnecessary confusion with older logs.
+        erase_logs(logs)
+
+    create_logs(logs)
+    redirect_loguru_to(logs / "vitae.log")
+    setup_database(vitae)
