@@ -7,6 +7,7 @@ from vitae.features.ingestion.parsing.academic import education_from_xml
 from .utils import Document, XmlString
 import pytest
 
+
 @pytest.fixture
 def sample_researcher() -> str:
     return "123456789"
@@ -82,11 +83,14 @@ def document_sample() -> Node:
         </DADOS-GERAIS>
         """).as_node
 
+
 class TestEducationFromXml:
     """Tests for education_from_xml function."""
 
     def has_all_entries(self, sample_researcher, document_sample):
-        educations: list[Education] = list(education_from_xml(sample_researcher, document_sample))
+        educations: list[Education] = list(
+            education_from_xml(sample_researcher, document_sample)
+        )
         assert len(educations) == 4
 
 
@@ -140,7 +144,8 @@ class TestMasterFromXml:
         assert len(master.fields) == 2
         assert any(sf.area == "Ciência da Computação" for sf in master.fields)
         assert any(
-            field.specialty == "Redes Neurais" or field.specialty == "Aprendizado de Máquina"
+            field.specialty == "Redes Neurais"
+            or field.specialty == "Aprendizado de Máquina"
             for field in master.fields
         )
 
@@ -167,27 +172,39 @@ class TestPhdFromXml:
         assert phd.institution.lattes_id == "UNI003"
         assert phd.institution.name == "Advanced Computing Institute"
 
+
 class TestPostdocFromXml:
     def has_category(self, sample_researcher, document_sample):
-        postdoc = list(education_from_xml(sample_researcher, document_sample))[3]
+        postdoc = list(education_from_xml(sample_researcher, document_sample))[
+            3
+        ]
         assert postdoc.category == "POS-DOUTORADO"
 
     def has_start_year(self, sample_researcher, document_sample):
-        postdoc = list(education_from_xml(sample_researcher, document_sample))[3]
+        postdoc = list(education_from_xml(sample_researcher, document_sample))[
+            3
+        ]
         assert postdoc.start == 2022
 
     def has_end_year(self, sample_researcher, document_sample):
-        postdoc = list(education_from_xml(sample_researcher, document_sample))[3]
+        postdoc = list(education_from_xml(sample_researcher, document_sample))[
+            3
+        ]
         assert postdoc.end == 2024
 
     def has_institution(self, sample_researcher, document_sample):
-        postdoc = list(education_from_xml(sample_researcher, document_sample))[3]
+        postdoc = list(education_from_xml(sample_researcher, document_sample))[
+            3
+        ]
         assert postdoc.institution.lattes_id == "UNI004"
         assert postdoc.institution.name == "Global Tech Lab"
 
     def has_fields(self, sample_researcher, document_sample):
-        postdoc = list(education_from_xml(sample_researcher, document_sample))[3]
+        postdoc = list(education_from_xml(sample_researcher, document_sample))[
+            3
+        ]
         assert len(postdoc.fields) == 3
-        assert any(field.area == "Engenharia de Software" for field in postdoc.fields)
+        assert any(
+            field.area == "Engenharia de Software" for field in postdoc.fields
+        )
         assert any(field.specialty == "Big Data" for field in postdoc.fields)
-

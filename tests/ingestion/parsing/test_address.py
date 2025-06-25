@@ -48,15 +48,22 @@ class SampleDocument(Document):
             institution_id=institution.lattes_id,
             institution_name=institution.name,
         )
-    
+
 
 @pytest.fixture
 def sample_researcher() -> str:
     return "123456789"
 
+
 @pytest.fixture
 def sample_address(sample_researcher: str) -> Address:
-    institution = Institution(lattes_id="12345", name="Test University", abbr=None, country=None, state=None)
+    institution = Institution(
+        lattes_id="12345",
+        name="Test University",
+        abbr=None,
+        country=None,
+        state=None,
+    )
     return Address(
         researcher_id=sample_researcher,
         cep="12345-678",
@@ -83,9 +90,10 @@ class DescribeAddressFromXml:
         assert actual.city == sample_address.city
         assert actual.neighborhood == sample_address.neighborhood
         # assert actual.public_place == sample_address.public_place
-        assert actual.institution.lattes_id == sample_address.institution.lattes_id
+        assert (
+            actual.institution.lattes_id == sample_address.institution.lattes_id
+        )
         assert actual.institution.name == sample_address.institution.name
-
 
     def its_none_cep_is_missing(self, sample_researcher, sample_address):
         sample = SampleDocument(
@@ -104,4 +112,3 @@ class DescribeAddressFromXml:
         actual = address_from_xml(sample_researcher, sample)
 
         assert actual is None
-
