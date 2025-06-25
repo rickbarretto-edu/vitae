@@ -75,7 +75,7 @@ def address_from_xml(researcher_id: str, document: xml.Node) -> Address | None:
         city=addr["cidade"],
         neighborhood=addr["bairro"],
         cep=addr["cep"],
-        public_place=addr["logradouro completo"],
+        public_place=addr["logradouro complemento"],
         institution=institution_from_xml(
             addr["codigo instituicao empresa"],
             addr["nome instituicao empresa"],
