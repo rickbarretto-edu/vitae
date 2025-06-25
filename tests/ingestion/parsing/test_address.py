@@ -84,20 +84,35 @@ def unwrap[T](x: T | None) -> T:
 class DescribeValidAddressFromXml:
     """Describe address_from_xml function's behavior."""
 
-    def it_parses_valid_address(self, sample_researcher, sample_address):
-        sample = SampleDocument(sample_address).as_node
-        actual = unwrap(address_from_xml(sample_researcher, sample))
+    def has_cep(self, sample_researcher, sample_address):
+        address = unwrap(address_from_xml(sample_researcher, SampleDocument(sample_address).as_node))
+        assert address.cep == sample_address.cep
 
-        assert actual.cep == sample_address.cep
-        assert actual.country == sample_address.country
-        assert actual.state == sample_address.state
-        assert actual.city == sample_address.city
-        assert actual.neighborhood == sample_address.neighborhood
-        # assert actual.public_place == sample_address.public_place
-        assert (
-            actual.institution.lattes_id == sample_address.institution.lattes_id
-        )
-        assert actual.institution.name == sample_address.institution.name
+    def has_country(self, sample_researcher, sample_address):
+        address = unwrap(address_from_xml(sample_researcher, SampleDocument(sample_address).as_node))
+        assert address.country == sample_address.country
+    
+    def has_state(self, sample_researcher, sample_address):
+        address = unwrap(address_from_xml(sample_researcher, SampleDocument(sample_address).as_node))
+        assert address.state == sample_address.state
+    
+    def has_city(self, sample_researcher, sample_address):
+        address = unwrap(address_from_xml(sample_researcher, SampleDocument(sample_address).as_node))
+        assert address.city == sample_address.city
+
+    def has_neighborhood(self, sample_researcher, sample_address):
+        address = unwrap(address_from_xml(sample_researcher, SampleDocument(sample_address).as_node))
+        assert address.neighborhood == sample_address.neighborhood
+    
+    def has_public_place(self, sample_researcher, sample_address):
+        address = unwrap(address_from_xml(sample_researcher, SampleDocument(sample_address).as_node))
+        assert address.public_place == sample_address.public_place
+
+    def has_associated_institution(self, sample_researcher, sample_address):
+        address = unwrap(address_from_xml(sample_researcher, SampleDocument(sample_address).as_node))
+        institution = address.institution
+        assert institution.lattes_id == sample_address.institution.lattes_id
+        assert institution.name == sample_address.institution.name
 
 
 class DescribeCEPlessAddress:
