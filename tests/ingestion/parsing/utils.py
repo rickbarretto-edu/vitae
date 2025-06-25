@@ -19,6 +19,15 @@ class Document(abc.ABC):
     def template(self) -> XmlString:
         ...
 
+    @staticmethod
+    def of(content: str):
+        class Sample(Document):
+            @property
+            def template(self) -> XmlString:
+                return content
+            
+        return Sample()
+
     def __str__(self) -> str:
         xml = f"""<?xml version="1.0" ?>
         <CURRICULO-VITAE>
