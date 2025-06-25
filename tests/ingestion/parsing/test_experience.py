@@ -1,10 +1,9 @@
-from random import sample
-from vitae.features.ingestion.adapters.professional import Experience
-from vitae.features.ingestion.adapters.institution import Institution
+import pytest
+
 from vitae.features.ingestion.parsing._xml import Node
 from vitae.features.ingestion.parsing.professional import experience_from_xml
+
 from .utils import Document
-import pytest
 
 
 @pytest.fixture
