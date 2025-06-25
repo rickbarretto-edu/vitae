@@ -3,7 +3,7 @@ from attr import dataclass
 
 from vitae.features.ingestion.adapters.institution import Institution
 from vitae.features.ingestion.parsing.professional import address_from_xml
-from .utils import Document, XmlString, Node
+from .utils import Document, XmlString
 
 from vitae.features.ingestion.adapters.professional import Address
 import pytest
