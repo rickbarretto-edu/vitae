@@ -7,12 +7,12 @@ from .utils import Document
 
 
 @pytest.fixture
-def sample_researcher() -> str:
+def researcher() -> str:
     return "123456789"
 
 
 @pytest.fixture
-def document_sample() -> Node:
+def document() -> Node:
     return Document.of("""
     <DADOS-GERAIS>
     <ATUACOES-PROFISSIONAIS>
@@ -54,105 +54,105 @@ def document_sample() -> Node:
 class DescribeExperienceFromXml:
     """Tests for experience_from_xml function."""
 
-    def has_4_entries(self, sample_researcher, document_sample):
-        experiences = list(experience_from_xml(sample_researcher, document_sample))
+    def has_4_entries(self, researcher, document):
+        experiences = list(experience_from_xml(researcher, document))
         assert len(experiences) == 4
 
 
 class DescribeFirstUCSExperience:
-    def has_saple_researcher_as_owner(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[0]
-        assert exp.researcher_id == sample_researcher
+    def has_saple_researcher_as_owner(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[0]
+        assert exp.researcher_id == researcher
 
-    def it_starts_at_2006(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[0]
+    def it_starts_at_2006(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[0]
         assert exp.start == 2006
 
-    def and_ends_at_2013(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[0]
+    def and_ends_at_2013(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[0]
         assert exp.end == 2013
 
-    def is_public_service_relationship(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[0]
+    def is_public_service_relationship(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[0]
         assert exp.relationship == "SERVIDOR_PUBLICO"
 
-    def has_link_with_ucf(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[0]
+    def has_link_with_ucf(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[0]
         assert exp.institution.lattes_id == "1234"
         assert exp.institution.name == "University of Computer Science"
 
 
 class DescribeSecondUCSExperience:
-    def has_sample_researcher_as_owner(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[1]
-        assert exp.researcher_id == sample_researcher
+    def has_sample_researcher_as_owner(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[1]
+        assert exp.researcher_id == researcher
 
-    def it_starts_at_2013(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[1]
+    def it_starts_at_2013(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[1]
         assert exp.start == 2013
 
-    def has_no_end(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[1]
+    def has_no_end(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[1]
         assert exp.end is None
 
-    def is_public_service_relationship(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[1]
+    def is_public_service_relationship(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[1]
         assert exp.relationship == "SERVIDOR_PUBLICO"
 
-    def has_link_with_ucf(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[1]
+    def has_link_with_ucf(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[1]
         assert exp.institution.lattes_id == "1234"
         assert exp.institution.name == "University of Computer Science"
 
 
 class DescribeFirstTechInnovationsExperience:
-    def has_sample_researcher_as_owner(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[2]
-        assert exp.researcher_id == sample_researcher
+    def has_sample_researcher_as_owner(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[2]
+        assert exp.researcher_id == researcher
 
-    def it_starts_at_2001(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[2]
+    def it_starts_at_2001(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[2]
         assert exp.start == 2001
 
-    def and_ends_at_2004(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[2]
+    def and_ends_at_2004(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[2]
         assert exp.end == 2004
 
-    def when_relationship_is_free(self, sample_researcher, document_sample):
+    def when_relationship_is_free(self, researcher, document):
         def its_considered_other():
-            exp = list(experience_from_xml(sample_researcher, document_sample))[2]
+            exp = list(experience_from_xml(researcher, document))[2]
             assert exp.relationship == "MSc Computer Science Student"
         
         its_considered_other()
 
-    def has_link_with_tech_innovations(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[2]
+    def has_link_with_tech_innovations(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[2]
         assert exp.institution.lattes_id == "5678"
         assert exp.institution.name == "Tech Innovations Inc."
 
 
 class DescribeSecondTechInnovationsExperience:
-    def has_sample_researcher_as_owner(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[3]
-        assert exp.researcher_id == sample_researcher
+    def has_sample_researcher_as_owner(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[3]
+        assert exp.researcher_id == researcher
 
-    def it_starts_at_2007(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[3]
+    def it_starts_at_2007(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[3]
         assert exp.start == 2007
 
-    def and_ends_at_2009(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[3]
+    def and_ends_at_2009(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[3]
         assert exp.end == 2009
 
-    def when_relationship_is_free(self, sample_researcher, document_sample):
+    def when_relationship_is_free(self, researcher, document):
         def its_considered_other():
-            exp = list(experience_from_xml(sample_researcher, document_sample))[3]
+            exp = list(experience_from_xml(researcher, document))[3]
             assert exp.relationship == "PhD Computer Science Student"
 
         its_considered_other()
 
-    def has_link_with_tech_innovations(self, sample_researcher, document_sample):
-        exp = list(experience_from_xml(sample_researcher, document_sample))[3]
+    def has_link_with_tech_innovations(self, researcher, document):
+        exp = list(experience_from_xml(researcher, document))[3]
         assert exp.institution.lattes_id == "5678"
         assert exp.institution.name == "Tech Innovations Inc."
 
