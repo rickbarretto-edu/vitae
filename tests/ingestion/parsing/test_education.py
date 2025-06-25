@@ -8,12 +8,12 @@ from .utils import Document
 
 
 @pytest.fixture
-def sample_researcher() -> str:
+def researcher() -> str:
     return "123456789"
 
 
 @pytest.fixture
-def document_sample() -> Node:
+def document() -> Node:
     return Document.of("""
         <DADOS-GERAIS>
         <FORMACAO-ACADEMICA-TITULACAO>
@@ -86,60 +86,60 @@ def document_sample() -> Node:
 class DescribeEducationFromXml:
     """Tests for education_from_xml function."""
 
-    def has_4_entries(self, sample_researcher, document_sample):
+    def has_4_entries(self, researcher, document):
         educations: list[Education] = list(
-            education_from_xml(sample_researcher, document_sample)
+            education_from_xml(researcher, document)
         )
         assert len(educations) == 4
 
 
 class DescribeGraduationOfEducation:
-    def is_graduation(self, sample_researcher, document_sample):
-        grad = list(education_from_xml(sample_researcher, document_sample))[0]
+    def is_graduation(self, researcher, document):
+        grad = list(education_from_xml(researcher, document))[0]
         assert grad.category == "GRADUACAO"
 
-    def is_cs_course(self, sample_researcher, document_sample):
-        grad = list(education_from_xml(sample_researcher, document_sample))[0]
+    def is_cs_course(self, researcher, document):
+        grad = list(education_from_xml(researcher, document))[0]
         assert grad.course == "Computer Science"
 
-    def its_starts_at_2014(self, sample_researcher, document_sample):
-        grad = list(education_from_xml(sample_researcher, document_sample))[0]
+    def its_starts_at_2014(self, researcher, document):
+        grad = list(education_from_xml(researcher, document))[0]
         assert grad.start == 2010
 
-    def and_ends_at_2014(self, sample_researcher, document_sample):
-        grad = list(education_from_xml(sample_researcher, document_sample))[0]
+    def and_ends_at_2014(self, researcher, document):
+        grad = list(education_from_xml(researcher, document))[0]
         assert grad.end == 2014
 
-    def its_serviced_by_tech_uni(self, sample_researcher, document_sample):
-        grad = list(education_from_xml(sample_researcher, document_sample))[0]
+    def its_serviced_by_tech_uni(self, researcher, document):
+        grad = list(education_from_xml(researcher, document))[0]
         assert grad.institution.lattes_id == "UNI001"
         assert grad.institution.name == "Tech University"
 
 
 class DescribeMasterOfEducation:
-    def is_master(self, sample_researcher, document_sample):
-        master = list(education_from_xml(sample_researcher, document_sample))[1]
+    def is_master(self, researcher, document):
+        master = list(education_from_xml(researcher, document))[1]
         assert master.category == "MESTRADO"
 
-    def is_ai_course(self, sample_researcher, document_sample):
-        master = list(education_from_xml(sample_researcher, document_sample))[1]
+    def is_ai_course(self, researcher, document):
+        master = list(education_from_xml(researcher, document))[1]
         assert master.course == "Artificial Intelligence"
 
-    def its_starts_at_2015(self, sample_researcher, document_sample):
-        master = list(education_from_xml(sample_researcher, document_sample))[1]
+    def its_starts_at_2015(self, researcher, document):
+        master = list(education_from_xml(researcher, document))[1]
         assert master.start == 2015
 
-    def and_ends_at_2017(self, sample_researcher, document_sample):
-        master = list(education_from_xml(sample_researcher, document_sample))[1]
+    def and_ends_at_2017(self, researcher, document):
+        master = list(education_from_xml(researcher, document))[1]
         assert master.end == 2017
 
-    def its_serviced_by_tech_inst(self, sample_researcher, document_sample):
-        master = list(education_from_xml(sample_researcher, document_sample))[1]
+    def its_serviced_by_tech_inst(self, researcher, document):
+        master = list(education_from_xml(researcher, document))[1]
         assert master.institution.lattes_id == "UNI002"
         assert master.institution.name == "Institute of Technology"
 
-    def has_fields(self, sample_researcher, document_sample):
-        master = list(education_from_xml(sample_researcher, document_sample))[1]
+    def has_fields(self, researcher, document):
+        master = list(education_from_xml(researcher, document))[1]
         assert len(master.fields) == 2
         assert any(sf.area == "Ciência da Computação" for sf in master.fields)
         assert any(
@@ -150,56 +150,56 @@ class DescribeMasterOfEducation:
 
 
 class DescribePhdOfEducation:
-    def is_phd(self, sample_researcher, document_sample):
-        phd = list(education_from_xml(sample_researcher, document_sample))[2]
+    def is_phd(self, researcher, document):
+        phd = list(education_from_xml(researcher, document))[2]
         assert phd.category == "DOUTORADO"
 
-    def is_data_science_course(self, sample_researcher, document_sample):
-        phd = list(education_from_xml(sample_researcher, document_sample))[2]
+    def is_data_science_course(self, researcher, document):
+        phd = list(education_from_xml(researcher, document))[2]
         assert phd.course == "Data Science"
 
-    def its_starts_at_2018(self, sample_researcher, document_sample):
-        phd = list(education_from_xml(sample_researcher, document_sample))[2]
+    def its_starts_at_2018(self, researcher, document):
+        phd = list(education_from_xml(researcher, document))[2]
         assert phd.start == 2018
 
-    def and_ends_at_2022(self, sample_researcher, document_sample):
-        phd = list(education_from_xml(sample_researcher, document_sample))[2]
+    def and_ends_at_2022(self, researcher, document):
+        phd = list(education_from_xml(researcher, document))[2]
         assert phd.end == 2022
 
-    def its_serviced_by_advanced_computing(self, sample_researcher, document_sample):
-        phd = list(education_from_xml(sample_researcher, document_sample))[2]
+    def its_serviced_by_advanced_computing(self, researcher, document):
+        phd = list(education_from_xml(researcher, document))[2]
         assert phd.institution.lattes_id == "UNI003"
         assert phd.institution.name == "Advanced Computing Institute"
 
 
 class DescribePostdocOfEducation:
-    def is_postdoc(self, sample_researcher, document_sample):
-        postdoc = list(education_from_xml(sample_researcher, document_sample))[
+    def is_postdoc(self, researcher, document):
+        postdoc = list(education_from_xml(researcher, document))[
             3
         ]
         assert postdoc.category == "POS-DOUTORADO"
 
-    def its_starts_at_2022(self, sample_researcher, document_sample):
-        postdoc = list(education_from_xml(sample_researcher, document_sample))[
+    def its_starts_at_2022(self, researcher, document):
+        postdoc = list(education_from_xml(researcher, document))[
             3
         ]
         assert postdoc.start == 2022
 
-    def and_ends_at_2024(self, sample_researcher, document_sample):
-        postdoc = list(education_from_xml(sample_researcher, document_sample))[
+    def and_ends_at_2024(self, researcher, document):
+        postdoc = list(education_from_xml(researcher, document))[
             3
         ]
         assert postdoc.end == 2024
 
-    def its_serviced_by_global_lab(self, sample_researcher, document_sample):
-        postdoc = list(education_from_xml(sample_researcher, document_sample))[
+    def its_serviced_by_global_lab(self, researcher, document):
+        postdoc = list(education_from_xml(researcher, document))[
             3
         ]
         assert postdoc.institution.lattes_id == "UNI004"
         assert postdoc.institution.name == "Global Tech Lab"
 
-    def has_fields(self, sample_researcher, document_sample):
-        postdoc = list(education_from_xml(sample_researcher, document_sample))[
+    def has_fields(self, researcher, document):
+        postdoc = list(education_from_xml(researcher, document))[
             3
         ]
         assert len(postdoc.fields) == 3
