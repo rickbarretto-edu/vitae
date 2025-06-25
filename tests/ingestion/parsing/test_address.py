@@ -76,14 +76,18 @@ def sample_address(sample_researcher: str) -> Address:
     )
 
 
+def unwrap[T](x: T | None) -> T:
+    assert x is not None
+    return x
+
+
 class DescribeAddressFromXml:
     """Describe address_from_xml function's behavior."""
 
     def it_parses_valid_address(self, sample_researcher, sample_address):
         sample = SampleDocument(sample_address).as_node
-        actual = address_from_xml(sample_researcher, sample)
+        actual = unwrap(address_from_xml(sample_researcher, sample))
 
-        assert actual is not None
         assert actual.cep == sample_address.cep
         assert actual.country == sample_address.country
         assert actual.state == sample_address.state
