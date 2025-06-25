@@ -82,62 +82,112 @@ def document_sample() -> Node:
         </DADOS-GERAIS>
         """).as_node
 
-class DescribeEducationFromXml:
-    """Describe education_from_xml function's behavior."""
+class TestEducationFromXml:
+    """Tests for education_from_xml function."""
 
-    def it_parses_all_entries(self, sample_researcher, document_sample):
+    def has_all_entries(self, sample_researcher, document_sample):
         educations: list[Education] = list(education_from_xml(sample_researcher, document_sample))
         assert len(educations) == 4
 
-    def it_parses_graduation(self, sample_researcher, document_sample):
-        educations: list[Education] = list(education_from_xml(sample_researcher, document_sample))
-        grad = educations[0]
+
+class TestGraduationFromXml:
+    def has_category(self, sample_researcher, document_sample):
+        grad = list(education_from_xml(sample_researcher, document_sample))[0]
         assert grad.category == "GRADUACAO"
+
+    def has_course(self, sample_researcher, document_sample):
+        grad = list(education_from_xml(sample_researcher, document_sample))[0]
         assert grad.course == "Computer Science"
+
+    def has_start_year(self, sample_researcher, document_sample):
+        grad = list(education_from_xml(sample_researcher, document_sample))[0]
         assert grad.start == 2010
+
+    def has_end_year(self, sample_researcher, document_sample):
+        grad = list(education_from_xml(sample_researcher, document_sample))[0]
         assert grad.end == 2014
+
+    def has_institution_id(self, sample_researcher, document_sample):
+        grad = list(education_from_xml(sample_researcher, document_sample))[0]
         assert grad.institution.lattes_id == "UNI001"
         assert grad.institution.name == "Tech University"
 
-    def it_parses_master(self, sample_researcher, document_sample):
-        educations: list[Education] = list(education_from_xml(sample_researcher, document_sample))
-        master = educations[1]
+
+class TestMasterFromXml:
+    def has_category(self, sample_researcher, document_sample):
+        master = list(education_from_xml(sample_researcher, document_sample))[1]
         assert master.category == "MESTRADO"
+
+    def has_course(self, sample_researcher, document_sample):
+        master = list(education_from_xml(sample_researcher, document_sample))[1]
         assert master.course == "Artificial Intelligence"
+
+    def has_start_year(self, sample_researcher, document_sample):
+        master = list(education_from_xml(sample_researcher, document_sample))[1]
         assert master.start == 2015
+
+    def has_end_year(self, sample_researcher, document_sample):
+        master = list(education_from_xml(sample_researcher, document_sample))[1]
         assert master.end == 2017
+
+    def has_institution(self, sample_researcher, document_sample):
+        master = list(education_from_xml(sample_researcher, document_sample))[1]
         assert master.institution.lattes_id == "UNI002"
         assert master.institution.name == "Institute of Technology"
+
+    def has_fields(self, sample_researcher, document_sample):
+        master = list(education_from_xml(sample_researcher, document_sample))[1]
         assert len(master.fields) == 2
         assert any(sf.area == "Ciência da Computação" for sf in master.fields)
         assert any(
-            fields.specialty == "Redes Neurais"
-            or fields.specialty == "Aprendizado de Máquina"
-            for fields in master.fields
+            field.specialty == "Redes Neurais" or field.specialty == "Aprendizado de Máquina"
+            for field in master.fields
         )
 
-    def it_parses_phd(self, sample_researcher, document_sample):
-        educations: list[Education] = list(education_from_xml(sample_researcher, document_sample))
-        phd = educations[2]
+
+class TestPhdFromXml:
+    def has_category(self, sample_researcher, document_sample):
+        phd = list(education_from_xml(sample_researcher, document_sample))[2]
         assert phd.category == "DOUTORADO"
+
+    def has_course(self, sample_researcher, document_sample):
+        phd = list(education_from_xml(sample_researcher, document_sample))[2]
         assert phd.course == "Data Science"
+
+    def has_start_year(self, sample_researcher, document_sample):
+        phd = list(education_from_xml(sample_researcher, document_sample))[2]
         assert phd.start == 2018
+
+    def has_end_year(self, sample_researcher, document_sample):
+        phd = list(education_from_xml(sample_researcher, document_sample))[2]
         assert phd.end == 2022
+
+    def has_institution(self, sample_researcher, document_sample):
+        phd = list(education_from_xml(sample_researcher, document_sample))[2]
         assert phd.institution.lattes_id == "UNI003"
         assert phd.institution.name == "Advanced Computing Institute"
 
-    def it_parses_posdoc(self, sample_researcher, document_sample):
-        educations: list[Education] = list(education_from_xml(sample_researcher, document_sample))
-        postdoc = educations[3]
+class TestPostdocFromXml:
+    def has_category(self, sample_researcher, document_sample):
+        postdoc = list(education_from_xml(sample_researcher, document_sample))[3]
         assert postdoc.category == "POS-DOUTORADO"
+
+    def has_start_year(self, sample_researcher, document_sample):
+        postdoc = list(education_from_xml(sample_researcher, document_sample))[3]
         assert postdoc.start == 2022
+
+    def has_end_year(self, sample_researcher, document_sample):
+        postdoc = list(education_from_xml(sample_researcher, document_sample))[3]
         assert postdoc.end == 2024
+
+    def has_institution(self, sample_researcher, document_sample):
+        postdoc = list(education_from_xml(sample_researcher, document_sample))[3]
         assert postdoc.institution.lattes_id == "UNI004"
         assert postdoc.institution.name == "Global Tech Lab"
+
+    def has_fields(self, sample_researcher, document_sample):
+        postdoc = list(education_from_xml(sample_researcher, document_sample))[3]
         assert len(postdoc.fields) == 3
         assert any(field.area == "Engenharia de Software" for field in postdoc.fields)
         assert any(field.specialty == "Big Data" for field in postdoc.fields)
-
-
-
 
