@@ -81,7 +81,7 @@ def unwrap[T](x: T | None) -> T:
     return x
 
 
-class DescribeAddressFromXml:
+class DescribeValidAddressFromXml:
     """Describe address_from_xml function's behavior."""
 
     def it_parses_valid_address(self, sample_researcher, sample_address):
@@ -99,8 +99,12 @@ class DescribeAddressFromXml:
         )
         assert actual.institution.name == sample_address.institution.name
 
-    def its_none_cep_is_missing(self, sample_researcher, sample_address):
-        sample = SampleDocument(
+
+class DescribeCEPlessAddress:
+    """Describe the behavior for an Address without CEP."""
+
+    def its_is_none(self, sample_researcher, sample_address):
+        actual = address_from_xml(sample_researcher, SampleDocument(
             Address(
                 researcher_id=sample_researcher,
                 cep="",
@@ -111,8 +115,6 @@ class DescribeAddressFromXml:
                 public_place=sample_address.public_place,
                 institution=sample_address.institution,
             )
-        ).as_node
-
-        actual = address_from_xml(sample_researcher, sample)
+        ).as_node)
 
         assert actual is None
