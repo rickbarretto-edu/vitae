@@ -8,12 +8,13 @@ and send to database.
 # ruff: noqa: D101, D105
 
 from collections.abc import Iterable, Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from sqlmodel import SQLModel
 
 from vitae.infra.database.tables import (
     Address,
+    Advisoring,
     Education,
     Experience,
     Expertise,
@@ -50,10 +51,12 @@ class Researchers(Transaction):
 class Academic(Transaction):
     education: Iterable[Education]
     fields: Iterable[StudyField]
+    advisoring: Iterable[Advisoring] = field(default_factory=list)
 
     def __iter__(self) -> Iterator[SQLModel]:
         yield from self.education
         yield from self.fields
+        yield from self.advisoring
 
 
 @dataclass
