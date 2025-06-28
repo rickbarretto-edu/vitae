@@ -80,6 +80,16 @@ def document() -> Node:
             </POS-DOUTORADO>
         </FORMACAO-ACADEMICA-TITULACAO>
         </DADOS-GERAIS>
+        <DADOS-COMPLEMENTARES>
+            <INFORMACOES-ADICIONAIS-CURSOS>
+                <INFORMACAO-ADICIONAL-CURSO CODIGO-CURSO="101" 
+                    NOME-GRANDE-AREA-DO-CONHECIMENTO="Ciências Exatas" 
+                    NOME-DA-AREA-DO-CONHECIMENTO="Ciência da Computação" 
+                    NOME-DA-SUB-AREA-DO-CONHECIMENTO="" 
+                    NOME-DA-ESPECIALIDADE=""
+                />
+            </INFORMACOES-ADICIONAIS-CURSOS>
+        </DADOS-COMPLEMENTARES>
         """).as_node
 
 
@@ -118,6 +128,16 @@ class DescribeGraduationOfEducation:
         grad = list(education_from_xml(researcher, document))[0]
         assert grad.institution.lattes_id == "UNI001"
         assert grad.institution.name == "Tech University"
+
+    def is_cs_field(self, researcher, document):
+        grad = list(education_from_xml(researcher, document))[0]
+        field = grad.fields[0]
+
+        assert field.major == "Ciências Exatas"
+        assert field.area == "Ciência da Computação"
+        assert field.sub == None
+        assert field.specialty == None
+
 
 
 class DescribeMasterOfEducation:

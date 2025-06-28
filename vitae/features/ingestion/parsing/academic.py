@@ -43,13 +43,21 @@ def education_from_xml(
                         document,
                     ),
                     advisor=education["numero id orientador"],
-                    fields=list(fields_from_education(education)),
+                    fields=list(fields_from_education(education, document)),
                 )
 
 
-def fields_from_education(education: xml.Node) -> Iterator[StudyField]:
+def fields_from_education(
+    education: xml.Node,
+    document: xml.Node,
+) -> Iterator[StudyField]:
     areas = education.first("areas do conhecimento").element
-    if areas is not None:
+
+    if areas is None:
+        if (course_id := education["codigo curso"]) is not None:  # noqa: SIM102
+            if (found := field_from_complementary(course_id, document)) is not None:
+                yield found
+    else:
         for a in areas:
             area = xml.Node(a)
             yield StudyField(
@@ -58,3 +66,32 @@ def fields_from_education(education: xml.Node) -> Iterator[StudyField]:
                 sub=area["nome da sub area do conhecimento"],
                 specialty=area["nome da especialidade"],
             )
+
+
+def field_from_complementary(
+    course_id: str,
+    document: xml.Node,
+) -> StudyField | None:
+    default_value = None
+
+    found: xml.Node = xml.Node(None)
+
+    if not (extra := document.first("dados complementares")).exists:
+        return default_value
+
+    if not (courses := extra.first("informacoes adicionais cursos")).exists:
+        return default_value
+
+    for course in courses.all("informacao adicional curso"):
+        if course["codigo curso"] == course_id:
+            found = course
+            break
+    else:
+        return default_value
+
+    return StudyField(
+        major=found["nome grande area do conhecimento"],
+        area=found["nome da area do conhecimento"],
+        sub=found["nome da sub area do conhecimento"],
+        specialty=found["nome da especialidade"],
+    )
