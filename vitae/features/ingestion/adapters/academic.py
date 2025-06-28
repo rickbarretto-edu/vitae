@@ -51,7 +51,7 @@ class Education:
 
     @property
     def advisor_as_table(self) -> tables.Advisoring | None:
-        if self.advisor is None:
+        if not self.advisor:
             return None
 
         return tables.Advisoring(
