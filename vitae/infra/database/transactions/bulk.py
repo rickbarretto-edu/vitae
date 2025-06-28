@@ -51,7 +51,7 @@ class Researchers(Transaction):
 class Academic(Transaction):
     education: Iterable[Education]
     fields: Iterable[StudyField]
-    advisoring: Iterable[Advising] = field(default_factory=list)
+    advisoring: Iterable[Advising]
 
     def __iter__(self) -> Iterator[SQLModel]:
         yield from self.education

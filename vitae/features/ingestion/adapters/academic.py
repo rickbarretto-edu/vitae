@@ -33,7 +33,7 @@ class Education:
     institution: Institution
     fields: list[StudyField]
 
-    advisor: str | None = None
+    advisor: str | None
     id: uuid.UUID = field(default_factory=uuid.uuid1)
 
     @property
