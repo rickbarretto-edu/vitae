@@ -2,7 +2,7 @@
 
 # ruff: noqa: FA102, D101
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from .orm import Orm, foreign, key, link, required_key
 
@@ -24,6 +24,7 @@ class Education(Orm, table=True):
 
     researcher: "Researcher" = link("education")
     fields: list["StudyField"] = link("education")
+    advisoring: Optional["Advisoring"] = link("education")
 
 
 class StudyField(Orm, table=True):
@@ -36,3 +37,11 @@ class StudyField(Orm, table=True):
     specialty: str | None
 
     education: "Education" = link("fields")
+
+
+class Advisoring(Orm, table=True):
+    education_id: str = foreign("education.id")
+    student_id: str = foreign("education.researcher_id")
+    advisor_id: str = foreign("researcher.lattes_id")
+
+    education: "Education" = link("advisoring")
