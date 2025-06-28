@@ -45,3 +45,5 @@ class Advisoring(Orm, table=True):
     advisor_id: str  # = foreign("researcher.lattes_id")
 
     education: "Education" = link("advisoring")
+    student: "Researcher" = link("student_of", viewonly=True)
+    advisor: "Researcher" = link("advisor_of", viewonly=True)
