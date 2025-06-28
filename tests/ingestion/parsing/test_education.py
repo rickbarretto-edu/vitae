@@ -102,6 +102,10 @@ class DescribeGraduationOfEducation:
         grad = list(education_from_xml(researcher, document))[0]
         assert grad.course == "Computer Science"
 
+    def has_turing_as_advisor(self, researcher, document):
+        grad = list(education_from_xml(researcher, document))[0]
+        assert grad.advisor == "12345"
+
     def its_starts_at_2014(self, researcher, document):
         grad = list(education_from_xml(researcher, document))[0]
         assert grad.start == 2010
@@ -124,6 +128,10 @@ class DescribeMasterOfEducation:
     def is_ai_course(self, researcher, document):
         master = list(education_from_xml(researcher, document))[1]
         assert master.course == "Artificial Intelligence"
+
+    def has_ada_as_advisor(self, researcher, document):
+        master = list(education_from_xml(researcher, document))[1]
+        assert master.advisor == "67890"
 
     def its_starts_at_2015(self, researcher, document):
         master = list(education_from_xml(researcher, document))[1]
@@ -154,6 +162,10 @@ class DescribePhdOfEducation:
         phd = list(education_from_xml(researcher, document))[2]
         assert phd.category == "DOUTORADO"
 
+    def has_hopper_as_advisor(self, researcher, document):
+        phd = list(education_from_xml(researcher, document))[2]
+        assert phd.advisor == "54321"
+
     def is_data_science_course(self, researcher, document):
         phd = list(education_from_xml(researcher, document))[2]
         assert phd.course == "Data Science"
@@ -178,6 +190,10 @@ class DescribePostdocOfEducation:
             3
         ]
         assert postdoc.category == "POS-DOUTORADO"
+
+    def has_some_advisor(self, researcher, document):
+        postdoc = list(education_from_xml(researcher, document))[3]
+        assert postdoc.advisor == "98765"
 
     def its_starts_at_2022(self, researcher, document):
         postdoc = list(education_from_xml(researcher, document))[
