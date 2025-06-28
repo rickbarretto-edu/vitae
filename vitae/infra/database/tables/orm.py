@@ -21,8 +21,8 @@ class Orm(SQLModel, metaclass=TableNameMeta):  # noqa: D101
     pass
 
 
-def link(back: str) -> Any:
-    return Relationship(back_populates=back)
+def link(back: str, **kargs) -> Any:
+    return Relationship(back_populates=back, sa_relationship_kwargs=kargs)
 
 
 def key(**kargs) -> Any:
