@@ -187,6 +187,9 @@ class Researchers:
         academic = bulk.Academic(
             education=(edu.as_table for edu in cv.education),
             fields=flatten(edu.fields_as_table for edu in cv.education),
+            advisoring=existent(
+                [edu.advisor_as_table for edu in cv.education],
+            ),
         )
 
         professional = bulk.Experience(
