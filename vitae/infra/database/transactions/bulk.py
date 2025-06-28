@@ -14,7 +14,7 @@ from sqlmodel import SQLModel
 
 from vitae.infra.database.tables import (
     Address,
-    Advisoring,
+    Advising,
     Education,
     Experience,
     Expertise,
@@ -51,7 +51,7 @@ class Researchers(Transaction):
 class Academic(Transaction):
     education: Iterable[Education]
     fields: Iterable[StudyField]
-    advisoring: Iterable[Advisoring] = field(default_factory=list)
+    advisoring: Iterable[Advising] = field(default_factory=list)
 
     def __iter__(self) -> Iterator[SQLModel]:
         yield from self.education

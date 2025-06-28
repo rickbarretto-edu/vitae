@@ -24,7 +24,7 @@ class Education(Orm, table=True):
 
     researcher: "Researcher" = link("education")
     fields: list["StudyField"] = link("education")
-    advisoring: Optional["Advisoring"] = link("education")
+    advisoring: Optional["Advising"] = link("education")
 
 
 class StudyField(Orm, table=True):
@@ -39,7 +39,7 @@ class StudyField(Orm, table=True):
     education: "Education" = link("fields")
 
 
-class Advisoring(Orm, table=True):
+class Advising(Orm, table=True):
     education_id: str = foreign("education.id", primary_key=True)
     student_id: str = foreign("researcher.lattes_id")
     advisor_id: str  # = foreign("researcher.lattes_id")

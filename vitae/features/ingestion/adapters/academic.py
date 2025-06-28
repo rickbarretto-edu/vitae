@@ -50,11 +50,11 @@ class Education:
         )
 
     @property
-    def advisor_as_table(self) -> tables.Advisoring | None:
+    def advisor_as_table(self) -> tables.Advising | None:
         if not self.advisor:
             return None
 
-        return tables.Advisoring(
+        return tables.Advising(
             education_id=self.id,
             student_id=self.researcher_id,
             advisor_id=self.advisor,
