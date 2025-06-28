@@ -40,8 +40,8 @@ class StudyField(Orm, table=True):
 
 
 class Advisoring(Orm, table=True):
-    education_id: str = foreign("education.id")
-    student_id: str = foreign("education.researcher_id")
+    education_id: str = foreign("education.id", primary_key=True)
+    student_id: str = foreign("researcher.lattes_id")
     advisor_id: str = foreign("researcher.lattes_id")
 
     education: "Education" = link("advisoring")
