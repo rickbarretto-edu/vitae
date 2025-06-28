@@ -10,7 +10,6 @@ import loguru
 from vitae.features.ingestion.adapters import Curriculum
 from vitae.infra.database import Database
 from vitae.infra.database.transactions import bulk
-from vitae.settings.vitae import Vitae
 
 
 def flatten[T](xs: Iterable[Iterable[T]]) -> Iterable[T]:
@@ -22,6 +21,10 @@ def flatten[T](xs: Iterable[Iterable[T]]) -> Iterable[T]:
 
     """
     return itertools.chain(*xs)
+
+
+def existent[T](xs: Iterable[T | None]) -> list[T]:
+    return [x for x in xs if x is not None]
 
 
 def log_with(into: Path, logger, logfile: str, level: str) -> None:  # noqa: ANN001
@@ -124,6 +127,12 @@ class Researchers:
                 edu.fields_as_table
                 for edu in flatten([cv.education for cv in curricula])
             ),
+            advisoring=existent(
+                [
+                    edu.advisor_as_table
+                    for edu in flatten([cv.education for cv in curricula])
+                ],
+            ),
         )
 
         professional = bulk.Professional(
@@ -178,6 +187,9 @@ class Researchers:
         academic = bulk.Academic(
             education=(edu.as_table for edu in cv.education),
             fields=flatten(edu.fields_as_table for edu in cv.education),
+            advisoring=existent(
+                [edu.advisor_as_table for edu in cv.education],
+            ),
         )
 
         professional = bulk.Experience(

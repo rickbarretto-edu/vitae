@@ -42,6 +42,7 @@ def education_from_xml(
                         education["nome instituicao"],
                         document,
                     ),
+                    advisor=education["numero id orientador"],
                     fields=list(fields_from_education(education)),
                 )
 

@@ -13,3 +13,4 @@ all_files/
 all_files copy/
 *.xml
 .coverage
+.coveragerc

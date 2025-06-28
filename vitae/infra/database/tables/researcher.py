@@ -2,14 +2,14 @@
 
 # ruff: noqa: FA102, D101
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from .orm import Orm, foreign, key, link, required_key
 
 __all__ = ["Expertise", "Nationality", "Researcher"]
 
 if TYPE_CHECKING:
-    from .academic import Education
+    from .academic import Advising, Education
     from .professional import Address, Experience
 
 
@@ -27,6 +27,8 @@ class Researcher(Orm, table=True):
     expertise: list["Expertise"] = link("researcher")
     experience: list["Experience"] = link("researcher")
     education: list["Education"] = link("researcher")
+    student_of: Optional["Advising"] = link("student", viewonly=True)
+    advisor_of: Optional["Advising"] = link("advisor", viewonly=True)
 
 
 class Nationality(Orm, table=True):

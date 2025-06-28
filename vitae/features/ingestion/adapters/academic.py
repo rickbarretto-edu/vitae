@@ -33,6 +33,7 @@ class Education:
     institution: Institution
     fields: list[StudyField]
 
+    advisor: str | None
     id: uuid.UUID = field(default_factory=uuid.uuid1)
 
     @property
@@ -46,6 +47,17 @@ class Education:
             course=self.course,
             start=self.start,
             end=self.end,
+        )
+
+    @property
+    def advisor_as_table(self) -> tables.Advising | None:
+        if not self.advisor:
+            return None
+
+        return tables.Advising(
+            education_id=self.id,
+            student_id=self.researcher_id,
+            advisor_id=self.advisor,
         )
 
     @property
