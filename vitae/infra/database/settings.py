@@ -22,5 +22,5 @@ def setup_database(vitae: Vitae) -> None:
         # and we run it multiple times to check everything before the ingestion,
         # was decided to rewrite the whole database instead.
         SQLModel.metadata.drop_all(vitae.postgres.engine)
+        SQLModel.metadata.create_all(vitae.postgres.engine)
 
-    SQLModel.metadata.create_all(vitae.postgres.engine)
