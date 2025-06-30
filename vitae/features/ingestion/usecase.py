@@ -36,11 +36,11 @@ class Ingestion:
             panic(f"Subdirectory does not exist: {directory}")
 
         self.researchers.put(
-            [
+            (
                 CurriculumDocument(curriculum).as_schema
                 for curriculum in directory.glob("*.xml")
                 if curriculum not in self.to_skip
-            ],
+            ),
         )
 
         print(f"Processed {directory.parent.name}/{directory.name}")  # noqa: T201
