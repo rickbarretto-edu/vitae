@@ -163,7 +163,7 @@ def _vitae_from_parsed(data: dict[str, Any]) -> Vitae:
 
     Use the functions `_from_file` or `_from_toml` to get `data`.
     """  # noqa: DOC201
-    in_production: bool = data.get("in_production", False)
+    in_production: bool = data["project"].get("in_production", False)
     postgres: dict = data.get("postgres") or {}
 
     paths: dict = data.get("paths") or {}
