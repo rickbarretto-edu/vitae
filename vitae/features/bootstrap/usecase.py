@@ -1,13 +1,18 @@
 """Use case for Boostrapping application."""
+from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
 import shutil
+from typing import TYPE_CHECKING
 
 from sqlalchemy.exc import OperationalError, SQLAlchemyError
 from sqlmodel import SQLModel
 
-from vitae.settings.vitae import Vitae
+if TYPE_CHECKING:
+    from vitae.settings.vitae import Vitae
+
+# ruff: noqa: ANN204, D105
 
 
 @dataclass
@@ -25,7 +30,7 @@ class CouldNotResetDatabase(Exception):
 
     def __str__(self):
         postgres = self.vitae.postgres
-        return f"Could not reset {postgres.db} by {postgres.user}. Reason: {self.msg}"
+        return f"Could not reset {postgres.db} by {postgres.user}. Reason: {self.msg}"  # noqa: E501
 
 
 @dataclass
