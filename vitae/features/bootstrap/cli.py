@@ -21,10 +21,10 @@ def bootstrap(
 
     if vitae.in_production:
         print("This will reset your logs and also your database.")
-        print("Insert your user and password before proceeding:\n>>>")
-        login: str = input("(Format: 'user:password' )\n>>> ")
+        print("Insert your password before proceeding.")
+        login: str = input(">>> ")
 
-        if login != str(vitae.postgres.user):
+        if login != vitae.postgres.user.password:
             msg = "Login doesn't match."
             raise cyclopts.ValidationError(msg)
 
