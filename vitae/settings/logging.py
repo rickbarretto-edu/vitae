@@ -15,7 +15,7 @@ def create_logs(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
 
-def redirect_loguru_to(log_file: Path) -> None:
+def logging_into(log_file: Path) -> None:
     """Redirect loguru's output to ``log_file``."""
     logger.remove()
     logger.add(
@@ -26,7 +26,7 @@ def redirect_loguru_to(log_file: Path) -> None:
     )
 
 
-def enable_loguru_tracing() -> None:
+def enable_traced_logging() -> None:
     """Enable TRACE level.
 
     I highly recomend to use this for development environment only.

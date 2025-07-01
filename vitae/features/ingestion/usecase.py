@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from collections.abc import Generator
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
+from vitae.features.ingestion.adapters import Curriculum
 from vitae.features.ingestion.parsing import CurriculumDocument
 from vitae.lib.panic import panic
 
@@ -35,12 +37,14 @@ class Ingestion:
         if not directory.exists():
             panic(f"Subdirectory does not exist: {directory}")
 
-        self.researchers.put(
-            [
-                CurriculumDocument(curriculum).as_schema
-                for curriculum in directory.glob("*.xml")
-                if curriculum not in self.to_skip
-            ],
-        )
+        self.researchers.put(process_each(directory, self.to_skip))
+        print(f"Processed {directory.parent.name}/{directory.name}")
 
-        print(f"Processed {directory.parent.name}/{directory.name}")  # noqa: T201
+
+def process_each(
+    directory: Path, to_skip: set) -> Generator[Curriculum, Any, None]:
+    for curriculum in directory.glob("*.xml"):
+        if curriculum.name not in to_skip:
+            yield CurriculumDocument(curriculum).as_schema
+        else:
+            print(f"Skipping: {curriculum}")
