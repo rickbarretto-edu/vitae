@@ -5,8 +5,7 @@ import cyclopts
 from cyclopts import Parameter
 
 from vitae.infra.database import Database
-from vitae.infra.database.settings import setup_database
-from vitae.settings.logging import create_logs, erase_logs, redirect_loguru_to
+from vitae.settings.logging import logging_into
 from vitae.settings.vitae import Vitae
 
 from .repository import Researchers
@@ -48,7 +47,7 @@ def ingest(
         Use higher numbers on production.
 
     """
-    redirect_loguru_to(Path("logs/vitae.log"))
+    logging_into(Path("logs/vitae.log"))
 
     vitae = Vitae.from_toml(Path("vitae.toml"))
     database = Database(vitae.postgres.engine)
