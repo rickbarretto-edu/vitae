@@ -38,8 +38,8 @@ class Bootstrap:
     vitae: Vitae
     logs: Path = Path("logs")
 
-    def init(self) -> None:
-        """Initialize Vitae from scratch."""
+    def new(self) -> None:
+        """Initialize Vitae Project from scratch."""
         self._load_db_models()
         self._reset_database()
         self._reset_logs()

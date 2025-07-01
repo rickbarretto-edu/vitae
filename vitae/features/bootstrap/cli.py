@@ -29,7 +29,7 @@ def bootstrap(
             raise cyclopts.ValidationError(msg)
 
     try:
-        Bootstrap(vitae).init()
+        Bootstrap(vitae).new()
     except DatabaseModelNotFound as err:
         print("A required database model was not found.")
         print(f"Tried to import: `{err.path}'")
