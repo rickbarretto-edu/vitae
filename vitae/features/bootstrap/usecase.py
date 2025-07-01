@@ -38,6 +38,15 @@ class Bootstrap:
     vitae: Vitae
     logs: Path = Path("logs")
 
+    def existing(self) -> None:
+        """Initialize Project from a running one.
+
+        Instead of bootstrapping the system from scratch,
+        this just loads everything needed to operate with
+        an already running system.
+        """
+        self._load_db_models()
+
     def new(self) -> None:
         """Initialize Vitae Project from scratch."""
         self._load_db_models()
