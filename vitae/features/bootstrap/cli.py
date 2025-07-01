@@ -17,6 +17,13 @@ app = cyclopts.App(name=["bootstrap", "reset", "init"])
 def bootstrap(
     verbose: Annotated[bool, Parameter(name=["--verbose", "-v"])] = False,
 ) -> None:
+    """Initialize/Reset the current database and logging.
+
+    Raises
+    ------
+    ValidationError
+
+    """
     vitae: Vitae = Vitae.from_toml()
 
     if vitae.in_production:
