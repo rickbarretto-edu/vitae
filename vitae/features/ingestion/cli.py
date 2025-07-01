@@ -48,8 +48,9 @@ def ingest(
         Use higher numbers on production.
 
     """
+    redirect_loguru_to(Path("logs/vitae.log"))
+
     vitae = Vitae.from_toml(Path("vitae.toml"))
-    setup(vitae)
     database = Database(vitae.postgres.engine)
 
     root_directory = vitae.paths.curricula
@@ -118,17 +119,3 @@ def curricula_xml_from(log: Path) -> set[str]:
     with log.open("r") as file:
         result: set[str] = {line.strip("\n") + ".xml" for line in file}
     return result
-
-
-def setup(vitae: Vitae) -> None:
-    """Set environment."""
-    logs = Path("logs")
-
-    if vitae.in_development:
-        # Since this will run multiple times, this is better to erase logs
-        # to avoid unnecessary confusion with older logs.
-        erase_logs(logs)
-
-    create_logs(logs)
-    redirect_loguru_to(logs / "vitae.log")
-    setup_database(vitae)
