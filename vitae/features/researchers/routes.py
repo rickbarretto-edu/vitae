@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
-templates = Jinja2Templates("vitae/features/researcher/templates")
+templates = Jinja2Templates("vitae/features/researchers/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
