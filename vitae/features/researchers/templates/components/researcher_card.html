@@ -1,0 +1,30 @@
+<div class="bg-white border-2 border-gray-100 rounded-xl p-6 hover:border-indigo-400 hover:shadow-lg hover:-translate-y-1 transition cursor-pointer mb-6">
+  <div class="flex items-center mb-4">
+    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold text-xl mr-4">
+      {{ r.initials }}
+    </div>
+    <div>
+      <h3 class="text-xl font-semibold">{{ r.name }}</h3>
+      <p class="text-sm text-gray-600 font-mono">ID: {{ r.id }}</p>
+    </div>
+  </div>
+
+  <div class="mb-4 space-y-1 text-sm">
+    <div><span class="font-semibold text-gray-700 w-32 inline-block">Universidade:</span> {{ r.university }}</div>
+    <div><span class="font-semibold text-gray-700 w-32 inline-block">Localização:</span> {{ r.location }}</div>
+    <div><span class="font-semibold text-gray-700 w-32 inline-block">Instituição:</span> {{ r.institution }}</div>
+    <div><span class="font-semibold text-gray-700 w-32 inline-block">Nacionalidade:</span> {{ r.nationality }}</div>
+    <div><span class="font-semibold text-gray-700 w-32 inline-block">Campo de Estudo:</span> {{ r.study_field }}</div>
+  </div>
+
+  <div class="flex flex-wrap gap-2 my-3">
+    {% for area in r.research_areas %}
+    <span class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-medium px-3 py-1 rounded-full">{{ area }}</span>
+    {% endfor %}
+  </div>
+
+  <div class="bg-slate-50 border-l-4 border-indigo-500 rounded-md p-4 mt-4">
+    <h4 class="font-semibold text-sm text-gray-800 mb-1">Resumo da Pesquisa</h4>
+    <p class="text-sm text-gray-600 leading-relaxed">{{ r.abstract }}</p>
+  </div>
+</div>
