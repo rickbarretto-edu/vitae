@@ -7,7 +7,7 @@ templates = Jinja2Templates("vitae/features/researchers/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-def show_search(request: Request, query: str):
+def show_search(request: Request, query: str | None = None):
     # Usecase go here...
     return templates.TemplateResponse("search.html", {"request": request})
 
