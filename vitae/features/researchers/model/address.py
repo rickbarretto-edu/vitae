@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 import attrs
 
 if TYPE_CHECKING:
-    from vitae.infra.database import tables as models
+    from vitae.infra.database import tables
 
 
 def force_str(val: str | None) -> str:
@@ -56,9 +56,9 @@ class Address:
                 return ""
 
     @classmethod
-    def from_database(cls, model: models.Address) -> Address:
+    def from_table(cls, table: tables.Address) -> Address:
         return cls(
-            city=City(model.city),
-            state=State(model.state),
-            country=Country(model.country),
+            city=City(table.city),
+            state=State(table.state),
+            country=Country(table.country),
         )
