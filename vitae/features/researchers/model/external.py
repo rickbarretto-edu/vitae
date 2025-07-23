@@ -6,7 +6,7 @@ from typing import Self
 import attrs
 
 
-class InvalidURL(Exception):  # noqa: N818
+class InvalidURL(ValueError):  # noqa: N818
     pass
 
 
