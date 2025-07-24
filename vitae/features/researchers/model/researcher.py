@@ -1,7 +1,7 @@
-
 import attrs
 
 from .address import Address
+from .cv import Curriculum
 from .external import Lattes, Orcid
 
 
@@ -14,3 +14,4 @@ class ExternalLink:
 class Researcher:
     links: ExternalLink
     address: Address
+    curriculum: Curriculum
