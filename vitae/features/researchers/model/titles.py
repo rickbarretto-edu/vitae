@@ -48,7 +48,7 @@ class AcademicTitles:
         return max(self.titles)
 
     @classmethod
-    def from_table(cls, tables: list[tables.Education]) -> Self:
+    def from_tables(cls, tables: list[tables.Education]) -> Self:
         return cls([AcademicTitle.from_table(x) for x in tables])
 
 
