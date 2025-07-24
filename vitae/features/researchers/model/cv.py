@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import cached_property
 from typing import Final, Self
 
 import attrs
@@ -12,6 +13,22 @@ from .titles import AcademicTitles
 @attrs.frozen
 class FullName:
     value: str
+
+    @cached_property
+    def each(self) -> list[str]:
+        return self.value.split(" ")
+
+    @cached_property
+    def first(self) -> str:
+        return self.each[0]
+
+    @cached_property
+    def surname(self) -> str:
+        return self.each[-1]
+
+    @cached_property
+    def initials(self) -> str:
+        return self.first[0] + self.surname[0]
 
 
 @attrs.frozen
