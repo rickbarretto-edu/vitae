@@ -12,7 +12,14 @@ from .titles import AcademicTitles
 
 @attrs.frozen
 class FullName:
-    value: str
+    _value: str
+
+    def __str__(self) -> str:
+        return self.value
+
+    @cached_property
+    def value(self) -> str:
+        return self._value.title()
 
     @cached_property
     def each(self) -> list[str]:
