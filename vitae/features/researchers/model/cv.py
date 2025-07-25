@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Final, Self
 
 import attrs
 
-from .titles import AcademicTitles
+from vitae.features.researchers.model.academic.titles import AcademicTitles
 
 if TYPE_CHECKING:
     from vitae.infra.database import tables
