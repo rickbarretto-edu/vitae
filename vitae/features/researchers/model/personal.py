@@ -56,11 +56,11 @@ class Nationality:
 
         """
         match table:
-            case Nationality(born_country="Brasil", nationality="B"):
+            case tables.Nationality(born_country="Brasil", nationality="B"):
                 return cls("Brasileiro(a)")
-            case Nationality(born_country, nationality="B"):
+            case tables.Nationality(born_country=born_country, nationality="B"):
                 return cls(f"{born_country} (Brasileiro)")
-            case Nationality(born_country, nationality="E"):
+            case tables.Nationality(born_country=born_country, nationality="E"):
                 return cls(f"{born_country} (Estranjeito)")
             case _:
                 return cls("")
