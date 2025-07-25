@@ -19,11 +19,12 @@ class Abstract:
 
     @property
     def full(self) -> str:
+        """Full abstract."""
         return self._text
 
     @property
     def brief(self) -> str:
-        """Formated Abstract's brief, given `brief_limit`."""
+        """Brief abstract."""
         limit = self._brief_limit
 
         words = self._text.split()
