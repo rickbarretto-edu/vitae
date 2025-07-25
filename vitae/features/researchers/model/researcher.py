@@ -1,14 +1,18 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import attrs
 
 from vitae.features.researchers.lib import optional
-from vitae.infra.database import tables
 
 from .academic import ExternalLinks
 from .cv import Curriculum
 from .personal import Person
 from .professional import Address
+
+if TYPE_CHECKING:
+    from vitae.infra.database import tables
 
 
 @attrs.frozen
