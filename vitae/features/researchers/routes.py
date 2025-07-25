@@ -18,24 +18,30 @@ templates = Jinja2Templates("vitae/features/researchers/templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-def show_search(request: Request, query: str | None = None):
+def home(request: Request):
+    return templates.TemplateResponse(
+        "search.html",
+        {
+            "request": request,
+        },
+    )
+
+
+@router.get("/search", response_class=HTMLResponse)
+def show_search(request: Request, query: str):
     vitae = Vitae.from_toml(Path("vitae.toml"))
     database = Database(vitae.postgres.engine)
 
-    researchers = ResearchersInDatabase(database)
-    search = SearchResearchers(researchers)
+    all_researchers = ResearchersInDatabase(database)
+    search = SearchResearchers(all_researchers)
 
-    researchers = (
-        search.by_id(query)
-        if query
-        else []
-    )
+    found_researchers = search.by_id(query)
 
     return templates.TemplateResponse(
         "search.html",
         {
             "request": request,
-            "researchers": researchers,
+            "researchers": found_researchers,
         },
     )
 
