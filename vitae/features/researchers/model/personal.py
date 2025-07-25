@@ -46,6 +46,9 @@ class Nationality:
 
     value: str
 
+    def __str__(self) -> str:
+        return self.value
+
     @classmethod
     def from_table(cls, table: tables.Nationality) -> Self:
         """Build itself from database's row.
