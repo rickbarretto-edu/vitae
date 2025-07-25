@@ -11,9 +11,6 @@ from vitae.infra.database import Database, tables
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from sqlalchemy import Engine
-
-
 class Researchers(Protocol):
     """Researchers's interface."""
 
