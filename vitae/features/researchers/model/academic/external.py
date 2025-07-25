@@ -1,9 +1,27 @@
 from __future__ import annotations
 
 import re
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
 import attrs
+
+from vitae.features.researchers.lib import optional
+
+if TYPE_CHECKING:
+    from vitae.infra.database import tables
+
+
+@attrs.frozen
+class ExternalLinks:
+    lattes: Lattes
+    orcid: Orcid | None
+
+    @classmethod
+    def from_table(cls, researcher: tables.Researcher):
+        return cls(
+            lattes=Lattes.from_id(researcher.lattes_id),
+            orcid=optional(researcher.orcid, Orcid.from_url),
+        )
 
 
 class InvalidURL(ValueError):  # noqa: N818
