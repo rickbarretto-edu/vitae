@@ -44,10 +44,10 @@ class FullName:
 class Nationality:
     """Researcher's Nationality."""
 
-    value: str
+    _value: str
 
     def __str__(self) -> str:
-        return self.value
+        return self._value
 
     @classmethod
     def from_table(cls, table: tables.Nationality) -> Self:
