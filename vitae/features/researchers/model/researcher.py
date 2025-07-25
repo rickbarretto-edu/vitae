@@ -26,13 +26,13 @@ class ExternalLink:
 @attrs.frozen
 class Researcher:
     links: ExternalLink
-    address: Address
+    address: Address | None
     curriculum: Curriculum
 
     @classmethod
     def from_table(cls, table: tables.Researcher):
         return cls(
             links=ExternalLink.from_table(table),
-            address=Address.from_table(table.address),
+            address=optional(table.address, Address.from_table),
             curriculum=Curriculum.from_table(table),
         )
