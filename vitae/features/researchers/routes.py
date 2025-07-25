@@ -32,16 +32,14 @@ def show_search(request: Request, query: str):
     vitae = Vitae.from_toml(Path("vitae.toml"))
     database = Database(vitae.postgres.engine)
 
-    all_researchers = ResearchersInDatabase(database)
-    search = SearchResearchers(all_researchers)
-
-    found_researchers = search.by_id(query)
+    search = SearchResearchers(ResearchersInDatabase(database))
+    results = [search.by_id(query)]
 
     return templates.TemplateResponse(
         "search.html",
         {
             "request": request,
-            "researchers": found_researchers,
+            "results": results,
         },
     )
 
