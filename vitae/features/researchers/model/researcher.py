@@ -10,6 +10,7 @@ from .address import Address
 from .cv import Curriculum
 from .external import Lattes, Orcid
 from .personal import Person
+from .professional import Address
 
 
 @attrs.frozen
