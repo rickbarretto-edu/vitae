@@ -14,15 +14,19 @@ if TYPE_CHECKING:
 class Abstract:
     """Curriculum's Abstract."""
 
-    text: str
-    brief_limit: Final[int] = 50
+    _text: str
+    _brief_limit: Final[int] = 50
+
+    @property
+    def full(self) -> str:
+        return self._text
 
     @property
     def brief(self) -> str:
         """Formated Abstract's brief, given `brief_limit`."""
-        limit = self.brief_limit
+        limit = self._brief_limit
 
-        words = self.text.split()
+        words = self._text.split()
         brief_text = " ".join(words[:limit])
 
         if len(words) > limit:
