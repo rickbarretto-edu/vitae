@@ -70,6 +70,9 @@ class AcademicTitle:
         """Formated value."""
         return self._value.replace("-", " ").title()
 
+    def __str__(self) -> str:
+        return self.value
+
     _ORDER: ClassVar[list[str]] = [
         "POS-DOUTORADO",
         "LIVRE-DOCENCIA",
