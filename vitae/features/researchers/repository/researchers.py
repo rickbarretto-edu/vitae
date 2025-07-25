@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol
 
+import attrs
 from sqlmodel import col, select
 
 from vitae.features.researchers.model.researcher import Researcher
@@ -9,6 +10,8 @@ from vitae.infra.database import Database, tables
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+
+    from sqlalchemy import Engine
 
 
 class Researchers(Protocol):
@@ -18,6 +21,7 @@ class Researchers(Protocol):
     def by_name(self, name: str) -> Iterable[Researcher]: ...
 
 
+@attrs.frozen
 class ResearchersInDatabase(Researchers):
     database: Database
 
