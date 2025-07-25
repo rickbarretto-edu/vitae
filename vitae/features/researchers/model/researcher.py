@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import attrs
 
+from vitae.features.researchers.lib import optional
 from vitae.infra.database import tables
 
 from ._shared import optional
