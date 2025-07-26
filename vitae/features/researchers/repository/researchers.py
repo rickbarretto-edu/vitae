@@ -43,5 +43,22 @@ class ResearchersInDatabase(Researchers):
                 return Researcher.from_table(result)
             return None
 
-    def by_name(self, name: str) -> Iterable[Researcher]:
-        return []
+    def by_name(self, name: str, n: int = 50) -> Iterable[Researcher]:
+        """Fetch Researchers by name.
+
+        The query name does not need to match the first name,
+        but this needs to follow the correct order.
+
+        Returns
+        -------
+        Iterable[Researcher] of n researchers.
+
+        """
+        with self.database.session as session:
+            result = session.exec(
+                select(tables.Researcher)
+                .where(col(tables.Researcher.full_name).ilike(f"%{name}%"))
+                .limit(n),
+            )
+
+            return (Researcher.from_table(r) for r in result)
