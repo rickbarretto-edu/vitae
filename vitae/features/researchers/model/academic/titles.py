@@ -9,6 +9,12 @@ if TYPE_CHECKING:
     from vitae.infra.database import tables
 
 
+__all__ = [
+    "AcademicTitle",
+    "AcademicTitles",
+]
+
+
 def when_value_error[T](
     default_value: T,
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:

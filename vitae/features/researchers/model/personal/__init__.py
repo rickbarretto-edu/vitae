@@ -5,6 +5,12 @@ import attrs
 
 from vitae.infra.database import tables
 
+__all__ = [
+    "FullName",
+    "Nationality",
+    "Person",
+]
+
 
 @attrs.frozen
 class FullName:

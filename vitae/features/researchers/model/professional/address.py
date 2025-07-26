@@ -8,6 +8,14 @@ if TYPE_CHECKING:
     from vitae.infra.database import tables
 
 
+__all__ = [
+    "Address",
+    "City",
+    "Country",
+    "State",
+]
+
+
 def force_str(val: str | None) -> str:
     return val or ""
 

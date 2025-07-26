@@ -10,6 +10,12 @@ from vitae.features.researchers.lib import optional
 if TYPE_CHECKING:
     from vitae.infra.database import tables
 
+__all__ = [
+    "ExternalLinks",
+    "Lattes",
+    "Orcid",
+]
+
 
 @attrs.frozen
 class ExternalLinks:

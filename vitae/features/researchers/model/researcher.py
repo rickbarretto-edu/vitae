@@ -14,6 +14,8 @@ from .professional import Address
 if TYPE_CHECKING:
     from vitae.infra.database import tables
 
+__all__ = ["Researcher"]
+
 
 @attrs.frozen
 class Researcher:

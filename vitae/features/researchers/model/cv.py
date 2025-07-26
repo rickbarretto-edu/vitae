@@ -9,6 +9,11 @@ from vitae.features.researchers.model.academic.titles import AcademicTitles
 if TYPE_CHECKING:
     from vitae.infra.database import tables
 
+__all__ = [
+    "Abstract",
+    "Curriculum",
+]
+
 
 @attrs.frozen
 class Abstract:
