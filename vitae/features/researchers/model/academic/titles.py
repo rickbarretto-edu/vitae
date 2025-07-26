@@ -115,4 +115,4 @@ class AcademicTitle:
 
     @classmethod
     def from_table(cls, education: tables.Education) -> Self:
-        return cls(education.category.replace(" ", "_").upper())
+        return cls(education.category.replace("-", "_").upper())
