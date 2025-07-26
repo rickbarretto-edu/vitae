@@ -4,8 +4,6 @@ from typing import TYPE_CHECKING
 
 import attrs
 
-from vitae.features.researchers.lib import optional
-
 from .academic import ExternalLinks
 from .cv import Curriculum
 from .personal import Person
