@@ -21,7 +21,7 @@
   </div>
 
   <div class="flex flex-wrap gap-2 my-3">
-    {% for area in researcher.research_areas %}
+    {% for area in researcher.curriculum.expertises.specialities %}
     <span class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-medium px-3 py-1 rounded-full">{{ area }}</span>
     {% endfor %}
   </div>
