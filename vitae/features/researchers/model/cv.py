@@ -62,5 +62,5 @@ class Curriculum:
         return cls(
             titles=AcademicTitles.from_tables(researcher.education),
             abstract=Abstract(researcher.abstract or ""),
-            expertises=Expertises(researcher.expertise),
+            expertises=Expertises.from_tables(researcher.expertise),
         )

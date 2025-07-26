@@ -26,7 +26,7 @@ class Expertises:
         return (x.specialization for x in self._each)
 
     @classmethod
-    def from_table(cls, expertises: list[tables.Expertise]) -> Self:
+    def from_tables(cls, expertises: list[tables.Expertise]) -> Self:
         return cls(
             [StudyField(e.major, e.area, e.sub, None) for e in expertises],
         )
