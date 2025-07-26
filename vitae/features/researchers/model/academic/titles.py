@@ -31,7 +31,7 @@ def when_value_error[T](
     return decorator
 
 
-def _should_be_upper(instance, attribute, value):
+def _should_be_scream_case(instance, attribute, value):
     whitespace_not_allowed = (
         "Whitespace is not allowed. Consider replace them by hyphens."
     )
@@ -57,7 +57,6 @@ class AcademicTitles:
     def from_tables(cls, tables: list[tables.Education]) -> Self:
         return cls([AcademicTitle.from_table(x) for x in tables])
 
-
 @attrs.frozen
 class AcademicTitle:
     """Researcher's Academic Title.
@@ -69,7 +68,7 @@ class AcademicTitle:
     this is considered as being the lowest one.
     """
 
-    _value: str = attrs.field(validator=_should_be_upper)
+    _value: str = attrs.field(validator=_should_be_scream_case)
 
     @property
     def value(self) -> str:
@@ -80,51 +79,36 @@ class AcademicTitle:
         return self.value
     
     _FORMATED_KNOWN_PORTUGUESE_TITLES: ClassVar[dict[str, str]] = {
-        "POS-DOUTORADO": "Pós-doutorado",
-        "LIVRE-DOCENCIA": "Livre-docência",
+        "POS_DOUTORADO": "Pós-doutorado",
+        "LIVRE_DOCENCIA": "Livre-docência",
         "DOUTORADO": "Doutorado",
         "MESTRADO": "Mestrado",
-        "MESTRADO-PROFISSIONALIZANTE": "Mestrado Profissionalizante",
+        "MESTRADO_PROFISSIONALIZANTE": "Mestrado Profissionalizante",
         "ESPECIALIZACAO": "Especialização",
         "APERFEICOAMENTO": "Aperfeiçoamento",
-        "RESIDENCIA-MEDICA": "Residência Médica",
+        "RESIDENCIA_MEDICA": "Residência Médica",
         "GRADUACAO": "Graduação",
-        "CURSO-TECNICO-PROFISSIONALIZANTE": "Curso Técnico",
-        "ENSINO-MEDIO-SEGUNDO-GRAU": "Segundo Grau",
-        "ENSINO-FUNDAMENTAL-PRIMEIRO-GRAU": "Primeiro Grau",
+        "CURSO_TECNICO_PROFISSIONALIZANTE": "Curso Técnico",
+        "ENSINO_MEDIO_SEGUNDO_GRAU": "Segundo Grau",
+        "ENSINO_FUNDAMENTAL_PRIMEIRO_GRAU": "Primeiro Grau",
     }
 
-    _ORDER: ClassVar[list[str]] = [
-        "POS-DOUTORADO",
-        "LIVRE-DOCENCIA",
-        "DOUTORADO",
-        "MESTRADO",
-        "MESTRADO-PROFISSIONALIZANTE",
-        "ESPECIALIZACAO",
-        "APERFEICOAMENTO",
-        "RESIDENCIA-MEDICA",
-        "GRADUACAO",
-        "CURSO-TECNICO-PROFISSIONALIZANTE",
-        "ENSINO-MEDIO-SEGUNDO-GRAU",
-        "ENSINO-FUNDAMENTAL-PRIMEIRO-GRAU",
-    ]
+    @property
+    def rank(self) -> int:
+        keys = list(self._FORMATED_KNOWN_PORTUGUESE_TITLES.keys())
+        try:
+            return len(keys) - keys.index(self._value)
+        except ValueError:
+            return 0
 
     @when_value_error(True)
     def __lt__(self, other: AcademicTitle) -> bool:
-        return self._ORDER.index(self._value) > self._ORDER.index(other._value)
+        return self.rank < other.rank
 
     @when_value_error(False)
-    def __le__(self, other: AcademicTitle) -> bool:
-        return self._ORDER.index(self._value) >= self._ORDER.index(other._value)
-
-    @when_value_error(False)
-    def __gt__(self, other: AcademicTitle) -> bool:
-        return self._ORDER.index(self._value) < self._ORDER.index(other._value)
-
-    @when_value_error(False)
-    def __ge__(self, other: AcademicTitle) -> bool:
-        return self._ORDER.index(self._value) <= self._ORDER.index(other._value)
+    def __eq__(self, other: AcademicTitle) -> bool:
+        return self.rank == other.rank
 
     @classmethod
     def from_table(cls, education: tables.Education) -> Self:
-        return cls(education.category.replace(" ", "-").upper())
+        return cls(education.category.replace(" ", "_").upper())
