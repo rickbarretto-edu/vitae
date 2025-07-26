@@ -1,3 +1,5 @@
+"""Academic Titles models."""
+
 from __future__ import annotations
 
 from functools import wraps
@@ -18,6 +20,15 @@ __all__ = [
 def when_value_error[T](
     default_value: T,
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
+    """Return default_value if some function raises.
+
+    Returns
+    -------
+    Always returns T. If the function succeeds, returns its result.
+    If ValueError is raised, this returns the default value.
+
+    """
+
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> T:
@@ -31,7 +42,22 @@ def when_value_error[T](
     return decorator
 
 
-def _should_be_scream_case(instance, attribute, value):
+def _should_be_scream_case(instance, attribute, value) -> None:
+    """Attrs validator for scream-case.
+
+    Sream-case is all-uppercased letters separated by underscores,
+    i.e.: 'SCREAM_CASE'.
+
+    Note:
+    ----
+    `instance` and `attribute` are required parameters by attrs,
+    but not used in this function.
+
+    Raises:
+    ------
+    ValueError
+
+    """
     whitespace_not_allowed = (
         "Whitespace is not allowed. Consider replace them by hyphens."
     )
@@ -57,6 +83,7 @@ class AcademicTitles:
     def from_tables(cls, tables: list[tables.Education]) -> Self:
         return cls([AcademicTitle.from_table(x) for x in tables])
 
+
 @attrs.frozen
 class AcademicTitle:
     """Researcher's Academic Title.
@@ -77,7 +104,7 @@ class AcademicTitle:
 
     def __str__(self) -> str:
         return self.value
-    
+
     _FORMATED_KNOWN_PORTUGUESE_TITLES: ClassVar[dict[str, str]] = {
         "POS_DOUTORADO": "Pós-doutorado",
         "LIVRE_DOCENCIA": "Livre-docência",
@@ -101,12 +128,14 @@ class AcademicTitle:
         except ValueError:
             return 0
 
-    @when_value_error(True)
+    @when_value_error(True)  # noqa: FBT003 - True is not being used as a flag
     def __lt__(self, other: AcademicTitle) -> bool:
+        """Compare Title's rank."""
         return self.rank < other.rank
 
-    @when_value_error(False)
+    @when_value_error(False)  # noqa: FBT003 - False is not being used as a flag
     def __eq__(self, other: AcademicTitle) -> bool:
+        """Compare Title's rank."""
         return self.rank == other.rank
 
     @classmethod
