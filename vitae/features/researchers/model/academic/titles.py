@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING, ClassVar, Self
 
 import attrs
 
 if TYPE_CHECKING:
     from vitae.infra.database import tables
-
 
 __all__ = [
     "AcademicTitle",
@@ -32,15 +32,13 @@ def _should_be_scream_case(instance, attribute, value) -> None:
     ValueError
 
     """
-    whitespace_not_allowed = (
-        "Whitespace is not allowed. Consider replace them by hyphens."
-    )
-    should_be_upper = "Value should be upper-cased. Use .upper() before."
-
-    if " " in value:
-        raise ValueError(whitespace_not_allowed)
-    if not value.isupper():
-        raise ValueError(should_be_upper)
+    pattern = r"^[A-Z]+(_[A-Z]+)*$"
+    if not re.fullmatch(pattern, value):
+        message = (
+            "Value must be SCREAM_CASE: "
+            "all uppercase letters separated by underscores."
+        )
+        raise ValueError(message)
 
 
 @attrs.frozen
