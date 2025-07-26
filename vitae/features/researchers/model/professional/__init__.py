@@ -1,3 +1,5 @@
+"""Researcher's professional experience related models."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Self
@@ -20,13 +22,20 @@ __all__ = [
 
 @attrs.frozen
 class ProfessionalLink:
+    """Researcher's Professional Link.
+
+    A Researcher may work at some Institution
+    in some Address.
+    """
+
     address: Address
-    institution: LinkedInstitution
+    institution: LinkedInstitution | None
 
     @classmethod
     def from_table(cls, researcher: tables.Researcher) -> Self:
+        address = researcher.address
 
         return cls(
-            address=optional(researcher.address, Address.from_table),
-            institution=optional(researcher.address, LinkedInstitution.from_table)
+            address=Address.from_table(address),
+            institution=optional(address, LinkedInstitution.from_table),
         )
