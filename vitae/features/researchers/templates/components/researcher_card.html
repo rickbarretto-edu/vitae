@@ -10,12 +10,18 @@
   </div>
 
   <div class="mb-4 space-y-1 text-sm">
-    <div><span class="font-semibold text-gray-700 w-32 inline-block">Título:</span> {{ researcher.curriculum.titles.highest }}</div>
     <div><span class="font-semibold text-gray-700 w-32 inline-block">Nacionalidade:</span> {{ researcher.this.nationality }}</div>
+    <div><span class="font-semibold text-gray-700 w-32 inline-block">Título:</span> {{ researcher.curriculum.titles.highest }}</div>
+    {% if researcher.address  %}
+      <div><span class="font-semibold text-gray-700 w-32 inline-block">Universidade:</span> {{ researcher.address }}</div>
+      <div><span class="font-semibold text-gray-700 w-32 inline-block">Localização:</span> {{ researcher.address }}</div>
+    {% else %}
+      <div><span class="font-semibold text-gray-700 w-32 inline-block">Universidade:</span> Sem associação.</div>
+    {% endif  %}
   </div>
 
   <div class="flex flex-wrap gap-2 my-3">
-    {% for area in r.research_areas %}
+    {% for area in researcher.research_areas %}
     <span class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-medium px-3 py-1 rounded-full">{{ area }}</span>
     {% endfor %}
   </div>
