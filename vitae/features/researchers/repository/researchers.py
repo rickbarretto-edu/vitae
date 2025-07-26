@@ -23,6 +23,15 @@ class ResearchersInDatabase(Researchers):
     database: Database
 
     def by_id(self, lattes_id: str) -> Researcher | None:
+        """Fetch a Researcher by its Lattes ID.
+
+        The Lattes ID must be exactly the same.
+
+        Returns
+        -------
+        A Researcher if any.
+
+        """
         with self.database.session as session:
             result = session.exec(
                 select(tables.Researcher).where(
