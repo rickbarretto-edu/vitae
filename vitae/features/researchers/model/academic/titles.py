@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from functools import wraps
-from typing import TYPE_CHECKING, Any, Callable, ClassVar, Self
+from typing import TYPE_CHECKING, ClassVar, Self
 
 import attrs
 
@@ -97,11 +96,16 @@ class AcademicTitle:
 
     @property
     def rank(self) -> int:
+        """Title's rank.
+
+        If value is not found between known titles,
+        this is considered the least significant as possible.
+        """
         keys = list(self._FORMATED_KNOWN_PORTUGUESE_TITLES.keys())
         try:
             return len(keys) - keys.index(self._value)
         except ValueError:
-            return 0
+            return -1
 
     def __lt__(self, other: AcademicTitle) -> bool:
         """Compare Title's rank."""
