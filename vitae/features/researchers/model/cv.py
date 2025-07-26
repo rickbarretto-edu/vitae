@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Final, Self
 
 import attrs
 
+from vitae.features.researchers.model.academic.expertises import Expertises
 from vitae.features.researchers.model.academic.titles import AcademicTitles
 
 if TYPE_CHECKING:
@@ -47,6 +48,7 @@ class Curriculum:
 
     titles: AcademicTitles
     abstract: Abstract
+    expertises: Expertises
 
     @classmethod
     def from_table(cls, researcher: tables.Researcher) -> Self:
@@ -60,4 +62,5 @@ class Curriculum:
         return cls(
             titles=AcademicTitles.from_tables(researcher.education),
             abstract=Abstract(researcher.abstract or ""),
+            expertises=Expertises(researcher.expertise),
         )
