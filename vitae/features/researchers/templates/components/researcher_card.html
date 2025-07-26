@@ -12,11 +12,15 @@
   <div class="mb-4 space-y-1 text-sm">
     <div><span class="font-semibold text-gray-700 w-32 inline-block">Nacionalidade:</span> {{ researcher.this.nationality }}</div>
     <div><span class="font-semibold text-gray-700 w-32 inline-block">Título:</span> {{ researcher.curriculum.titles.highest }}</div>
-    {% if researcher.address  %}
-      <div><span class="font-semibold text-gray-700 w-32 inline-block">Universidade:</span> {{ researcher.address }}</div>
-      <div><span class="font-semibold text-gray-700 w-32 inline-block">Localização:</span> {{ researcher.address }}</div>
-    {% else %}
+    {% if researcher.professional.institution  %}
+      <div><span class="font-semibold text-gray-700 w-32 inline-block">Universidade:</span> {{ researcher.professional.institution }}</div>
+    {% else  %}
       <div><span class="font-semibold text-gray-700 w-32 inline-block">Universidade:</span> Sem associação.</div>
+    {% endif  %}
+    {% if researcher.professional.address  %}
+      <div><span class="font-semibold text-gray-700 w-32 inline-block">Localização:</span> {{ researcher.professional.address }}</div>
+    {% else %}
+      <div><span class="font-semibold text-gray-700 w-32 inline-block">Localização:</span> Não fornecida.</div>
     {% endif  %}
   </div>
 
