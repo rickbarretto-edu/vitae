@@ -48,7 +48,8 @@ class StudyField:
     def taxonomy(self) -> Iterable[str]:
         """Taxonomy of a Study Field in order, from the broadest."""
         each = [self._broad_field, self._area, self._sub_area, self._focus]
-        return (item for item in each if item is not None)
+        normalized = [level.title() for level in each if level is not None]
+        return (item for item in normalized)
 
     @property
     def specialization(self) -> str:
