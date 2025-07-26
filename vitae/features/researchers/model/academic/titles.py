@@ -74,10 +74,25 @@ class AcademicTitle:
     @property
     def value(self) -> str:
         """Formated value."""
-        return self._value.replace("-", " ").title()
+        return self._FORMATED_KNOWN_PORTUGUESE_TITLES[self._value]
 
     def __str__(self) -> str:
         return self.value
+    
+    _FORMATED_KNOWN_PORTUGUESE_TITLES: ClassVar[dict[str, str]] = {
+        "POS-DOUTORADO": "Pós-doutorado",
+        "LIVRE-DOCENCIA": "Livre-docência",
+        "DOUTORADO": "Doutorado",
+        "MESTRADO": "Mestrado",
+        "MESTRADO-PROFISSIONALIZANTE": "Mestrado Profissionalizante",
+        "ESPECIALIZACAO": "Especialização",
+        "APERFEICOAMENTO": "Aperfeiçoamento",
+        "RESIDENCIA-MEDICA": "Residência Médica",
+        "GRADUACAO": "Graduação",
+        "CURSO-TECNICO-PROFISSIONALIZANTE": "Curso Técnico",
+        "ENSINO-MEDIO-SEGUNDO-GRAU": "Segundo Grau",
+        "ENSINO-FUNDAMENTAL-PRIMEIRO-GRAU": "Primeiro Grau",
+    }
 
     _ORDER: ClassVar[list[str]] = [
         "POS-DOUTORADO",
