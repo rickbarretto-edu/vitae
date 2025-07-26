@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Self
 
 import attrs
 
@@ -35,15 +35,24 @@ as_upper = attrs.converters.pipe(
 class City:
     name: str = attrs.field(converter=as_title)
 
+    def __str__(self) -> str:
+        return self.name
+
 
 @attrs.frozen
 class State:
     abbr: str = attrs.field(converter=as_upper)
 
+    def __str__(self) -> str:
+        return self.abbr
+
 
 @attrs.frozen
 class Country:
     name: str = attrs.field(converter=as_title)
+
+    def __str__(self) -> str:
+        return self.name
 
 
 @attrs.frozen
@@ -56,9 +65,9 @@ class Address:
 
     def __str__(self) -> str:
         match self:
-            case Address(city, state, country="Brasil"):
+            case Address(city=city, state=state, country=Country("Brasil")):
                 return f"{city} ({state})"
-            case Address(city, state, country):
+            case Address(city=city, state=state, country=country):
                 return f"{city} ({state}), {country}"
             case _:
                 return ""
