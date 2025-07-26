@@ -44,11 +44,32 @@ class ResearchersInDatabase(Researchers):
                 return Researcher.from_table(result)
             return None
 
-    def by_name(self, name: str, n: int = 50) -> Iterable[Researcher]:
+    def stricly_by_name(self, name: str, n: int = 50) -> Iterable[Researcher]:
         """Fetch Researchers by name.
 
         The query name does not need to match the first name,
-        but this needs to follow the correct order.
+        but this needs to strictly follow the correct sequence.
+
+        Use this if the performance of `by_name` is significantly
+        affecting the system.
+
+        Scenario
+        --------
+        Given I have "Josiah Stinkney Carberry",
+        When I look for "Josiah Caberry", I'll not find him.
+        But, when I look for "Josiah Stinkney" or "Stinkney Carberry", I'll.
+
+                >>> assert (
+                ...     researchers.loosely_by_name("Josiah Stinkney")
+                ...     is Researcher
+                ... )
+                >>> assert (
+                ...     researchers.loosely_by_name("Stinkney Carberry")
+                ...     is Researcher
+                ... )
+                >>> assert (
+                ...     researchers.loosely_by_name("Josiah Carberry") is None
+                ... )
 
         Returns
         -------
@@ -64,12 +85,27 @@ class ResearchersInDatabase(Researchers):
 
             return (Researcher.from_table(r) for r in result)
 
-    def by_name_phrase(self, name: str, n: int = 50) -> Iterable[Researcher]:
-        """Fetch Researchers by name phrase.
+    def by_name(self, name: str, n: int = 50) -> Iterable[Researcher]:
+        """Fetch Researchers by name.
 
-        This query can be slower than `by_name`, but this is also more precise.
-        This breakes down your query into tokens, so the final user don't need
-        to care about the order of the name.
+        This query may be slower than `stricly_by_name`,
+        but this is also more broad, and gives better results.
+        For this, names may be searched in any order of sequence.
+
+        Scenario
+        --------
+        Given I have "Josiah Stinkney Carberry",
+        When I search by "Josiah Caberry" or "Caberry Stinkney",
+        I'll be able to find him.
+
+                >>> assert (
+                ...     researchers.loosely_by_name("Josiah Caberry")
+                ...     is Researcher
+                ... )
+                >>> assert (
+                ...     researchers.loosely_by_name("Caberry Stinkney")
+                ...     is Researcher
+                ... )
 
         Returns
         -------
