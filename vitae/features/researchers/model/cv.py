@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Final, Self
+from typing import TYPE_CHECKING, Self
 
 import attrs
 
+from vitae.features.researchers.model.academic.abstract import Abstract
 from vitae.features.researchers.model.academic.expertises import Expertises
 from vitae.features.researchers.model.academic.titles import AcademicTitles
 
@@ -11,35 +12,8 @@ if TYPE_CHECKING:
     from vitae.infra.database import tables
 
 __all__ = [
-    "Abstract",
     "Curriculum",
 ]
-
-
-@attrs.frozen
-class Abstract:
-    """Curriculum's Abstract."""
-
-    _text: str
-    _brief_limit: Final[int] = 50
-
-    @property
-    def full(self) -> str:
-        """Full abstract."""
-        return self._text
-
-    @property
-    def brief(self) -> str:
-        """Brief abstract."""
-        limit = self._brief_limit
-
-        words = self._text.split()
-        brief_text = " ".join(words[:limit])
-
-        if len(words) > limit:
-            return f"{brief_text}..."
-
-        return brief_text
 
 
 @attrs.frozen
