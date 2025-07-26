@@ -14,10 +14,11 @@ __all__ = [
 
 @attrs.frozen
 class FullName:
+    """Researcher's full name."""
+
     _value: str
 
     def __str__(self) -> str:
-        """String representation."""
         return self.value
 
     @cached_property
@@ -77,6 +78,8 @@ class Nationality:
 
 @attrs.frozen
 class Person:
+    """Researcher's personal information."""
+
     name: FullName
     nationality: Nationality
 
