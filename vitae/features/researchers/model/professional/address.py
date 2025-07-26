@@ -64,13 +64,9 @@ class Address:
     country: Country
 
     def __str__(self) -> str:
-        match self:
-            case Address(city=city, state=state, country=Country("Brasil")):
-                return f"{city} ({state})"
-            case Address(city=city, state=state, country=country):
-                return f"{city} ({state}), {country}"
-            case _:
-                return ""
+        if self.country == Country("Brasil"):
+            return f"{self.city} ({self.state})"
+        return f"{self.city} ({self.state}), {self.country}"
 
     @classmethod
     def from_table(cls, table: tables.Address) -> Address:
