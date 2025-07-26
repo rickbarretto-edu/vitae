@@ -1,11 +1,15 @@
+"""Expertise related models."""
+
 from __future__ import annotations
 
-from collections.abc import Iterable
-from typing import Self
+from typing import TYPE_CHECKING, Self
 
 import attrs
 
-from vitae.infra.database import tables
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from vitae.infra.database import tables
 
 
 @attrs.frozen
@@ -34,10 +38,7 @@ class Expertises:
 
 @attrs.frozen
 class StudyField:
-    """Classification of a Study Field.
-    
-    
-    """
+    """Classification of a Study Field."""
 
     _broad_field: str | None
     _area: str | None
