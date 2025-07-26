@@ -25,7 +25,7 @@ class ProfessionalLink:
     in some Address.
     """
 
-    address: Address
+    address: Address | None
     institution: LinkedInstitution | None
 
     @classmethod
@@ -33,6 +33,6 @@ class ProfessionalLink:
         address = researcher.address
 
         return cls(
-            address=Address.from_table(address),
+            address=optional(address, Address.from_table),
             institution=optional(address, LinkedInstitution.from_table),
         )
