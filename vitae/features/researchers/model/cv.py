@@ -4,9 +4,11 @@ from typing import TYPE_CHECKING, Self
 
 import attrs
 
-from vitae.features.researchers.model.academic.abstract import Abstract
-from vitae.features.researchers.model.academic.expertises import Expertises
-from vitae.features.researchers.model.academic.titles import AcademicTitles
+from vitae.features.researchers.model.academic import (
+    Abstract,
+    AcademicTitles,
+    Expertises,
+)
 
 if TYPE_CHECKING:
     from vitae.infra.database import tables
