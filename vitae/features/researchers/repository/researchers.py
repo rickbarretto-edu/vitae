@@ -83,7 +83,7 @@ class ResearchersInDatabase(Researchers):
                 .limit(n),
             )
 
-            return (Researcher.from_table(r) for r in result)
+            return [Researcher.from_table(r) for r in result]
 
     def by_name(self, name: str, n: int = 50) -> Iterable[Researcher]:
         """Fetch Researchers by name.
@@ -123,4 +123,4 @@ class ResearchersInDatabase(Researchers):
             result = session.exec(
                 select(tables.Researcher).where(and_(*conditions)).limit(n),
             )
-            return (Researcher.from_table(r) for r in result)
+            return [Researcher.from_table(r) for r in result]
