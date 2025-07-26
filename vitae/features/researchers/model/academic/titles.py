@@ -17,31 +17,6 @@ __all__ = [
 ]
 
 
-def when_value_error[T](
-    default_value: T,
-) -> Callable[[Callable[..., T]], Callable[..., T]]:
-    """Return default_value if some function raises.
-
-    Returns
-    -------
-    Always returns T. If the function succeeds, returns its result.
-    If ValueError is raised, this returns the default value.
-
-    """
-
-    def decorator(func: Callable[..., T]) -> Callable[..., T]:
-        @wraps(func)
-        def wrapper(*args: Any, **kwargs: Any) -> T:
-            try:
-                return func(*args, **kwargs)
-            except ValueError:
-                return default_value
-
-        return wrapper
-
-    return decorator
-
-
 def _should_be_scream_case(instance, attribute, value) -> None:
     """Attrs validator for scream-case.
 
@@ -128,12 +103,10 @@ class AcademicTitle:
         except ValueError:
             return 0
 
-    @when_value_error(True)  # noqa: FBT003 - True is not being used as a flag
     def __lt__(self, other: AcademicTitle) -> bool:
         """Compare Title's rank."""
         return self.rank < other.rank
 
-    @when_value_error(False)  # noqa: FBT003 - False is not being used as a flag
     def __eq__(self, other: AcademicTitle) -> bool:
         """Compare Title's rank."""
         return self.rank == other.rank
