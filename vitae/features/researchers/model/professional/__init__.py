@@ -14,10 +14,7 @@ from .institution import LinkedInstitution
 if TYPE_CHECKING:
     from vitae.infra.database import tables
 
-__all__ = [
-    "Address",
-    "LinkedInstitution",
-]
+__all__ = ["Address", "LinkedInstitution", "ProfessionalLink"]
 
 
 @attrs.frozen
