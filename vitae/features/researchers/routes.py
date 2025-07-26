@@ -33,7 +33,7 @@ def show_search(request: Request, query: str):
     database = Database(vitae.postgres.engine)
 
     search = SearchResearchers(ResearchersInDatabase(database))
-    results = [search.by_id(query)]
+    results = search.query(query)
 
     return templates.TemplateResponse(
         "search.html",
