@@ -79,6 +79,8 @@ vitae
 Remember to install with `poetry install` before run as a script.
 Otherwise, you may run as `python -m vitae`.
 
+> If you want to execute the web application from uvicorn for some reason, try: `poetry run uvicorn vitae.__main__:web_new --factory --reload `.
+
 ## Tooling Recomentation
 
 1. **DBA tools**

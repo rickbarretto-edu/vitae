@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PesquisaBrasil - Base de Dados de Pesquisadores</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* Search & Filter Panel */
+        .search-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .search-section h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #333;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>') no-repeat 16px center;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-group {
+            margin-bottom: 24px;
+        }
+
+        .filter-group h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #374151;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .clear-filters {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+        }
+
+        .clear-filters:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            min-height: 600px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .sort-select {
+            padding: 8px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Researcher Cards */
+        .researcher-card {
+            background: #fff;
+            border: 2px solid #f3f4f6;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .researcher-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .researcher-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .researcher-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-right: 16px;
+        }
+
+        .researcher-info h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .researcher-id {
+            font-size: 0.9rem;
+            color: #666;
+            font-family: monospace;
+        }
+
+        .researcher-details {
+            margin-bottom: 16px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #374151;
+            width: 120px;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            color: #666;
+        }
+
+        .research-areas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .area-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .abstract {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 16px;
+            border-left: 4px solid #667eea;
+        }
+
+        .abstract h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .abstract p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .search-panel {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .header {
+                padding: 20px;
+                text-align: center;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .search-panel, .results-panel {
+                padding: 20px;
+            }
+            
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Vitae</h1>
+            <p>Descubra e conecte-se com pesquisadores Lattes.</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Search & Filter Panel -->
+            <div class="search-panel">
+                <div class="search-section">
+                    <h2>Pesquisar</h2>
+                    <input type="text" class="search-input" placeholder="Pesquisar por nome ou ID...">
+                </div>
+
+                <div class="filter-group">
+                    <h3>Universidade</h3>
+                    <select class="filter-select">
+                        <option value="">Todas as Universidades</option>
+                        <option value="usp">Universidade de São Paulo</option>
+                        <option value="unicamp">Universidade Estadual de Campinas</option>
+                        <option value="ufrj">Universidade Federal do Rio de Janeiro</option>
+                        <option value="ufmg">Universidade Federal de Minas Gerais</option>
+                        <option value="ufrgs">Universidade Federal do Rio Grande do Sul</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Localização</h3>
+                    <select class="filter-select">
+                        <option value="">Todas as Localizações</option>
+                        <option value="sp">São Paulo</option>
+                        <option value="rj">Rio de Janeiro</option>
+                        <option value="mg">Minas Gerais</option>
+                        <option value="rs">Rio Grande do Sul</option>
+                        <option value="pr">Paraná</option>
+                        <option value="sc">Santa Catarina</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Campo de Estudo</h3>
+                    <select class="filter-select">
+                        <option value="">Todos os Campos</option>
+                        <option value="cs">Ciências da Computação</option>
+                        <option value="bio">Biologia</option>
+                        <option value="physics">Física</option>
+                        <option value="medicine">Medicina</option>
+                        <option value="engineering">Engenharia</option>
+                        <option value="chemistry">Química</option>
+                        <option value="math">Matemática</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Área de Pesquisa</h3>
+                    <select class="filter-select">
+                        <option value="">Todas as Áreas</option>
+                        <option value="ai">Inteligência Artificial</option>
+                        <option value="ml">Aprendizado de Máquina</option>
+                        <option value="robotics">Robótica</option>
+                        <option value="nlp">Processamento de Linguagem Natural</option>
+                        <option value="biotech">Biotecnologia</option>
+                        <option value="nanotechnology">Nanotecnologia</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Subespecialidade</h3>
+                    <select class="filter-select">
+                        <option value="">Todas as Especialidades</option>
+                        <option value="deep-learning">Aprendizado Profundo</option>
+                        <option value="computer-vision">Visão Computacional</option>
+                        <option value="reinforcement-learning">Aprendizado por Reforço</option>
+                        <option value="bioinformatics">Bioinformática</option>
+                        <option value="quantum-computing">Computação Quântica</option>
+                    </select>
+                </div>
+
+                <button class="clear-filters">Limpar Todos os Filtros</button>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="results-panel">
+                <div class="results-header">
+                    <div class="results-count">1.247 pesquisadores encontrados</div>
+                    <select class="sort-select">
+                        <!-- <option value="relevance">Ordenar por Relevância</option> -->
+                        <option value="name">Ordenar por Nome</option>
+                        <option value="university">Ordenar por Universidade</option>
+                        <!-- <option value="recent">Mais Recentes</option> -->
+                    </select>
+                </div>
+
+                <!-- Exemplos de Cards de Pesquisadores -->
+                <div class="researcher-card">
+                    <div class="researcher-header">
+                        <div class="researcher-avatar">MS</div>
+                        <div class="researcher-info">
+                            <h3>Dra. Maria Silva</h3>
+                            <div class="researcher-id">ID: PBR-2024-001</div>
+                        </div>
+                    </div>
+                    
+                    <div class="researcher-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Universidade:</span>
+                            <span class="detail-value">Universidade de São Paulo</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Localização:</span>
+                            <span class="detail-value">São Paulo, SP</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Instituição:</span>
+                            <span class="detail-value">Instituto de Matemática e Estatística</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Nacionalidade:</span>
+                            <span class="detail-value">Brasileira</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Campo de Estudo:</span>
+                            <span class="detail-value">Aprendizado de Máquina</span>
+                        </div>
+                    </div>
+
+                    <div class="research-areas">
+                        <span class="area-tag">Aprendizado de Máquina</span>
+                        <span class="area-tag">Visão Computacional</span>
+                        <span class="area-tag">Inteligência Artificial</span>
+                    </div>
+
+                    <div class="abstract">
+                        <h4>Resumo da Pesquisa</h4>
+                        <p>A pesquisa da Dra. Silva foca no desenvolvimento de novas arquiteturas de aprendizado profundo para aplicações de visão computacional. Seu trabalho tem contribuído significativamente para sistemas autônomos e análise de imagens médicas, com mais de 150 artigos publicados e 10.000+ citações.</p>
+                    </div>
+                </div>
+
+                <div class="researcher-card">
+                    <div class="researcher-header">
+                        <div class="researcher-avatar">JS</div>
+                        <div class="researcher-info">
+                            <h3>Prof. João Santos</h3>
+                            <div class="researcher-id">ID: PBR-2024-002</div>
+                        </div>
+                    </div>
+                    
+                    <div class="researcher-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Universidade:</span>
+                            <span class="detail-value">Universidade Estadual de Campinas</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Localização:</span>
+                            <span class="detail-value">Campinas, SP</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Instituição:</span>
+                            <span class="detail-value">Faculdade de Engenharia Elétrica e de Computação</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Nacionalidade:</span>
+                            <span class="detail-value">Brasileira</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Campo de Estudo:</span>
+                            <span class="detail-value">Automação e Sistemas de Controle, Engenharia Elétrica</span>
+                        </div>
+                    </div>
+
+                    <div class="research-areas">
+                        <span class="area-tag">Robótica</span>
+                        <span class="area-tag">Sistemas de Controle</span>
+                        <span class="area-tag">Automação Industrial</span>
+                    </div>
+
+                    <div class="abstract">
+                        <h4>Resumo da Pesquisa</h4>
+                        <p>O Professor Santos especializa-se em robótica autônoma e sistemas de controle inteligentes. Seu laboratório desenvolve soluções robóticas avançadas para automação industrial e exploração espacial, com expertise particular em algoritmos de aprendizado por reforço e controle adaptativo.</p>
+                    </div>
+                </div>
+
+                <div class="researcher-card">
+                    <div class="researcher-header">
+                        <div class="researcher-avatar">AL</div>
+                        <div class="researcher-info">
+                            <h3>Dra. Ana Lima</h3>
+                            <div class="researcher-id">ID: PBR-2024-003</div>
+                        </div>
+                    </div>
+                    
+                    <div class="researcher-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Universidade:</span>
+                            <span class="detail-value">Universidade Federal do Rio de Janeiro</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Localização:</span>
+                            <span class="detail-value">Rio de Janeiro, RJ</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Instituição:</span>
+                            <span class="detail-value">Instituto de Computação</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Nacionalidade:</span>
+                            <span class="detail-value">Brasileira</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Campo de Estudo:</span>
+                            <span class="detail-value">Humanidades Digitais, Inteligência Artificial</span>
+                        </div>
+                    </div>
+
+                    <div class="research-areas">
+                        <span class="area-tag">Processamento de Linguagem Natural</span>
+                        <span class="area-tag">Linguística Computacional</span>
+                        <span class="area-tag">Ética em IA</span>
+                    </div>
+
+                    <div class="abstract">
+                        <h4>Resumo da Pesquisa</h4>
+                        <p>A pesquisa da Dra. Lima conecta processamento de linguagem natural e ética em IA, focando no desenvolvimento de modelos de linguagem mais interpretáveis e justos. Seu trabalho aborda detecção de viés em sistemas de IA e tem sido fundamental para estabelecer diretrizes éticas para aplicações de PLN na saúde e educação.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

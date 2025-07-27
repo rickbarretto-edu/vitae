@@ -1,0 +1,37 @@
+<div class="bg-white border-2 border-gray-100 rounded-xl p-6 hover:border-indigo-400 hover:shadow-lg hover:-translate-y-1 transition cursor-pointer mb-6">
+  <div class="flex items-center mb-4">
+    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold text-xl mr-4">
+      {{ researcher.this.name.initials }}
+    </div>
+    <div>
+      <h3 class="text-xl font-semibold">{{ researcher.this.name }}</h3>
+      <p class="text-sm text-gray-600 font-mono">ID: {{ researcher.links.lattes.id }}</p>
+    </div>
+  </div>
+
+  <div class="mb-4 space-y-1 text-sm">
+    <div><span class="font-semibold text-gray-700 w-32 inline-block">Nacionalidade:</span> {{ researcher.this.nationality }}</div>
+    <div><span class="font-semibold text-gray-700 w-32 inline-block">Título:</span> {{ researcher.curriculum.titles.highest }}</div>
+    {% if researcher.professional.institution  %}
+      <div><span class="font-semibold text-gray-700 w-32 inline-block">Universidade:</span> {{ researcher.professional.institution }}</div>
+    {% else  %}
+      <div><span class="font-semibold text-gray-700 w-32 inline-block">Universidade:</span> Sem associação.</div>
+    {% endif  %}
+    {% if researcher.professional.address  %}
+      <div><span class="font-semibold text-gray-700 w-32 inline-block">Localização:</span> {{ researcher.professional.address }}</div>
+    {% else %}
+      <div><span class="font-semibold text-gray-700 w-32 inline-block">Localização:</span> Não fornecida.</div>
+    {% endif  %}
+  </div>
+
+  <div class="flex flex-wrap gap-2 my-3">
+    {% for area in researcher.curriculum.expertises.specialities %}
+    <span class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-medium px-3 py-1 rounded-full">{{ area }}</span>
+    {% endfor %}
+  </div>
+
+  <div class="bg-slate-50 border-l-4 border-indigo-500 rounded-md p-4 mt-4">
+    <h4 class="font-semibold text-sm text-gray-800 mb-1">Resumo da Pesquisa</h4>
+    <p class="text-sm text-gray-600 leading-relaxed">{{ researcher.curriculum.abstract.brief }}</p>
+  </div>
+</div>

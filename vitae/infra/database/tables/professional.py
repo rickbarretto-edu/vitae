@@ -2,12 +2,13 @@
 
 # ruff: noqa: FA102, D101
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from .orm import Orm, foreign, key, link
 
 if TYPE_CHECKING:
     from .researcher import Researcher
+    from .institution import Institution
 
 __all__ = ["Address", "Experience"]
 
@@ -24,7 +25,7 @@ class Address(Orm, table=True):
     public_place: str | None
 
     researcher: "Researcher" = link("address")
-
+    institution: "Institution" = link("addresses")
 
 class Experience(Orm, table=True):
     id: int | None = key()
