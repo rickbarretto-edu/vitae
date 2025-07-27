@@ -81,7 +81,7 @@ class ResearchersInDatabase(Researchers):
                 select(tables.Researcher)
                 .where(col(tables.Researcher.full_name).ilike(f"%{name}%"))
                 .limit(n),
-            )
+            ).all()
 
             return [Researcher.from_table(r) for r in result]
 
@@ -122,5 +122,5 @@ class ResearchersInDatabase(Researchers):
         with self.database.session as session:
             result = session.exec(
                 select(tables.Researcher).where(and_(*conditions)).limit(n),
-            )
+            ).all()
             return [Researcher.from_table(r) for r in result]
