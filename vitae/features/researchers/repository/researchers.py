@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Literal, Protocol
 
 import attrs
 from sqlmodel import and_, col, select
@@ -10,6 +10,28 @@ from vitae.infra.database import Database, tables
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+
+
+type Order = Literal["asc", "desc"] | None
+INVALID_ORDER_LITERAL = "order_by must be 'asc', 'desc', or None"
+
+
+def ordered_by_name[T, G](
+    selected: T,
+    order: Order | None,
+) -> G:
+    a_z = col(tables.Researcher.full_name).asc()
+    z_a = col(tables.Researcher.full_name).desc()
+
+    match order:
+        case "asc":
+            return selected.order_by(a_z)
+        case "desc":
+            return selected.order_by(z_a)
+        case None:
+            return selected
+        case _:
+            raise ValueError(INVALID_ORDER_LITERAL)
 
 
 class Researchers(Protocol):
@@ -45,7 +67,12 @@ class ResearchersInDatabase(Researchers):
                 return Researcher.from_table(result)
             return None
 
-    def stricly_by_name(self, name: str, n: int = 50) -> Iterable[Researcher]:
+    def stricly_by_name(
+        self,
+        name: str,
+        n: int = 50,
+        order_by: Order = None,
+    ) -> Iterable[Researcher]:
         """Fetch Researchers by name.
 
         The query name does not need to match the first name,
@@ -77,16 +104,22 @@ class ResearchersInDatabase(Researchers):
         Iterable[Researcher] of n researchers.
 
         """
-        with self.database.session as session:
-            result = session.exec(
-                select(tables.Researcher)
-                .where(col(tables.Researcher.full_name).ilike(f"%{name}%"))
-                .limit(n),
-            ).all()
+        has_name = col(tables.Researcher.full_name).ilike(f"%{name}%")
 
+        with self.database.session as session:
+            selected = select(tables.Researcher).where(has_name)
+            ordered = ordered_by_name(selected, order_by)
+            limited = ordered.limit(n)
+
+            result: list[tables.Researcher] = session.exec(limited).all()
             return [Researcher.from_table(r) for r in result]
 
-    def by_name(self, name: str, n: int = 50) -> Iterable[Researcher]:
+    def by_name(
+        self,
+        name: str,
+        n: int = 50,
+        order_by: Order = None,
+    ) -> Iterable[Researcher]:
         """Fetch Researchers by name.
 
         This query may be slower than `stricly_by_name`,
@@ -115,13 +148,15 @@ class ResearchersInDatabase(Researchers):
         """
         words = name.split()
 
-        conditions = [
+        has_names = [
             col(tables.Researcher.full_name).ilike(f"%{word}%")
             for word in words
         ]
 
         with self.database.session as session:
-            result = session.exec(
-                select(tables.Researcher).where(and_(*conditions)).limit(n),
-            ).all()
+            selected = select(tables.Researcher).where(and_(*has_names))
+            ordered = ordered_by_name(selected, order_by)
+            limited = ordered.limit(n)
+
+            result: list[tables.Researcher] = session.exec(limited).all()
             return [Researcher.from_table(r) for r in result]
