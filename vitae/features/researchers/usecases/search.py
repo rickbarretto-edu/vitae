@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import enum
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING
 
 import attrs
 
@@ -10,28 +10,9 @@ if TYPE_CHECKING:
     from vitae.features.researchers.repository.researchers import Researchers
 
 
-@attrs.frozen
-class SortingRule:
-    by: SortingGroup
-    order: SortingOrder
-
-    @classmethod
-    def default(cls) -> Self:
-        return cls(
-            by=SortingGroup.Name,
-            order=SortingOrder.Ascendent,
-        )
-
-
-class SortingGroup(enum.Enum):
-    Name = enum.auto()
-    Location = enum.auto()
-    Institution = enum.auto()
-
-
-class SortingOrder(enum.Enum):
-    Ascendent = enum.auto()
-    Descendent = enum.auto()
+class SortingOrder(enum.StrEnum):
+    Ascendent = "asc"
+    Descendent = "desc"
 
 
 @attrs.frozen
@@ -46,22 +27,18 @@ class SearchResearchers:
     def query(
         self,
         query: str,
-        sorting: SortingRule | None = None,
+        sorting: SortingOrder | None = None,
     ) -> list[Researcher]:
-        """Query Researchers automatically by ID or name."""
-        sorting = sorting or SortingRule.default()
-
         if is_lattes_id(query):
-            by_id_result = self._by_id(query)
-            return [by_id_result] if by_id_result is not None else []
+            result = self.researchers.by_id(query)
+            return [result] if result else []
 
-        return self._by_name(query)
-
-    def _by_id(self, id: str) -> Researcher | None:
-        return self.researchers.by_id(id)
-
-    def _by_name(self, match: str) -> list[Researcher]:
-        return list(self.researchers.by_name(match))
+        return list(
+            self.researchers.by_name(
+                query,
+                order_by=sorting.value if sorting else None,
+            ),
+        )
 
 
 def is_lattes_id(query: str) -> bool:
