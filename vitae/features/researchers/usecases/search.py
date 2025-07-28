@@ -15,6 +15,7 @@ class SortingRule:
     by: SortingGroup
     order: SortingOrder
 
+
 class SortingGroup(enum.Enum):
     Name = enum.auto()
     Location = enum.auto()
