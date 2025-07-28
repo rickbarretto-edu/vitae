@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 import enum
 from typing import TYPE_CHECKING
 
@@ -27,7 +26,7 @@ class SortingOrder(enum.Enum):
     Descendent = enum.auto()
 
 
-@dataclass
+@attrs.frozen
 class SearchResearchers:
     """Researcher's Search use-case.
 
