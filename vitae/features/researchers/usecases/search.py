@@ -1,14 +1,21 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+import enum
 from typing import TYPE_CHECKING
+
+import attrs
 
 if TYPE_CHECKING:
     from vitae.features.researchers.model.researcher import Researcher
     from vitae.features.researchers.repository.researchers import Researchers
 
 
-@dataclass
+class SortingOrder(enum.StrEnum):
+    Ascendent = "asc"
+    Descendent = "desc"
+
+
+@attrs.frozen
 class SearchResearchers:
     """Researcher's Search use-case.
 
@@ -17,19 +24,21 @@ class SearchResearchers:
 
     researchers: Researchers
 
-    def query(self, query: str) -> list[Researcher]:
-        """Query Researchers automatically by ID or name."""
+    def query(
+        self,
+        query: str,
+        sorting: SortingOrder | None = None,
+    ) -> list[Researcher]:
         if is_lattes_id(query):
-            by_id_result = self.by_id(query)
-            return [by_id_result] if by_id_result is not None else []
+            result = self.researchers.by_id(query)
+            return [result] if result else []
 
-        return self.by_name(query)
-
-    def by_id(self, id: str) -> Researcher | None:
-        return self.researchers.by_id(id)
-
-    def by_name(self, match: str) -> list[Researcher]:
-        return list(self.researchers.by_name(match))
+        return list(
+            self.researchers.by_name(
+                query,
+                order_by=sorting.value if sorting else None,
+            ),
+        )
 
 
 def is_lattes_id(query: str) -> bool:

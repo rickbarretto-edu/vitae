@@ -9,7 +9,10 @@ from fastapi.templating import Jinja2Templates
 from vitae.features.researchers.repository.researchers import (
     ResearchersInDatabase,
 )
-from vitae.features.researchers.usecases.search import SearchResearchers
+from vitae.features.researchers.usecases.search import (
+    SearchResearchers,
+    SortingOrder,
+)
 from vitae.infra.database import Database
 from vitae.settings.vitae import Vitae
 
@@ -28,12 +31,19 @@ def home(request: Request):
 
 
 @router.get("/search", response_class=HTMLResponse)
-def show_search(request: Request, query: str):
+def show_search(
+    request: Request,
+    query: str,
+    sort: str | None = None,
+):
     vitae = Vitae.from_toml(Path("vitae.toml"))
     database = Database(vitae.postgres.engine)
 
     search = SearchResearchers(ResearchersInDatabase(database))
-    results = search.query(query)
+    results = search.query(
+        query,
+        SortingOrder(sort) if sort else None,
+    )
 
     return templates.TemplateResponse(
         "search.html",

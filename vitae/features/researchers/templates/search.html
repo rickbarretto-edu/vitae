@@ -8,9 +8,10 @@
   <div class="bg-white/90 backdrop-blur rounded-2xl shadow-md p-6 min-h-[600px]">
     <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
       <div class="text-gray-600 text-base">{{ results|length }} pesquisadores encontrados</div>
-      <select class="px-3 py-2 border-2 border-gray-200 rounded-md text-sm">
-        <option value="name">Ordenar por Nome</option>
-        <option value="university">Ordenar por Universidade</option>
+      <select class="px-3 py-2 border-2 border-gray-200 rounded-md text-sm" id="sort-select">
+        <option value="">Ordenar...</option>
+        <option value="asc">A-Z</option>
+        <option value="desc">Z-A</option>
       </select>
     </div>
 
@@ -24,5 +25,16 @@
       </div>
     {% endif %}
   </div>
+  <script>
+    document.getElementById('sort-select').addEventListener('change', function() {
+      const params = new URLSearchParams(window.location.search);
+      if (this.value) {
+        params.set('sort', this.value);
+      } else {
+        params.delete('sort');
+      }
+      window.location.search = params.toString();
+    });
+  </script>
 </div>
 {% endblock %}
