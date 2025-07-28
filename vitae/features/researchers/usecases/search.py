@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Self
 
 import attrs
 
@@ -43,8 +43,14 @@ class SearchResearchers:
 
     researchers: Researchers
 
-    def query(self, query: str) -> list[Researcher]:
+    def query(
+        self,
+        query: str,
+        sorting: SortingRule | None = None,
+    ) -> list[Researcher]:
         """Query Researchers automatically by ID or name."""
+        sorting = sorting or SortingRule.default()
+
         if is_lattes_id(query):
             by_id_result = self._by_id(query)
             return [by_id_result] if by_id_result is not None else []
