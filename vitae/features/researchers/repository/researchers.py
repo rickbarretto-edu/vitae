@@ -38,8 +38,18 @@ class Researchers(Protocol):
     """Researchers's interface."""
 
     def by_id(self, lattes_id: str) -> Researcher | None: ...
-    def by_name(self, name: str) -> Iterable[Researcher]: ...
-    def stricly_by_name(self, name: str) -> Iterable[Researcher]: ...
+
+    def by_name(
+        self,
+        name: str,
+        order_by: Order,
+    ) -> Iterable[Researcher]: ...
+
+    def stricly_by_name(
+        self,
+        name: str,
+        order_by: Order,
+    ) -> Iterable[Researcher]: ...
 
 
 @attrs.frozen
