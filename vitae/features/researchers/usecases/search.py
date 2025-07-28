@@ -1,11 +1,30 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import enum
 from typing import TYPE_CHECKING
+
+import attrs
 
 if TYPE_CHECKING:
     from vitae.features.researchers.model.researcher import Researcher
     from vitae.features.researchers.repository.researchers import Researchers
+
+
+@attrs.frozen
+class SortingRule:
+    by: SortingGroup
+    order: SortingOrder
+
+class SortingGroup(enum.Enum):
+    Name = enum.auto()
+    Location = enum.auto()
+    Institution = enum.auto()
+
+
+class SortingOrder(enum.Enum):
+    Ascendent = enum.auto()
+    Descendent = enum.auto()
 
 
 @dataclass
