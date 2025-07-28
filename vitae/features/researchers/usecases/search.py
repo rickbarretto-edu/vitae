@@ -20,15 +20,15 @@ class SearchResearchers:
     def query(self, query: str) -> list[Researcher]:
         """Query Researchers automatically by ID or name."""
         if is_lattes_id(query):
-            by_id_result = self.by_id(query)
+            by_id_result = self._by_id(query)
             return [by_id_result] if by_id_result is not None else []
 
-        return self.by_name(query)
+        return self._by_name(query)
 
-    def by_id(self, id: str) -> Researcher | None:
+    def _by_id(self, id: str) -> Researcher | None:
         return self.researchers.by_id(id)
 
-    def by_name(self, match: str) -> list[Researcher]:
+    def _by_name(self, match: str) -> list[Researcher]:
         return list(self.researchers.by_name(match))
 
 
