@@ -15,6 +15,13 @@ class SortingRule:
     by: SortingGroup
     order: SortingOrder
 
+    @classmethod
+    def default(cls) -> Self:
+        return cls(
+            by=SortingGroup.Name,
+            order=SortingOrder.Ascendent,
+        )
+
 
 class SortingGroup(enum.Enum):
     Name = enum.auto()
