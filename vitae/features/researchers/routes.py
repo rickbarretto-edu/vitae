@@ -62,16 +62,18 @@ def show_search(
     all_filters = load_filters(database)
 
     search = SearchResearchers(ResearchersInDatabase(database))
+    choosen_filters = ChoosenFilters(
+        country=country,
+        state=state,
+        started=started,
+        has_finished=has_finished,
+        expertise=expertise,
+    )
+
     results = search.query(
         query,
         order_by=SortingOrder(sort) if sort else None,
-        filter_by=ChoosenFilters(
-            country=country,
-            state=state,
-            started=started,
-            has_finished=has_finished,
-            expertise=expertise,
-        ),
+        filter_by=choosen_filters,
     )
 
     return templates.TemplateResponse(
@@ -80,6 +82,7 @@ def show_search(
             "request": request,
             "results": results,
             "filters": all_filters,
+            "choosen-filters": choosen_filters,
         },
     )
 
