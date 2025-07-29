@@ -41,6 +41,13 @@ def home(
         {
             "request": request,
             "filters": all_filters,
+            "choosen_filters": {
+                "country": None,
+                "state": None,
+                "started": None,
+                "has_finished": None,
+                "expertise": None,
+            },
         },
     )
 
@@ -83,7 +90,7 @@ def show_search(
             "request": request,
             "results": results,
             "filters": all_filters,
-            "choosen-filters": choosen_filters,
+            "choosen_filters": choosen_filters,
         },
     )
 

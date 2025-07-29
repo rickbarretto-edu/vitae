@@ -11,7 +11,7 @@
           <select name="country" class="w-full px-3 py-2 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400">
             <option value="">Todos os países</option>
             {% for country in filters.countries %}
-            <option value="{{ country }}">{{ country | title }}</option>
+            <option value="{{ country }}" {% if choosen_filters.country == country %}selected{% endif %}>{{ country | title }}</option>
             {% endfor %}
           </select>
         </div>
@@ -20,7 +20,7 @@
           <select name="state" class="w-full px-3 py-2 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400">
             <option value="">Todos os estados</option>
             {% for state in filters.states %}
-            <option value="{{ state }}">{{ state | upper }}</option>
+            <option value="{{ state }}" {% if choosen_filters.state == state %}selected{% endif %}>{{ state | upper }}</option>
             {% endfor %}
           </select>
         </div>
@@ -29,11 +29,11 @@
           <select name="started" class="w-full px-3 py-2 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400">
             <option value="">Todas as formações</option>
             {% for title in filters.titles %}
-            <option value="{{ title }}">{{ title | title }}</option>
+            <option value="{{ title }}" {% if choosen_filters.started == title %}selected{% endif %}>{{ title | title }}</option>
             {% endfor %}
           </select>
           <div class="flex items-center mt-2">
-            <input type="checkbox" id="has_finished" name="has_finished" value="false" class="mr-2">
+            <input type="checkbox" id="has_finished" name="has_finished" value="true" class="mr-2" {% if choosen_filters.has_finished %}checked{% endif %}>
             <label for="has_finished" class="text-sm text-gray-700">Apenas concluídas</label>
           </div>
         </div>
@@ -42,7 +42,7 @@
           <select name="expertise" class="w-full px-3 py-2 border-2 border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400">
             <option value="">Todas as áreas</option>
             {% for expertise in filters.expertises %}
-            <option value="{{ expertise }}">{{ expertise | title }}</option>
+            <option value="{{ expertise }}" {% if choosen_filters.expertise == expertise %}selected{% endif %}>{{ expertise | title }}</option>
             {% endfor %}
           </select>
         </div>
