@@ -88,6 +88,7 @@ class ResearchersInDatabase(Researchers):
         name: str,
         n: int = 50,
         order_by: Order = None,
+        filters: Filters | None = None,
     ) -> Iterable[Researcher]:
         """Fetch Researchers by name.
 
@@ -137,6 +138,7 @@ class ResearchersInDatabase(Researchers):
         name: str,
         n: int = 50,
         order_by: Order = None,
+        filters: Filters | None = None,
     ) -> Iterable[Researcher]:
         """Fetch Researchers by name.
 
