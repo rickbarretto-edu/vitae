@@ -1,5 +1,3 @@
-from .filters import Filters
+from .filters import ChoosenFilters, Filters
 
-__all__ = [
-    "Filters",
-]
+__all__ = ["ChoosenFilters", "Filters"]
