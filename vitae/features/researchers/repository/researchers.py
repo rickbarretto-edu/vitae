@@ -20,7 +20,7 @@ INVALID_ORDER_LITERAL = "order_by must be 'asc', 'desc', or None"
 type SelectedResearchers = Select[tuple[tables.Researcher]]
 
 
-def get(
+def also(
     selected: SelectedResearchers,
     keyword: str | None,
     fn: Callable[[SelectedResearchers, str | None], SelectedResearchers],
@@ -37,19 +37,19 @@ def using_filter(
     if not filters:
         return selected
 
-    by_title = get(selected, filters["title"], lambda query, title:
+    by_title = also(selected, filters["title"], lambda query, title:
         query.join(tables.Education)
             .where(col(tables.Education.category) == title))
 
-    by_expertise = get(by_title, filters["expertise"], lambda query, expertise:
+    by_expertise = also(by_title, filters["expertise"], lambda query, expertise:
         query.join(tables.Expertise)
             .where(col(tables.Expertise.sub) == expertise))
 
-    by_state = get(by_expertise, filters["state"], lambda query, state:
+    by_state = also(by_expertise, filters["state"], lambda query, state:
         query.join(tables.Address)
             .where(col(tables.Address.state) == state))
 
-    return get(by_state, filters["country"], lambda query, country:
+    return also(by_state, filters["country"], lambda query, country:
         query.join(tables.Address)
             .where(col(tables.Address.country) == country))
 
