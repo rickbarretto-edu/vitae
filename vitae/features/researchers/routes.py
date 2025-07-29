@@ -67,7 +67,7 @@ def show_search(
         filter_by=ChoosenFilters(
             country=country,
             state=state,
-            title=title,
+            started=title,
             expertise=expertise,
         ),
     )

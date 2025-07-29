@@ -13,5 +13,5 @@ class Filters(TypedDict):
 class ChoosenFilters(TypedDict, total=True):
     country: str | None
     state: str | None
-    title: str | None
+    started: str | None
     expertise: str | None

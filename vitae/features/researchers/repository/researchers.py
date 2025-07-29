@@ -37,13 +37,15 @@ def using_filter(
     if not filters:
         return selected
 
-    by_title = also(selected, filters["title"], lambda query, title:
-        query.join(tables.Education)
-            .where(col(tables.Education.category) == title))
+    by_started_formations = also(selected, filters["started"],
+        lambda query, title:
+            query.join(tables.Education)
+                .where(col(tables.Education.category) == title))
 
-    by_expertise = also(by_title, filters["expertise"], lambda query, expertise:
-        query.join(tables.Expertise)
-            .where(col(tables.Expertise.sub) == expertise))
+    by_expertise = also(by_started_formations, filters["expertise"],
+        lambda query, expertise:
+            query.join(tables.Expertise)
+                .where(col(tables.Expertise.sub) == expertise))
 
     by_state = also(by_expertise, filters["state"], lambda query, state:
         query.join(tables.Address)
