@@ -56,11 +56,12 @@ def show_search(
     has_finished: bool | None = None,
     expertise: str | None = None,
 ):
+    # Requirements Setup
     vitae = Vitae.from_toml(Path("vitae.toml"))
     database = Database(vitae.postgres.engine)
-
     all_filters = load_filters(database)
 
+    # Feature Setup
     search = SearchResearchers(ResearchersInDatabase(database))
     choosen_filters = ChoosenFilters(
         country=country,
