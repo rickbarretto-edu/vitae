@@ -46,10 +46,11 @@ def home(
                 "country": None,
                 "state": None,
                 "started": None,
-                "has_finished": None,
+                "has_finished": False,
                 "expertise": None,
             },
             "order": None,
+            "page": 1,
         },
     )
 
@@ -58,11 +59,12 @@ def home(
 def show_search(
     request: Request,
     query: str = "",
+    page: int = 1,
     sort: str | None = None,
     country: str | None = None,
     state: str | None = None,
     started: str | None = None,
-    has_finished: bool | None = None,
+    has_finished: bool = False,
     expertise: str | None = None,
 ):
     # Requirements Setup
@@ -84,6 +86,7 @@ def show_search(
         query,
         order_by=SortingOrder(sort) if sort else None,
         filter_by=choosen_filters,
+        page=page,
     )
 
     return templates.TemplateResponse(
@@ -95,6 +98,7 @@ def show_search(
             "query": query,
             "choosen_filters": choosen_filters,
             "order": sort,
+            "page": page,
         },
     )
 
