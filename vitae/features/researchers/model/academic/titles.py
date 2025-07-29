@@ -48,8 +48,10 @@ class AcademicTitles:
     titles: list[AcademicTitle]
 
     @property
-    def highest(self) -> AcademicTitle:
-        return max(self.titles)
+    def highest(self) -> AcademicTitle | None:
+        if self.titles:
+            return max(self.titles)
+        return None
 
     @classmethod
     def from_tables(cls, tables: list[tables.Education]) -> Self:
