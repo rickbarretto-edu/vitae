@@ -52,7 +52,7 @@ def show_search(
     sort: str | None = None,
     country: str | None = None,
     state: str | None = None,
-    title: str | None = None,
+    started: str | None = None,
     expertise: str | None = None,
 ):
     vitae = Vitae.from_toml(Path("vitae.toml"))
@@ -67,7 +67,7 @@ def show_search(
         filter_by=ChoosenFilters(
             country=country,
             state=state,
-            started=title,
+            started=started,
             expertise=expertise,
         ),
     )
