@@ -86,6 +86,7 @@ def show_search(
         query,
         order_by=SortingOrder(sort) if sort else None,
         filter_by=choosen_filters,
+        page=page,
     )
 
     return templates.TemplateResponse(
