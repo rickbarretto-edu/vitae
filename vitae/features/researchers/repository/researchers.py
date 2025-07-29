@@ -122,7 +122,7 @@ class ResearchersInDatabase(Researchers):
             ordered = ordered_by_name(selected, order_by)
             limited = ordered.limit(n)
 
-            result: list[tables.Researcher] = session.exec(limited).all()
+            result: list[tables.Researcher] = session.exec(limited).all()  # type: ignore
             return [Researcher.from_table(r) for r in result]
 
     def by_name(
@@ -169,5 +169,5 @@ class ResearchersInDatabase(Researchers):
             ordered = ordered_by_name(selected, order_by)
             limited = ordered.limit(n)
 
-            result: list[tables.Researcher] = session.exec(limited).all()
+            result: list[tables.Researcher] = session.exec(limited).all()  # type: ignore
             return [Researcher.from_table(r) for r in result]
