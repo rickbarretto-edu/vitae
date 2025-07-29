@@ -50,6 +50,7 @@ def home(
                 "expertise": None,
             },
             "order": None,
+            "page": 1,
         },
     )
 
@@ -58,6 +59,7 @@ def home(
 def show_search(
     request: Request,
     query: str = "",
+    page: int = 1,
     sort: str | None = None,
     country: str | None = None,
     state: str | None = None,
@@ -95,6 +97,7 @@ def show_search(
             "query": query,
             "choosen_filters": choosen_filters,
             "order": sort,
+            "page": page,
         },
     )
 
