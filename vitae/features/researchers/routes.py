@@ -46,7 +46,7 @@ def home(
                 "country": None,
                 "state": None,
                 "started": None,
-                "has_finished": None,
+                "has_finished": False,
                 "expertise": None,
             },
             "order": None,
@@ -62,7 +62,7 @@ def show_search(
     country: str | None = None,
     state: str | None = None,
     started: str | None = None,
-    has_finished: bool | None = None,
+    has_finished: bool = False,
     expertise: str | None = None,
 ):
     # Requirements Setup
