@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import TypedDict
 
 
@@ -8,8 +10,8 @@ class Filters(TypedDict):
     expertises: list[str]
 
 
-class ChoosenFilters(TypedDict):
-    country: str
-    state: str
-    title: str
-    expertise: str
+class ChoosenFilters(TypedDict, total=True):
+    country: str | None
+    state: str | None
+    title: str | None
+    expertise: str | None
