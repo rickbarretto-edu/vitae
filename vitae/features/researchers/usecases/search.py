@@ -29,6 +29,7 @@ class SearchResearchers:
     def query(
         self,
         query: str,
+        *,
         order_by: SortingOrder | None = None,
         filter_by: ChoosenFilters | None = None,
     ) -> list[Researcher]:
