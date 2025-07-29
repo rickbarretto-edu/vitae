@@ -15,13 +15,13 @@ if TYPE_CHECKING:
 
 
 class Filters(Protocol):
-    @property
+    @cached_property
     def countries(self) -> Sequence[str]: ...
-    @property
+    @cached_property
     def states(self) -> Sequence[str]: ...
-    @property
+    @cached_property
     def titles(self) -> Sequence[str]: ...
-    @property
+    @cached_property
     def expertises(self) -> Sequence[str]: ...
 
 
