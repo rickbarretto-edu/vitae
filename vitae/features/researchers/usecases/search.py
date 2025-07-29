@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 
 import attrs
 
-from vitae.features.researchers.schemes import Filters
 from vitae.features.researchers.schemes.filters import ChoosenFilters
 
 if TYPE_CHECKING:
@@ -30,8 +29,8 @@ class SearchResearchers:
     def query(
         self,
         query: str,
-        sorting: SortingOrder | None = None,
-        filters: ChoosenFilters | None = None,
+        order_by: SortingOrder | None = None,
+        filter_by: ChoosenFilters | None = None,
     ) -> list[Researcher]:
         if is_lattes_id(query):
             result = self.researchers.by_id(query)
@@ -40,8 +39,8 @@ class SearchResearchers:
         return list(
             self.researchers.by_name(
                 query,
-                order_by=sorting.value if sorting else None,
-                filters=filters,
+                order_by=order_by.value if order_by else None,
+                filter_by=filter_by,
             ),
         )
 

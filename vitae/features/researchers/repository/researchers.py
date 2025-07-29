@@ -83,14 +83,14 @@ class Researchers(Protocol):
         self,
         name: str,
         order_by: Order,
-        filters: ChoosenFilters | None,
+        filter_by: ChoosenFilters | None,
     ) -> Iterable[Researcher]: ...
 
     def stricly_by_name(
         self,
         name: str,
         order_by: Order,
-        filters: ChoosenFilters | None,
+        filter_by: ChoosenFilters | None,
     ) -> Iterable[Researcher]: ...
 
 
@@ -124,7 +124,7 @@ class ResearchersInDatabase(Researchers):
         name: str,
         n: int = 50,
         order_by: Order = None,
-        filters: ChoosenFilters | None = None,
+        filter_by: ChoosenFilters | None = None,
     ) -> Iterable[Researcher]:
         """Fetch Researchers by name.
 
@@ -163,7 +163,7 @@ class ResearchersInDatabase(Researchers):
             selected = select(tables.Researcher).where(
                 has_name if name else True,
             )
-            filtered = using_filter(selected, filters)
+            filtered = using_filter(selected, filter_by)
             ordered = ordered_by_name(filtered, order_by)
             limited = ordered.limit(n)
 
@@ -175,7 +175,7 @@ class ResearchersInDatabase(Researchers):
         name: str,
         n: int = 50,
         order_by: Order = None,
-        filters: ChoosenFilters | None = None,
+        filter_by: ChoosenFilters | None = None,
     ) -> Iterable[Researcher]:
         """Fetch Researchers by name.
 
@@ -214,7 +214,7 @@ class ResearchersInDatabase(Researchers):
             selected = select(tables.Researcher).where(
                 and_(*has_names) if name else True,
             )
-            filtered = using_filter(selected, filters)
+            filtered = using_filter(selected, filter_by)
             ordered = ordered_by_name(filtered, order_by)
             limited = ordered.limit(n)
 
