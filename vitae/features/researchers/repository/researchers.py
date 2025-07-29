@@ -16,11 +16,13 @@ if TYPE_CHECKING:
 type Order = Literal["asc", "desc"] | None
 INVALID_ORDER_LITERAL = "order_by must be 'asc', 'desc', or None"
 
+type SelectedResearchers = Select[tuple[tables.Researcher]]
+
 
 def ordered_by_name(
-    selected: Select[tuple[tables.Researcher]],
+    selected: SelectedResearchers,
     order: Order | None,
-) -> Select[tuple[tables.Researcher]]:
+) -> SelectedResearchers:
     a_z = col(tables.Researcher.full_name).asc()
     z_a = col(tables.Researcher.full_name).desc()
 
