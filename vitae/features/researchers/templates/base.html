@@ -17,6 +17,14 @@
     class="hidden fixed bottom-5 right-5 z-50 bg-white text-purple-600 w-12 h-12 flex items-center justify-center rounded hover:bg-gray-100">
     ↑
   </a>
+
+  {% if page > 1 %}
+  <a href="javascript:void(0)" onclick="history.back()"
+    class="fixed bottom-5 left-5 z-50 bg-white text-purple-600 w-12 h-12 flex items-center justify-center rounded hover:bg-gray-100">
+    ←
+  </a>
+  {% endif %}
+
   <script>
     const btn = document.getElementById("goUpBtn");
     window.addEventListener("scroll", () => {
