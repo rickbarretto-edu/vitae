@@ -11,7 +11,19 @@
 
   <div class="mb-4 space-y-1 text-sm">
     <div><span class="font-semibold text-gray-700 w-32 inline-block">Nacionalidade:</span> {{ researcher.this.nationality }}</div>
-    <div><span class="font-semibold text-gray-700 w-32 inline-block">Título:</span> {{ researcher.curriculum.titles.highest }}</div>
+    {% if researcher.curriculum.titles.highest  %}
+    <div>
+      <span class="font-semibold text-gray-700 w-32 inline-block">Título:</span>
+      {{ researcher.curriculum.titles.highest }}
+      {% if researcher.curriculum.titles.highest.begin or researcher.curriculum.titles.highest.finish %}
+        ({% if researcher.curriculum.titles.highest.begin %}{{ researcher.curriculum.titles.highest.begin }}{% endif %}
+        {% if researcher.curriculum.titles.highest.begin and researcher.curriculum.titles.highest.finish %}-{% endif %}
+        {% if researcher.curriculum.titles.highest.finish %}{{ researcher.curriculum.titles.highest.finish }}{% endif %})
+      {% endif %}
+    </div>
+    {% else  %}
+      <div><span class="font-semibold text-gray-700 w-32 inline-block">Título:</span> Nenhum título fornecido.</div>
+    {% endif  %}
     {% if researcher.professional.institution  %}
       <div><span class="font-semibold text-gray-700 w-32 inline-block">Universidade:</span> {{ researcher.professional.institution }}</div>
     {% else  %}

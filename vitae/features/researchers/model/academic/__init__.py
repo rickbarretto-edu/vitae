@@ -1,11 +1,11 @@
 from .abstract import Abstract
 from .expertises import Expertises
 from .external import ExternalLinks
-from .titles import AcademicTitle, AcademicTitles
+from .titles import AcademicDegree, AcademicTitles
 
 __all__ = [
     "Abstract",
-    "AcademicTitle",
+    "AcademicDegree",
     "AcademicTitles",
     "Expertises",
     "ExternalLinks",
