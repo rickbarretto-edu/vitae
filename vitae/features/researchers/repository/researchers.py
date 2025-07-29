@@ -34,7 +34,7 @@ def using_filter(
             col(tables.Education.category) == filters["started"])
 
     if filters.get("has_finished"):
-        selected = selected.join(tables.Education).where(
+        selected = selected.where(
             col(tables.Education.end).is_not(None))
 
     if filters.get("expertise"):
@@ -46,7 +46,7 @@ def using_filter(
             col(tables.Address.state) == filters["state"])
 
     if filters.get("country"):
-        selected = selected.join(tables.Address).where(
+        selected = selected.where(
             col(tables.Address.country) == filters["country"])
 
     return selected.distinct()
