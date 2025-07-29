@@ -10,7 +10,7 @@ from vitae.features.researchers.repository import (
     FiltersInDatabase,
     ResearchersInDatabase,
 )
-from vitae.features.researchers.schemes.filters import ChoosenFilters
+from vitae.features.researchers.schemes import ChoosenFilters
 from vitae.features.researchers.usecases import (
     LoadFilters,
     SearchResearchers,
