@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Protocol
+from typing import TYPE_CHECKING, Callable, Literal, Protocol
 
 import attrs
+from sqlalchemy import Select
 from sqlmodel import and_, col, select
 
 from vitae.features.researchers.model.researcher import Researcher
+from vitae.features.researchers.schemes import ChoosenFilters
 from vitae.infra.database import Database, tables
 
 if TYPE_CHECKING:
@@ -15,11 +17,47 @@ if TYPE_CHECKING:
 type Order = Literal["asc", "desc"] | None
 INVALID_ORDER_LITERAL = "order_by must be 'asc', 'desc', or None"
 
+type SelectedResearchers = Select[tuple[tables.Researcher]]
 
-def ordered_by_name[T, G](
-    selected: T,
+
+# fmt: off
+def using_filter(
+    selected: SelectedResearchers,
+    filters: ChoosenFilters | None,
+) -> SelectedResearchers:
+
+    if not filters:
+        return selected
+
+    if filters.get("started"):
+        selected = selected.join(tables.Education).where(
+            col(tables.Education.category) == filters["started"])
+
+    if filters.get("has_finished"):
+        selected = selected.where(
+            col(tables.Education.end).is_not(None))
+
+    if filters.get("expertise"):
+        selected = selected.join(tables.Expertise).where(
+            col(tables.Expertise.sub) == filters["expertise"])
+
+    if filters.get("state"):
+        selected = selected.join(tables.Address).where(
+            col(tables.Address.state) == filters["state"])
+
+    if filters.get("country"):
+        selected = selected.where(
+            col(tables.Address.country) == filters["country"])
+
+    return selected.distinct()
+
+# fmt: on
+
+
+def ordered_by_name(
+    selected: SelectedResearchers,
     order: Order | None,
-) -> G:
+) -> SelectedResearchers:
     a_z = col(tables.Researcher.full_name).asc()
     z_a = col(tables.Researcher.full_name).desc()
 
@@ -43,12 +81,14 @@ class Researchers(Protocol):
         self,
         name: str,
         order_by: Order,
+        filter_by: ChoosenFilters | None,
     ) -> Iterable[Researcher]: ...
 
     def stricly_by_name(
         self,
         name: str,
         order_by: Order,
+        filter_by: ChoosenFilters | None,
     ) -> Iterable[Researcher]: ...
 
 
@@ -82,6 +122,7 @@ class ResearchersInDatabase(Researchers):
         name: str,
         n: int = 50,
         order_by: Order = None,
+        filter_by: ChoosenFilters | None = None,
     ) -> Iterable[Researcher]:
         """Fetch Researchers by name.
 
@@ -117,11 +158,14 @@ class ResearchersInDatabase(Researchers):
         has_name = col(tables.Researcher.full_name).ilike(f"%{name}%")
 
         with self.database.session as session:
-            selected = select(tables.Researcher).where(has_name)
-            ordered = ordered_by_name(selected, order_by)
+            selected = select(tables.Researcher).where(
+                has_name if name else True,
+            )
+            filtered = using_filter(selected, filter_by)
+            ordered = ordered_by_name(filtered, order_by)
             limited = ordered.limit(n)
 
-            result: list[tables.Researcher] = session.exec(limited).all()
+            result: list[tables.Researcher] = session.exec(limited).all()  # type: ignore
             return [Researcher.from_table(r) for r in result]
 
     def by_name(
@@ -129,6 +173,7 @@ class ResearchersInDatabase(Researchers):
         name: str,
         n: int = 50,
         order_by: Order = None,
+        filter_by: ChoosenFilters | None = None,
     ) -> Iterable[Researcher]:
         """Fetch Researchers by name.
 
@@ -156,17 +201,20 @@ class ResearchersInDatabase(Researchers):
         Iterable[Researcher] of n researchers.
 
         """
-        words = name.split()
+        each_name = name.split()
 
         has_names = [
-            col(tables.Researcher.full_name).ilike(f"%{word}%")
-            for word in words
+            col(tables.Researcher.full_name).ilike(f"%{name_token}%")
+            for name_token in each_name
         ]
 
         with self.database.session as session:
-            selected = select(tables.Researcher).where(and_(*has_names))
-            ordered = ordered_by_name(selected, order_by)
+            selected = select(tables.Researcher).where(
+                and_(*has_names) if name else True,
+            )
+            filtered = using_filter(selected, filter_by)
+            ordered = ordered_by_name(filtered, order_by)
             limited = ordered.limit(n)
 
-            result: list[tables.Researcher] = session.exec(limited).all()
+            result: list[tables.Researcher] = session.exec(limited).all()  # type: ignore
             return [Researcher.from_table(r) for r in result]

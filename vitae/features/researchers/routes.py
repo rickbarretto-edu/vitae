@@ -6,10 +6,13 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
-from vitae.features.researchers.repository.researchers import (
+from vitae.features.researchers.repository import (
+    FiltersInDatabase,
     ResearchersInDatabase,
 )
-from vitae.features.researchers.usecases.search import (
+from vitae.features.researchers.schemes import ChoosenFilters
+from vitae.features.researchers.usecases import (
+    LoadFilters,
     SearchResearchers,
     SortingOrder,
 )
@@ -20,12 +23,32 @@ router = APIRouter()
 templates = Jinja2Templates("vitae/features/researchers/templates")
 
 
+def load_filters(database: Database):
+    return LoadFilters(FiltersInDatabase(database)).all
+
+
 @router.get("/", response_class=HTMLResponse)
-def home(request: Request):
+def home(
+    request: Request,
+):
+    vitae = Vitae.from_toml(Path("vitae.toml"))
+    database = Database(vitae.postgres.engine)
+
+    all_filters = load_filters(database)
+
     return templates.TemplateResponse(
         "search.html",
         {
             "request": request,
+            "filters": all_filters,
+            "choosen_filters": {
+                "country": None,
+                "state": None,
+                "started": None,
+                "has_finished": None,
+                "expertise": None,
+            },
+            "order": None,
         },
     )
 
@@ -33,16 +56,33 @@ def home(request: Request):
 @router.get("/search", response_class=HTMLResponse)
 def show_search(
     request: Request,
-    query: str,
+    query: str = "",
     sort: str | None = None,
+    country: str | None = None,
+    state: str | None = None,
+    started: str | None = None,
+    has_finished: bool | None = None,
+    expertise: str | None = None,
 ):
+    # Requirements Setup
     vitae = Vitae.from_toml(Path("vitae.toml"))
     database = Database(vitae.postgres.engine)
+    all_filters = load_filters(database)
 
+    # Feature Setup
     search = SearchResearchers(ResearchersInDatabase(database))
+    choosen_filters = ChoosenFilters(
+        country=country,
+        state=state,
+        started=started,
+        has_finished=has_finished,
+        expertise=expertise,
+    )
+
     results = search.query(
         query,
-        SortingOrder(sort) if sort else None,
+        order_by=SortingOrder(sort) if sort else None,
+        filter_by=choosen_filters,
     )
 
     return templates.TemplateResponse(
@@ -50,17 +90,10 @@ def show_search(
         {
             "request": request,
             "results": results,
+            "filters": all_filters,
+            "choosen_filters": choosen_filters,
+            "order": sort,
         },
-    )
-
-
-@router.get("/researcher/{id}", response_class=HTMLResponse)
-def show_researcher_detail(request: Request, id: str):
-    # Usecase go here...
-    researcher = None  # Placeholder
-    return templates.TemplateResponse(
-        "detail.html",
-        {"request": request, "researcher": researcher},
     )
 
 
