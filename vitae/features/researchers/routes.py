@@ -48,6 +48,7 @@ def home(
                 "has_finished": None,
                 "expertise": None,
             },
+            "order": None,
         },
     )
 
@@ -91,6 +92,7 @@ def show_search(
             "results": results,
             "filters": all_filters,
             "choosen_filters": choosen_filters,
+            "order": sort,
         },
     )
 
