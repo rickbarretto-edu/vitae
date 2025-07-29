@@ -1,13 +1,16 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
 
 import attrs
-from sqlalchemy.orm import Mapped
 from sqlmodel import col, select
 
 from vitae.infra.database import Database, tables
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+    from sqlalchemy.orm import Mapped
 
 
 class Filters(Protocol):
