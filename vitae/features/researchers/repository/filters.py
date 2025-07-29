@@ -1,4 +1,10 @@
-from typing import Protocol, Sequence
+from collections.abc import Sequence
+from typing import Protocol
+
+import attrs
+from sqlmodel import select
+
+from vitae.infra.database import Database, tables
 
 
 class Filters(Protocol):
@@ -12,12 +18,30 @@ class Filters(Protocol):
 class FiltersInDatabase:
     database: Database
 
-    def countries(self) -> list[str]:
+    def countries(self) -> Sequence[str]:
         with self.database.session as session:
-            return session.exec(
-                select(tables.Address.country).distinct(),
-            ).all()
+            selected = select(tables.Address.country).distinct()
+            return sorted(
+                [x for x in session.exec(selected).all() if x is not None],
+            )
 
-    def states(self) -> list[str]: ...
-    def titles(self) -> list[str]: ...
-    def expertises(self) -> list[str]: ...
+    def states(self) -> Sequence[str]:
+        with self.database.session as session:
+            selected = select(tables.Address.state).distinct()
+            return sorted(
+                [x for x in session.exec(selected).all() if x is not None],
+            )
+
+    def titles(self) -> Sequence[str]:
+        with self.database.session as session:
+            selected = select(tables.Education.category).distinct()
+            return sorted(
+                [x for x in session.exec(selected).all() if x is not None],
+            )
+
+    def expertises(self) -> Sequence[str]:
+        with self.database.session as session:
+            selected = select(tables.Expertise.sub).distinct()
+            return sorted(
+                [x for x in session.exec(selected).all() if x is not None],
+            )
