@@ -7,7 +7,12 @@
 
   <div class="bg-white/90 backdrop-blur rounded-2xl shadow-md p-6 min-h-[600px]">
     <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
-      <div class="text-gray-600 text-base">{{ results|length }} pesquisadores encontrados</div>
+      <h3 class="text-gray-600 font-semibold mb-2">Página {{ page }}</h3>
+      {% if results|length %}
+      <h4 class="text-gray-600 text-base font-semibold mb-2">
+        {{ results|length }} pesquisadores encontrados para esta página.
+      </h4>
+      {% endif %}
       <select class="px-3 py-2 border-2 border-gray-200 rounded-md text-sm" id="sort-select" name="sort" form="filters-form">
         <option value="" {% if not order %}selected{% endif %}>Ordenar...</option>
         <option value="asc" {% if order == 'asc' %}selected{% endif %}>A-Z</option>
@@ -29,7 +34,10 @@
       </div>
     {% else %}
       <div class="text-center py-24 text-gray-600">
-        <h3 class="text-lg font-semibold mb-2">Nenhum pesquisador encontrado.</h3>
+        <h3 class="text-lg font-semibold mb-2">Página {{ page }}</h3>
+        <h4 class="text-lg font-semibold mb-2">
+          Nenhum pesquisador encontrado para esta página. 
+        </h4>
       </div>
     {% endif %}
   </div>
