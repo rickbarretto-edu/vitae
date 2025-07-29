@@ -10,6 +10,7 @@ from vitae.features.researchers.repository import (
     FiltersInDatabase,
     ResearchersInDatabase,
 )
+from vitae.features.researchers.schemes.filters import ChoosenFilters
 from vitae.features.researchers.usecases import (
     LoadFilters,
     SearchResearchers,
@@ -52,7 +53,7 @@ def show_search(
     country: str | None = None,
     state: str | None = None,
     title: str | None = None,
-    expertise:  str | None = None,
+    expertise: str | None = None,
 ):
     vitae = Vitae.from_toml(Path("vitae.toml"))
     database = Database(vitae.postgres.engine)
@@ -63,6 +64,12 @@ def show_search(
     results = search.query(
         query,
         SortingOrder(sort) if sort else None,
+        ChoosenFilters(
+            country=country,
+            state=state,
+            title=title,
+            expertise=expertise,
+        ),
     )
 
     return templates.TemplateResponse(

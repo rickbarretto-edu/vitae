@@ -41,6 +41,7 @@ class SearchResearchers:
             self.researchers.by_name(
                 query,
                 order_by=sorting.value if sorting else None,
+                filters=filters,
             ),
         )
 

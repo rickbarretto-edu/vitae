@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Protocol
+from typing import TYPE_CHECKING, Callable, Literal, Protocol
 
 import attrs
 from sqlalchemy import Select
@@ -18,6 +18,42 @@ type Order = Literal["asc", "desc"] | None
 INVALID_ORDER_LITERAL = "order_by must be 'asc', 'desc', or None"
 
 type SelectedResearchers = Select[tuple[tables.Researcher]]
+
+
+def get(
+    selected: SelectedResearchers,
+    keyword: str | None,
+    fn: Callable[[SelectedResearchers, str | None], SelectedResearchers],
+) -> SelectedResearchers:
+    return fn(selected, keyword) if keyword else selected
+
+
+# fmt: off
+def using_filter(
+    selected: SelectedResearchers,
+    filters: ChoosenFilters | None,
+) -> SelectedResearchers:
+
+    if not filters:
+        return selected
+
+    by_title = get(selected, filters["title"], lambda query, title:
+        query.join(tables.Education)
+            .where(col(tables.Education.category) == title))
+
+    by_expertise = get(by_title, filters["expertise"], lambda query, expertise:
+        query.join(tables.Expertise)
+            .where(col(tables.Expertise.sub) == expertise))
+
+    by_state = get(by_expertise, filters["state"], lambda query, state:
+        query.join(tables.Address)
+            .where(col(tables.Address.state) == state))
+
+    return get(by_state, filters["country"], lambda query, country:
+        query.join(tables.Address)
+            .where(col(tables.Address.country) == country))
+
+# fmt: on
 
 
 def ordered_by_name(
@@ -127,7 +163,8 @@ class ResearchersInDatabase(Researchers):
             selected = select(tables.Researcher).where(
                 has_name if name else True,
             )
-            ordered = ordered_by_name(selected, order_by)
+            filtered = using_filter(selected, filters)
+            ordered = ordered_by_name(filtered, order_by)
             limited = ordered.limit(n)
 
             result: list[tables.Researcher] = session.exec(limited).all()  # type: ignore
@@ -177,7 +214,8 @@ class ResearchersInDatabase(Researchers):
             selected = select(tables.Researcher).where(
                 and_(*has_names) if name else True,
             )
-            ordered = ordered_by_name(selected, order_by)
+            filtered = using_filter(selected, filters)
+            ordered = ordered_by_name(filtered, order_by)
             limited = ordered.limit(n)
 
             result: list[tables.Researcher] = session.exec(limited).all()  # type: ignore
