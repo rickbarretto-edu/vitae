@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 from collections.abc import Sequence
 from typing import Protocol
 
 import attrs
-from sqlmodel import select
+from sqlalchemy.orm import Mapped
+from sqlmodel import col, select
 
 from vitae.infra.database import Database, tables
 
@@ -18,30 +21,21 @@ class Filters(Protocol):
 class FiltersInDatabase:
     database: Database
 
-    def countries(self) -> Sequence[str]:
+    def _keywords(self, column: Mapped[str | None]) -> Sequence[str]:
         with self.database.session as session:
-            selected = select(tables.Address.country).distinct()
+            selected = select(column).distinct()
             return sorted(
                 [x for x in session.exec(selected).all() if x is not None],
             )
+
+    def countries(self) -> Sequence[str]:
+        return self._keywords(col(tables.Address.country))
 
     def states(self) -> Sequence[str]:
-        with self.database.session as session:
-            selected = select(tables.Address.state).distinct()
-            return sorted(
-                [x for x in session.exec(selected).all() if x is not None],
-            )
+        return self._keywords(col(tables.Address.state))
 
     def titles(self) -> Sequence[str]:
-        with self.database.session as session:
-            selected = select(tables.Education.category).distinct()
-            return sorted(
-                [x for x in session.exec(selected).all() if x is not None],
-            )
+        return self._keywords(col(tables.Education.category))
 
     def expertises(self) -> Sequence[str]:
-        with self.database.session as session:
-            selected = select(tables.Expertise.sub).distinct()
-            return sorted(
-                [x for x in session.exec(selected).all() if x is not None],
-            )
+        return self._keywords(col(tables.Expertise.sub))
