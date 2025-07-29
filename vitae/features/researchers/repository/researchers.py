@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal, Protocol
 
 import attrs
+from sqlalchemy import Select
 from sqlmodel import and_, col, select
 
 from vitae.features.researchers.model.researcher import Researcher
@@ -16,8 +17,8 @@ type Order = Literal["asc", "desc"] | None
 INVALID_ORDER_LITERAL = "order_by must be 'asc', 'desc', or None"
 
 
-def ordered_by_name[T, G](
-    selected: T,
+def ordered_by_name[G](
+    selected: Select[tuple[tables.Researcher]],
     order: Order | None,
 ) -> G:
     a_z = col(tables.Researcher.full_name).asc()
