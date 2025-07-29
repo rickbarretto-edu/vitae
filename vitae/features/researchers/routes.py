@@ -41,6 +41,7 @@ def home(
         {
             "request": request,
             "filters": all_filters,
+            "query": "",
             "choosen_filters": {
                 "country": None,
                 "state": None,
@@ -91,6 +92,7 @@ def show_search(
             "request": request,
             "results": results,
             "filters": all_filters,
+            "query": query,
             "choosen_filters": choosen_filters,
             "order": sort,
         },
