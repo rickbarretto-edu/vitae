@@ -120,7 +120,9 @@ class ResearchersInDatabase(Researchers):
         has_name = col(tables.Researcher.full_name).ilike(f"%{name}%")
 
         with self.database.session as session:
-            selected = select(tables.Researcher).where(has_name)
+            selected = select(tables.Researcher).where(
+                has_name if name else True,
+            )
             ordered = ordered_by_name(selected, order_by)
             limited = ordered.limit(n)
 
@@ -159,15 +161,17 @@ class ResearchersInDatabase(Researchers):
         Iterable[Researcher] of n researchers.
 
         """
-        words = name.split()
+        each_name = name.split()
 
         has_names = [
-            col(tables.Researcher.full_name).ilike(f"%{word}%")
-            for word in words
+            col(tables.Researcher.full_name).ilike(f"%{name_token}%")
+            for name_token in each_name
         ]
 
         with self.database.session as session:
-            selected = select(tables.Researcher).where(and_(*has_names))
+            selected = select(tables.Researcher).where(
+                and_(*has_names) if name else True,
+            )
             ordered = ordered_by_name(selected, order_by)
             limited = ordered.limit(n)
 
