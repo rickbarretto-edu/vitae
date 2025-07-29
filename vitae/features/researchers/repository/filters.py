@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
 import attrs
@@ -14,9 +15,13 @@ if TYPE_CHECKING:
 
 
 class Filters(Protocol):
+    @property
     def countries(self) -> Sequence[str]: ...
+    @property
     def states(self) -> Sequence[str]: ...
+    @property
     def titles(self) -> Sequence[str]: ...
+    @property
     def expertises(self) -> Sequence[str]: ...
 
 
@@ -31,14 +36,18 @@ class FiltersInDatabase:
                 [x for x in session.exec(selected).all() if x is not None],
             )
 
+    @cached_property
     def countries(self) -> Sequence[str]:
         return self._keywords(col(tables.Address.country))
 
+    @cached_property
     def states(self) -> Sequence[str]:
         return self._keywords(col(tables.Address.state))
 
+    @cached_property
     def titles(self) -> Sequence[str]:
         return self._keywords(col(tables.Education.category))
 
+    @cached_property
     def expertises(self) -> Sequence[str]:
         return self._keywords(col(tables.Expertise.sub))
