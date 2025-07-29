@@ -47,8 +47,9 @@ def home(
 @router.get("/search", response_class=HTMLResponse)
 def show_search(
     request: Request,
-    query: str,
+    query: str = "",
     sort: str | None = None,
+
 ):
     vitae = Vitae.from_toml(Path("vitae.toml"))
     database = Database(vitae.postgres.engine)
