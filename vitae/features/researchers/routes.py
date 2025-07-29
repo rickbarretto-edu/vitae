@@ -67,16 +67,6 @@ def show_search(
     )
 
 
-@router.get("/researcher/{id}", response_class=HTMLResponse)
-def show_researcher_detail(request: Request, id: str):
-    # Usecase go here...
-    researcher = None  # Placeholder
-    return templates.TemplateResponse(
-        "detail.html",
-        {"request": request, "researcher": researcher},
-    )
-
-
 @router.get("/researcher/{id}/export", response_class=JSONResponse)
 def export_researcher(id: str):
     # Usecase go here...
