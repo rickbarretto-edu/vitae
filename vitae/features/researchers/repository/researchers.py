@@ -17,10 +17,10 @@ type Order = Literal["asc", "desc"] | None
 INVALID_ORDER_LITERAL = "order_by must be 'asc', 'desc', or None"
 
 
-def ordered_by_name[G](
+def ordered_by_name(
     selected: Select[tuple[tables.Researcher]],
     order: Order | None,
-) -> G:
+) -> Select[tuple[tables.Researcher]]:
     a_z = col(tables.Researcher.full_name).asc()
     z_a = col(tables.Researcher.full_name).desc()
 
