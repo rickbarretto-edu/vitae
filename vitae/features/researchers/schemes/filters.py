@@ -14,4 +14,5 @@ class ChoosenFilters(TypedDict, total=True):
     country: str | None
     state: str | None
     started: str | None
+    has_finished: bool | None
     expertise: str | None

@@ -53,6 +53,7 @@ def show_search(
     country: str | None = None,
     state: str | None = None,
     started: str | None = None,
+    has_finished: bool | None = None,
     expertise: str | None = None,
 ):
     vitae = Vitae.from_toml(Path("vitae.toml"))
@@ -68,6 +69,7 @@ def show_search(
             country=country,
             state=state,
             started=started,
+            has_finished=has_finished,
             expertise=expertise,
         ),
     )

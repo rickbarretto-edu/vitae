@@ -20,14 +20,6 @@ INVALID_ORDER_LITERAL = "order_by must be 'asc', 'desc', or None"
 type SelectedResearchers = Select[tuple[tables.Researcher]]
 
 
-def also(
-    selected: SelectedResearchers,
-    keyword: str | None,
-    fn: Callable[[SelectedResearchers, str | None], SelectedResearchers],
-) -> SelectedResearchers:
-    return fn(selected, keyword) if keyword else selected
-
-
 # fmt: off
 def using_filter(
     selected: SelectedResearchers,
@@ -37,23 +29,27 @@ def using_filter(
     if not filters:
         return selected
 
-    by_started_formations = also(selected, filters["started"],
-        lambda query, title:
-            query.join(tables.Education)
-                .where(col(tables.Education.category) == title))
+    if filters.get("started"):
+        selected = selected.join(tables.Education).where(
+            col(tables.Education.category) == filters["started"])
 
-    by_expertise = also(by_started_formations, filters["expertise"],
-        lambda query, expertise:
-            query.join(tables.Expertise)
-                .where(col(tables.Expertise.sub) == expertise))
+    if filters.get("has_finished"):
+        selected = selected.join(tables.Education).where(
+            col(tables.Education.end).is_not(None))
 
-    by_state = also(by_expertise, filters["state"], lambda query, state:
-        query.join(tables.Address)
-            .where(col(tables.Address.state) == state))
+    if filters.get("expertise"):
+        selected = selected.join(tables.Expertise).where(
+            col(tables.Expertise.sub) == filters["expertise"])
 
-    return also(by_state, filters["country"], lambda query, country:
-        query.join(tables.Address)
-            .where(col(tables.Address.country) == country))
+    if filters.get("state"):
+        selected = selected.join(tables.Address).where(
+            col(tables.Address.state) == filters["state"])
+
+    if filters.get("country"):
+        selected = selected.join(tables.Address).where(
+            col(tables.Address.country) == filters["country"])
+
+    return selected.distinct()
 
 # fmt: on
 
