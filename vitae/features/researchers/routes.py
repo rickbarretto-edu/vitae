@@ -63,8 +63,8 @@ def show_search(
     search = SearchResearchers(ResearchersInDatabase(database))
     results = search.query(
         query,
-        SortingOrder(sort) if sort else None,
-        ChoosenFilters(
+        order_by=SortingOrder(sort) if sort else None,
+        filter_by=ChoosenFilters(
             country=country,
             state=state,
             title=title,
