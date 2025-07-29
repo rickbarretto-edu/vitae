@@ -80,7 +80,7 @@ class Researchers(Protocol):
     def by_name(
         self,
         name: str,
-        n: int,
+        researchers: int,
         page: int,
         order_by: Order,
         filter_by: ChoosenFilters | None,
@@ -89,7 +89,7 @@ class Researchers(Protocol):
     def stricly_by_name(
         self,
         name: str,
-        n: int,
+        researchers: int,
         page: int,
         order_by: Order,
         filter_by: ChoosenFilters | None,
@@ -124,7 +124,7 @@ class ResearchersInDatabase(Researchers):
     def stricly_by_name(
         self,
         name: str,
-        n: int = 50,
+        researchers: int = 50,
         page: int = 1,
         order_by: Order = None,
         filter_by: ChoosenFilters | None = None,
@@ -161,7 +161,7 @@ class ResearchersInDatabase(Researchers):
 
         """
         has_name = col(tables.Researcher.full_name).ilike(f"%{name}%")
-        offset = n * (page - 1)
+        offset = researchers * (page - 1)
 
         with self.database.session as session:
             selected = select(tables.Researcher).where(
@@ -169,7 +169,7 @@ class ResearchersInDatabase(Researchers):
             )
             filtered = using_filter(selected, filter_by)
             ordered = ordered_by_name(filtered, order_by)
-            limited = ordered.offset(offset).limit(n)
+            limited = ordered.offset(offset).limit(researchers)
 
             result: list[tables.Researcher] = session.exec(limited).all()  # type: ignore
             return [Researcher.from_table(r) for r in result]
@@ -177,7 +177,7 @@ class ResearchersInDatabase(Researchers):
     def by_name(
         self,
         name: str,
-        n: int = 50,
+        researchers: int = 50,
         page: int = 1,
         order_by: Order = None,
         filter_by: ChoosenFilters | None = None,
@@ -209,7 +209,7 @@ class ResearchersInDatabase(Researchers):
 
         """
         each_name = name.split()
-        offset = n * (page - 1)
+        offset = researchers * (page - 1)
 
         has_names = [
             col(tables.Researcher.full_name).ilike(f"%{name_token}%")
@@ -222,7 +222,7 @@ class ResearchersInDatabase(Researchers):
             )
             filtered = using_filter(selected, filter_by)
             ordered = ordered_by_name(filtered, order_by)
-            limited = ordered.offset(offset).limit(n)
+            limited = ordered.offset(offset).limit(researchers)
 
             result: list[tables.Researcher] = session.exec(limited).all()  # type: ignore
             return [Researcher.from_table(r) for r in result]
