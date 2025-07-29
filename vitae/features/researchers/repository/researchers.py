@@ -7,7 +7,7 @@ from sqlalchemy import Select
 from sqlmodel import and_, col, select
 
 from vitae.features.researchers.model.researcher import Researcher
-from vitae.features.researchers.schemes.filters import Filters
+from vitae.features.researchers.schemes import ChoosenFilters
 from vitae.infra.database import Database, tables
 
 if TYPE_CHECKING:
@@ -47,14 +47,14 @@ class Researchers(Protocol):
         self,
         name: str,
         order_by: Order,
-        filters: Filters | None,
+        filters: ChoosenFilters | None,
     ) -> Iterable[Researcher]: ...
 
     def stricly_by_name(
         self,
         name: str,
         order_by: Order,
-        filters: Filters | None,
+        filters: ChoosenFilters | None,
     ) -> Iterable[Researcher]: ...
 
 
@@ -88,7 +88,7 @@ class ResearchersInDatabase(Researchers):
         name: str,
         n: int = 50,
         order_by: Order = None,
-        filters: Filters | None = None,
+        filters: ChoosenFilters | None = None,
     ) -> Iterable[Researcher]:
         """Fetch Researchers by name.
 
@@ -138,7 +138,7 @@ class ResearchersInDatabase(Researchers):
         name: str,
         n: int = 50,
         order_by: Order = None,
-        filters: Filters | None = None,
+        filters: ChoosenFilters | None = None,
     ) -> Iterable[Researcher]:
         """Fetch Researchers by name.
 
