@@ -11,8 +11,8 @@ from vitae.features.researchers.repository import (
     FiltersInDatabase,
     ResearchersInDatabase,
 )
-from vitae.features.researchers.usecases.filters import LoadFilters
-from vitae.features.researchers.usecases.search import (
+from vitae.features.researchers.usecases import (
+    LoadFilters,
     SearchResearchers,
     SortingOrder,
 )
