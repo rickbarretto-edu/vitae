@@ -49,7 +49,10 @@ def show_search(
     request: Request,
     query: str = "",
     sort: str | None = None,
-
+    country: str | None = None,
+    state: str | None = None,
+    title: str | None = None,
+    expertise:  str | None = None,
 ):
     vitae = Vitae.from_toml(Path("vitae.toml"))
     database = Database(vitae.postgres.engine)
