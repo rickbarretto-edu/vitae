@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
@@ -30,8 +29,12 @@ def load_filters(database: Database):
 @router.get("/", response_class=HTMLResponse)
 def home(
     request: Request,
-    all_filters: Annotated[LoadFilters, Depends(load_filters)],
 ):
+    vitae = Vitae.from_toml(Path("vitae.toml"))
+    database = Database(vitae.postgres.engine)
+
+    all_filters = load_filters(database)
+
     return templates.TemplateResponse(
         "search.html",
         {
@@ -44,12 +47,13 @@ def home(
 @router.get("/search", response_class=HTMLResponse)
 def show_search(
     request: Request,
-    all_filters: Annotated[LoadFilters, Depends(load_filters)],
     query: str,
     sort: str | None = None,
 ):
     vitae = Vitae.from_toml(Path("vitae.toml"))
     database = Database(vitae.postgres.engine)
+
+    all_filters = load_filters(database)
 
     search = SearchResearchers(ResearchersInDatabase(database))
     results = search.query(
