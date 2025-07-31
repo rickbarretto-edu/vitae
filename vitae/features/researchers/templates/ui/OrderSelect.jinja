@@ -1,8 +1,8 @@
-{#def selected: str #}
+{#def forms_id: str, selected: str #}
 
 {% set orders = [("", "Ordenar"), ("asc", "A-Z"), ("desc", "Z-A")] %}
 
-<select id="sort-select" name="sort" form="filters-form" 
+<select id="sort-select" name="sort" form="{{forms_id}}" 
     class="px-3 py-2 border-2 border-gray-200 rounded-md text-sm">
     {% for (value, display) in orders %}
         <ui.Option value={{value}} selected={{selected}}>
@@ -10,3 +10,8 @@
         </ui.Option>
     {% endfor %}
 </select>
+<script>
+    document.getElementById('sort-select').addEventListener('change', function() {
+        document.getElementById("{{forms_id}}").submit();
+    });
+</script>
