@@ -1,9 +1,11 @@
+{# def subtitle: str = "Descubra e conecte-se com pesquisadores Lattes", current_page: int #}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Vitae - Descubra e conecte-se com pesquisadores Lattes.{% endblock %}</title>
+    <title>Vitae - {{subtitle}}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">  
 </head>
@@ -15,10 +17,10 @@
                 Descubra e conecte-se com pesquisadores Lattes.
             </ui.SubTitle>
         </layout.Header>
-        {% block content %}{% endblock %}
+        {{ content }}
     </div>
 
     <ui.GoTopButton id="top" />
-    <ui.GoBackButton current_page={{page}}></ui.GoBackButton>
+    <ui.GoBackButton current_page={{current_page}}></ui.GoBackButton>
 </body>
 </html>
