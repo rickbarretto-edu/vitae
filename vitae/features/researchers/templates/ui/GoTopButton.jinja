@@ -1,0 +1,15 @@
+{#def id: str #}
+
+<a href="#{{id}}" id="go-top-button"
+    class="hidden fixed bottom-5 right-5 z-50 
+        bg-white text-purple-600 w-12 h-12 
+        flex items-center justify-center rounded 
+        hover:bg-gray-100">
+    ↑
+</a>
+<script>
+    const btn = document.getElementById("go-top-button");
+    window.addEventListener("scroll", () => {
+        btn.classList.toggle("hidden", window.scrollY <= 300);
+    });
+</script>
