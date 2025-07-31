@@ -15,11 +15,7 @@
             {% endif %}
           </h4>
         {% endif %}
-        <select class="px-3 py-2 border-2 border-gray-200 rounded-md text-sm" id="sort-select" name="sort" form="filters-form">
-          <option value="" {% if not order %}selected{% endif %}>Ordenar...</option>
-          <option value="asc" {% if order == 'asc' %}selected{% endif %}>A-Z</option>
-          <option value="desc" {% if order == 'desc' %}selected{% endif %}>Z-A</option>
-        </select>
+        <ui.OrderSelect selected={{order}} />
       </div>
 
       {% if results %}
