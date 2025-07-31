@@ -1,0 +1,53 @@
+{# def 
+    id: str,
+    for: str
+#}
+
+{# 
+    Documentation
+    -------------
+
+    This component increases the `parameter` and reloads the page,
+    asking the server the next page with the same queries.
+
+    Usage
+    -----
+
+    If you have the URL: "https://{{your.website.com}}/?page=1", use it like:
+
+        <NextPageButton for="page">
+            Next Page
+        </NextPageButton>
+
+    And this gonna open: "https://{{your.website.com}}/?page=2".
+
+    i.e. "step", you may have:
+
+        <NextPageButton for="step">
+            Step {{current_step + 1}}
+        </NextPageButton>
+
+#}
+
+{% set parameter = for %}
+
+<a id="{{id}}" href="#"
+    class="px-3 py-1 border rounded-l bg-gray-100 hover:bg-gray-200"
+>
+  {{ content }}
+</a>
+
+<script>
+document.getElementById('{{id}}').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+
+    let currentPage = parseInt(params.get("{{parameter}}")) || 1;
+    params.set("{{parameter}}", currentPage + 1);
+
+    url.search = params.toString();
+    window.location.href = url.toString();
+});
+</script>

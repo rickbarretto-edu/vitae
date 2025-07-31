@@ -14,14 +14,9 @@
         {% for researcher in results %}
           {% include "components/researcher_card.html" %}
         {% endfor %}
-        <footer class="flex justify-center mt-8">
-          <nav class="inline-flex -space-x-px">
-              <a href="?query={{ query }}&sort={{ order }}&country={{ choosen_filters.country }}&state={{ choosen_filters.state }}&started={{ choosen_filters.started }}&has_finished={{ choosen_filters.has_finished }}&expertise={{ choosen_filters.expertise }}&page={{ page + 1 }}" 
-                class="px-3 py-1 border rounded-l bg-gray-100 hover:bg-gray-200">
-                  Carregar mais
-              </a>
-          </nav>
-        </footer>
+        <search.Pagination id="next-page">
+          Carregar mais
+        </search.Pagination>
       {% else %}
         <div class="text-center py-24 text-gray-600 text-lg font-semibold">
           <search.PageCount page={{page}}/>
