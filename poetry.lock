@@ -589,6 +589,25 @@ MarkupSafe = ">=2.0"
 i18n = ["Babel (>=2.7)"]
 
 [[package]]
+name = "jinjax"
+version = "0.60"
+description = "Replace your HTML templates with Python server-Side components"
+optional = false
+python-versions = "<4,>=3.11"
+groups = ["main"]
+files = [
+    {file = "jinjax-0.60-py3-none-any.whl", hash = "sha256:4942e1d915f5659102768bacbbe191aa2d2ba9f4630271a29913d6be433faa80"},
+    {file = "jinjax-0.60.tar.gz", hash = "sha256:794d66ae1bd91f25c89293e237f834a1aa8d20f4a3804b07908c5ee36aa631c6"},
+]
+
+[package.dependencies]
+jinja2 = ">=3.0"
+markupsafe = ">=2.0"
+
+[package.extras]
+whitenoise = ["whitenoise (>=6.9.0,<6.10.0)"]
+
+[[package]]
 name = "loguru"
 version = "0.7.3"
 description = "Python logging made (stupidly) simple"
@@ -1951,4 +1970,4 @@ dev = ["black (>=19.3b0) ; python_version >= \"3.6\"", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "e2fb436df8c28d9d477cf232ef6d3a99d53ed28f64b6c9af7d534d3b5eac716f"
+content-hash = "cf7d7d0f50e77231e50372bd6bfab489f3aeab9bd7742727c14f780454776128"
