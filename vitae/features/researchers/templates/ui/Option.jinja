@@ -1,0 +1,25 @@
+{#def value: str, selected: str #}
+
+{# 
+
+    Documentation
+    -------------
+
+    This component is a custom <option/> element, which decides which one
+    is the selected according to the user preference and its value.
+
+    Usage
+    -----
+
+        <select name="cars-color">
+            <option value="white" selected={{user_preference}}>Snow</option>
+            <option value="blue"  selected={{user_preference}}>Midnight Blue</option>
+            <option value="purple" selected={{user_preference}}>Purple Mustang</option>
+        </select>
+
+#}
+
+<option value={{value}} 
+    {% if selected == value %}selected{% endif %}>
+    {{ content }}
+</option>
