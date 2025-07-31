@@ -5,6 +5,7 @@ from pathlib import Path
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
+import jinjax
 
 from vitae.features.researchers.repository import (
     FiltersInDatabase,
@@ -21,6 +22,10 @@ from vitae.settings.vitae import Vitae
 
 router = APIRouter()
 templates = Jinja2Templates("vitae/features/researchers/templates")
+
+templates.env.add_extension(jinjax.JinjaX)
+catalog = jinjax.Catalog(jinja_env=templates.env)
+catalog.add_folder("vitae/features/researchers/templates")
 
 
 def load_filters(database: Database):
