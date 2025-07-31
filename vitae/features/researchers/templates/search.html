@@ -2,32 +2,32 @@
   <div class="grid lg:grid-cols-[350px_1fr] gap-6 items-start">
     {% include "components/filters.html" %}
 
-    <div class="bg-white/90 backdrop-blur rounded-2xl shadow-md p-6 min-h-[600px]">
-      <div class="flex justify-between items-center border-b border-gray-100 pb-4
+    <section class="bg-white/90 backdrop-blur rounded-2xl shadow-md p-6 min-h-[600px]">
+      <header class="flex justify-between items-center border-b border-gray-100 pb-4
         text-gray-600 font-semibold">
         <search.PageCount page={{page}}/>
         <search.ResearcherCount researchers={{results}}/>
         <ui.OrderSelect forms-id="filters-form" selected={{order}} />
-      </div>
+      </header>
 
       {% if results %}
         {% for researcher in results %}
           {% include "components/researcher_card.html" %}
         {% endfor %}
-        <div class="flex justify-center mt-8">
+        <footer class="flex justify-center mt-8">
           <nav class="inline-flex -space-x-px">
               <a href="?query={{ query }}&sort={{ order }}&country={{ choosen_filters.country }}&state={{ choosen_filters.state }}&started={{ choosen_filters.started }}&has_finished={{ choosen_filters.has_finished }}&expertise={{ choosen_filters.expertise }}&page={{ page + 1 }}" 
                 class="px-3 py-1 border rounded-l bg-gray-100 hover:bg-gray-200">
                   Carregar mais
               </a>
           </nav>
-        </div>
+        </footer>
       {% else %}
         <div class="text-center py-24 text-gray-600 text-lg font-semibold">
           <search.PageCount page={{page}}/>
           <search.ResearcherCount researchers={{results}}/>
         </div>
       {% endif %}
-    </div>
+    </section>
   </div>
 </layout.Page>
