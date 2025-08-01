@@ -7,7 +7,7 @@
                 text-gray-600 font-semibold">
                 <search.PageCount page={{page}}/>
                 <search.ResearcherCount researchers={{results}}/>
-                <ui.OrderSelect forms-id="filters-form" selected={{order}} />
+                <ui.OrderSelect id="sort-select" forms-id="filters-form" for_param="{{order}}" />
             </header>
 
             {% if results is false %}
