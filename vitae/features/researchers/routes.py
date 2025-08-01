@@ -89,7 +89,7 @@ def show_search(
     )
 
     return templates.TemplateResponse(
-        "search.html",
+        "SearchPage.jinja",
         {
             "request": request,
             "results": results,
