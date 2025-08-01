@@ -15,7 +15,7 @@
 
 {# Update the UI to use the selected value from URL. #}
 <script>
-    window.addEventListener('load', function () {
+    {
         const self = document.getElementById("{{id}}")
         const selectedValue = new URLSearchParams(window.location.search)
             .get("{{for_param}}")
@@ -24,7 +24,7 @@
             .find(option => option.value === selectedValue)
         
         if (selectedOption) selectedOption.selected = true
-    })
+    }
 </script>
 
 {# Submit a new request when manually selected. #}
