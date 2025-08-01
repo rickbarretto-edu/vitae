@@ -5,40 +5,40 @@
     expertises: list
 #}
 
-<aside class="bg-white/90 backdrop-blur rounded-2xl shadow-md p-6 sticky top-6 space-y-6">
+<aside class="bg-white/70 backdrop-blur rounded-2xl shadow-xl p-6 sticky top-6 space-y-6">
     <form method="get" action="/search" id="filters-form">
-        <h2 class="text-xl font-semibold mb-4">Pesquisar</h2>
+        <form.Label of="query">Pesquisar</form.Label>
         <form.Search on_url="query" placeholder="Pesquisar por nome ou ID..."/>
-        <div class="space-y-4 mt-6">
+        <div class="space-y-4 mt-6 gap-2">
             <form.Attribute>
-                <form.CountrySelect on-url="country" placeholder="Todos os países" 
-                    available={{countries}}>
-                    País
+                <form.Label of="country">País</form.Label>
+                <form.CountrySelect on-url="country" available={{countries}}>
+                    Todos os Países
                 </form.CountrySelect>
             </form.Attribute>
             <form.Attribute>
-                <form.StateSelect on-url="state" placeholder="Todos os estados" 
-                    available={{states}}>
-                    Estado
+                <form.Label of="state">Estado</form.Label>
+                <form.StateSelect on-url="state" available={{states}}>
+                    Todos os estados
                 </form.StateSelect>
             </form.Attribute>
             <form.Attribute>
-                <form.FormationSelect on-url="started" placeholder="Todas as formações" 
-                    available={{titles}}>
-                    Formações iniciadas
+                <form.Label of="started">Formações iniciadas</form.Label>
+                <form.FormationSelect on-url="started" available={{titles}}>
+                    Todas as formações
                 </form.FormationSelect>
                 <form.OnlyFinishedFormation on-url="has-finished">
                     Apenas finalizadas
                 </form.OnlyFinishedFormation>
             </form.Attribute>
             <form.Attribute>
-                <form.ExpertiseSelect on-url="expertise" placeholder="Todas as áreas" 
-                    available={{expertises}}>
-                    Areas de atuação
+                <form.Label of="expertise">Areas de atuação</form.Label>
+                <form.ExpertiseSelect on-url="expertise" available={{expertises}}>
+                    Todas as areas
                 </form.ExpertiseSelect>
             </form.Attribute>
+            <form.Button type="submit">Buscar</form.Button>
         </div>
-        <form.Button type="submit">Buscar</form.Button>
     </form>
     <form.Button onclick="window.location.href='/'">Remover filtros</form.Button>
 </aside>

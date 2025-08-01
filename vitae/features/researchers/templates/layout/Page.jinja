@@ -7,9 +7,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vitae - {{subtitle}}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Domine:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Sail&display=swap" rel="stylesheet">
+    <style>
+        .sail-regular {
+            font-family: "Sail", system-ui;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .domine-regular {
+            font-family: "Domine", serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .inter-regular {
+            font-family: "Inter", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {sans: ['Inter', 'sans-serif']},
+            },
+        },
+        }
+    </script>
 </head>
-<body class="bg-gradient-to-br from-indigo-500 to-purple-600 min-h-screen font-sans text-gray-800" id="top">
+<body class="bg-gradient-to-br from-purple-200 to-teal-400 min-h-screen font-sans text-gray-800" id="top">
     <div class="max-w-screen-xl mx-auto px-4 py-6">
         <layout.Header>
             <ui.Title>Vitae</ui.Title>
@@ -20,7 +52,7 @@
         {{ content }}
     </div>
 
-    <ui.GoTopButton id="top" />
-    <ui.GoBackButton current_page={{current_page}}></ui.GoBackButton>
+    <ui.GoTopButton id="top">Ir para topo</ui.GoTopButton>
+    <ui.GoBackButton current_page={{current_page}}>Página Anterior</ui.GoBackButton>
 </body>
 </html>
