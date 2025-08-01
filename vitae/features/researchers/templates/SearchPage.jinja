@@ -21,17 +21,17 @@
                 <ui.OrderSelect id="order-selection" forms-id="filters-form" for_param="sort" />
             </header>
 
-            {% if results is false %}
-                <main class="text-center py-24 text-gray-600 text-lg font-semibold">
-                    <search.PageCount page={{page}}/>
-                    <search.ResearcherCount researchers={{results}}/>
-                </main>
-            {% else %}
+            {% if results %}
                 <main>
                     {% for researcher in results %}
                     <researcher.Card researcher={{researcher}} />
                     {% endfor %}
                     <search.NextPageButton id="next-page" for-param="page">Carregar mais</search.NextPageButton>
+                </main>
+            {% else %}
+                <main class="text-center py-24 text-gray-600 text-lg font-semibold">
+                    <search.PageCount page={{page}}/>
+                    <search.ResearcherCount researchers={{results}}/>
                 </main>
             {% endif %}
         </section>
