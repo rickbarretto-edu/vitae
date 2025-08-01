@@ -4,17 +4,20 @@
         <form.Search on_url="query" placeholder="Pesquisar por nome ou ID..."/>
         <div class="space-y-4 mt-6">
             <form.Attribute>
-                <form.CountrySelect on-url="country" placeholder="Todos os países" available={{filters.countries}}>
+                <form.CountrySelect on-url="country" placeholder="Todos os países" 
+                    available={{filters.countries}}>
                     País
                 </form.CountrySelect>
             </form.Attribute>
             <form.Attribute>
-                <form.StateSelect on-url="state" placeholder="Todos os estados" available={{filters.states}}>
+                <form.StateSelect on-url="state" placeholder="Todos os estados" 
+                    available={{filters.states}}>
                     Estado
                 </form.StateSelect>
             </form.Attribute>
             <form.Attribute>
-                <form.FormationSelect on-url="started" placeholder="Todas as formações" available={{filters.titles}}>
+                <form.FormationSelect on-url="started" placeholder="Todas as formações" 
+                    available={{filters.titles}}>
                     Formações iniciadas
                 </form.FormationSelect>
                 <form.OnlyFinishedFormation on-url="has-finished">
@@ -22,7 +25,8 @@
                 </form.OnlyFinishedFormation>
             </form.Attribute>
             <form.Attribute>
-                <form.ExpertiseSelect on-url="expertise" placeholder="Todas as áreas" available={{filters.expertises}}>
+                <form.ExpertiseSelect on-url="expertise" placeholder="Todas as áreas" 
+                    available={{filters.expertises}}>
                     Áreas de atuação
                 </form.ExpertiseSelect>
             </form.Attribute>
