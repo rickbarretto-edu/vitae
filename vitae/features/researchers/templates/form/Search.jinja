@@ -10,11 +10,11 @@
 />
 
 <script>
-    window.addEventListener("load", function() {
+    {
         const self = document.querySelector(`[name="{{on_url}}"]`)
         const value = new URLSearchParams(window.location.search)
             .get("{{on_url}}")
 
         if (value && self) self.value = value
-    })
+    }
 </script>
