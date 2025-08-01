@@ -36,20 +36,11 @@ def home(
     all_filters = load_filters(database)
 
     return templates.TemplateResponse(
-        "search.html",
+        "SearchPage.jinja",
         {
             "request": request,
             "filters": all_filters,
-            "query": "",
-            "choosen_filters": {
-                "country": None,
-                "state": None,
-                "started": None,
-                "has_finished": False,
-                "expertise": None,
-            },
-            "order": None,
-            "page": 1,
+            "page": 0,
         },
     )
 
