@@ -13,9 +13,7 @@
   </ul>
 
   <researcher.Specialities specialities={{researcher.curriculum.expertises.specialities}}/>
-
-  <div class="bg-slate-50 border-l-4 border-indigo-500 rounded-md p-4 mt-4">
-    <h4 class="font-semibold text-sm text-gray-800 mb-1">Resumo da Pesquisa</h4>
-    <p class="text-sm text-gray-600 leading-relaxed">{{ researcher.curriculum.abstract.brief }}</p>
-  </div>
+  <researcher.Abstract>
+    {{ researcher.curriculum.abstract.brief }}
+  </researcher.Abstract>
 </div>
