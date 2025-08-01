@@ -1,0 +1,7 @@
+{#def value: str = "" #}
+
+{% set value = value or "Não fornecida." %}
+
+<researcher.Attribute name="Localização">
+    {{value}}
+</researcher.Attribute>

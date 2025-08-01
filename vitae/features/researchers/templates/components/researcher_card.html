@@ -9,11 +9,7 @@
       until={{researcher.curriculum.titles.highest.finish}}
     />
     <researcher.Institution name={{researcher.professional.institution}} />
-    {% if researcher.professional.address  %}
-      <div><span class="font-semibold text-gray-700 w-32 inline-block">Localização:</span> {{ researcher.professional.address }}</div>
-    {% else %}
-      <div><span class="font-semibold text-gray-700 w-32 inline-block">Localização:</span> Não fornecida.</div>
-    {% endif  %}
+    <researcher.Address value={{researcher.professional.address}} />
   </div>
 
   <div class="flex flex-wrap gap-2 my-3">
