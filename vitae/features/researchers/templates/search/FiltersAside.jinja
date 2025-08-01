@@ -1,3 +1,10 @@
+{#def 
+    countries: list,
+    states: list,
+    titles: list,
+    expertises: list
+#}
+
 <aside class="bg-white/90 backdrop-blur rounded-2xl shadow-md p-6 sticky top-6 space-y-6">
     <form method="get" action="/search" id="filters-form">
         <h2 class="text-xl font-semibold mb-4">Pesquisar</h2>
@@ -5,19 +12,19 @@
         <div class="space-y-4 mt-6">
             <form.Attribute>
                 <form.CountrySelect on-url="country" placeholder="Todos os países" 
-                    available={{filters.countries}}>
+                    available={{countries}}>
                     País
                 </form.CountrySelect>
             </form.Attribute>
             <form.Attribute>
                 <form.StateSelect on-url="state" placeholder="Todos os estados" 
-                    available={{filters.states}}>
+                    available={{states}}>
                     Estado
                 </form.StateSelect>
             </form.Attribute>
             <form.Attribute>
                 <form.FormationSelect on-url="started" placeholder="Todas as formações" 
-                    available={{filters.titles}}>
+                    available={{titles}}>
                     Formações iniciadas
                 </form.FormationSelect>
                 <form.OnlyFinishedFormation on-url="has-finished">
@@ -26,8 +33,8 @@
             </form.Attribute>
             <form.Attribute>
                 <form.ExpertiseSelect on-url="expertise" placeholder="Todas as áreas" 
-                    available={{filters.expertises}}>
-                    Áreas de atuação
+                    available={{expertises}}>
+                    Areas de atuação
                 </form.ExpertiseSelect>
             </form.Attribute>
         </div>
