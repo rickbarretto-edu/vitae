@@ -21,7 +21,9 @@
                 {% else %}
                     <div><!-- Placeholder --></div>
                 {% endif %}
-                <ui.OrderSelect id="order-selection" forms-id="filters-form" for_param="sort" />
+                <div class="max-w-[10]">
+                    <ui.OrderSelect id="order-selection" forms-id="filters-form" for_param="sort" />
+                </div>
             </header>
 
             {% if results %}

@@ -6,12 +6,11 @@
 
 {% set orders = [("", "Ordenar"), ("asc", "A-Z"), ("desc", "Z-A")] %}
 
-<select id="{{id}}" name="{{for_param}}" form="{{forms_id}}" 
-    class="px-3 py-2 border-2 border-gray-200 rounded-md text-sm">
+<form.Select id={{for_param}} on-url={{for_param}}>
     {% for (value, display) in orders %}
         <option value="{{value}}">{{display}}</option>
     {% endfor %}
-</select>
+</form.Select>
 
 {# Update the UI to use the selected value from URL. #}
 <script>
