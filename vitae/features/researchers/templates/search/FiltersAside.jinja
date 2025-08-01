@@ -9,7 +9,7 @@
     <form method="get" action="/search" id="filters-form">
         <form.Label of="query">Pesquisar</form.Label>
         <form.Search on_url="query" placeholder="Pesquisar por nome ou ID..."/>
-        <div class="space-y-4 mt-6">
+        <div class="space-y-4 my-6">
             <form.Attribute>
                 <form.Label of="country">País</form.Label>
                 <form.CountrySelect on-url="country" available={{countries}}>
@@ -39,6 +39,6 @@
             </form.Attribute>
         </div>
         <form.Button type="submit">Buscar</form.Button>
+        <form.Button onclick="window.location.href='/'">Remover filtros</form.Button>
     </form>
-    <form.Button onclick="window.location.href='/'">Remover filtros</form.Button>
 </aside>
