@@ -14,9 +14,9 @@
         {% for researcher in results %}
           {% include "components/researcher_card.html" %}
         {% endfor %}
-        <search.Pagination id="next-page">
+        <search.NextPageButton id="next-page" for-param="page">
           Carregar mais
-        </search.Pagination>
+        </search.NextPageButton>
       {% else %}
         <div class="text-center py-24 text-gray-600 text-lg font-semibold">
           <search.PageCount page={{page}}/>

@@ -1,6 +1,6 @@
 {# def 
     id: str,
-    for: str
+    for_param: str
 #}
 
 {# 
@@ -11,7 +11,7 @@
     asking the server the next page with the same queries.
 
     `id`: HTML ID for this element.
-    `for`: target URL parameter to be incremented.
+    `for_param`: target URL parameter to be incremented.
 
     Usage
     -----
@@ -32,9 +32,7 @@
 
 #}
 
-{% set parameter = for %}
-
-<a id="{{id}}" href="#"
+<a id={{id}} href="#"
     class="px-3 py-1 border rounded-l bg-gray-100 hover:bg-gray-200"
 >
   {{ content }}
@@ -47,8 +45,8 @@ document.getElementById('{{id}}').addEventListener('click', function (e) {
     const url = new URL(window.location.href);
     const params = url.searchParams;
 
-    let currentPage = parseInt(params.get("{{parameter}}")) || 1;
-    params.set("{{parameter}}", currentPage + 1);
+    let currentPage = parseInt(params.get("{{for_param}}")) || 1;
+    params.set("{{for_param}}", currentPage + 1);
 
     url.search = params.toString();
     window.location.href = url.toString();
