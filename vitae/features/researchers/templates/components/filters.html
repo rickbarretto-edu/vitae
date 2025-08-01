@@ -28,17 +28,12 @@
           </form.ExpertiseSelect>
         </form.Attribute>
       </div>
-      <button type="submit"
-        class="w-full mt-6 text-gray-600 border-2 border-gray-300 rounded-md py-2 hover:border-indigo-400 hover:text-indigo-500 transition"
-      >
+      <form.Button type="submit">
         Buscar
-      </button>
+      </form.Button>
     </form>
-    <button
-      onclick="window.location.href='/'"
-      class="w-full text-gray-600 border-2 border-gray-300 rounded-md py-2 mt-2 hover:border-indigo-400 hover:text-indigo-500 transition"
-    >
-      Limpar Todos os Filtros
-    </button>
+    <form.Button onclick="window.location.href='/'">
+      Remover filtros
+    </form.Button>
   </div>
 </div>
