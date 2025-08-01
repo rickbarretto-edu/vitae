@@ -94,8 +94,6 @@ def show_search(
             "request": request,
             "results": results,
             "filters": all_filters,
-            "query": query,
-            "order": sort,
             "page": page,
         },
     )
