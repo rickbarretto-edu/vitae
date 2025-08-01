@@ -19,6 +19,8 @@ env = Environment(
         "vitae/features/researchers/templates",
         encoding="utf-8",
     ),
+    autoescape=True,
+    auto_reload=True,
 )
 env.filters["words"] = words
 env.add_extension(jinjax.JinjaX)
