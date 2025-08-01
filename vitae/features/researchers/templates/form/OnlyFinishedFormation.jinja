@@ -1,11 +1,5 @@
-{#def
-    on_url: str,
-    checked: str
-#}
+{#def on_url: str #}
 
-<div class="flex items-center mt-2">
-    <input type="checkbox" name="{{on_url}}" class="mr-2" {% if checked is eq("on") %}checked{% endif %}>
-    <label for="{{on_url}}" class="text-sm text-gray-700">
-        {{ content }}
-    </label>
-</div>
+<form.Checkbox on-url={{on_url}}>
+    {{ content }}
+</form.Checkbox>
