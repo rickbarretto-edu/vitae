@@ -2,7 +2,7 @@
   <search.ResearcherProfile name={{researcher.this.name}} lattes-id={{researcher.links.lattes.id}} />
 
   <div class="mb-4 space-y-1 text-sm">
-    <div><span class="font-semibold text-gray-700 w-32 inline-block">Nacionalidade:</span> {{ researcher.this.nationality }}</div>
+    <search.ResearcherNationality value={{researcher.this.nationality}} />
     {% if researcher.curriculum.titles.highest  %}
     <div>
       <span class="font-semibold text-gray-700 w-32 inline-block">Título:</span>
