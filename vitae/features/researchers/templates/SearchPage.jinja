@@ -25,7 +25,7 @@
             </header>
 
             {% if results %}
-                <main>
+                <main class="flex flex-col items-center">
                     {% for researcher in results %}
                     <researcher.Card researcher={{researcher}} />
                     {% endfor %}
