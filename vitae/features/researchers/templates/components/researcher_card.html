@@ -1,7 +1,7 @@
 <div class="bg-white border-2 border-gray-100 rounded-xl p-6 hover:border-indigo-400 hover:shadow-lg hover:-translate-y-1 transition cursor-pointer mb-6">
   <researcher.Profile name={{researcher.this.name}} lattes-id={{researcher.links.lattes.id}} />
 
-  <div class="mb-4 space-y-1 text-sm">
+  <ul class="mb-4 space-y-1 text-sm">
     <researcher.Nationality value={{researcher.this.nationality}} />
     <researcher.HighestAcademicTitle 
       name={{researcher.curriculum.titles.highest}}
@@ -10,7 +10,7 @@
     />
     <researcher.Institution name={{researcher.professional.institution}} />
     <researcher.Address value={{researcher.professional.address}} />
-  </div>
+  </ul>
 
   <div class="flex flex-wrap gap-2 my-3">
     {% for area in researcher.curriculum.expertises.specialities %}
