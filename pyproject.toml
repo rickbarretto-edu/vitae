@@ -12,6 +12,7 @@ packages = [
 
 [tool.poetry.scripts]
 vitae = "vitae.__main__:cli"
+find-byte = "scripts.find_byte:main"
 pre-process = "scripts.preprocess:cli"
 clear-cache = "scripts.clear:cache"
 clear-log = "scripts.clear:log"
@@ -28,6 +29,7 @@ fastapi = {extras = ["standard"], version = "^0.116.1"}
 jinja2 = "^3.1.6"
 attrs = "^25.3.0"
 cattrs = "^25.1.1"
+jinjax = "^0.60"
 
 
 [tool.poetry.group.dev.dependencies]

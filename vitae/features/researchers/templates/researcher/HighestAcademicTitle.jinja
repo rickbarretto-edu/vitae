@@ -1,0 +1,13 @@
+{#def name: str, at: int, until: int | None #}
+
+<researcher.Attribute name="Título">
+    {% if name %}
+        {% if until %}
+            {{name}} ({{at}} - {{until}})
+        {% else %}
+            {{name}} ({{at}})
+        {% endif %}
+    {% else %}
+        Nenhum título especificado.
+    {% endif %}
+</researcher.Attribute>

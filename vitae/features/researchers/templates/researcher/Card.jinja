@@ -1,0 +1,23 @@
+{#def researcher #}
+
+<section class="bg-white border-2 border-gray-100 rounded-xl p-6 hover:border-indigo-400 hover:shadow-lg hover:-translate-y-1 transition cursor-pointer mb-6">
+    <researcher.Profile 
+        name={{researcher.this.name}} 
+        lattes-id={{researcher.links.lattes.id}} 
+    />
+
+    <ul class="list-none mb-4 space-y-1 text-sm">
+        <researcher.Nationality value={{researcher.this.nationality}} />
+        <researcher.HighestAcademicTitle 
+            name={{researcher.curriculum.titles.highest}}
+            at={{researcher.curriculum.titles.highest.begin}}
+            until={{researcher.curriculum.titles.highest.finish}}
+        />
+        <researcher.Institution name={{researcher.professional.institution}} />
+        <researcher.Address value={{researcher.professional.address}} />
+    </ul>
+    <researcher.Specialities specialities={{researcher.curriculum.expertises.specialities}}/>
+    <researcher.Abstract>
+        {{ researcher.curriculum.abstract.brief }}
+    </researcher.Abstract>
+</section>

@@ -1,0 +1,40 @@
+{#def 
+    id: str, 
+    forms_id: str, 
+    for_param: str
+#}
+
+{% set orders = [("", "Ordenar"), ("asc", "A-Z"), ("desc", "Z-A")] %}
+
+<select id="{{id}}" name="{{for_param}}" form="{{forms_id}}" 
+    class="px-3 py-2 border-2 border-gray-200 rounded-md text-sm">
+    {% for (value, display) in orders %}
+        <option value="{{value}}">{{display}}</option>
+    {% endfor %}
+</select>
+
+{# Update the UI to use the selected value from URL. #}
+<script>
+    {
+        const self = document.getElementById("{{id}}")
+        const selectedValue = new URLSearchParams(window.location.search)
+            .get("{{for_param}}")
+
+        const selectedOption = Array.from(self.options)
+            .find(option => option.value === selectedValue)
+        
+        if (selectedOption) selectedOption.selected = true
+    }
+</script>
+
+{# Submit a new request when manually selected. #}
+<script>
+    document.getElementById("{{id}}").addEventListener('change', function(event) {
+        event.preventDefault()
+        const value = event.target.value;
+        const url = new URL(window.location.href);
+        
+        url.searchParams.set("{{for_param}}", value);
+        document.getElementById("{{forms_id}}").submit()
+    })
+</script>

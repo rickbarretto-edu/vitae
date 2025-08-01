@@ -1,0 +1,14 @@
+{#def researchers: list = [] #}
+
+{% set count = researchers | length %}
+
+<h4>
+{% if count == 1 %} 
+    {{count}} pesquisador encontrado
+{% elif count > 1 %}
+    {{count}} pesquisadores encontrados
+{% else %}
+    Nenhum pesquisador encontrado
+{% endif %}
+    para esta página.
+</h4>

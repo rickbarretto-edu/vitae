@@ -1,0 +1,30 @@
+{#def current_page: int #}
+
+{# 
+    Documentation
+    -------------
+
+    Current page describes the current searching page the user is in,
+    this is important to avoid having this button on the first search page,
+    which is kind-of useless since there is no last search.
+
+    This button is useful to deal with the lack of Bootstrap-like
+    pagination, since I don't want to fetch the whole database just to know
+    how many pages there are left.
+
+    Usage
+    -----
+
+            <GoBackButton current-page={{current_page}} />
+
+#}
+
+{% if current_page > 1 %}
+    <a href="javascript:void(0)" onclick="history.back()"
+        class="fixed bottom-5 left-5 z-50 
+            bg-white text-purple-600 w-12 h-12 
+            flex items-center justify-center rounded 
+            hover:bg-gray-100">
+        &#8592
+    </a>
+{% endif %}

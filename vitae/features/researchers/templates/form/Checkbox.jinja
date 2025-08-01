@@ -1,0 +1,20 @@
+{#def on_url: str #}
+
+<div class="flex items-center mt-2">
+    <input type="checkbox" name="{{on_url}}" class="mr-2">
+    <label for="{{on_url}}" class="text-sm text-gray-700">
+        {{ content }}
+    </label>
+</div>
+
+<script>
+    {
+        const self = document.querySelector(`[name="{{on_url}}"]`)
+        const value = new URLSearchParams(window.location.search)
+            .get("{{on_url}}")
+
+        console.log(value)
+
+        if (self && value !== null) self.checked = ["true", "1", "on"].includes(value)
+    }
+</script>

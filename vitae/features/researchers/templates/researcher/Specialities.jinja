@@ -1,0 +1,7 @@
+{#def specialities: list = [] #}
+
+<ul class="list-none flex flex-wrap gap-2 my-3">
+    {% for speciality in specialities %}
+        <ui.Pill>{{speciality | title}}</ui.Pill>
+    {% endfor %}
+</ul>

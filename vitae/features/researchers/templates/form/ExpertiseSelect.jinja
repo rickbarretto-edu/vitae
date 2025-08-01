@@ -1,0 +1,14 @@
+{#def
+    placeholder: str,
+    on_url: str,
+    available: list[str] = []
+#}
+
+<form.Select label={{content}} on_url={{on_url}}>
+    <option value="">{{placeholder}}</option>
+    {% for expertise in available %}
+        <option value="{{ expertise }}">
+            {{ expertise | title }}
+        </option>
+    {% endfor %}
+</form.Select>

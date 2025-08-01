@@ -4,13 +4,13 @@ from pathlib import Path
 
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.templating import Jinja2Templates
 
 from vitae.features.researchers.repository import (
     FiltersInDatabase,
     ResearchersInDatabase,
 )
 from vitae.features.researchers.schemes import ChoosenFilters
+from vitae.features.researchers.templates import templates
 from vitae.features.researchers.usecases import (
     LoadFilters,
     SearchResearchers,
@@ -20,7 +20,6 @@ from vitae.infra.database import Database
 from vitae.settings.vitae import Vitae
 
 router = APIRouter()
-templates = Jinja2Templates("vitae/features/researchers/templates")
 
 
 def load_filters(database: Database):
@@ -37,20 +36,11 @@ def home(
     all_filters = load_filters(database)
 
     return templates.TemplateResponse(
-        "search.html",
+        "SearchPage.jinja",
         {
             "request": request,
             "filters": all_filters,
-            "query": "",
-            "choosen_filters": {
-                "country": None,
-                "state": None,
-                "started": None,
-                "has_finished": False,
-                "expertise": None,
-            },
-            "order": None,
-            "page": 1,
+            "page": 0,
         },
     )
 
@@ -90,14 +80,11 @@ def show_search(
     )
 
     return templates.TemplateResponse(
-        "search.html",
+        "SearchPage.jinja",
         {
             "request": request,
             "results": results,
             "filters": all_filters,
-            "query": query,
-            "choosen_filters": choosen_filters,
-            "order": sort,
             "page": page,
         },
     )
