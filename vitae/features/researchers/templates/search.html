@@ -12,7 +12,7 @@
 
       {% if results %}
         {% for researcher in results %}
-          {% include "components/researcher_card.html" %}
+          <researcher.Card researcher={{researcher}} />
         {% endfor %}
         <search.NextPageButton id="next-page" for-param="page">
           Carregar mais
