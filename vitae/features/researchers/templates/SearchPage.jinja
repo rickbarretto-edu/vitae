@@ -17,7 +17,11 @@
             <header class="flex justify-between items-center border-b border-gray-100 pb-4
                 text-gray-600 font-semibold">
                 <search.PageCount page={{page}}/>
-                <search.ResearcherCount researchers={{results}}/>
+                {% if results %}
+                    <search.ResearcherCount researchers={{results}}/>
+                {% else %}
+                    <div><!-- Placeholder --></div>
+                {% endif %}
                 <ui.OrderSelect id="order-selection" forms-id="filters-form" for_param="sort" />
             </header>
 
@@ -29,9 +33,9 @@
                     <search.NextPageButton id="next-page" for-param="page">Carregar mais</search.NextPageButton>
                 </main>
             {% else %}
-                <main class="text-center py-24 text-gray-600 text-lg font-semibold">
-                    <search.PageCount page={{page}}/>
+                <main class="text-center py-24">
                     <search.ResearcherCount researchers={{results}}/>
+                    <p>Tente ajustar os filtros ou use uma palavra-chave diferente</p>
                 </main>
             {% endif %}
         </section>
