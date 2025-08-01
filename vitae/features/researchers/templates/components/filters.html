@@ -5,20 +5,17 @@
       <form.Search on_url="query" placeholder="Pesquisar por nome ou ID..."/>
       <div class="space-y-4 mt-6">
         <form.Attribute>
-          <form.CountrySelect on-url="country" placeholder="Todos os países" 
-            available={{filters.countries}} selected={{choosen_filters.country}}>
+          <form.CountrySelect on-url="country" placeholder="Todos os países" available={{filters.countries}}>
             País
           </form.CountrySelect>
         </form.Attribute>
         <form.Attribute>
-          <form.StateSelect on-url="state" placeholder="Todos os estados" 
-            available={{filters.states}} selected={{choosen_filters.state}}>
+          <form.StateSelect on-url="state" placeholder="Todos os estados" available={{filters.states}}>
             Estado
           </form.StateSelect>
         </form.Attribute>
         <form.Attribute>
-          <form.FormationSelect on-url="started" placeholder="Todas as formações" 
-            available={{filters.titles}} selected={{choosen_filters.title}}>
+          <form.FormationSelect on-url="started" placeholder="Todas as formações" available={{filters.titles}}>
             Formações iniciadas
           </form.FormationSelect>
           <form.OnlyFinishedFormation on-url="has-finished" checked="{{choosen.has_finished}}">

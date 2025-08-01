@@ -1,11 +1,10 @@
 {#def
     placeholder: str,
     on_url: str,
-    selected: str,
     available: list[str] = []
 #}
 
-<form.Select selected={{selected}} label={{content}} on_url={{on_url}}>
+<form.Select label={{content}} on_url={{on_url}}>
     <option value="">{{placeholder}}</option>
     {% for formation in available %}
         <option value="{{ formation }}">
