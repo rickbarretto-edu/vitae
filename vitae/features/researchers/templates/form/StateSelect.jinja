@@ -1,11 +1,10 @@
 {#def
-    placeholder: str,
     on_url: str,
     available: list[str] = []
 #}
 
-<form.Select label={{content}} on_url={{on_url}}>
-    <option value="">{{placeholder}}</option>
+<form.Select on_url={{on_url}}>
+    <option value="">{{content}}</option>
     {% for state in available %}
         <option value="{{ state }}">
             {{ state | upper }}
