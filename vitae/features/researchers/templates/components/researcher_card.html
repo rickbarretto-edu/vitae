@@ -8,11 +8,7 @@
       at={{researcher.curriculum.titles.highest.begin}}
       until={{researcher.curriculum.titles.highest.finish}}
     />
-    {% if researcher.professional.institution  %}
-      <div><span class="font-semibold text-gray-700 w-32 inline-block">Universidade:</span> {{ researcher.professional.institution }}</div>
-    {% else  %}
-      <div><span class="font-semibold text-gray-700 w-32 inline-block">Universidade:</span> Sem associação.</div>
-    {% endif  %}
+    <researcher.Institution name={{researcher.professional.institution}} />
     {% if researcher.professional.address  %}
       <div><span class="font-semibold text-gray-700 w-32 inline-block">Localização:</span> {{ researcher.professional.address }}</div>
     {% else %}

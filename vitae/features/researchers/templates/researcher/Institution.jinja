@@ -1,0 +1,7 @@
+{#def name: str = "" #}
+
+{% set name = name or "Sem associação com alguma instituição." %}
+
+<researcher.Attribute name="Instituição">
+    {{name}}
+</researcher.Attribute>
