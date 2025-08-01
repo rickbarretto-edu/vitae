@@ -12,6 +12,7 @@ packages = [
 
 [tool.poetry.scripts]
 vitae = "vitae.__main__:cli"
+find-byte = "scripts.find_byte:main"
 pre-process = "scripts.preprocess:cli"
 clear-cache = "scripts.clear:cache"
 clear-log = "scripts.clear:log"
