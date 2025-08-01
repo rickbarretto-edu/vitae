@@ -1,28 +1,28 @@
 <layout.Page subtitle="Busca por pesquisadores" current-page={{page}} >
-  <div class="grid lg:grid-cols-[350px_1fr] gap-6 items-start">
-    {% include "components/filters.html" %}
+    <div class="grid lg:grid-cols-[350px_1fr] gap-6 items-start">
+        {% include "components/filters.html" %}
 
-    <section class="bg-white/90 backdrop-blur rounded-2xl shadow-md p-6 min-h-[600px]">
-      <header class="flex justify-between items-center border-b border-gray-100 pb-4
-        text-gray-600 font-semibold">
-        <search.PageCount page={{page}}/>
-        <search.ResearcherCount researchers={{results}}/>
-        <ui.OrderSelect forms-id="filters-form" selected={{order}} />
-      </header>
+        <section class="bg-white/90 backdrop-blur rounded-2xl shadow-md p-6 min-h-[600px]">
+            <header class="flex justify-between items-center border-b border-gray-100 pb-4
+                text-gray-600 font-semibold">
+                <search.PageCount page={{page}}/>
+                <search.ResearcherCount researchers={{results}}/>
+                <ui.OrderSelect forms-id="filters-form" selected={{order}} />
+            </header>
 
-      {% if results %}
-        {% for researcher in results %}
-          <researcher.Card researcher={{researcher}} />
-        {% endfor %}
-        <search.NextPageButton id="next-page" for-param="page">
-          Carregar mais
-        </search.NextPageButton>
-      {% else %}
-        <div class="text-center py-24 text-gray-600 text-lg font-semibold">
-          <search.PageCount page={{page}}/>
-          <search.ResearcherCount researchers={{results}}/>
-        </div>
-      {% endif %}
-    </section>
+            {% if results is false %}
+                <main class="text-center py-24 text-gray-600 text-lg font-semibold">
+                    <search.PageCount page={{page}}/>
+                    <search.ResearcherCount researchers={{results}}/>
+                </main>
+            {% else %}
+                <main>
+                    {% for researcher in results %}
+                    <researcher.Card researcher={{researcher}} />
+                    {% endfor %}
+                    <search.NextPageButton id="next-page" for-param="page">Carregar mais</search.NextPageButton>
+                </main>
+            {% endif %}
+        </section>
   </div>
 </layout.Page>
