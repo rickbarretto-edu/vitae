@@ -4,6 +4,31 @@
     for_param: str
 #}
 
+{#
+
+    Order Select
+    ------------
+
+    A select dropdown for sorting options with predefined choices.
+    Syncs with a URL parameter and submits a form on change.
+
+    `id`: the HTML id for the select element.
+    `forms_id`: the id of the form to submit on selection change.
+    `for_param`: the URL parameter name used for sorting.
+
+    Usage
+    -----
+
+    To create an order selector tied to `sort` URL parameter and form:
+
+        <form.OrderSelect id="order-select" forms_id="search-form" for_param="sort" />
+
+    This renders a dropdown with options: "Ordenar" (empty), "A-Z" (asc), and "Z-A" (desc).
+    Changing the selection updates the URL parameter and submits the form.
+
+#}
+
+
 {% set orders = [("", "Ordenar"), ("asc", "A-Z"), ("desc", "Z-A")] %}
 
 <form.Select id={{for_param}} on-url={{for_param}}>
