@@ -1,13 +1,23 @@
+import pytest
 from jinjax import HTMLAttrs
 
-def test_form_attribute_component_renders_div_with_attrs(catalog):
-    rendered = catalog.render(
+@pytest.fixture(scope="module")
+def attribute(catalog):
+    return catalog.render(
         "form.Attribute",
         _attrs=HTMLAttrs({"class": "flex flex-col gap-2"}),
-        _content="<label>Label</label><input placeholder='Search' />",
+        _content="<label>Label</label><input placeholder='Search'/>",
     )
 
-    assert '<div class="flex flex-col gap-2">' in rendered
-    assert "<label>Label</label>" in rendered
-    assert "<input placeholder='Search'" in rendered
-    assert rendered.strip().endswith("</div>")
+class DescribeFormAttribute:
+
+    def has_content(self, attribute):
+        assert "<label>Label</label>" in attribute
+        assert "<input placeholder='Search'" in attribute
+
+    def has_custom_class(self, attribute):
+        assert 'class="flex flex-col gap-2"' in attribute
+
+    def is_a_div(self, attribute):
+        assert attribute.strip().startswith("<div")
+        assert attribute.strip().endswith("</div>")
