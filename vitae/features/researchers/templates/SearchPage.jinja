@@ -4,6 +4,59 @@
     page: int
 #}
 
+{#
+
+    Search Results Page
+    -------------------
+
+    This template builds the search results view for researchers.
+
+    Parameters
+    ----------
+    `results`: list of researcher objects returned from the search.
+    `filters`: dictionary containing filtering data:
+        - `countries`: list of country names
+        - `states`: list of state names
+        - `titles`: list of academic titles
+        - `expertises`: list of expertise areas
+    `page`: current page number used for pagination and conditional UI.
+
+    Behavior
+    --------
+    - Displays filters on the left using `search.FiltersAside`.
+    - Shows current page and results count.
+    - Shows ordering dropdown.
+    - Displays researcher cards if results exist.
+    - Otherwise, shows a fallback empty-state message.
+    - Includes a "Load More" button that increases the `page` URL param.
+
+    Usage
+    -----
+
+    For Jinja:
+
+        templates.TemplateResponse(
+            "SearchPage.jinja",
+            {
+                "request": request,
+                "results": results,
+                "filters": all_filters,
+                "page": page,
+            },
+        )
+
+    For JinjaX:
+
+        catalog.render(
+            "SearchPage",
+            results=results,
+            filters=all_filters,
+            page=page,
+        )
+
+#}
+
+
 <layout.Page subtitle="Busca por pesquisadores" current-page={{page}}>
     <div class="grid lg:grid-cols-[350px_1fr] gap-6 items-start">
 
