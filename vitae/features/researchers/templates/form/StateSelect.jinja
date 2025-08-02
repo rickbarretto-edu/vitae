@@ -3,6 +3,35 @@
     available: list[str] = []
 #}
 
+{#
+
+    State Select
+    ------------
+
+    A select dropdown component populated with a list of state abbreviations,
+    synced with a URL parameter.
+
+    `on_url`: the query parameter name to sync with the selected option.
+    `available`: list of state abbreviations to render as `<option>` elements.
+
+    Content
+    -------
+    Is the label for the default (empty) option.
+
+    Usage
+    -----
+
+    To create a state selector tied to the `state` URL parameter:
+
+        <form.StateSelect on_url="state" available=["sp", "rj", "mg"]>
+            Select State
+        </form.StateSelect>
+
+    If the URL contains `?state=sp`, that option will be pre-selected.
+
+#}
+
+
 <form.Select on_url={{on_url}}>
     <option value="">{{content}}</option>
     {% for state in available %}
