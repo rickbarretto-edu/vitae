@@ -22,11 +22,15 @@ def address_without_value(catalog):
 
 class DescribeAddress:
 
+    def is_list_item(self, address_with_value):
+        assert address_with_value.find("li")
+
     def has_content(self, address_with_value):
-        assert "São Paulo, SP" in address_with_value.text
+        assert "São Paulo, SP" in address_with_value.find_all("span")[1].text
 
     def has_default_value(self, address_without_value):
-        assert "Não fornecida." in address_without_value.text
+        assert "Não fornecida." in address_without_value.find_all("span")[1].text
 
-    def has_label(self, address_with_value):
-        assert "Localização" in address_with_value.text
+    def has_label(self, address_with_value, address_without_value):
+        assert "Localização" in address_with_value.find_all("span")[0].text
+        assert "Localização" in address_without_value.find_all("span")[0].text
