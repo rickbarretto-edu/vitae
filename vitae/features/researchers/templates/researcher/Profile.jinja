@@ -3,6 +3,29 @@
     lattes_id: str
 #}
 
+{#
+
+    Profile
+    -------
+
+    Displays the researcher's profile header with their name, initials avatar, and Lattes ID.
+
+    `name`: the full name of the researcher.
+    `lattes_id`: the researcher's Lattes platform identifier.
+
+    Usage
+    -----
+
+    To show a researcher profile header:
+
+        <researcher.Profile name="John Doe" lattes_id="1234567890123456" />
+
+    This renders the initials avatar from the first and last letters of the name,
+    the full name, and the Lattes ID below it.
+
+#}
+
+
 {% set name = name | string %}
 {% set initials = name | words | map(attribute=0) | join('') %}
 
