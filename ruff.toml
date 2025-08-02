@@ -1,4 +1,4 @@
-extend-exclude = ["tests/"]
+extend-exclude = ["tests/", "*/**/_*_spec.py"]
 fix = true
 line-length = 80
 
