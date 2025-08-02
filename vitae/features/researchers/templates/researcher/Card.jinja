@@ -1,6 +1,41 @@
 {#def researcher #}
 
-<section class="w-full bg-white border-2 border-gray-100 rounded-xl p-6 hover:border-indigo-400 hover:shadow-lg hover:-translate-y-1 transition cursor-pointer mb-6">
+{#
+
+    Card
+    ----
+
+    A full researcher profile card component displaying key data such as name, titles, institution, address,
+    specialities, and abstract. Combines multiple researcher.* components into a styled, interactive block.
+
+    `researcher`: the researcher object containing all structured data to be rendered.
+
+    Content
+    -------
+    Not used. All data is driven by the `researcher` parameter.
+
+    Usage
+    -----
+
+    To render a complete profile card:
+
+        <researcher.Card researcher={{r}} />
+
+    This component includes:
+
+    - <researcher.Profile>
+    - <researcher.Nationality>
+    - <researcher.HighestAcademicTitle>
+    - <researcher.Institution>
+    - <researcher.Address>
+    - <researcher.Specialities>
+    - <researcher.Abstract>
+
+#}
+
+
+<section class="w-full bg-white border-2 border-gray-100 rounded-xl p-6 mb-6
+    hover:border-indigo-400 hover:shadow-lg hover:-translate-y-1 transition cursor-pointer">
     <researcher.Profile 
         name={{researcher.this.name}} 
         lattes-id={{researcher.links.lattes.id}} 
