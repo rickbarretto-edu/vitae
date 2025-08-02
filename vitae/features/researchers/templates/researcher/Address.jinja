@@ -1,5 +1,34 @@
 {#def value: str = "" #}
 
+{#
+
+    Address
+    -------
+
+    A component used to display a researcher's address or location inside an attribute block.
+    Falls back to a default message when no value is provided.
+
+    `value`: the address or location to display. Defaults to "Não fornecida." if empty.
+
+    Content
+    -------
+    Not used. The display is handled via the `value` parameter.
+
+    Usage
+    -----
+
+    To show a researcher's location:
+
+        <researcher.Address value="São Paulo, SP" />
+
+    If `value` is not provided or is empty, it will display:
+
+        Não fornecida.
+
+#}
+
+
+
 {% set value = value or "Não fornecida." %}
 
 <researcher.Attribute name="Localização">
