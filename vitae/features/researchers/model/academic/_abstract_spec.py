@@ -13,7 +13,7 @@ class DescribeAbstract:
 
     def has_brief_text_under_limit(self):
         short_text = "This abstract is short."
-        abstract = Abstract(short_text, brief_limit=50)
+        abstract = Abstract(short_text, brief_limit=50) # pyright: ignore[reportCallIssue]
         assert abstract.brief == short_text
 
     def has_brief_text_exactly_at_limit(self):
