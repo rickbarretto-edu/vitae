@@ -1,4 +1,4 @@
-"""This script is designed to pre-process all files before actually pushing it into PostgreSQL.
+"""Pre-process all files before ingestion.
 
 Data Processing Steps
 ---------------------
@@ -8,6 +8,7 @@ Data Processing Steps
 - Decode XML from ISO 8859-1 to UTF-8 due to compatibility issues with PostreSQL.
 - Prettify XML files to make it easier to debug and inspect.
 - Removes all old .zip files to save disk space.
+
 """
 
 from dataclasses import dataclass
@@ -25,7 +26,7 @@ class File(Protocol):
 
 
 def log(message: str):
-    """Logs action for certain `File`.
+    """Log action for certain `File`.
 
     Into your message, `{}` means the filename of `File`.
 
@@ -34,6 +35,10 @@ def log(message: str):
     >>> @log("Processing file: {}")
     ... def process(self):
     ...     pass
+
+    Returns
+    -------
+    A wrapped function with log behavior attached.
 
     """
 
