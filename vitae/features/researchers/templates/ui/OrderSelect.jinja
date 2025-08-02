@@ -37,20 +37,6 @@
     {% endfor %}
 </form.Select>
 
-{# Update the UI to use the selected value from URL. #}
-<script>
-    {
-        const self = document.getElementById("{{id}}")
-        const selectedValue = new URLSearchParams(window.location.search)
-            .get("{{for_param}}")
-
-        const selectedOption = Array.from(self.options)
-            .find(option => option.value === selectedValue)
-        
-        if (selectedOption) selectedOption.selected = true
-    }
-</script>
-
 {# Submit a new request when manually selected. #}
 <script>
     document.getElementById("{{id}}").addEventListener('change', function(event) {
