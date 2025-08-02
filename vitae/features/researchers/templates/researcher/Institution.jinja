@@ -1,5 +1,29 @@
 {#def name: str = "" #}
 
+{#
+
+    Institution
+    -----------
+
+    Displays the name of the researcher's affiliated institution. If no name is provided,
+    a default message is shown.
+
+    `name`: the institution name to display. Defaults to "Sem associação com alguma instituição." if empty.
+
+    Usage
+    -----
+
+    To show the researcher's institution:
+
+        <researcher.Institution name="Universidade de São Paulo" />
+
+    If `name` is not provided or is empty, it will display:
+
+        Sem associação com alguma instituição.
+
+#}
+
+
 {% set name = name or "Sem associação com alguma instituição." %}
 
 <researcher.Attribute name="Instituição">
