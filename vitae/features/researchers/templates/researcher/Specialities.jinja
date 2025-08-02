@@ -1,5 +1,24 @@
 {#def specialities: list = [] #}
 
+{#
+
+    Specialities
+    ------------
+
+    Displays a list of specialities as styled pills.
+
+    `specialities`: a list of speciality strings to display.
+
+    Usage
+    -----
+
+    To show specialities:
+
+        <researcher.Specialities specialities={{["machine learning", "data science"]}}/>
+
+#}
+
+
 <ul class="list-none flex flex-wrap gap-2 my-3">
     {% for speciality in specialities %}
         <ui.Pill>{{speciality | title}}</ui.Pill>
