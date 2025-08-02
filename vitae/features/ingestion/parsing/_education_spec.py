@@ -4,7 +4,7 @@ from vitae.features.ingestion.adapters.academic import Education
 from vitae.features.ingestion.parsing._xml import Node
 from vitae.features.ingestion.parsing.academic import education_from_xml
 
-from .utils import Document
+from ._test_utils import Document
 
 
 @pytest.fixture

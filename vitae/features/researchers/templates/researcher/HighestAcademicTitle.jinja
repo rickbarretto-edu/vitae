@@ -1,5 +1,38 @@
 {#def name: str, at: int, until: int | None #}
 
+{#
+
+    Highest Academic Title
+    ----------------------
+
+    Display the researcher's highest academic title, optionally with the start and end years.
+
+    `name`: the name of the academic title (e.g., "Doutorado").
+    `at`: the year the title began or was granted.
+    `until`: the year the title was completed, if available.
+
+    Content
+    -------
+    Not used. All data is passed through parameters.
+
+    Usage
+    -----
+
+    To show a complete title with duration:
+
+        <researcher.HighestAcademicTitle name="Doutorado" at={{2015}} until={{2019}} />
+
+    To show a title with only a start year:
+
+        <researcher.HighestAcademicTitle name="Mestrado" at={{2020}} />
+
+    If `name` is empty or not provided, it will display:
+
+        Nenhum título especificado.
+
+#}
+
+
 <researcher.Attribute name="Título">
     {% if name %}
         {% if until %}

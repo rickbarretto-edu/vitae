@@ -1,5 +1,30 @@
 {#def researchers: list = [] #}
 
+{#
+
+    Researcher Count
+    ----------------
+
+    Displays the count of researchers found on the current page with proper pluralization.
+
+    `researchers`: the list of researcher objects to count. Defaults to an empty list.
+
+    Usage
+    -----
+
+    To show the number of researchers on the current page:
+
+        <search.ResearcherCount researchers={{researcher_list}} />
+
+    This renders text like:
+
+        "1 pesquisador encontrado para esta página."
+        "3 pesquisadores encontrados para esta página."
+        "Nenhum pesquisador encontrado para esta página."
+
+#}
+
+
 {% set count = researchers | length %}
 
 <h4>

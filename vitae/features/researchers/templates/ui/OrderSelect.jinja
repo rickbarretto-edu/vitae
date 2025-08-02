@@ -1,39 +1,50 @@
 {#def 
-    id: str, 
-    forms_id: str, 
-    for_param: str
+    form: str, 
+    on_url: str
 #}
+
+{#
+
+    Order Select
+    ------------
+
+    A select dropdown for sorting options with predefined choices.
+    Syncs with a URL parameter and submits a form on change.
+
+    `form`: the id of the form to submit on selection change.
+    `on-url`: the URL parameter name used for sorting.
+
+    Usage
+    -----
+
+    To create an order selector tied to `sort` URL parameter and form:
+
+        <form id="search-form">...</form>
+        ...
+        <ui.OrderSelect form="search-form" on-url="sort"></ui.OrderSelect>
+
+    This renders a dropdown with options: "Ordenar" (empty), "A-Z" (asc), and "Z-A" (desc).
+    Changing the selection updates the URL parameter and submits the form.
+
+#}
+
 
 {% set orders = [("", "Ordenar"), ("asc", "A-Z"), ("desc", "Z-A")] %}
 
-<form.Select id={{for_param}} on-url={{for_param}}>
+<form.Select on-url={{on_url}} form={{form}}>
     {% for (value, display) in orders %}
         <option value="{{value}}">{{display}}</option>
     {% endfor %}
 </form.Select>
 
-{# Update the UI to use the selected value from URL. #}
-<script>
-    {
-        const self = document.getElementById("{{id}}")
-        const selectedValue = new URLSearchParams(window.location.search)
-            .get("{{for_param}}")
-
-        const selectedOption = Array.from(self.options)
-            .find(option => option.value === selectedValue)
-        
-        if (selectedOption) selectedOption.selected = true
-    }
-</script>
-
 {# Submit a new request when manually selected. #}
 <script>
-    document.getElementById("{{id}}").addEventListener('change', function(event) {
+    document.querySelector(`[name="{{on_url}}"]`).addEventListener('change', function(event) {
         event.preventDefault()
         const value = event.target.value;
         const url = new URL(window.location.href);
         
-        url.searchParams.set("{{for_param}}", value);
-        document.getElementById("{{forms_id}}").submit()
+        url.searchParams.set("{{on_url}}", value);
+        document.getElementById("{{form}}").submit()
     })
 </script>

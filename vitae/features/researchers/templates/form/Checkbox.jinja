@@ -1,5 +1,32 @@
 {#def on_url: str #}
 
+{# 
+
+    Checkbox
+    --------
+
+    A checkbox component that reflects its checked state based on a URL parameter.
+    Commonly used for filters or toggle options that persist across page reloads.
+
+    `on_url`: the query parameter name to sync with the checkbox state.
+
+    Content
+    -------
+    Checkbox's Label.
+
+    Usage
+    -----
+
+    To create a checkbox linked to the `enabled` URL parameter:
+
+        <form.Checkbox on-url="enabled">Enable Feature</form.Checkbox>
+
+    If the URL contains `?enabled=true`, `?enabled=1`, or `?enabled=on`, the checkbox will be pre-checked.
+
+#}
+
+
+
 <div class="flex items-center mt-2">
     <input type="checkbox" name="{{on_url}}" class="mr-2">
     <label for="{{on_url}}" class="text-sm text-gray-700">

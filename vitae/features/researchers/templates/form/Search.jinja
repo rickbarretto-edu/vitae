@@ -3,6 +3,30 @@
     placeholder: str = "Search"
 #}
 
+
+{#
+
+    Search
+    ------
+
+    A text input component synced with a URL parameter, preserving the input value on page reload.
+
+    `on_url`: the query parameter name to sync with the input value. Defaults to "search".
+    `placeholder`: placeholder text shown when the input is empty. Defaults to "Search".
+
+    Usage
+    -----
+
+    To create a search input synced with the `query` URL parameter:
+
+        <form.Search on-url="query" placeholder="Search here..." />
+
+    If the URL contains `?query=example`, the input will be pre-filled with "example".
+
+#}
+
+
+
 <input type="text" name="{{on_url}}" placeholder="{{placeholder}}"
     class="block w-full max-w-xs px-4 py-2 rounded-lg 
     text-sm font-normal text-gray-900 bg-transparent bg-white/20

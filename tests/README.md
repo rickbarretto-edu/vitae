@@ -1,6 +1,7 @@
 # Test
 
 Tests uses `pytest` as test runner, so see their documentation or make sure you have experience with this tool before proceeding.
+Most tests are under their own domains, so explore `vitae` or run `pytest` to find them.
 
 ## RSpec-ish syntax
 

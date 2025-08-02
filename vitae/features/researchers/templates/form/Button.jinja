@@ -1,3 +1,29 @@
+{# 
+
+    Button
+    ------
+
+    Custom styled button with full-width layout.
+    Accepts additional HTML attributes via `attrs.render()`.
+
+    Content
+    -------
+    Inner HTML
+
+    Usage
+    -----
+
+    Use as a styled button:
+
+        <form.Button>Click Me</form.Button>
+
+    You can pass any valid HTML attributes like `type`, `id`, or `onclick`:
+
+        <form.Button type="submit" id="my-btn">Submit</form.Button>
+
+#}
+
+
 <button {{attrs.render()}} class="w-full bg-white/50 text-gray-600 shadow-sm rounded-md py-2 
     hover:bg-white/60 hover:text-indigo-500 hover:-translate-y-0.5 hover:shadow-lg hover:border-indigo-400 transition ">
     {{ content }}

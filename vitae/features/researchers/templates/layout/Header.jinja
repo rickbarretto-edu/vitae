@@ -1,3 +1,27 @@
+{#
+
+    Header Layout
+    -------------
+
+    A styled header container with a translucent background, blur effect, rounded corners,
+    and shadow, used to wrap page or section header content.
+
+    Content
+    -------
+    The inner HTML or components to be displayed inside the header.
+
+    Usage
+    -----
+
+    To create a page header:
+
+        <layout.Header>
+            <h1>My Page Title</h1>
+        </layout.Header>
+
+#}
+
+
 <header class="bg-white/70 backdrop-blur rounded-2xl shadow-xl shadow-md p-8 mb-6">
     {{ content }}
 </header>

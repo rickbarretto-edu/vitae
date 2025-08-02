@@ -1,3 +1,26 @@
 {#def page: int = 1 #}
 
+{#
+
+    Page Count
+    ----------
+
+    Displays the current page number in the pagination.
+
+    `page`: the current page number. Defaults to 1.
+
+    Usage
+    -----
+
+    To display the current page:
+
+        <search.PageCount page=3 />
+
+    This renders:
+
+        Página 3
+
+#}
+
+
 <h3>Página {{ page }}</h3>

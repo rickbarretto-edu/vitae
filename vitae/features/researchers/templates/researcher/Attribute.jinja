@@ -1,5 +1,38 @@
 {#def name: str #}
 
+{#
+
+    Researcher's Attribute
+    ----------------------
+
+    A component for displaying a labeled attribute in a list, commonly used in researcher profiles.
+
+    `name`: the label shown before the value.
+
+    Content
+    -------
+    Is the value associated with the attribute name.
+
+    Usage
+    -----
+
+    To display a labeled item such as the researcher's degree:
+
+        <ul>
+            <researcher.Attribute name="Formação">Doutorado</researcher.Attribute>
+            <researcher.Attribute name="Instituição">USP</researcher.Attribute>
+            <researcher.Attribute name="Localização">São Paulo (SP)</researcher.Attribute>
+        </ul>
+
+    This will render:
+
+        - Formação: Doutorado
+        - Instituição: USP
+        - Localização: São Paulo (SP)
+
+#}
+
+
 <li>
     <span class="font-semibold text-gray-700 w-32 inline-block">
         {{ name }}:

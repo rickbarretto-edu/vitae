@@ -1,6 +1,41 @@
-{#def on_url: str #}
+{#def on_url: str, form: str | None = None #}
 
-<select name="{{on_url}}" class="Select block w-full max-w-xs px-4 py-2 rounded-lg 
+
+{#
+
+    Select
+    ------
+
+    A base select component that syncs its selected value with a URL parameter.
+    Preserves the selection on page reload based on the query string.
+
+    `on_url`: the query parameter name to sync with the selected option.
+
+    Content
+    -------
+    Should contain one or more `<option>` elements.
+
+    Usage
+    -----
+
+    To create a select dropdown synced with the `category` URL parameter:
+
+        <form.Select on-url="category">
+            <option value="">Select Category</option>
+            <option value="science">Science</option>
+            <option value="art">Art</option>
+        </form.Select>
+
+    If the URL contains `?category=art`, that option will be pre-selected.
+
+#}
+
+<!-- DEBUG(Select): on_url={{on_url}}, form={{form}} -->
+
+
+<select name="{{on_url}}" 
+    {% if form %}form="{{form}}"{% endif %} 
+    class="Select block w-full max-w-xs px-4 py-2 rounded-lg 
     text-sm font-normal text-gray-900 bg-transparent bg-white/20
     shadow-xs border border-gray-300 placeholder-gray-400 leading-relaxed 
     focus:outline-none"

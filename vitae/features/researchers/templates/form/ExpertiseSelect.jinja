@@ -3,6 +3,35 @@
     available: list[str] = []
 #}
 
+{# 
+
+    Expertise Select
+    ----------------
+
+    A select dropdown component populated from a list of expertise strings and synced with a URL parameter.
+    Used for filtering or selecting an expertise category.
+
+    `on_url`: the query parameter name to sync with the selected option.
+    `available`: list of expertise strings to render as `<option>` elements.
+
+    Content
+    -------
+    Is the label for the default (empty) option.
+
+    Usage
+    -----
+
+    To create an expertise selector tied to the `expertise` URL parameter:
+
+        <form.ExpertiseSelect on-url="expertise" available=["design", "development", "research"]>
+            Select Expertise
+        </form.ExpertiseSelect>
+
+    If the URL contains `?expertise=design`, that option will be pre-selected.
+
+#}
+
+
 <form.Select on_url={{on_url}}>
     <option value="">{{content}}</option>
     {% for expertise in available %}

@@ -3,6 +3,37 @@
     available: list[str] = []
 #}
 
+
+{# 
+
+    Country Select
+    --------------
+
+    A select dropdown component populated from a list and synced with a URL parameter.
+    Commonly used for filtering or selection inputs in forms.
+
+    `on_url`: the query parameter name to sync with the selected option.
+    `available`: list of string values to be rendered as `<option>` elements.
+
+    Content
+    -------
+    Is the label for the default (empty) option.
+
+    Usage
+    -----
+
+    To create a country selector tied to the `country` URL parameter:
+
+        <form.CountrySelect on-url="country" available=["brazil", "usa"]>
+            Select a country
+        </form.CountrySelect>
+
+    If the URL contains `?country=usa`, that option will be selected.
+
+#}
+
+
+
 <form.Select on_url={{on_url}}>
     <option value="">{{content}}</option>
     {% for country in available %}

@@ -38,12 +38,27 @@ ty = "^0.0.1a5"
 
 [tool.pytest.ini_options]
 testpaths = [
+    "vitae",
     "tests",
     "integration",
 ]
-python_files = ["*test_*.py", "*_spec", "*_case", "*_usecase"]
+python_files = ["*test_*.py", "*_spec.py", "_*_spec.py"]
 python_classes = ["Test*", "Suite*", "Spec*", "Describe*"]
-python_functions = ["test_*", "should_*", "it_*", "its_*", "has_*", "is_*", "have_*", "are_*", "when_*", "and_"]
+python_functions = [
+    "test_*", 
+    "should_*", 
+    "it_*", 
+    "its_*", 
+    "has_*", 
+    "is_*", 
+    "have_*", 
+    "are_*", 
+    "when_*", 
+    "and_*", 
+    "can_*", 
+    "raises_*",
+    "supports_*"
+]
 console_output_style = "progress"
 
 [tool.coverage.run]

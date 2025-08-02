@@ -3,34 +3,40 @@
     for_param: str
 #}
 
-{# 
-    Documentation
-    -------------
+{#
 
-    This component increases the `parameter` and reloads the page,
-    asking the server the next page with the same queries.
+    Next Page Button
+    ----------------
 
-    `id`: HTML ID for this element.
-    `for_param`: target URL parameter to be incremented.
+    A button component that increments a specified URL parameter and reloads the page,
+    typically used for pagination or step navigation.
+
+    `id`: the HTML id for this button element.
+    `for_param`: the URL parameter to increment on click.
+
+    Content
+    -------
+    The button label or inner content.
 
     Usage
     -----
 
-    If you have the URL: "https://{{your.website.com}}/?page=1", use it like:
+    For example, to increment the `page` parameter starting from `?page=1`:
 
-        <NextPageButton id="next-page" for="page">
+        <NextPageButton id="next-page" for-param="page">
             Next Page
         </NextPageButton>
 
-    And this gonna open: "https://{{your.website.com}}/?page=2".
+    Clicking will navigate to `?page=2`, and so forth.
 
-    i.e. "step", you may have:
+    Similarly, for a step parameter:
 
-        <NextPageButton id="next-step" for="step">
+        <NextPageButton id="next-step" for-param="step">
             Step {{current_step + 1}}
         </NextPageButton>
 
 #}
+
 
 <a id={{id}} href="#" class="block w-full max-w-[16rem]">
     <form.Button>{{ content }}</form.Button>
