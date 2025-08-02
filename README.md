@@ -1,4 +1,8 @@
-# Vitae
+<h1 align="center">Vitae</h1>
+
+![Vitae Showcase](./showcase.png)
+
+<p align="center">Vitae's Web UI showcase</p>
 
 ## Requirements
 
