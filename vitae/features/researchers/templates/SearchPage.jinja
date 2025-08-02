@@ -7,7 +7,8 @@
 <layout.Page subtitle="Busca por pesquisadores" current-page={{page}}>
     <div class="grid lg:grid-cols-[350px_1fr] gap-6 items-start">
 
-        <search.FiltersAside countries={{filters.countries}}
+        <search.FiltersAside id="filters-form" 
+            countries={{filters.countries}}
             states={{filters.states}}
             titles={{filters.titles}}
             expertises={{filters.expertises}}
@@ -22,7 +23,7 @@
                     <div><!-- Placeholder --></div>
                 {% endif %}
                 <div class="max-w-[10]">
-                    <ui.OrderSelect id="order-selection" forms-id="filters-form" for_param="sort" />
+                    <ui.OrderSelect form="filters-form" on-url="sort" />
                 </div>
             </header>
 
