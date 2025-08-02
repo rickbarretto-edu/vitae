@@ -1,5 +1,29 @@
 {#def of: str #}
 
+{#
+
+    Label
+    -----
+
+    A label component linked to a form element via the `for` attribute.
+
+    `of`: the `id` of the target form element this label is associated with.
+
+    Content
+    -------
+    Is the text displayed inside the label.
+
+    Usage
+    -----
+
+    To label an input with id "username":
+
+        <form.Label of="username">Username</form.Label>
+        <form.Input for-url="username">Your name: </form.Input>
+
+#}
+
+
 <label for="{{of}}" class="text-sm font-semibold text-gray-700 mb-2">
     {{ content }}
 </label>
