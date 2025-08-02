@@ -1,4 +1,8 @@
-# Vitae
+<h1 align="center">Vitae</h1>
+
+![Vitae Showcase](./showcase.png)
+
+<p align="center">Vitae's Web UI showcase</p>
 
 ## Requirements
 
@@ -80,6 +84,11 @@ Remember to install with `poetry install` before run as a script.
 Otherwise, you may run as `python -m vitae`.
 
 > If you want to execute the web application from uvicorn for some reason, try: `poetry run uvicorn vitae.__main__:web_new --factory --reload `.
+
+### 6. Explore
+
+To know more about each detail of this project, just open `vitae` and read the documentation for each feature, which includes the objective and architectural decisions for each one.
+The source code also provides documentation for crucial sections.
 
 ## Tooling Recomentation
 
