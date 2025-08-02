@@ -1,5 +1,33 @@
 {# def subtitle: str = "Descubra e conecte-se com pesquisadores Lattes", current_page: int #}
 
+{#
+
+    Page Layout
+    -----------
+
+    The main page layout component providing the full HTML structure,
+    including header, fonts, Tailwind CSS setup, and common UI components.
+
+    `subtitle`: the page subtitle used in the `<title>` tag and header subtitle.
+        Defaults to "Descubra e conecte-se com pesquisadores Lattes".
+    `current_page`: the current page number, used to control the GoBackButton visibility.
+
+    Content
+    -------
+    The main content of the page inserted inside the layout container.
+
+    Usage
+    -----
+
+    To create a full page layout with dynamic subtitle and current page:
+
+        <layout.Page subtitle="Pesquisar Pesquisadores" current_page={{2}}>
+            ... your page content here ...
+        </layout.Page>
+
+#}
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
