@@ -6,7 +6,7 @@ from vitae.features.ingestion.adapters.institution import Institution
 from vitae.features.ingestion.parsing.professional import address_from_xml
 from vitae.features.ingestion.adapters.professional import Address
 
-from .utils import Document, XmlString
+from ._test_utils import Document, XmlString
 
 
 @dataclass

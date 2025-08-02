@@ -4,7 +4,7 @@ from vitae.features.ingestion.adapters import Researcher
 from vitae.features.ingestion.parsing._xml import Node
 from vitae.features.ingestion.parsing.researcher import researcher_from_xml
 
-from .utils import Document
+from ._test_utils import Document
 
 
 @pytest.fixture
