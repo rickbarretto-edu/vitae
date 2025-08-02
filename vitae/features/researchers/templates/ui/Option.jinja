@@ -1,23 +1,32 @@
 {#def value: str, selected: str #}
 
-{# 
+{#
 
-    Documentation
-    -------------
+    Option
+    ------
 
-    This component is a custom <option/> element, which decides which one
-    is the selected according to the user preference and its value.
+    A custom `<option>` element that sets the selected attribute based on user preference.
+
+    `value`: the value of this option.
+    `selected`: the current selected value to compare against.
+
+    Content
+    -------
+    The visible text inside the option.
 
     Usage
     -----
 
+    To create options with dynamic selection:
+
         <select name="cars-color">
-            <option value="white" selected={{user_preference}}>Snow</option>
-            <option value="blue"  selected={{user_preference}}>Midnight Blue</option>
-            <option value="purple" selected={{user_preference}}>Purple Mustang</option>
+            <ui.Option value="white" selected={{user_preference}}>Snow</ui.Option>
+            <ui.Option value="blue" selected={{user_preference}}>Midnight Blue</ui.Option>
+            <ui.Option value="purple" selected={{user_preference}}>Purple Mustang</ui.Option>
         </select>
 
 #}
+
 
 <option value={{value}} 
     {% if selected == value %}selected{% endif %}>

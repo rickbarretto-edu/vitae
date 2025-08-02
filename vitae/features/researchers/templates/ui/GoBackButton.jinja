@@ -1,23 +1,28 @@
 {#def current_page: int #}
 
-{# 
-    Documentation
-    -------------
+{#
 
-    Current page describes the current searching page the user is in,
-    this is important to avoid having this button on the first search page,
-    which is kind-of useless since there is no last search.
+    Go Back Button
+    --------------
 
-    This button is useful to deal with the lack of Bootstrap-like
-    pagination, since I don't want to fetch the whole database just to know
-    how many pages there are left.
+    A button to navigate back to the previous page in paginated searches.
+    It only renders if the current page is greater than 1.
+
+    `current_page`: the current page number of the search results.
+
+    Content
+    -------
+    Used as the button's tooltip (`title` attribute).
 
     Usage
     -----
 
-            <GoBackButton current-page={{2}} />
+        <ui.GoBackButton current_page={{2}}>Back</ui.GoBackButton>
+
+    This button will not render on the first page (`current_page` = 1).
 
 #}
+
 
 {% if current_page > 1 %}
     <a href="javascript:void(0)" onclick="history.back()" title="{{content}}"

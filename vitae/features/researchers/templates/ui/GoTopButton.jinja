@@ -1,17 +1,26 @@
 {#def id: str #}
 
-{# 
-    Documentation
+{#
+
+    Go Top Button
     -------------
 
-    ID describes an html element's id that is at the position 
-    you want this button to leaves the user to.
+    A fixed button that appears after scrolling down and scrolls the page to a target element by ID.
+
+    `id`: the HTML id of the target element to scroll to when the button is clicked.
+
+    Content
+    -------
+    Is used as the button's tooltip (`title` attribute).
 
     Usage
     -----
-            <header id="top">...</header>
-            ...
-            <GoTopButton id="top"/>
+
+    To create a "go to top" button linked to an element with id "top":
+
+        <header id="top">...</header>
+        ...
+        <ui.GoTopButton id="top">Back to Top</ui.GoTopButton>
 
 #}
 
