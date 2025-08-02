@@ -30,6 +30,7 @@ jinja2 = "^3.1.6"
 attrs = "^25.3.0"
 cattrs = "^25.1.1"
 jinjax = "^0.60"
+beautifulsoup4 = "^4.13.4"
 
 
 [tool.poetry.group.dev.dependencies]
