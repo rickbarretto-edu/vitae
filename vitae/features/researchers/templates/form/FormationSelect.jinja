@@ -3,6 +3,35 @@
     available: list[str] = []
 #}
 
+{# 
+
+    Academic Formation Select
+    -------------------------
+
+    A select dropdown component populated from a list of formations and synced with a URL parameter.
+    Used for filtering or selecting an education or formation category.
+
+    `on_url`: the query parameter name to sync with the selected option.
+    `available`: list of formation strings to render as `<option>` elements.
+
+    Content
+    -------
+    Is the label for the default (empty) option.
+
+    Usage
+    -----
+
+    To create a formation selector tied to the `formation` URL parameter:
+
+        <form.Select on_url="formation" available=["bachelor", "master", "phd"]>
+            Select Formation
+        </form.Select>
+
+    If the URL contains `?formation=master`, that option will be pre-selected.
+
+#}
+
+
 <form.Select on_url={{on_url}}>
     <option value="">{{content}}</option>
     {% for formation in available %}
