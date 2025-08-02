@@ -24,7 +24,7 @@ class DescribeFullName:
         fn = FullName("luiz carlos")
         assert fn.initials == "LC"
 
-    def should_convert_to_str(self):
+    def supports_str(self):
         fn = FullName("joão pedro")
         assert str(fn) == "João Pedro"
 

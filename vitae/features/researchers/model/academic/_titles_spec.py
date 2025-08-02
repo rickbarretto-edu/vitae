@@ -5,7 +5,7 @@ from .titles import AcademicDegree, AcademicTitles
 
 
 class DescribeAcademicDegree:
-    def is_created_with_valid_scream_case(self):
+    def should_be_created_from_scream_case(self):
         degree = AcademicDegree("MESTRADO", begin=2010, finish=2012)
         assert degree._name == "MESTRADO"
         assert degree.begin == 2010
@@ -16,15 +16,15 @@ class DescribeAcademicDegree:
         with pytest.raises(ValueError):
             AcademicDegree("Mestrado")
 
-    def has_title_if_finish_is_not_none(self):
+    def has_title_if_finished(self):
         degree = AcademicDegree("GRADUACAO", finish=2020)
         assert degree.has_title is True
 
-    def has_no_title_if_finish_is_none(self):
+    def has_no_title_if_not_finished(self):
         degree = AcademicDegree("GRADUACAO")
         assert degree.has_title is False
 
-    def returns_formatted_title(self):
+    def its_title_is_formatted(self):
         degree = AcademicDegree("POS_DOUTORADO")
         assert degree.title == "Pós-doutorado"
 
@@ -54,12 +54,12 @@ class DescribeAcademicTitles:
         at = AcademicTitles([grad, ms, phd])
         assert at.highest == phd
 
-    def when_has_no_title_has_no_highest(self):
+    def has_no_highest_if_no_title(self):
         deg = AcademicDegree("GRADUACAO")
         at = AcademicTitles([deg])
         assert at.highest is None
 
-    def can_be_created_from_table(self):
+    def supports_from_table(self):
         some_id = "0000"
 
         education = tables.Education(

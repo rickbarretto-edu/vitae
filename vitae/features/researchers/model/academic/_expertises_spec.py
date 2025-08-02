@@ -18,7 +18,7 @@ class DescribeStudyField:
 
 
 class DescribeExpertises:
-    def can_be_created_from_tables(self):
+    def supports_from_tables(self):
 
         def new_expertise(major, area, sub):
             return tables.Expertise(

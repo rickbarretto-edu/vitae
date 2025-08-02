@@ -5,7 +5,7 @@ from .external import ExternalLinks, Lattes, Orcid, InvalidURL
 
 
 class DescribeLattes:
-    def is_created_from_valid_id(self):
+    def supports_valid_id(self):
         lattes = Lattes.from_id("1234567890123456")
         assert lattes.id == "1234567890123456"
         assert lattes.url == "http://lattes.cnpq.br/1234567890123456"
@@ -15,7 +15,7 @@ class DescribeLattes:
         with pytest.raises(InvalidURL):
             Lattes.from_url("http://invalid.url/1234567890123456")
 
-    def is_created_from_valid_url(self):
+    def supports_valid_url(self):
         url = "http://lattes.cnpq.br/1234567890123456"
         lattes = Lattes.from_url(url)
         assert lattes.id == "1234567890123456"
@@ -23,17 +23,17 @@ class DescribeLattes:
 
 
 class DescribeOrcid:
-    def is_created_from_valid_id(self):
+    def supports_valid_id(self):
         orcid = Orcid.from_id("0000-0000-0000-0000")
         assert orcid.id == "0000-0000-0000-0000"
         assert orcid.url == "http://orcid.org/0000-0000-0000-0000"
 
-    def raises_invalid_url_for_wrong_url(self):
+    def raises_invalid_url_when_invalid(self):
         import pytest
         with pytest.raises(InvalidURL):
             Orcid.from_url("http://invalid.org/0000-0000-0000-0000")
 
-    def is_created_from_valid_url(self):
+    def supports_valid_url(self):
         url = "http://orcid.org/0000-0000-0000-0000"
         orcid = Orcid.from_url(url)
         assert orcid.id == "0000-0000-0000-0000"
@@ -41,7 +41,7 @@ class DescribeOrcid:
 
 
 class DescribeExternalLinks:
-    def can_be_created_from_table(self):
+    def supports_from_table(self):
         researcher = tables.Researcher(
             lattes_id="1234567890123456",
             full_name="John Doe",
@@ -54,7 +54,7 @@ class DescribeExternalLinks:
         assert isinstance(links.orcid, Orcid)
         assert links.orcid.id == "0000-0002-1825-0097"
 
-    def can_be_created_from_table_with_no_orcid(self):
+    def has_optional_orcid(self):
         researcher = tables.Researcher(
             lattes_id="1234567890123456",
             full_name="John Doe",

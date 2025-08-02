@@ -12,7 +12,7 @@ class DescribeCity:
         city = City(None)
         assert city.name == ""
 
-    def is_casted_to_string(self):
+    def supports_str(self):
         city = City("rio")
         assert str(city) == "Rio"
 
@@ -26,7 +26,7 @@ class DescribeState:
         state = State(None)
         assert state.abbr == ""
 
-    def is_casted_to_string(self):
+    def supports_str(self):
         state = State("mg")
         assert str(state) == "MG"
 
@@ -40,13 +40,14 @@ class DescribeCountry:
         country = Country(None)
         assert country.name == ""
 
-    def is_casted_to_string(self):
+    def supports_str(self):
         country = Country("canadá")
         assert str(country) == "Canadá"
 
 
 class DescribeAddress:
     def test_brazilian_format(self):
+        """Format should be: <city> (<state>)"""
         address = Address(
             city=City("campinas"),
             state=State("sp"),
@@ -55,6 +56,7 @@ class DescribeAddress:
         assert str(address) == "Campinas (SP)"
 
     def test_foreign_format(self):
+        """Format should be: <city> (<state>), <country>"""
         address = Address(
             city=City("paris"),
             state=State("idf"),
@@ -62,7 +64,7 @@ class DescribeAddress:
         )
         assert str(address) == "Paris (IDF), França"
 
-    def is_created_from_table(self):
+    def supports_from_table(self):
         addr = Address.from_table(tables.Address(
             researcher_id="0",
             institution_id="0",
