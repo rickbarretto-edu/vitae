@@ -10,6 +10,12 @@ The reason of this choice is to promote encapsulation, reduce code coupling betw
 
 This approach requires some familiarity with Clean Architecture and DDD principles, especially the importance of *context*. The same term can have different meanings depending on its context, and this design acknowledges and embraces that.
 
+### Benefits
+
+What I've noticed when using this approach is that each domain has its own needs. i.e. Bootstrap feature does not have Repositories, Domain Models, only a CLI and a Use Case.
+
+There is no need to have such things for simpler features. So I can use whatever approach I want or need for each case individually.
+
 ## Shared Components
 
 While features are self-contained, some shared components are used across the application for practical reasons, especially when there's no meaningful value in duplicating them.
