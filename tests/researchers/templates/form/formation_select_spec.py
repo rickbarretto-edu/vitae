@@ -6,14 +6,14 @@ from jinjax import HTMLAttrs
 @pytest.fixture(scope="module")
 def select(catalog):
     component = catalog.render(
-        "form.ExpertiseSelect",
-        on_url="expertise",
-        available=["math", "chemistry", "history"],
-        _content="Expertise",
+        "form.FormationSelect",
+        on_url="education",
+        available=["undergrad", "master", "phd"],
+        _content="All Educations",
     )
     return BeautifulSoup(component, "html.parser")
 
-class DescribeExpertiseSelect:
+class DescribeFormationSelect:
 
     def has_4_options(self, select):
         options = select.find_all("option")
@@ -22,7 +22,7 @@ class DescribeExpertiseSelect:
     def its_options_has_given_values(self, select):
         options = select.find_all("option")
 
-        expected = ["", "math", "chemistry", "history"]
+        expected = ["", "undergrad", "master", "phd"]
         actual = [option["value"].strip() for option in options]
 
         assert expected == actual
@@ -30,7 +30,7 @@ class DescribeExpertiseSelect:
     def its_options_display_is_titled(self, select):
         options = select.find_all("option")
 
-        expected = ["Expertise", "Math", "Chemistry", "History"]
+        expected = ["All Educations", "Undergrad", "Master", "Phd"]
         actual = [option.text.strip() for option in options]
 
         assert expected == actual
@@ -39,4 +39,4 @@ class DescribeExpertiseSelect:
         assert "select" == select.find("select").name
 
     def its_bind_to_url(self, select):
-        assert "expertise" == select.find("select")["name"]
+        assert "education" == select.find("select")["name"]

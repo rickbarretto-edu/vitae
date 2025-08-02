@@ -13,7 +13,7 @@ def select(catalog):
     )
     return BeautifulSoup(component, "html.parser")
 
-class DescribeButton:
+class DescribeCountrySelect:
 
     def has_4_options(self, select):
         options = select.find_all("option")

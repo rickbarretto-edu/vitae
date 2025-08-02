@@ -12,7 +12,7 @@ def checkbox(catalog):
     )
     return BeautifulSoup(component, "html.parser")
 
-class DescribeButton:
+class DescribeCheckbox:
 
     def has_label(self, checkbox):
         assert checkbox.find("label")
