@@ -1,3 +1,16 @@
+"""Clears the environment.
+
+To clear log files, use:
+
+        $ poetry run clear-log
+
+To clear cache files (Ruff, Pytest, Python's bytecode):
+
+        $ poetry run clear-cache
+
+
+"""
+
 from pathlib import Path
 import shutil
 
