@@ -1,5 +1,30 @@
 {#def on_url: str #}
 
+{#
+
+    Documentation
+    -------------
+
+    A checkbox component synced with a URL parameter.
+
+    `on_url`: the query parameter name to sync with the checkbox state.
+
+    See `form.Checkbox` for more information.
+
+    Content
+    -------
+    Is the label displayed next to the checkbox.
+
+    Usage
+    -----
+
+    To create a checkbox linked to the `finished` URL parameter:
+
+        <form.OnlyFinishedFormation on_url="finished">Apenas finalizadas.</form.OnlyFinishedFormation>
+
+#}
+
+
 <form.Checkbox on-url={{on_url}}>
     {{ content }}
 </form.Checkbox>
