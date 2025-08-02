@@ -1,5 +1,28 @@
 {#def value: str #}
 
+{#
+
+    Nationality
+    -----------
+
+    Displays the researcher's nationality. If no value is provided, a default message is shown.
+
+    `value`: the nationality to display. Defaults to "Nacionalidade não informada." if empty.
+
+    Usage
+    -----
+
+    To show the researcher's nationality:
+
+        <researcher.Nationality value="Brasileira" />
+
+    If `value` is not provided or empty, it will display:
+
+        Nacionalidade não informada.
+
+#}
+
+
 {% set value = value or "Nacionalidade não informada." %}
 
 <researcher.Attribute name="Nacionalidade">
