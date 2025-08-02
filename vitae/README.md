@@ -40,3 +40,9 @@ The database layer is implemented using **SQLModel** (which integrates Pydantic 
 This separation of concerns ensures that:
 - Schema definitions remain isolated and reusable.
 - Transaction logic can be optimized independently, as demonstrated in `feature/ingest`, where bulk ingestion needed high throughput and efficient querying.
+
+## RSpec tests
+
+Pytest is the choosen test runner, and with some configuration I've setted it up to use RSpec-ish syntax, which I think is more descriptive and helps a lot to understand the desired behavior.
+
+See the internal test documentation to understand how to use it.
