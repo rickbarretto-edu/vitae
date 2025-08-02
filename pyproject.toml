@@ -42,9 +42,9 @@ testpaths = [
     "tests",
     "integration",
 ]
-python_files = ["*test_*.py", "*_spec", "*_case", "*_usecase", "_*_spec.py"]
+python_files = ["*test_*.py", "*_spec.py", "_*_spec.py"]
 python_classes = ["Test*", "Suite*", "Spec*", "Describe*"]
-python_functions = ["test_*", "should_*", "it_*", "its_*", "has_*", "is_*", "have_*", "are_*", "when_*", "and_"]
+python_functions = ["test_*", "should_*", "it_*", "its_*", "has_*", "is_*", "have_*", "are_*", "when_*", "and_*", "can_*", "raises_*"]
 console_output_style = "progress"
 
 [tool.coverage.run]
