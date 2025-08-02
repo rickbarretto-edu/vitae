@@ -1,3 +1,28 @@
+{# 
+    Documentation
+    -------------
 
+    This component wraps content in a `<div>` to visually group related 
+    elements (e.g., label + input). It allows passing custom HTML attributes
+    for layout and styling.
 
-<div>{{content}}</div>
+    Usage
+    -----
+
+    For grouping form elements with spacing:
+
+        <form.Attribute class="flex flex-col gap-2">
+            <form.Label>Some Label</form.Label>
+            <form.Search>Placeholder...</form.Search>
+        </form.Attribute>
+
+    This renders as:
+
+        <div class="flex flex-col gap-2">
+            ...
+        </div>
+#}
+
+<div {{attrs.render()}}>
+    {{content}}
+</div>
