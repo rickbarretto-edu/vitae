@@ -5,6 +5,34 @@
     expertises: list
 #}
 
+{#
+
+    Search's Filter Aside
+    ---------------------
+
+    Sidebar filter component for the search page that provides multiple filtering options
+    such as country, state, formation started, finished formations, and expertise areas.
+
+    `countries`: list of country strings for the country select dropdown.
+    `states`: list of state strings for the state select dropdown.
+    `titles`: list of formation titles for the formation select dropdown.
+    `expertises`: list of expertise areas for the expertise select dropdown.
+
+    Usage
+    -----
+
+    To render the search filters sidebar:
+
+        <search.FilterAside 
+            countries={{["Brazil", "USA"]}} 
+            states={{["SP", "RJ"]}}
+            titles={{["Bachelor", "Master"]}} 
+            expertises={{["AI", "Data Science"]}} 
+        />
+
+#}
+
+
 <aside class="bg-white/70 backdrop-blur rounded-2xl shadow-xl p-6 sticky top-6 space-y-6">
     <form method="get" action="/search" id="filters-form">
         <form.Label of="query">Pesquisar</form.Label>
