@@ -25,7 +25,13 @@ def using_filter(
     selected: SelectedResearchers,
     filters: ChoosenFilters | None,
 ) -> SelectedResearchers:
+    """Add Filters to SQL Statement.
 
+    Returns
+    -------
+    SQL Statement.
+
+    """
     if not filters:
         return selected
 
@@ -58,6 +64,18 @@ def ordered_by_name(
     selected: SelectedResearchers,
     order: Order | None,
 ) -> SelectedResearchers:
+    """Add ordenation to SQL statement.
+
+    Raises
+    ------
+    ValueError:
+        if order literal is invalid.
+
+    Returns
+    -------
+    SQL Statement.
+
+    """
     a_z = col(tables.Researcher.full_name).asc()
     z_a = col(tables.Researcher.full_name).desc()
 
@@ -75,7 +93,9 @@ def ordered_by_name(
 class Researchers(Protocol):
     """Researchers's interface."""
 
-    def by_id(self, lattes_id: str) -> Researcher | None: ...
+    def by_id(self, lattes_id: str) -> Researcher | None:
+        """Define an ID search."""
+        ...
 
     def by_name(
         self,
@@ -84,7 +104,12 @@ class Researchers(Protocol):
         page: int,
         order_by: Order,
         filter_by: ChoosenFilters | None,
-    ) -> Iterable[Researcher]: ...
+    ) -> Iterable[Researcher]:
+        """Define a search by name.
+
+        This one should match each token in any order.
+        """
+        ...
 
     def stricly_by_name(
         self,
@@ -93,11 +118,21 @@ class Researchers(Protocol):
         page: int,
         order_by: Order,
         filter_by: ChoosenFilters | None,
-    ) -> Iterable[Researcher]: ...
+    ) -> Iterable[Researcher]:
+        """Define a strict search by name.
+
+        This should look for names that looks exactly like the query.
+        """
+        ...
 
 
 @attrs.frozen
 class ResearchersInDatabase(Researchers):
+    """Concrete implemenation of Researchers.
+
+    This one deals with our running database.
+    """
+
     database: Database
 
     def by_id(self, lattes_id: str) -> Researcher | None:
