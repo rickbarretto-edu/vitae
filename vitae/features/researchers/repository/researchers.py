@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable, Literal, Protocol
+from typing import TYPE_CHECKING, Literal, Protocol
 
 import attrs
 from sqlalchemy import Select
@@ -224,5 +224,5 @@ class ResearchersInDatabase(Researchers):
             ordered = ordered_by_name(filtered, order_by)
             limited = ordered.offset(offset).limit(researchers)
 
-            result: list[tables.Researcher] = session.exec(limited).all()  # type: ignore
+            result: list[tables.Researcher] = session.exec(limited).all()  # pyright: ignore[reportArgumentType, reportCallIssue]
             return [Researcher.from_table(r) for r in result]
