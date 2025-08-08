@@ -207,7 +207,7 @@ class ResearchersInDatabase(Researchers):
             ordered = ordered_by_name(filtered, order_by)
             limited = ordered.offset(offset).limit(researchers)
 
-            result: list[tables.Researcher] = session.exec(limited).all()  # type: ignore
+            result: list[tables.Researcher] = session.exec(limited).all()  # pyright: ignore[reportArgumentType, reportCallIssue]
             return [Researcher.from_table(r) for r in result]
 
     def by_name(
