@@ -7,11 +7,12 @@ from sqlalchemy import Select
 from sqlmodel import and_, col, select
 
 from vitae.features.researchers.model.researcher import Researcher
-from vitae.features.researchers.schemes import ChoosenFilters
 from vitae.infra.database import Database, tables
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+
+    from vitae.features.researchers.schemes import ChoosenFilters
 
 
 type Order = Literal["asc", "desc"] | None
