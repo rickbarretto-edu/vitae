@@ -27,8 +27,8 @@ class Researcher(Orm, table=True):
     expertise: list["Expertise"] = link("researcher")
     experience: list["Experience"] = link("researcher")
     education: list["Education"] = link("researcher")
-    student_of: Optional["Advising"] = link("student", viewonly=True)
-    advisor_of: Optional["Advising"] = link("advisor", viewonly=True)
+    student_of: list["Advising"] = link("student", viewonly=True)
+    advisor_of: list["Advising"] = link("advisor", viewonly=True)
 
 
 class Nationality(Orm, table=True):
