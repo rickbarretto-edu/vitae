@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Self
 
 import attrs
 
@@ -8,7 +8,7 @@ from vitae.features.researchers.model.academic.external import Lattes
 from vitae.features.researchers.model.personal import FullName
 
 if TYPE_CHECKING:
-    from vitae.features.researchers.model.researcher import Researcher
+    from vitae.infra.database import tables
 
 
 @attrs.frozen
@@ -30,10 +30,6 @@ class ResearcherAsNode:
             ],
         )
 
-    @property
-    def lattes_id(self) -> str:
-        return self._itself.links.lattes.id
-
 
 @attrs.frozen
 class AdvisingLink:
@@ -41,6 +37,25 @@ class AdvisingLink:
 
     student: ResearcherAsNode
     advisor: ResearcherAsNode
+
+    @classmethod
+    def from_table(cls, advising: tables.Advising) -> Self | None:
+        if (student := advising.student) is None:
+            return None
+
+        if (advisor := advising.advisor) is None:
+            return None
+
+        return cls(
+            student=ResearcherAsNode(
+                lattes=Lattes.from_id(student.lattes_id),
+                name=FullName(student.full_name),
+            ),
+            advisor=ResearcherAsNode(
+                lattes=Lattes.from_id(advisor.lattes_id),
+                name=FullName(advisor.full_name),
+            ),
+        )
 
 
 @attrs.frozen
