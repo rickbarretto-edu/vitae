@@ -1,4 +1,4 @@
-from .export import ExportToLucy
+from .lucylattes import ExportToLucy
 from .filters import LoadFilters
 from .search import SearchResearchers, SortingOrder
 
