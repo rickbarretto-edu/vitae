@@ -114,12 +114,10 @@ class ExportToLucy:
 
                 for advising in researcher.student_of:
                     advisor = get(advising.advisor_id)
-                    print(advisor)
                     rows.extend(rows_from_relations(advisor, depth - 1))
 
                 for advising in researcher.advisor_of:
                     student = get(advising.student_id)
-                    print(student)
                     rows.extend(rows_from_relations(student, depth - 1))
 
                 return rows
