@@ -1,13 +1,30 @@
 {#def fn_name: str #}
 
 
-<dialog id="export-modal" class="border-none rounded-lg p-0 max-w-[90%] w-[800px]">
-  <header class="flex justify-between items-center px-4 py-3 border-b border-gray-300">
-        <h2 class="m-0 text-lg font-semibold">Exportar Pesquisadores</h2>
-    </header>
-    <ui.CodeBlock id="lucy-lattes-csv">Carregando...</ui.CodeBlock>
-    <footer class="px-4 py-3 border-t border-gray-300"></footer>
+<dialog id="export-modal" class="bg-white/70 backdrop-blur rounded-2xl shadow-xl shadow-md p-6 max-w-[90%] w-[800px]">
+  <header class="flex items-center border-b border-gray-300 mb-4">
+    <h2 class="m-0 text-lg font-semibold">Exportar Pesquisadores</h2>
+  </header>
+  <ui.CodeBlock id="lucy-lattes-csv">Carregando...</ui.CodeBlock>
+  <footer class="border-t border-gray-300 mt-4"></footer>
 </dialog>
+
+<style>
+#export-modal::backdrop {
+    backdrop-filter: blur(0.1rem);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+</style>
+
+<script>
+(function() {
+    const self = document.getElementById('export-modal')
+
+    self.addEventListener('click', (event) => {
+        if (event.target === self) self.close()
+    })
+})()
+</script>
 
 <script>
 async function {{fn_name}}(id) {
