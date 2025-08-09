@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 
 from vitae.features.researchers.repository import (
@@ -21,7 +21,8 @@ from vitae.infra.database import Database
 from vitae.settings.vitae import Vitae
 
 router = APIRouter()
-
+fastapi_app = FastAPI()
+fastapi_app.include_router(router)
 
 def load_filters(database: Database):
     return LoadFilters(FiltersInDatabase(database)).all
