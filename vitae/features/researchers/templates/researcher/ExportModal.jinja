@@ -6,7 +6,14 @@
         <h2 class="m-0 text-lg font-semibold">Exportar Pesquisador</h2>
     </header>
     <ui.CodeBlock id="lucy-lattes-csv">Carregando...</ui.CodeBlock>
-    <footer class="border-t border-gray-300 mt-4"></footer>
+    <footer class="border-t border-gray-300 mt-4 p-4">
+        <form method="dialog" class="block m-auto max-w-[16rem]">
+            <form.Button type="submit" id="download-lucy-csv">
+                <i class="bi bi-box-arrow-down"></i>
+                Salvar Como...
+            </form.Button>
+        </form>
+    </footer>
 </dialog>
 
 <style>
@@ -51,4 +58,27 @@ async function {{fn_name}}(id) {
         codeBlock.textContent = `Error: ${err.message}`
     }
 }
+</script>
+
+{# Download button behavior #}
+<script>
+(() => {
+    const downloadBtn = document.getElementById('download-lucy-csv')
+    const codeBlock = document.querySelector('#lucy-lattes-csv code')
+
+    downloadBtn.addEventListener('click', () => {
+        const text = codeBlock.textContent
+        const blob = new Blob([text], { type: 'text/plain' })
+        const url = URL.createObjectURL(blob)
+        const anchor = document.createElement('a')
+
+        anchor.href = url
+        anchor.download = 'exported.txt'
+        document.body.appendChild(anchor)
+        anchor.click()
+
+        document.body.removeChild(anchor)
+        URL.revokeObjectURL(url)
+    })
+})()
 </script>
