@@ -71,34 +71,42 @@ class ExportToLucy:
         visited: set[str] = set()
         group_name = dt.datetime.now(dt.UTC).isoformat()
 
-        def rows_from_relations(researcher: Researcher | None, depth: int):
-            """Return a flatten list of associated researchers."""
-            if depth < 0 or researcher.lattes_id in visited:
-                return []
-
-            visited.add(researcher.lattes_id)
-            if researcher is None:
-                return []
-
-            rows = [
-                LucyLattesRow(
-                    lattes=Lattes.from_id(researcher.lattes_id),
-                    name=FullName(researcher.full_name),
-                    group=group_name,
-                ),
-            ]
-
-            for advising in researcher.student_of:
-                rows.extend(rows_from_relations(advising.advisor_id, depth - 1))
-
-            for advising in researcher.advisor_of:
-                rows.extend(rows_from_relations(advising.student_id, depth - 1))
-
-            return rows
-
         with self._researchers.session() as session:
-            statement = select(Researcher).where(Researcher.lattes_id == researcher_id)
-            researcher = session.exec(statement).first()
 
+            def get(id):
+                statement = select(Researcher).where(Researcher.lattes_id == id)
+                return session.exec(statement).first()
+
+            def rows_from_relations(researcher: Researcher | None, depth: int):
+                """Return a flatten list of associated researchers."""
+                if researcher is None:
+                    return []
+
+                if depth < 0 or researcher.lattes_id in visited:
+                    return []
+
+                visited.add(researcher.lattes_id)
+
+                rows = [
+                    LucyLattesRow(
+                        lattes=Lattes.from_id(researcher.lattes_id),
+                        name=FullName(researcher.full_name),
+                        group=group_name,
+                    ),
+                ]
+
+                for advising in researcher.student_of:
+                    advisor = get(advising.advisor_id)
+                    print(advisor)
+                    rows.extend(rows_from_relations(advisor, depth - 1))
+
+                for advising in researcher.advisor_of:
+                    student = get(advising.student_id)
+                    print(student)
+                    rows.extend(rows_from_relations(student, depth - 1))
+
+                return rows
+
+            researcher = get(researcher_id)
             rows = rows_from_relations(researcher, depth)
             return LucyLattes(associated=rows).as_csv
