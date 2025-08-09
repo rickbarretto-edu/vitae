@@ -83,7 +83,7 @@
             {% if results %}
                 <main class="flex flex-col items-center">
                     {% for researcher in results %}
-                    <researcher.Card researcher={{researcher}} />
+                    <researcher.Card researcher={{researcher}} on-click="exportResearcher" />
                     {% endfor %}
                     <search.NextPageButton id="next-page" for-param="page">Carregar mais</search.NextPageButton>
                 </main>
