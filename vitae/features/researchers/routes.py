@@ -15,6 +15,7 @@ from vitae.features.researchers.usecases import (
     LoadFilters,
     SearchResearchers,
     SortingOrder,
+    ExportToLucy,
 )
 from vitae.infra.database import Database
 from vitae.settings.vitae import Vitae
@@ -90,7 +91,12 @@ def show_search(
     )
 
 
-@router.get("/researcher/{id}/export", response_class=JSONResponse)
+@router.get("/researcher/{id}/export")
 def export_researcher(id: str):
-    # Usecase go here...
-    pass
+    vitae = Vitae.from_toml(Path("vitae.toml"))
+    database = Database(vitae.postgres.engine)
+
+    export_to_lucy = ExportToLucy(ResearchersInDatabase(database))
+    csv_file = export_to_lucy.csv_of(id)
+
+    return csv_file
