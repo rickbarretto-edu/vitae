@@ -94,6 +94,14 @@ def ordered_by_name(
 class Researchers(Protocol):
     """Researchers's interface."""
 
+    def session(self):
+        """Allow lazy loading for longer lifetimes.
+        
+        This is very useful for too specific queries,
+        that needs to access nested data.
+        """
+        ...
+
     def by_id(self, lattes_id: str) -> Researcher | None:
         """Define an ID search."""
         ...
@@ -135,6 +143,9 @@ class ResearchersInDatabase(Researchers):
     """
 
     database: Database
+
+    def session(self):
+        return self.database.session
 
     def by_id(self, lattes_id: str) -> Researcher | None:
         """Fetch a Researcher by its Lattes ID.
