@@ -5,7 +5,7 @@
     <header class="flex items-center border-b border-gray-300 mb-4">
         <h2 class="m-0 text-lg font-semibold">Exportar Pesquisador</h2>
     </header>
-    <ui.CodeBlock id="lucy-lattes-csv">Carregando...</ui.CodeBlock>
+    <ui.CodeBlock id="lucy-lattes-csv"></ui.CodeBlock>
     <footer class="border-t border-gray-300 mt-4 p-4">
         <form method="dialog" class="block m-auto max-w-[16rem]">
             <form.Button type="submit" id="download-lucy-csv">
@@ -37,25 +37,37 @@
 {# Open modal with fetched data #}
 <script>
 async function {{fn_name}}(id) {
+
     const element = document.querySelector(`[data-researcher-id="${id}"]`)
     if (!element) return
 
     const endpoint = element.dataset.endpoint
     const action = element.dataset.action
 
-    const lucyModal = document.getElementById('export-modal')
-    const codeBlock = document.querySelector('#lucy-lattes-csv code')
+    const lucyModal = document.getElementById("export-modal")
+    const codeblock = document.querySelector("#lucy-lattes-csv")
+    const code = document.querySelector("#lucy-lattes-csv code")
+    const save = document.querySelector("#export-modal button[type='submit']")
 
-    codeBlock.textContent = 'Carregando...'
-    lucyModal.showModal()
+    const onOpen = () => {
+        codeblock.classList.add("hidden")
+        save.classList.add("hidden")
+        lucyModal.showModal()
+    }
+
+    const onLoad = (content) => {
+        code.textContent = content
+        codeblock.classList.remove("hidden")
+        save.classList.remove("hidden")
+    }
 
     try {
+        onOpen()
         const res = await fetch(`/${endpoint}/${id}/${action}`)
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const text = await res.json()
-        codeBlock.textContent = text
+        onLoad(await res.json())
     } catch (err) {
-        codeBlock.textContent = `Error: ${err.message}`
+        code.textContent = `Error: ${err.message}`
     }
 }
 </script>
