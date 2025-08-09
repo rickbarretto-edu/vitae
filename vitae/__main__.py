@@ -1,6 +1,4 @@
 import cyclopts
-from fastapi import FastAPI
-import uvicorn
 
 from vitae.features.bootstrap.cli import app as bootstrap_app
 from vitae.features.ingestion.cli import app as ingestion_app
