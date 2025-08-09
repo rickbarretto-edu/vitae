@@ -1,7 +1,9 @@
 import datetime as dt
 
 import attrs
+from sqlmodel import select
 
+from vitae.infra.database.tables import Researcher
 from vitae.features.researchers.model.academic.external import Lattes
 from vitae.features.researchers.model.personal import FullName
 from vitae.features.researchers.repository import Researchers
@@ -60,7 +62,7 @@ class LucyLattes:
 
 
 @attrs.define
-class LucyExport:
+class ExportToLucy:
     """Exports Lucy-compatible CSV from a root researcher."""
 
     _researchers: Researchers
@@ -69,18 +71,18 @@ class LucyExport:
         visited: set[str] = set()
         group_name = dt.datetime.now(dt.UTC).isoformat()
 
-        def rows_from_relations(lattes_id: str, depth: int):
+        def rows_from_relations(researcher: Researcher | None, depth: int):
             """Return a flatten list of associated researchers."""
-            if depth < 0 or lattes_id in visited:
+            if depth < 0 or researcher.lattes_id in visited:
                 return []
 
-            visited.add(lattes_id)
-            if (researcher := self._researchers.by_id(lattes_id)) is None:
+            visited.add(researcher.lattes_id)
+            if researcher is None:
                 return []
 
             rows = [
                 LucyLattesRow(
-                    lattes=Lattes(researcher.lattes_id),
+                    lattes=Lattes.from_id(researcher.lattes_id),
                     name=FullName(researcher.full_name),
                     group=group_name,
                 ),
@@ -94,5 +96,9 @@ class LucyExport:
 
             return rows
 
-        researchers = rows_from_relations(researcher_id, depth)
-        return LucyLattes(associated=researchers).as_csv
+        with self._researchers.session() as session:
+            statement = select(Researcher).where(Researcher.lattes_id == researcher_id)
+            researcher = session.exec(statement).first()
+
+            rows = rows_from_relations(researcher, depth)
+            return LucyLattes(associated=rows).as_csv
