@@ -52,8 +52,10 @@ class LucyLattes:
             "ID_LATTES,NAME,GROUP"
         )
         return "\n".join(
-            lucys_header,
-            *[row.as_csv for row in self.associated],
+            [
+                lucys_header,
+                *[row.as_csv for row in self.associated],
+            ]
         )
 
 
