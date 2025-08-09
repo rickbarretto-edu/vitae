@@ -1,7 +1,10 @@
+import datetime as dt
+
 import attrs
 
 from vitae.features.researchers.model.academic.external import Lattes
 from vitae.features.researchers.model.personal import FullName
+from vitae.features.researchers.repository import Researchers
 
 type LattesID = str
 type CSVContent = str
@@ -36,7 +39,7 @@ class LucyLattesRow:
 
 
 @attrs.frozen
-class LucyLattesCSV:
+class LucyLattes:
     associated: list[LucyLattesRow]
 
     @property
@@ -52,3 +55,42 @@ class LucyLattesCSV:
             lucys_header,
             *[row.as_csv for row in self.associated],
         )
+
+
+@attrs.define
+class LucyExport:
+    """Exports Lucy-compatible CSV from a root researcher."""
+
+    _researchers: Researchers
+
+    def csv_of(self, researcher_id: LattesID, depth: int = 5) -> str:
+        visited: set[str] = set()
+        group_name = dt.datetime.now(dt.UTC).isoformat()
+
+        def rows_from_relations(lattes_id: str, depth: int):
+            """Return a flatten list of associated researchers."""
+            if depth < 0 or lattes_id in visited:
+                return []
+
+            visited.add(lattes_id)
+            if (researcher := self._researchers.by_id(lattes_id)) is None:
+                return []
+
+            rows = [
+                LucyLattesRow(
+                    lattes=Lattes(researcher.lattes_id),
+                    name=FullName(researcher.full_name),
+                    group=group_name,
+                ),
+            ]
+
+            for advising in researcher.student_of:
+                rows.extend(rows_from_relations(advising.advisor_id, depth - 1))
+
+            for advising in researcher.advisor_of:
+                rows.extend(rows_from_relations(advising.student_id, depth - 1))
+
+            return rows
+
+        researchers = rows_from_relations(researcher_id, depth)
+        return LucyLattes(associated=researchers).as_csv
