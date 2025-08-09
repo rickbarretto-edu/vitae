@@ -1,0 +1,96 @@
+{#def fn_name: str #}
+
+
+<dialog id="export-modal" class="bg-white/70 backdrop-blur rounded-2xl outline-none shadow-xl shadow-md p-6 max-w-[90%] w-[800px]">
+    <header class="flex items-center border-b border-gray-300 mb-4">
+        <h2 class="m-0 text-lg font-semibold">Exportar Pesquisador</h2>
+    </header>
+    <ui.CodeBlock id="lucy-lattes-csv"></ui.CodeBlock>
+    <footer class="border-t border-gray-300 mt-4 p-4">
+        <form method="dialog" class="block m-auto max-w-[16rem]">
+            <form.Button type="submit" id="download-lucy-csv">
+                <i class="bi bi-box-arrow-down"></i>
+                Salvar Como...
+            </form.Button>
+        </form>
+    </footer>
+</dialog>
+
+<style>
+#export-modal::backdrop {
+    backdrop-filter: blur(0.1rem);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+</style>
+
+{# Close modal #}
+<script>
+(function() {
+    const self = document.getElementById('export-modal')
+
+    self.addEventListener('click', (event) => {
+        if (event.target === self) self.close()
+    })
+})()
+</script>
+
+{# Open modal with fetched data #}
+<script>
+async function {{fn_name}}(id) {
+
+    const element = document.querySelector(`[data-researcher-id="${id}"]`)
+    if (!element) return
+
+    const endpoint = element.dataset.endpoint
+    const action = element.dataset.action
+
+    const lucyModal = document.getElementById("export-modal")
+    const codeblock = document.querySelector("#lucy-lattes-csv")
+    const code = document.querySelector("#lucy-lattes-csv code")
+    const save = document.querySelector("#export-modal button[type='submit']")
+
+    const onOpen = () => {
+        codeblock.classList.add("hidden")
+        save.classList.add("hidden")
+        lucyModal.showModal()
+    }
+
+    const onLoad = (content) => {
+        code.textContent = content
+        codeblock.classList.remove("hidden")
+        save.classList.remove("hidden")
+    }
+
+    try {
+        onOpen()
+        const res = await fetch(`/${endpoint}/${id}/${action}`)
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        onLoad(await res.json())
+    } catch (err) {
+        code.textContent = `Error: ${err.message}`
+    }
+}
+</script>
+
+{# Download button behavior #}
+<script>
+(() => {
+    const downloadBtn = document.getElementById("download-lucy-csv")
+    const codeBlock = document.querySelector("#lucy-lattes-csv code")
+
+    downloadBtn.addEventListener("click", () => {
+        const text = codeBlock.textContent
+        const blob = new Blob([text], { type: "text/plain" })
+        const url = URL.createObjectURL(blob)
+        const anchor = document.createElement("a")
+
+        anchor.href = url
+        anchor.download = "exported.txt"
+        document.body.appendChild(anchor)
+        anchor.click()
+
+        document.body.removeChild(anchor)
+        URL.revokeObjectURL(url)
+    })
+})()
+</script>
