@@ -1,4 +1,6 @@
 import datetime as dt
+import re
+import unicodedata
 
 import attrs
 from sqlmodel import select
@@ -29,11 +31,26 @@ class LucyLattesRow:
 
     @property
     def name(self) -> str:
-        return "".join(self._name.each)
+        name = self._normalized(str(self._name)).title()
+
+        if not (parts := name.split()):
+            return ""
+
+        surname = parts[-1]
+        initials = ''.join(p[0] for p in parts[:-1])
+        return f"{surname}{initials}"
 
     @property
     def group(self) -> str:
-        return self._group
+        return self._normalized(self._group)
+
+    def _normalized(self, data: str) -> str:
+        cleaned = re.sub(r'[^A-Za-z0-9 ]+', '', self._as_ascii(data))
+        return re.sub(r'\s+', ' ', cleaned).strip()
+
+    def _as_ascii(self, data: str) -> str:
+        normalized = unicodedata.normalize('NFKD', data)
+        return normalized.encode('ascii', 'ignore').decode('ascii')
 
     @property
     def as_csv(self) -> str:
@@ -69,7 +86,7 @@ class ExportToLucy:
 
     def csv_of(self, researcher_id: LattesID, depth: int = 5) -> str:
         visited: set[str] = set()
-        group_name = dt.datetime.now(dt.UTC).isoformat()
+        group_name = dt.datetime.now(dt.UTC).strftime("%Y%m%d-%H%M")
 
         with self._researchers.session() as session:
 
