@@ -16,6 +16,7 @@
 }
 </style>
 
+{# Close modal #}
 <script>
 (function() {
     const self = document.getElementById('export-modal')
@@ -26,6 +27,7 @@
 })()
 </script>
 
+{# Open modal with fetched data #}
 <script>
 async function {{fn_name}}(id) {
     const element = document.querySelector(`[data-researcher-id="${id}"]`)
