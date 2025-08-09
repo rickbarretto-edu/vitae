@@ -59,15 +59,3 @@ class Researcher:
             professional=ProfessionalLink.from_table(table),
             curriculum=Curriculum.from_table(table),
         )
-
-
-@attrs.frozen
-class Network:
-    """Network of Researchers with a central Researcher.
-
-    On DSA view, this is a graph, where `_of` is the root.
-    """
-
-    of: Researcher
-    links_to: list[Network]
-
