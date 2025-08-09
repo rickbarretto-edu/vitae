@@ -4,17 +4,25 @@ from typing import TYPE_CHECKING
 
 import attrs
 
+from vitae.features.researchers.model.academic.external import Lattes
+from vitae.features.researchers.model.personal import FullName
+
 if TYPE_CHECKING:
     from vitae.features.researchers.model.researcher import Researcher
 
 
 @attrs.frozen
 class ResearcherAsNode:
-    _itself: Researcher
+    _lattes: Lattes
+    _name: FullName
+
+    @property
+    def lattes_id(self) -> str:
+        return self._lattes.id
 
     @property
     def name(self) -> str:
-        full_name = self._itself.this.name.each
+        full_name = self._name.each
         return "".join(
             [
                 full_name[-1],
