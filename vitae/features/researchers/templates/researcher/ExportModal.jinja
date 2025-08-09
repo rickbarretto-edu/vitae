@@ -1,35 +1,35 @@
 {#def fn_name: str #}
 
 
-<dialog id="exportModal" class="border-none rounded-lg p-0 max-w-[90%] w-[800px]">
+<dialog id="export-modal" class="border-none rounded-lg p-0 max-w-[90%] w-[800px]">
   <header class="flex justify-between items-center px-4 py-3 border-b border-gray-300">
         <h2 class="m-0 text-lg font-semibold">Exportar Pesquisadores</h2>
     </header>
-    <ui.CodeBlock>Loading...</ui.CodeBlock>
+    <ui.CodeBlock id="lucy-lattes-csv">Carregando...</ui.CodeBlock>
     <footer class="px-4 py-3 border-t border-gray-300"></footer>
 </dialog>
 
 <script>
 async function {{fn_name}}(id) {
-    const element = document.querySelector(`[data-researcher-id="${id}"]`);
-    if (!element) return;
+    const element = document.querySelector(`[data-researcher-id="${id}"]`)
+    if (!element) return
 
-    const endpoint = element.dataset.endpoint;
-    const action = element.dataset.action;
+    const endpoint = element.dataset.endpoint
+    const action = element.dataset.action
 
-    const modal = document.getElementById('exportModal');
-    const codeBlock = document.getElementById('exportContent');
+    const lucyModal = document.getElementById('export-modal')
+    const codeBlock = document.querySelector('#lucy-lattes-csv code')
 
-    codeBlock.textContent = 'Loading';
-    modal.showModal();
+    codeBlock.textContent = 'Carregando...'
+    lucyModal.showModal()
 
     try {
-        const res = await fetch(`/${endpoint}/${id}/${action}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const text = await res.text();
-        codeBlock.textContent = text;
+        const res = await fetch(`/${endpoint}/${id}/${action}`)
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const text = await res.text()
+        codeBlock.textContent = text
     } catch (err) {
-        codeBlock.textContent = `Error: ${err.message}`;
+        codeBlock.textContent = `Error: ${err.message}`
     }
 }
 </script>
