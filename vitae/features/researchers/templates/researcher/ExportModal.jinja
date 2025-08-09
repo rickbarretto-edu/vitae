@@ -75,17 +75,17 @@ async function {{fn_name}}(id) {
 {# Download button behavior #}
 <script>
 (() => {
-    const downloadBtn = document.getElementById('download-lucy-csv')
-    const codeBlock = document.querySelector('#lucy-lattes-csv code')
+    const downloadBtn = document.getElementById("download-lucy-csv")
+    const codeBlock = document.querySelector("#lucy-lattes-csv code")
 
-    downloadBtn.addEventListener('click', () => {
+    downloadBtn.addEventListener("click", () => {
         const text = codeBlock.textContent
-        const blob = new Blob([text], { type: 'text/plain' })
+        const blob = new Blob([text], { type: "text/plain" })
         const url = URL.createObjectURL(blob)
-        const anchor = document.createElement('a')
+        const anchor = document.createElement("a")
 
         anchor.href = url
-        anchor.download = 'exported.txt'
+        anchor.download = "exported.txt"
         document.body.appendChild(anchor)
         anchor.click()
 
