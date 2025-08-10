@@ -1,10 +1,39 @@
 <h1 align="center">Vitae</h1>
 
-![Vitae Showcase](./showcase.png)
+![Vitae Hero](./splash.png)
 
-<p align="center">Vitae's Web UI showcase</p>
 
-## Requirements
+Vitae is a Search Engine for Lattes Researchers. This works by ingesting Lattes' XML files and storing them into a database. 
+
+
+## At A Glance
+
+With the built database, you can search for Researchers by name or ID and filters them by a lot of properties. This is also possible to export them to Lucy Lattes for graph creation or open their Curriculum on Orcid or Lattes itself.
+
+![Showcase](./showcase.png)
+
+<p align="center">User Application</p>
+
+## Guide
+
+### Non-Technical User
+
+If you're already on a setted-up environment, with a running database, you may skip the [Environment Setup](#environment-setup) and read the [User Guide](./user-guide.md) which covers the GUI Native-like application for non-technical users.
+
+### Administrator
+
+If you need to setup your environment, read [Environment Setup](#environment-setup) and then the [User Guide](./user-guide.md).
+
+### Developer
+
+If you're a developer and wants to contribute to the project, read the [Contributing](CONTRIBUTING.md) document.
+
+
+## Environment Setup
+
+### Requirements
+
+This Python project is Poetry-based and this is required to have a deterministic environment and avoid dependency conflicts.
 
 - [Python 3.12](https://www.python.org/)
 - [PostgreSQL 17](https://www.postgresql.org/)
@@ -12,24 +41,24 @@
 
 ## How to run it
 
-### 1. Dependencies
+### 1. Install Dependencies
 
 ```
-poetry install
+$ poetry install
 ```
 
-### 2. Environment Settings
+### 2. Setup vitae.toml
 
 
 ```bash
-cp vitae.example.toml vitae.toml
+$ cp vitae.example.toml vitae.toml
 # Now edit it to use your own settings
 ```
 
-### 3. Virtual Environment
+### 3. Activate Virtual Environment
 
 ```bash
-poetry env activate
+$ poetry env activate
 ```
 
 On *Visual Studio Code*: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>,
@@ -44,7 +73,8 @@ Before running the application for the first time, complete these steps:
 Ensure your PostgreSQL database exists, using the same settings you specified in [Environment Settings](#2-environment-settings):
 
 ```bash
-createdb <your-database> -U <your-user>
+$ createdb <your-database> -U <your-user>
+$ vitae bootstrap
 ```
 
 2. **Add Your Curricula Repository**
@@ -53,6 +83,7 @@ Place your curricula repository in the root directory of this project (at the sa
 
 > [!WARNING]
 > Add your curricula repository to `.gitignore` to avoid accidentally uploading it to remote.
+> Also, remember to have the same name on your `vitae.toml` file.
 
 3. **Directory Structure**
 
@@ -74,18 +105,36 @@ root
 ```
 
 
-### 5. Execute
+### 5. Ingest XMLs Curriculum
 
 ```bash
-vitae
+$ vitae ingest
 ```
 
 Remember to install with `poetry install` before run as a script.
 Otherwise, you may run as `python -m vitae`.
 
-> If you want to execute the web application from uvicorn for some reason, try: `poetry run uvicorn vitae.__main__:web_new --factory --reload `.
+### 6. Run Web UI
 
-### 6. Explore
+You may run the Web UI manually if you're a technical user and this brings some special functionalities, such as custom hosting, multiple workers or hot-reload, for development.
+
+To run manually, you may use:
+
+```
+$ vitae web
+```
+
+By passing `--production`, you'll be hosting this on `0.0.0.0:8000` with 4 workers by default. Also, hot-reload is enabled by default for non-production runs.
+
+If you want use your own custom settings, you may use:
+
+```
+$ uvicorn vitae.features.researchers.app:main
+```
+
+And pass your own flags, see [FastAPI](https://fastapi.tiangolo.com/)'s and [Uvicorn](https://www.uvicorn.org/)'s documentations for more details.
+
+### 7. Explore
 
 To know more about each detail of this project, just open `vitae` and read the documentation for each feature, which includes the objective and architectural decisions for each one.
 The source code also provides documentation for crucial sections.
