@@ -18,7 +18,7 @@ clear-cache = "scripts.clear:cache"
 clear-log = "scripts.clear:log"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.12,<3.15"
 attrs = "^25.3.0"
 cyclopts = "^3.19.0"
 fastapi = {extras = ["standard"], version = "^0.116.1"}
@@ -36,6 +36,7 @@ ty = "^0.0.1a5"
 pytest = "^8.3.5"
 pytest-cov = "^6.2.1"
 beautifulsoup4 = "^4.13.4"
+pyinstaller = "^6.15.0"
 
 [tool.pytest.ini_options]
 testpaths = [
