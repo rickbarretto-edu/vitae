@@ -21,8 +21,6 @@ from vitae.infra.database import Database
 from vitae.settings.vitae import Vitae
 
 router = APIRouter()
-fastapi_app = FastAPI()
-fastapi_app.include_router(router)
 
 def load_filters(database: Database):
     return LoadFilters(FiltersInDatabase(database)).all

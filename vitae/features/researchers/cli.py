@@ -2,8 +2,8 @@ import sys
 import subprocess
 
 import cyclopts
-import uvicorn
 from fastapi import FastAPI
+import uvicorn
 
 from vitae.features.researchers.routes import router
 
@@ -17,19 +17,11 @@ def web(production: bool = False) -> None:
     You can search, filter and also export as Lucy Lattes CSV files.
     """
 
-    args = [
-        sys.executable,
-        "-m",
-        "uvicorn",
-        "vitae.features.researchers.routes:fastapi_app",
-        "--host",
-        "0.0.0.0" if production else "127.0.0.1",
-        "--port",
-        "8000",
-    ]
-
-    if production:
-        args += ["--workers", "4"]
-    else:
-        args += ["--reload"]
-    subprocess.run(args)
+    uvicorn.run(
+        "vitae.features.researchers.app:main",
+        host="0.0.0.0" if production else "127.0.0.1",
+        port=8000,
+        reload=not production,
+        log_level="info" if production else "debug",
+        workers=4 if production else 1,
+    )
