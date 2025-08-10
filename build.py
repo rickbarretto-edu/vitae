@@ -1,3 +1,5 @@
+import shutil
+
 import PyInstaller.__main__
 
 PyInstaller.__main__.run([
@@ -12,3 +14,11 @@ PyInstaller.__main__.run([
     "--splash", "splash.png",
     "--add-data", "vitae/features/researchers/templates;vitae/features/researchers/templates",
 ])
+
+# Move Files
+shutil.copy("README.md", "dist/app/")
+shutil.copy("vitae.example.toml", "dist/app/vitae.toml")
+
+# Rename Files
+shutil.move("dist/app/app.exe", "dist/app/vitae.exe")
+shutil.move("dist/app", "dist/vitae")
