@@ -19,6 +19,7 @@ PyInstaller.__main__.run([
 shutil.copy("README.md", "dist/app/")
 shutil.copy("GUIDE.md", "dist/app/")
 shutil.copy("GUIA.md", "dist/app/")
+shutil.copy("CONTRIBUTING.md", "dist/app/")
 shutil.copy("vitae.example.toml", "dist/app/vitae.toml")
 
 # Rename Files
