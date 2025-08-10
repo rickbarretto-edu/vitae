@@ -49,6 +49,14 @@ This project is owned and maintained by the UEFS's LASIC (Intelligent and Cognit
 
 Please be kind, ensuring a respectful and collaborative environment.
 
+## Project Structure
+
+* `queries/`: Helpful queries that may be interesting to be saved.
+* `scripts/`: Helpful scripts to manage the project.
+* `tests/`: Some tests are placed here to avoid polluting the source-code, others are placed along-side with the source.
+* `vitae/`: Source code of the project. Read its Read-me to get more information about this.
+* `build.py`: Build system to create non-technical user desktop application. Its entry is `vitae/app.py`.
+
 ## Questions?
 
 If you have any questions or need help, feel free to open an issue or contact the maintainers.
