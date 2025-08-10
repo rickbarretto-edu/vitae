@@ -1,17 +1,23 @@
 # Vitae's User Guide
 
-This Guide covers the final user application for non-technical users on already setup environment.
-If you need to use Vitae, but don't want to worry about instalations or command line interfaces, this is your go-to manual.
+This guide is intended for non-technical users working in an already configured environment.
+If you need to use Vitae without worrying about installations or command-line interfaces, this is your go-to manual.
 
 ## Download
 
-Download your application from the Github's Releases tab, this application is portable and does not need to be installed on your system.
+You can download the application from the **Releases** section of our [GitHub repository](https://github.com/lasicuefs/curricFilter).
+The application is portable, meaning it does not require any installation.
 
-You may notice some files on it, `vitae.exe` and `vitae.toml` are the ones you need to worry about to be able to run this.
+After downloading, you will see several files in the folder.
+The only files you need to know about as a final user are:
+
+- `vitae.exe` – The application launcher.
+- `vitae.toml` – The configuration file.
 
 ## Setup Vitae.toml
 
-The only parameters you need to update are those below, and your administrator must give you it. 
+Before running Vitae for the first time, you will need to set up a few database parameters.
+Your system administrator will provide these values.
 
 ```toml
 [postgres.user]
@@ -24,12 +30,12 @@ port = 5432                     # Database's port, generally "5432"
 name = "vitae"                  # Database's name, your admin should use "vitae", preferably
 ```
 
-Once this is setup, you don't need to change this anymore.
+Once this is setup, you do **not** need to change this settings anymore.
 
 ## Launching the Application
 
 As any other desktop application, just double-click on `vitae.exe`, and then, it's working.
-This may take 5s to 7s to open.
+This may take 5s to 7s to be fully loaded.
 
 ## Features
 
@@ -42,14 +48,17 @@ This may take 5s to 7s to open.
 5. Profile: Click the profile to export it to Lucy Lattes
 6. External Profile: Open the researcher’s profile on Lattes, or Orcid if available
 
-There is also a button at the bottom of the page to request more researchers. A “go to top” button will appear on your right, and on the left, a button to go back to the previous page.
+Additional navigation:
+* A Load More” button appears at the bottom of the page to load more results.
+* A “Go to Top” button appears on the right side.
+* A “Back” button appears on the left to return to the previous page.
 
 ## FAQ
 
-### Q: Why in Portuguese
+### **Q:** Why in Portuguese
 
-This application was made for Brazilian users which speaks Portuguese natively. I honest don't expect English speaker users to be using this, but if there are any, let us know to add support for it.
+**A:** This application was developed primarily for Brazilian users, whose native language is Portuguese. If there is demand from English-speaking users, we may add full English support in a future release.
 
-### Q: Vitae keeps running even after closing it
+### **Q:** Vitae keeps running even after closing it
 
-For some reason when the window is closed the backend still runs on the compiled version of this application. If this still, just kill it from the Task Manager by searching for `vitae.exe`.
+**A:** For the compiled version, the backend may continue running in the background after the window is closed. If this happens, open Windows' **Task Manager**, search for `vitae.exe`, and end the process manually.
