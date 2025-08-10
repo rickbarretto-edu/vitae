@@ -29,6 +29,11 @@ def start_app():
 
 
 if __name__ == "__main__":
+    IS_BUNDLED = getattr(sys, "frozen", False)
+
     redirect_console_to_logfile(Path("vitae.log"))
-    close_splash()
+
+    if IS_BUNDLED:
+        close_splash()
+
     start_app()
