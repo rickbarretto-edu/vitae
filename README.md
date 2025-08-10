@@ -18,7 +18,7 @@ With the built database, you can search for Researchers by name or ID and filter
 
 ### Non-Technical User
 
-If you're already on a setted-up environment, with a running database, you may skip the [Environment Setup](#environment-setup) and read the [User Guide](./user-guide.md) which covers the GUI Native-like application for non-technical users.
+If you're already on a setted-up environment, with a running database, you may skip the [Environment Setup](#environment-setup) and read the [User Guide](./GUIDE.md) which covers the GUI Native-like application for non-technical users.
 
 > [!INFO]
 > Se você é um usuário brasileiro e está em um ambiente já configurado, por favor, leia: [Guia de Usuário](./GUIA.md).
@@ -29,7 +29,7 @@ If you need to setup your environment, read [Environment Setup](#environment-set
 
 ### Developer
 
-If you're a developer and wants to contribute to the project, read the [Contributing](CONTRIBUTING.md) document.
+If you're a developer and wants to contribute to the project, read the [Contributing](CONTRIBUTING.md) document after have read both [Environment Setup](#environment-setup) and [User Guide](./GUIDE.md).
 
 
 ## Environment Setup
