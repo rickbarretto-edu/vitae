@@ -4,7 +4,7 @@ version = "1.0.0-pre"
 description = ""
 authors = ["Thiago Sena", "RickBarretto"]
 maintainers = ["Angelo Loula <angelocl@uefs.br>"]
-license = "" # To discuss
+license = "MIT"
 readme = "README.md"
 
 packages = [
