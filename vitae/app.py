@@ -1,10 +1,22 @@
 from pathlib import Path
 import sys
+import threading
+import time
 
 from flaskwebgui import FlaskUI
 
 from vitae.features.researchers.app import main
 
+def close_splash(delay=5):
+    def delayed_close():
+        time.sleep(delay)
+        try:
+            import pyi_splash
+            pyi_splash.close()
+        except:
+            pass
+
+    threading.Thread(target=delayed_close, daemon=True).start()
 
 def create_config_file():
     example = """
@@ -42,4 +54,5 @@ def start_app():
 if __name__ == "__main__":
     redirect_console_to_logfile(Path("vitae.log"))
     create_config_file()
+    close_splash()
     start_app()
