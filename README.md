@@ -20,6 +20,7 @@ With the built database, you can search for Researchers by name or ID and filter
 
 If you're already on a setted-up environment, with a running database, you may skip the [Environment Setup](#environment-setup) and read the [User Guide](./user-guide.md) which covers the GUI Native-like application for non-technical users.
 
+> [!INFO]
 > Se você é um usuário brasileiro e está em um ambiente já configurado, por favor, leia: [Guia de Usuário](./GUIA.md).
 
 ### Administrator
