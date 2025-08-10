@@ -22,7 +22,7 @@ If you're already on a setted-up environment, with a running database, you may s
 
 ### Administrator
 
-If you need to setup your environment, read [Environment Setup](#environment-setup) and then the [User Guide](./user-guide.md).
+If you need to setup your environment, read [Environment Setup](#environment-setup) and then the [User Guide](./GUIDE.md).
 
 ### Developer
 
