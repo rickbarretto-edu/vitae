@@ -1,16 +1,18 @@
 from __future__ import annotations
 
+import functools
 from pathlib import Path
 
-from fastapi import APIRouter, FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse
 
 from vitae.features.researchers.repository import (
     FiltersInDatabase,
     ResearchersInDatabase,
 )
 from vitae.features.researchers.schemes import ChoosenFilters
-from vitae.features.researchers.templates import templates
+from vitae.features.researchers.schemes.filters import Filters
+from vitae.features.researchers.templates import load_templates
 from vitae.features.researchers.usecases import (
     LoadFilters,
     SearchResearchers,
@@ -20,19 +22,26 @@ from vitae.features.researchers.usecases import (
 from vitae.infra.database import Database
 from vitae.settings.vitae import Vitae
 
-router = APIRouter()
 
-def load_filters(database: Database):
+# =~=~=~=~=~=~= Server Configuration =~=~=~=~=~=~=
+
+vitae = Vitae.from_toml(Path("vitae.toml"))
+database = Database(vitae.postgres.engine)
+
+router = APIRouter()
+templates = load_templates(vitae)
+
+def load_filters(database: Database) -> Filters: 
     return LoadFilters(FiltersInDatabase(database)).all
+
+
+# =~=~=~=~=~=~= EndPoints =~=~=~=~=~=~=
 
 
 @router.get("/", response_class=HTMLResponse)
 def home(
     request: Request,
 ):
-    vitae = Vitae.from_toml(Path("vitae.toml"))
-    database = Database(vitae.postgres.engine)
-
     all_filters = load_filters(database)
 
     return templates.TemplateResponse(
@@ -57,9 +66,7 @@ def show_search(
     has_finished: bool = False,
     expertise: str | None = None,
 ):
-    # Requirements Setup
-    vitae = Vitae.from_toml(Path("vitae.toml"))
-    database = Database(vitae.postgres.engine)
+
     all_filters = load_filters(database)
 
     # Feature Setup
@@ -92,8 +99,6 @@ def show_search(
 
 @router.get("/researcher/{id}/export")
 def export_researcher(id: str):
-    vitae = Vitae.from_toml(Path("vitae.toml"))
-    database = Database(vitae.postgres.engine)
 
     export_to_lucy = ExportToLucy(ResearchersInDatabase(database))
     csv_file = export_to_lucy.csv_of(id)
