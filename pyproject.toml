@@ -28,6 +28,7 @@ loguru = "^0.7.3"
 jinja2 = "^3.1.6"
 jinjax = "^0.60"
 cattrs = "^25.1.1"
+flaskwebgui = "^1.1.6"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.11.8"
