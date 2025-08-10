@@ -2,7 +2,7 @@
 name = "vitae"
 version = "1.0.0-pre"
 description = ""
-authors = ["Thiago Sena", "RickBarretto"]
+authors = ["Thiago Sena <thiagopinto.sena@gmail.com>", "RickBarretto"]
 maintainers = ["Angelo Loula <angelocl@uefs.br>"]
 license = "MIT"
 readme = "README.md"
