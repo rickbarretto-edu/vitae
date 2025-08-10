@@ -1,8 +1,10 @@
 [tool.poetry]
 name = "vitae"
-version = "0.1.0"
+version = "1.0.0-pre"
 description = ""
-authors = ["Author <author@example.com>"]
+authors = ["Thiago Sena", "RickBarretto"]
+maintainers = ["Angelo Loula <angelocl@uefs.br>"]
+license = "MIT"
 readme = "README.md"
 
 packages = [
@@ -18,24 +20,25 @@ clear-cache = "scripts.clear:cache"
 clear-log = "scripts.clear:log"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.12,<3.15"
+attrs = "^25.3.0"
+cyclopts = "^3.19.0"
+fastapi = {extras = ["standard"], version = "^0.116.1"}
+sqlmodel = "^0.0.24"
 psycopg = {extras = ["binary"], version = "^3.2.7"}
 loguru = "^0.7.3"
-pytest = "^8.3.5"
-sqlmodel = "^0.0.24"
-cyclopts = "^3.19.0"
-pytest-cov = "^6.2.1"
-fastapi = {extras = ["standard"], version = "^0.116.1"}
 jinja2 = "^3.1.6"
-attrs = "^25.3.0"
-cattrs = "^25.1.1"
 jinjax = "^0.60"
-beautifulsoup4 = "^4.13.4"
-
+cattrs = "^25.1.1"
+flaskwebgui = "^1.1.6"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.11.8"
 ty = "^0.0.1a5"
+pytest = "^8.3.5"
+pytest-cov = "^6.2.1"
+beautifulsoup4 = "^4.13.4"
+pyinstaller = "^6.15.0"
 
 [tool.pytest.ini_options]
 testpaths = [

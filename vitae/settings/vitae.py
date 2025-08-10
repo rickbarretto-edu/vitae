@@ -4,9 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 from functools import cached_property
+import os
 from pathlib import Path
+import sys
 from typing import TYPE_CHECKING, Any
 
+import attrs
 from sqlalchemy import create_engine
 import tomllib
 
@@ -77,7 +80,7 @@ class PostgresSettings:
         return create_engine(self.url, echo=True)
 
 
-@dataclass(frozen=True, kw_only=True)
+@attrs.frozen(kw_only=True)
 class PathsSettings:
     """Paths' Settings for Vitae.
 
@@ -98,6 +101,12 @@ class PathsSettings:
         if not self._curricula.is_dir():
             message: str = "Curricula must be a directory"
             raise ValueError(message)
+
+    @property
+    def base(self) -> Path:
+        if getattr(sys, "frozen", False):
+            return Path(getattr(sys, "_MEIPASS"))
+        return Path(os.path.abspath("."))
 
     @property
     def curricula(self) -> Path:
@@ -184,6 +193,6 @@ def _vitae_from_parsed(data: dict[str, Any]) -> Vitae:
         in_production=in_production,
         postgres=PostgresSettings(user=pg_user, db=pg_db),
         paths=PathsSettings(
-            _curricula=Path(paths.get("curricula") or "all_files"),
+            curricula=Path(paths.get("curricula") or "all_files"),
         ),
     )
