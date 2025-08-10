@@ -14,3 +14,8 @@ all_files copy/
 *.xml
 .coverage
 .coveragerc
+
+# PyInstaller Generated Files
+build/
+dist/
+app.spec
