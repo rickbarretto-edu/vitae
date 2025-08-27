@@ -46,7 +46,7 @@ class Researcher:
 
     @classmethod
     def from_table(cls, 
-        table: tables.Researcher,
+        researcher: tables.Researcher,
         education: list[tables.Education] | None = None,
         expertise: list[tables.Expertise] | None = None,
     ) -> Self:
@@ -58,8 +58,8 @@ class Researcher:
 
         """
         return cls(
-            this=Person.from_table(table),
-            links=ExternalLinks.from_table(table),
-            professional=ProfessionalLink.from_table(table),
-            curriculum=Curriculum.from_table(table),
+            this=Person.from_table(researcher),
+            links=ExternalLinks.from_table(researcher),
+            professional=ProfessionalLink.from_table(researcher),
+            curriculum=Curriculum.from_table(researcher),
         )
