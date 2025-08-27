@@ -45,7 +45,11 @@ class Researcher:
     professional: ProfessionalLink
 
     @classmethod
-    def from_table(cls, table: tables.Researcher) -> Self:
+    def from_table(cls, 
+        table: tables.Researcher,
+        education: list[tables.Education] | None = None,
+        expertise: list[tables.Expertise] | None = None,
+    ) -> Self:
         """Build itself from a Researcher row.
 
         Returns
