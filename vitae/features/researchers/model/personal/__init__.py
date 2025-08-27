@@ -83,9 +83,3 @@ class Person:
     name: FullName
     nationality: Nationality
 
-    @classmethod
-    def from_table(cls, researcher: tables.Researcher) -> Self:
-        return cls(
-            name=FullName(researcher.full_name),
-            nationality=Nationality.from_table(researcher.nationality),
-        )

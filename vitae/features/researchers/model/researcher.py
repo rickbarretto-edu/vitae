@@ -6,9 +6,12 @@ from typing import TYPE_CHECKING, Callable, Self
 
 import attrs
 
+from vitae.features.researchers.lib import optional
+from vitae.features.researchers.model.academic.external import Lattes, Orcid
+
 from .academic import ExternalLinks
 from .cv import Curriculum
-from .personal import Person
+from .personal import FullName, Nationality, Person
 from .professional import ProfessionalLink
 
 if TYPE_CHECKING:
@@ -55,6 +58,7 @@ class Researcher:
     def from_table(cls, 
         researcher: tables.Researcher,
         addresss: tables.Address | None = None,
+        nationality: tables.Nationality | None = None,
         education: list[tables.Education] | None = None,
         expertise: list[tables.Expertise] | None = None,
     ) -> Self:
@@ -66,8 +70,14 @@ class Researcher:
 
         """
         return cls(
-            this=Person.from_table(researcher),
-            links=ExternalLinks.from_table(researcher),
+            this=Person(
+                name=FullName(researcher.full_name),
+                nationality=Nationality.from_table(some_or(nationality, lambda: researcher.nationality))
+            ),
+            links=ExternalLinks(
+                lattes=Lattes.from_id(researcher.lattes_id),
+                orcid=optional(researcher.orcid, Orcid.from_url),
+            ),
             professional=ProfessionalLink.from_table(
                 some_or(addresss, lambda: researcher.address)
             ),
