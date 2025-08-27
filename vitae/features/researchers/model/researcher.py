@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING, Callable, Self
 
 import attrs
 
@@ -15,6 +15,13 @@ if TYPE_CHECKING:
     from vitae.infra.database import tables
 
 __all__ = ["Researcher"]
+
+
+def some_or[T](x: T | None, default: Callable[[], T]) -> T:
+    if x is None:
+        return default()
+    else:
+        return x
 
 
 @attrs.frozen
@@ -61,5 +68,9 @@ class Researcher:
             this=Person.from_table(researcher),
             links=ExternalLinks.from_table(researcher),
             professional=ProfessionalLink.from_table(researcher),
-            curriculum=Curriculum.from_table(researcher),
+            curriculum=Curriculum.from_table(
+                researcher,
+                some_or(education, lambda: researcher.education),
+                some_or(expertise, lambda: researcher.expertise),
+            ),
         )
