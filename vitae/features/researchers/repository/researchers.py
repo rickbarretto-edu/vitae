@@ -120,20 +120,6 @@ class Researchers(Protocol):
         """
         ...
 
-    def stricly_by_name(
-        self,
-        name: str,
-        researchers: int,
-        page: int,
-        order_by: Order,
-        filter_by: ChoosenFilters | None,
-    ) -> Iterable[Researcher]:
-        """Define a strict search by name.
-
-        This should look for names that looks exactly like the query.
-        """
-        ...
-
 
 @attrs.frozen
 class ResearchersInDatabase(Researchers):
@@ -167,59 +153,6 @@ class ResearchersInDatabase(Researchers):
             if result:
                 return Researcher.from_table(result)
             return None
-
-    def stricly_by_name(
-        self,
-        name: str,
-        researchers: int = 50,
-        page: int = 1,
-        order_by: Order = None,
-        filter_by: ChoosenFilters | None = None,
-    ) -> Iterable[Researcher]:
-        """Fetch Researchers by name.
-
-        The query name does not need to match the first name,
-        but this needs to strictly follow the correct sequence.
-
-        Use this if the performance of `by_name` is significantly
-        affecting the system.
-
-        Scenario
-        --------
-        Given I have "Josiah Stinkney Carberry",
-        When I look for "Josiah Caberry", I'll not find him.
-        But, when I look for "Josiah Stinkney" or "Stinkney Carberry", I'll.
-
-                >>> assert (
-                ...     researchers.loosely_by_name("Josiah Stinkney")
-                ...     is Researcher
-                ... )
-                >>> assert (
-                ...     researchers.loosely_by_name("Stinkney Carberry")
-                ...     is Researcher
-                ... )
-                >>> assert (
-                ...     researchers.loosely_by_name("Josiah Carberry") is None
-                ... )
-
-        Returns
-        -------
-        Iterable[Researcher] of n researchers.
-
-        """
-        has_name = col(tables.Researcher.full_name).ilike(f"%{name}%")
-        offset = researchers * (page - 1)
-
-        with self.database.session as session:
-            selected = select(tables.Researcher).where(
-                has_name if name else True,
-            )
-            filtered = using_filter(selected, filter_by)
-            ordered = ordered_by_name(filtered, order_by)
-            limited = ordered.offset(offset).limit(researchers)
-
-            result: list[tables.Researcher] = session.exec(limited).all()  # pyright: ignore[reportArgumentType, reportCallIssue]
-            return [Researcher.from_table(r) for r in result]
 
     def by_name(
         self,
