@@ -115,7 +115,7 @@ class Researchers(Protocol):
         page: int,
         order_by: Order,
         filter_by: ChoosenFilters | None,
-    ) -> Iterable[Researcher]:
+    ) -> list[Researcher]:
         """Define a search by name.
 
         This one should match each token in any order.
@@ -163,7 +163,7 @@ class ResearchersInDatabase(Researchers):
         page: int = 1,
         order_by: Order = None,
         filter_by: ChoosenFilters | None = None,
-    ) -> Sequence[Researcher]:
+    ) -> list[Researcher]:
         """Fetch Researchers by name.
 
         This query may be slower than `stricly_by_name`,
