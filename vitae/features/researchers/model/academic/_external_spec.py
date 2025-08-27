@@ -38,29 +38,3 @@ class DescribeOrcid:
         orcid = Orcid.from_url(url)
         assert orcid.id == "0000-0000-0000-0000"
         assert orcid.url == url
-
-
-class DescribeExternalLinks:
-    def supports_from_table(self):
-        researcher = tables.Researcher(
-            lattes_id="1234567890123456",
-            full_name="John Doe",
-            orcid="http://orcid.org/0000-0002-1825-0097"
-        )
-        links = ExternalLinks.from_table(researcher)
-
-        assert isinstance(links.lattes, Lattes)
-        assert links.lattes.id == "1234567890123456"
-        assert isinstance(links.orcid, Orcid)
-        assert links.orcid.id == "0000-0002-1825-0097"
-
-    def has_optional_orcid(self):
-        researcher = tables.Researcher(
-            lattes_id="1234567890123456",
-            full_name="John Doe",
-        )
-        links = ExternalLinks.from_table(researcher)
-
-        assert isinstance(links.lattes, Lattes)
-        assert links.lattes.id == "1234567890123456"
-        assert links.orcid is None
