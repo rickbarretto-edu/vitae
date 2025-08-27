@@ -10,6 +10,7 @@ profiling/
 .ruff_cache
 vitae.toml
 all_files/
+curricula/
 all_files copy/
 *.xml
 .coverage
