@@ -1,13 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Protocol
+from typing import TYPE_CHECKING, Literal, Protocol, Sequence
 
 import attrs
 from sqlalchemy import Select
 from sqlmodel import and_, col, select
+from sqlalchemy.orm import selectinload
 
 from vitae.features.researchers.model.researcher import Researcher
 from vitae.infra.database import Database, tables
+from vitae.infra.database.tables.researcher import Expertise
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -161,7 +163,7 @@ class ResearchersInDatabase(Researchers):
         page: int = 1,
         order_by: Order = None,
         filter_by: ChoosenFilters | None = None,
-    ) -> Iterable[Researcher]:
+    ) -> Sequence[Researcher]:
         """Fetch Researchers by name.
 
         This query may be slower than `stricly_by_name`,
@@ -197,12 +199,32 @@ class ResearchersInDatabase(Researchers):
         ]
 
         with self.database.session as session:
-            selected = select(tables.Researcher).where(
-                and_(*has_names) if name else True,
+            selected = (
+                select(tables.Researcher)
+                .where(and_(*has_names) if name else True)
+                .options(
+                    selectinload(tables.Researcher.address),
+                    selectinload(tables.Researcher.nationality),
+                    selectinload(tables.Researcher.education),
+                    selectinload(tables.Researcher.expertise),
+                )
             )
+
             filtered = using_filter(selected, filter_by)
             ordered = ordered_by_name(filtered, order_by)
             limited = ordered.offset(offset).limit(researchers)
 
-            result: list[tables.Researcher] = session.exec(limited).all()  # pyright: ignore[reportArgumentType, reportCallIssue]
-            return [Researcher.from_table(r) for r in result]
+            result = session.exec(limited).all()
+
+            print(result)
+
+            return [
+                Researcher.from_table(
+                    researcher,
+                    addresss=researcher.address,
+                    nationality=researcher.nationality,
+                    education=researcher.education,
+                    expertise=researcher.expertise,
+                )
+                for researcher in result
+            ]
