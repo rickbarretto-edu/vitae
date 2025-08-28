@@ -43,7 +43,7 @@ class SearchResearchers:
             order_by=order_by.value if order_by else None,
             filter_by=filter_by,
             page=page,
-        ),  # pyright: ignore[reportCallIssue]
+        )
 
 
 def is_lattes_id(query: str) -> bool:
