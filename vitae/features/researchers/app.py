@@ -1,6 +1,5 @@
 import time
 from fastapi import FastAPI, Request
-from loguru import logger
 
 from .routes import router
 
