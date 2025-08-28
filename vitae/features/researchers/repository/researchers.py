@@ -216,8 +216,6 @@ class ResearchersInDatabase(Researchers):
 
             result = session.exec(limited).all()
 
-            print(result)
-
             return [
                 Researcher.from_table(
                     researcher,
