@@ -1,0 +1,66 @@
+"""In Memory data fetched from database.
+
+Latest Update: 
+    27/08/2025
+
+This module contains fetched data from the SQL Database,
+to reduce overhead when loading the application for the first time, 
+I think this is a good idea.
+"""
+
+from functools import cached_property
+from typing import Sequence
+import attrs
+
+
+@attrs.frozen
+class FiltersInMemory:
+
+    @cached_property
+    def countries(self) -> Sequence[str]:
+        return [
+            "Afeganistão", "África do Sul", "Albânia", "Alemanha", "Andorra", "Angola", "Antartida", "Antigua", "Antilhas Holandesas", "Arábia Saudita", "Argélia", "Argentina", "Armênia", "Austrália", "Austria", "Azerbaijão",
+            "Bahamas", "Bangladesh", "Barbados", "Barein", "Belarus", "Bélgica", "Belize", "Benin", "Bermudas", "Birmânia", "Bolívia", "Bósnia", "Botsuana", "Brasil", "Britsh Indian Ocean", "Brunei", "Bulgária", "Burkina Fasso", "Burundi", "Butão",
+            "Cabo Verde", "Camarões", "Camboja", "Canadá", "Catar", "Cazaquistão", "Chade", "Chile", "China", "Chipre", "Cingapura", "Colômbia", "Comores", "Coréia do Sul", "Costa do Marfim", "Costa Rica", "Croácia", "Cuba",
+            "Dinamarca",
+            "Egito", "El Salvador", "Emirados Árabes", "Equador", "Escócia", "Eslováquia", "Eslovênia", "Espanha", "Estados Unidos", "Estônia", "Etiópia",
+            "Filipinas", "Finlândia", "Formosa", "França",
+            "Gabão", "Gales", "Gâmbia", "Gana", "Geórgia", "Grã-Bretanha", "Grécia", "Guadalupe", "Guatemala", "Guiana", "Guiana Francesa", "Guiné", "Guiné Bissau",
+            "Haiti", "Holanda", "Honduras", "Hong Kong", "Hungria",
+            "Iêmem", "Ilhas Norfolk", "Índia", "Indonésia", "Inglaterra", "Irã", "Iraque", "Irlanda", "Irlanda do Norte", "Islândia", "Israel", "Itália", "Iugoslávia",
+            "Jamaica", "Japão", "Jordânia",
+            "Laos", "Letônia", "Líbano", "Luxemburgo",
+            "Macau", "Macedônia", "Madagascar", "Malásia", "Malavi", "Mali", "Malta", "Marrocos", "Martinica", "Maurício", "México", "Mianmar", "Moçambique", "Moldova", "Mônaco", "Mongólia", "Montenegro",
+            "Namíbia", "Nepal", "Nicarágua", "Niger", "Nigéria", "Noruega", "Nova Zelândia",
+            "Omã",
+            "Pacific Islands", "Panamá", "Paquistão", "Paraguai", "Peru", "Polônia", "Porto Rico", "Portugal",
+            "Quênia",
+            "RD Congo", "Rep.Centro-Africana", "República Dominicana", "República Tcheca", "Reunião", "Romênia", "Ruanda", "Rússia",
+            "Samoa Americana", "Samoa Ocidental", "San Marino", "Santa Lúcia", "São Cristóvão Nevis", "São Pedro Miquelon", "São Tomé e Príncipe", "Senegal", "Sérvia", "Síria", "Somália", "Sri Lanka", "Sudão", "Suécia", "Suiça", "Suriname",
+            "Tadjaquistão", "Tailândia", "Tanzânia", "Timor", "Timor Leste", "Togo", "Trinidad e Tobago", "Tunísia", "Turquia",
+            "Ucrânia", "Uganda", "Uruguai", "Uzbekistan",
+            "Vanuatu", "Vaticano", "Venezuela", "Vietnã",
+            "Western Sahara",
+            "Zaire", "Zâmbia", "Zimbabue",
+        ]
+    
+    @cached_property
+    def states(self) -> Sequence[str]:
+        return [
+            "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", 
+            "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC",
+            "SE", "SP", "TO",
+        ]
+
+    @cached_property
+    def titles(self) -> Sequence[str]:
+        return [
+            "APERFEICOAMENTO", "CURSO-TECNICO-PROFISSIONALIZANTE", "DOUTORADO",
+            "ENSINO-FUNDAMENTAL-PRIMEIRO-GRAU", "ENSINO-MEDIO-SEGUNDO-GRAU",
+            "ESPECIALIZACAO", "GRADUACAO", "LIVRE-DOCENCIA", "MESTRADO",
+            "MESTRADO-PROFISSIONALIZANTE", "POS-DOUTORADO", "RESIDENCIA-MEDICA",
+        ]
+
+    @cached_property
+    def expertises(self) -> Sequence[str]:
+        
