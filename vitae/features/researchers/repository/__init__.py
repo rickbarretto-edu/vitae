@@ -6,5 +6,4 @@ __all__ = [
     "FiltersInDatabase",
     "Researchers",
     "ResearchersInDatabase",
-    "ResearchersInDatabase",
 ]

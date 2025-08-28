@@ -29,9 +29,7 @@ class ProfessionalLink:
     institution: LinkedInstitution | None
 
     @classmethod
-    def from_table(cls, researcher: tables.Researcher) -> Self:
-        address = researcher.address
-
+    def from_table(cls, address: tables.Address) -> Self:
         return cls(
             address=optional(address, Address.from_table),
             institution=optional(address, LinkedInstitution.from_table),

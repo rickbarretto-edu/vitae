@@ -38,13 +38,11 @@ class SearchResearchers:
             result = self.researchers.by_id(query)
             return [result] if result else []
 
-        return list(
-            self.researchers.by_name(
-                query,
-                order_by=order_by.value if order_by else None,
-                filter_by=filter_by,
-                page=page,
-            ),  # pyright: ignore[reportCallIssue]
+        return self.researchers.by_name(
+            query,
+            order_by=order_by.value if order_by else None,
+            filter_by=filter_by,
+            page=page,
         )
 
 

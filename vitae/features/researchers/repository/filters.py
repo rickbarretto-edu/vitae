@@ -50,4 +50,4 @@ class FiltersInDatabase:
 
     @cached_property
     def expertises(self) -> Sequence[str]:
-        return self._keywords(col(tables.Expertise.sub))
+        return self._keywords(col(tables.Expertise.area))

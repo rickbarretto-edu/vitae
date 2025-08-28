@@ -29,7 +29,11 @@ class Curriculum:
     expertises: Expertises
 
     @classmethod
-    def from_table(cls, researcher: tables.Researcher) -> Self:
+    def from_table(cls, 
+        researcher: tables.Researcher,
+        education: list[tables.Education],
+        expertise: list[tables.Expertise],
+    ) -> Self:
         """Build itself from a database's row.
 
         Returns
@@ -38,7 +42,7 @@ class Curriculum:
 
         """
         return cls(
-            titles=AcademicTitles.from_tables(researcher.education),
+            titles=AcademicTitles.from_tables(education),
             abstract=Abstract(researcher.abstract or ""),
-            expertises=Expertises.from_tables(researcher.expertise),
+            expertises=Expertises.from_tables(expertise),
         )

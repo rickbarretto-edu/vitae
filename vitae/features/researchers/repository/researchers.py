@@ -1,13 +1,15 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Protocol
+from typing import TYPE_CHECKING, Literal, Protocol, Sequence
 
 import attrs
 from sqlalchemy import Select
 from sqlmodel import and_, col, select
+from sqlalchemy.orm import selectinload
 
 from vitae.features.researchers.model.researcher import Researcher
 from vitae.infra.database import Database, tables
+from vitae.infra.database.tables.researcher import Expertise
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -33,30 +35,36 @@ def using_filter(
     SQL Statement.
 
     """
-    if not filters:
-        return selected
+    def haskey(d, k):
+        try:
+            return bool(d[k])
+        except:
+            return False
 
-    if filters.get("started"):
-        selected = selected.join(tables.Education).where(
-            col(tables.Education.category) == filters["started"])
-
-    if filters.get("has_finished"):
-        selected = selected.where(
-            col(tables.Education.end).is_not(None))
-
-    if filters.get("expertise"):
-        selected = selected.join(tables.Expertise).where(
-            col(tables.Expertise.sub) == filters["expertise"])
-
-    if filters.get("state"):
-        selected = selected.join(tables.Address).where(
-            col(tables.Address.state) == filters["state"])
-
-    if filters.get("country"):
-        selected = selected.where(
-            col(tables.Address.country) == filters["country"])
-
-    return selected.distinct()
+    return (
+        selected
+            .join(tables.Education)
+            .where(
+                tables.Education.category == filters["started"] 
+                if haskey(filters, "started") else True
+            )
+            .where(col(tables.Education.end).is_not(None)
+                if haskey(filters, "ended") else True
+            )
+            .join(tables.Address)
+            .where(col(tables.Address.state) == filters["state"]
+                if haskey(filters, "state") else True
+            )
+            .join(tables.Nationality)
+            .where(col(tables.Nationality.born_country) == filters["country"]
+                if haskey(filters, "country") else True
+            )
+            .join(tables.Expertise)
+            .where(tables.Expertise.area == filters["expertise"]
+                if haskey(filters, "expertise") else True
+            )
+            .distinct()
+    )
 
 # fmt: on
 
@@ -113,24 +121,10 @@ class Researchers(Protocol):
         page: int,
         order_by: Order,
         filter_by: ChoosenFilters | None,
-    ) -> Iterable[Researcher]:
+    ) -> list[Researcher]:
         """Define a search by name.
 
         This one should match each token in any order.
-        """
-        ...
-
-    def stricly_by_name(
-        self,
-        name: str,
-        researchers: int,
-        page: int,
-        order_by: Order,
-        filter_by: ChoosenFilters | None,
-    ) -> Iterable[Researcher]:
-        """Define a strict search by name.
-
-        This should look for names that looks exactly like the query.
         """
         ...
 
@@ -168,59 +162,6 @@ class ResearchersInDatabase(Researchers):
                 return Researcher.from_table(result)
             return None
 
-    def stricly_by_name(
-        self,
-        name: str,
-        researchers: int = 50,
-        page: int = 1,
-        order_by: Order = None,
-        filter_by: ChoosenFilters | None = None,
-    ) -> Iterable[Researcher]:
-        """Fetch Researchers by name.
-
-        The query name does not need to match the first name,
-        but this needs to strictly follow the correct sequence.
-
-        Use this if the performance of `by_name` is significantly
-        affecting the system.
-
-        Scenario
-        --------
-        Given I have "Josiah Stinkney Carberry",
-        When I look for "Josiah Caberry", I'll not find him.
-        But, when I look for "Josiah Stinkney" or "Stinkney Carberry", I'll.
-
-                >>> assert (
-                ...     researchers.loosely_by_name("Josiah Stinkney")
-                ...     is Researcher
-                ... )
-                >>> assert (
-                ...     researchers.loosely_by_name("Stinkney Carberry")
-                ...     is Researcher
-                ... )
-                >>> assert (
-                ...     researchers.loosely_by_name("Josiah Carberry") is None
-                ... )
-
-        Returns
-        -------
-        Iterable[Researcher] of n researchers.
-
-        """
-        has_name = col(tables.Researcher.full_name).ilike(f"%{name}%")
-        offset = researchers * (page - 1)
-
-        with self.database.session as session:
-            selected = select(tables.Researcher).where(
-                has_name if name else True,
-            )
-            filtered = using_filter(selected, filter_by)
-            ordered = ordered_by_name(filtered, order_by)
-            limited = ordered.offset(offset).limit(researchers)
-
-            result: list[tables.Researcher] = session.exec(limited).all()  # pyright: ignore[reportArgumentType, reportCallIssue]
-            return [Researcher.from_table(r) for r in result]
-
     def by_name(
         self,
         name: str,
@@ -228,7 +169,7 @@ class ResearchersInDatabase(Researchers):
         page: int = 1,
         order_by: Order = None,
         filter_by: ChoosenFilters | None = None,
-    ) -> Iterable[Researcher]:
+    ) -> list[Researcher]:
         """Fetch Researchers by name.
 
         This query may be slower than `stricly_by_name`,
@@ -264,12 +205,30 @@ class ResearchersInDatabase(Researchers):
         ]
 
         with self.database.session as session:
-            selected = select(tables.Researcher).where(
-                and_(*has_names) if name else True,
+            selected = (
+                select(tables.Researcher)
+                .where(and_(*has_names) if name else True)
+                .options(
+                    selectinload(tables.Researcher.address),
+                    selectinload(tables.Researcher.nationality),
+                    selectinload(tables.Researcher.education),
+                    selectinload(tables.Researcher.expertise),
+                )
             )
+
             filtered = using_filter(selected, filter_by)
             ordered = ordered_by_name(filtered, order_by)
             limited = ordered.offset(offset).limit(researchers)
 
-            result: list[tables.Researcher] = session.exec(limited).all()  # pyright: ignore[reportArgumentType, reportCallIssue]
-            return [Researcher.from_table(r) for r in result]
+            result = session.exec(limited).all()
+
+            return [
+                Researcher.from_table(
+                    researcher,
+                    addresss=researcher.address,
+                    nationality=researcher.nationality,
+                    education=researcher.education,
+                    expertise=researcher.expertise,
+                )
+                for researcher in result
+            ]

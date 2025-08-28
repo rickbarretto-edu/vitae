@@ -71,7 +71,7 @@ class Nationality:
             case tables.Nationality(born_country=born_country, nationality="B"):
                 return cls(f"{born_country} (Brasileiro)")
             case tables.Nationality(born_country=born_country, nationality="E"):
-                return cls(f"{born_country} (Estranjeito)")
+                return cls(f"{born_country} (Estrangeiro)")
             case _:
                 return cls("")
 
@@ -83,9 +83,3 @@ class Person:
     name: FullName
     nationality: Nationality
 
-    @classmethod
-    def from_table(cls, researcher: tables.Researcher) -> Self:
-        return cls(
-            name=FullName(researcher.full_name),
-            nationality=Nationality.from_table(researcher.nationality),
-        )

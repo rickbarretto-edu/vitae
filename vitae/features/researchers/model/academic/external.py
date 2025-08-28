@@ -29,13 +29,6 @@ class ExternalLinks:
     lattes: Lattes
     orcid: Orcid | None
 
-    @classmethod
-    def from_table(cls, researcher: tables.Researcher):
-        return cls(
-            lattes=Lattes.from_id(researcher.lattes_id),
-            orcid=optional(researcher.orcid, Orcid.from_url),
-        )
-
 
 class InvalidURL(ValueError):  # noqa: N818
     pass

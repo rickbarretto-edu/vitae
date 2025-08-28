@@ -31,8 +31,7 @@ database = Database(vitae.postgres.engine)
 router = APIRouter()
 templates = load_templates(vitae)
 
-def load_filters(database: Database) -> Filters: 
-    return LoadFilters(FiltersInDatabase(database)).all
+all_filters = LoadFilters(FiltersInDatabase(database)).all
 
 
 # =~=~=~=~=~=~= EndPoints =~=~=~=~=~=~=
@@ -42,7 +41,6 @@ def load_filters(database: Database) -> Filters:
 def home(
     request: Request,
 ):
-    all_filters = load_filters(database)
 
     return templates.TemplateResponse(
         "SearchPage.jinja",
@@ -66,8 +64,6 @@ def show_search(
     has_finished: bool = False,
     expertise: str | None = None,
 ):
-
-    all_filters = load_filters(database)
 
     # Feature Setup
     search = SearchResearchers(ResearchersInDatabase(database))

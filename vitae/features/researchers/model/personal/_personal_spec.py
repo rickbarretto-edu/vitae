@@ -52,7 +52,7 @@ class DescribeNationality:
             born_country="França",
             nationality="E",
         ))
-        assert str(nat) == "França (Estranjeito)"
+        assert str(nat) == "França (Estrangeiro)"
 
     def should_be_empty(self):
         nationality = Nationality.from_table(tables.Nationality(
@@ -60,19 +60,3 @@ class DescribeNationality:
         ))
 
         assert str(nationality) == ""
-
-
-class DescribePerson:
-    def can_be_created_from_table(self):
-        person = Person.from_table(tables.Researcher(
-            lattes_id="0",
-            full_name="ana julia",
-            nationality=tables.Nationality(
-                researcher_id="0",
-                born_country="Brasil",
-                nationality="B",
-            )
-        ))
-        assert isinstance(person.name, FullName)
-        assert person.name.first == "Ana"
-        assert str(person.nationality) == "Brasileiro(a)"
