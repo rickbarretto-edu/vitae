@@ -52,7 +52,7 @@ class DescribeNationality:
             born_country="França",
             nationality="E",
         ))
-        assert str(nat) == "França (Estranjeito)"
+        assert str(nat) == "França (Estrangeiro)"
 
     def should_be_empty(self):
         nationality = Nationality.from_table(tables.Nationality(

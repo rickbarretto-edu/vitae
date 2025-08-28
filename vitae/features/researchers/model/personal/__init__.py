@@ -71,7 +71,7 @@ class Nationality:
             case tables.Nationality(born_country=born_country, nationality="B"):
                 return cls(f"{born_country} (Brasileiro)")
             case tables.Nationality(born_country=born_country, nationality="E"):
-                return cls(f"{born_country} (Estranjeito)")
+                return cls(f"{born_country} (Estrangeiro)")
             case _:
                 return cls("")
 
