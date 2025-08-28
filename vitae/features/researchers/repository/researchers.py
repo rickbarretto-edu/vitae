@@ -35,30 +35,31 @@ def using_filter(
     SQL Statement.
 
     """
-    if not filters:
-        return selected
+    def haskey(d, k):
+        try:
+            return bool(d[k])
+        except:
+            return False
 
-    if filters.get("started"):
-        selected = selected.join(tables.Education).where(
-            col(tables.Education.category) == filters["started"])
-
-    if filters.get("has_finished"):
-        selected = selected.where(
-            col(tables.Education.end).is_not(None))
-
-    if filters.get("expertise"):
-        selected = selected.join(tables.Expertise).where(
-            col(tables.Expertise.sub) == filters["expertise"])
-
-    if filters.get("state"):
-        selected = selected.join(tables.Address).where(
-            col(tables.Address.state) == filters["state"])
-
-    if filters.get("country"):
-        selected = selected.where(
-            col(tables.Address.country) == filters["country"])
-
-    return selected.distinct()
+    return (
+        selected
+            .join(tables.Education)
+            .where(
+                tables.Education.category == filters["started"] 
+                if haskey(filters, "started") else True
+            )
+            .where(col(tables.Education.end).is_not(None)
+                if haskey(filters, "ended") else True
+            )
+            .join(tables.Address)
+            .where(col(tables.Address.state) == filters["state"]
+                if haskey(filters, "state") else True
+            )
+            .join(tables.Nationality)
+            .where(col(tables.Nationality.born_country) == filters["country"]
+                if haskey(filters, "country") else True
+            )
+    )
 
 # fmt: on
 
