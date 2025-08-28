@@ -59,6 +59,7 @@ def using_filter(
             .where(col(tables.Nationality.born_country) == filters["country"]
                 if haskey(filters, "country") else True
             )
+            .unique()
     )
 
 # fmt: on
