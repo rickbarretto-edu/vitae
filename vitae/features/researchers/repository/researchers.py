@@ -59,6 +59,10 @@ def using_filter(
             .where(col(tables.Nationality.born_country) == filters["country"]
                 if haskey(filters, "country") else True
             )
+            .join(tables.Expertise)
+            .where(tables.Expertise.area == filters["expertise"]
+                if haskey(filters, "expertise") else True
+            )
             .distinct()
     )
 
