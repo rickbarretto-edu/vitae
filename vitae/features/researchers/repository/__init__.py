@@ -1,10 +1,9 @@
-from .filters import Filters, FiltersInDatabase
+from .filters import Filters, FiltersInCache
 from .researchers import Researchers, ResearchersInDatabase
 
 __all__ = [
     "Filters",
-    "FiltersInDatabase",
+    "FiltersInCache",
     "Researchers",
-    "ResearchersInDatabase",
     "ResearchersInDatabase",
 ]
