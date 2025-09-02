@@ -1,5 +1,7 @@
 {#def fn_name: str #}
 
+{#set fn_name = "exportLucy" #}
+
 
 <dialog id="export-modal" class="bg-white/70 backdrop-blur rounded-2xl outline-none shadow-xl shadow-md p-6 max-w-[90%] w-[800px]">
     <header class="flex items-center border-b border-gray-300 mb-4">
@@ -35,42 +37,85 @@
 </script>
 
 {# Open modal with fetched data #}
-<script>
-async function {{fn_name}}(id) {
-
-    const element = document.querySelector(`[data-researcher-id="${id}"]`)
-    if (!element) return
-
-    const endpoint = element.dataset.endpoint
-    const action = element.dataset.action
-
+<script type="module">
+(function() {
     const lucyModal = document.getElementById("export-modal")
     const codeblock = document.querySelector("#lucy-lattes-csv")
     const code = document.querySelector("#lucy-lattes-csv code")
     const save = document.querySelector("#export-modal button[type='submit']")
+    const downloadBtn = document.getElementById("download-lucy-csv")
 
-    const onOpen = () => {
+    // Close modal when clicking outside
+    lucyModal.addEventListener('click', (event) => {
+        if (event.target === lucyModal) lucyModal.close()
+    })
+
+    // Export function
+    async function exportSelectedResearchers() {
         codeblock.classList.add("hidden")
         save.classList.add("hidden")
         lucyModal.showModal()
+
+        try {
+            const selected = JSON.parse(localStorage.getItem("selectedResearchers") || "{}")
+            const ids = Object.keys(selected)
+
+            if (ids.length === 0) {
+                code.textContent = "Nenhum pesquisador selecionado."
+                codeblock.classList.remove("hidden")
+                return
+            }
+
+            const rows = [
+                "# Mantenha como separador a vírgula",
+                "# Não altere o nome das colunas (linha 5)",
+                "# Não altere a ordem das colunas e das 5 primeiras linhas",
+                "# Insira o nome ABREVIADO do pesquisador",
+                "ID_LATTES,NAME,GROUP"
+            ]
+
+            ids.forEach(id => {
+                const name = selected[id] || ""
+                rows.push(`${id},${name},Vitae`)
+            })
+
+            code.textContent = rows.join("\n")
+            codeblock.classList.remove("hidden")
+            save.classList.remove("hidden")
+
+        } catch (err) {
+            code.textContent = `Error: ${err.message}`
+            codeblock.classList.remove("hidden")
+        }
     }
 
-    const onLoad = (content) => {
-        code.textContent = content
-        codeblock.classList.remove("hidden")
-        save.classList.remove("hidden")
-    }
+    // Download button
+    downloadBtn.addEventListener("click", () => {
+        const text = code.textContent
+        const blob = new Blob([text], { type: "text/plain" })
+        const url = URL.createObjectURL(blob)
+        const anchor = document.createElement("a")
+        anchor.href = url
+        anchor.download = "exported.csv"
+        document.body.appendChild(anchor)
+        anchor.click()
+        document.body.removeChild(anchor)
+        URL.revokeObjectURL(url)
+    })
 
-    try {
-        onOpen()
-        const res = await fetch(`/${endpoint}/${id}/${action}`)
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        onLoad(await res.json())
-    } catch (err) {
-        code.textContent = `Error: ${err.message}`
-    }
-}
+    // Keyboard shortcut Ctrl+E / Cmd+E
+    document.addEventListener("keydown", (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "e") {
+            event.preventDefault()
+            exportSelectedResearchers()
+        }
+    })
+
+    // Expose function if needed
+    window.{{fn_name}} = exportSelectedResearchers
+})()
 </script>
+
 
 {# Download button behavior #}
 <script>
