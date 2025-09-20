@@ -84,9 +84,15 @@
                 <form.Button id="clear-selection" onclick="localStorage.removeItem('selectedResearchers'); location.reload();">
                     <i class="bi bi-x-circle"></i> Limpar tudo
                 </form.Button>
-                <researcher.ExportButton triggers="exportResearcher">
-                    <i class="bi bi-box-arrow-down"></i> Exportar
-                </researcher.ExportButton>
+                <a id="export-link" href="#" onclick="event.preventDefault(); const qs = window.location.search || ''; const url = '/export' + qs; window.open(url, '_blank');">
+                    <form.Button id="export-all">
+                        <i class="bi bi-box-arrow-down"></i> Exportar todos
+                    </form.Button>                
+                </a>
+            </form.Button>
+            <researcher.ExportButton triggers="exportResearcher">
+                <i class="bi bi-box-arrow-down"></i> Exportar
+            </researcher.ExportButton>
             </section>
 
             {% if results %}
