@@ -81,9 +81,10 @@
             </header>
 
             <section id="selection-action" class="my-4 flex justify-end">
-                <form.Button id="clear-selection" onclick="localStorage.removeItem('selectedResearchers'); location.reload();">
+                <researcher.DeselectAllButton>
                     <i class="bi bi-x-circle"></i> Deselecionar todos
                 </form.Button>
+                </researcher.DeselectAllButton>
                 <researcher.ExportButton triggers="exportResearcher">
                     <i class="bi bi-box-arrow-down"></i> Exportar
                 </researcher.ExportButton>
