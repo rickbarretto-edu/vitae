@@ -8,32 +8,19 @@
     A researcher profile card component displaying key data such as name, titles, institution, address,
     specialities, and abstract. Combines multiple researcher components into a styled, interactive block.
 
+    The card is togglable, so the users can select the researchers to be exported. When checked,
+    the card will have a purple border indicating that researcher was selected correcly.
+    
+    But don't worry, the preference is stored across page reloads, since this is stored into the
+    session storage key: "selectedResearchers". Also, when the Card is loaded, its state is loaded
+    from the stored data, assuming the state of the card is kept consistent.
+
     Usage
     -----
 
     To render a complete profile card:
 
         <researcher.Card researcher={{r}} />
-
-    This component includes:
-
-    - <researcher.Profile/>
-    - <researcher.Nationality/>
-    - <researcher.HighestAcademicTitle/>
-    - <researcher.Institution/>
-    - <researcher.Address/>
-    - <researcher.Specialities/>
-    - <researcher.Abstract/>
-
-    This component includes:
-
-    - <researcher.Profile/>
-    - <researcher.Nationality/>
-    - <researcher.HighestAcademicTitle/>
-    - <researcher.Institution/>
-    - <researcher.Address/>
-    - <researcher.Specialities/>
-    - <researcher.Abstract/>
 
 #}
 
