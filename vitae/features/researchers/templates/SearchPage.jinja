@@ -80,6 +80,15 @@
                 </div>
             </header>
 
+            <section id="selection-action" class="my-4 flex justify-end">
+                <form.Button id="clear-selection" onclick="localStorage.removeItem('selectedResearchers'); location.reload();">
+                    <i class="bi bi-x-circle"></i> Limpar tudo
+                </form.Button>
+                <researcher.ExportButton triggers="exportResearcher">
+                    <i class="bi bi-box-arrow-down"></i> Exportar
+                </researcher.ExportButton>
+            </section>
+
             {% if results %}
                 <main class="flex flex-col items-center">
                     {% for researcher in results %}
