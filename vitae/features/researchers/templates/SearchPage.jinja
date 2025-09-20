@@ -84,11 +84,6 @@
                 <form.Button id="clear-selection" onclick="localStorage.removeItem('selectedResearchers'); location.reload();">
                     <i class="bi bi-x-circle"></i> Limpar tudo
                 </form.Button>
-                <researcher.ExportAllButton 
-                    id="export-all" targets="/export" 
-                    storage="selectedResearchers" 
-                    triggers="exportResearcher" 
-                />
                 <researcher.ExportButton triggers="exportResearcher">
                     <i class="bi bi-box-arrow-down"></i> Exportar
                 </researcher.ExportButton>
