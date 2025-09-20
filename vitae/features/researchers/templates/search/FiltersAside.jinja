@@ -69,12 +69,14 @@
             <form.Button type="submit">Buscar</form.Button>
         </div>
     </form>
-    <form.Button onclick="window.location.href='/'">Remover filtros</form.Button>
-    <search.ExportAllButton 
-        id="export-all" targets="/export" 
-        storage="selectedResearchers" 
-        triggers="exportResearcher" 
-    />
-        <i class="bi bi-box-arrow-down"></i> Exportar todos
-    </search.ExportAllButton>
+    <div class="flex justify-between items-center space-x-2">
+        <form.Button onclick="window.location.href='/'">Remover filtros</form.Button>
+        <search.ExportAllButton 
+            id="export-all" targets="/export" 
+            storage="selectedResearchers" 
+            triggers="exportResearcher" 
+        >
+            <i class="bi bi-box-arrow-down"></i> Exportar todos
+        </search.ExportAllButton>
+    </div>
 </aside>
