@@ -20,6 +20,32 @@ There is no need to have such things for simpler features. So I can use whatever
 
 While features are self-contained, some shared components are used across the application for practical reasons, especially when there's no meaningful value in duplicating them.
 
+## Session Storage
+
+### Selected Researchers
+
+Selected Researchers are stored into session storage and they are used to be exported to Lucy Lattes.
+
+The researcher list UI uses a small client-side selection store named `selectedResearchers`.
+It is a plain object persisted in `localStorage` under the same key and maps researcher ids
+to their display names. This allows users to click researcher cards to select/deselect them
+and keep that selection across page reloads.
+
+Layout:
+
+```ts
+type LattesID = string
+type ResearcherName = string
+type SelectedResearchers = {
+    LattesID: ResearcherName
+    ...
+}
+```
+
+OBS.: This does not implicate this types actually exists in the code,
+since we use JS as script language to interact with the website.
+
+
 ### Settings
 
 The `settings` module defines a global `Vitae` configuration object that holds project-wide settings. Configuration values are provided through a `.toml` file instead of `.env`, for the following reasons:
