@@ -1,4 +1,9 @@
-{#def id: str, to: str = "/export" #}
+{#def 
+    id: str,
+    storage: str,
+    triggers: str,
+    to: str = "/export",
+#}
 
 {# 
 
@@ -20,11 +25,31 @@
 <script type="module">
     document.addEventListener("DOMContentLoaded", () => {
         const link = document.getElementById("{{id}}")
-        link.addEventListener("click", (event) => {
+        link.addEventListener("click", async (event) => {
             event.preventDefault()
             const qs = window.location.search || ""
             const url = "{{to}}" + qs
-            window.open(url, "_blank")
+            const storageKey = "{{storage}}"
+            const exportResearchers = {{triggers}}
+            try {
+                const res = await fetch(url, { credentials: "same-origin" })
+                if (!res.ok) 
+                    throw new Error(`Fetch failed: ${res.status}`)
+                
+                const text = await res.text()
+                let data
+                try {
+                    data = JSON.parse(text) 
+                } catch { 
+                    data = text 
+                }
+                localStorage.setItem(storageKey, JSON.stringify(data))
+                window.dispatchEvent(new CustomEvent(`${storageKey}:updated`))
+                exportResearchers()
+                localStorage.setItem(storageKey, {})
+            } catch (err) {
+                console.error("Export fetch failed", err)
+            }
         })
     })
 </script>
