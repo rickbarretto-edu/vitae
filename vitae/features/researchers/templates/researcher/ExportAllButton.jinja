@@ -1,0 +1,30 @@
+{#def id: str, to: str = "/export" #}
+
+{# 
+
+    Export All Button
+    -----------------
+
+    A button component that allows users to export all researchers based on current search filters.
+    The button constructs a URL with the current query string parameters to ensure the export
+    respects the active filters.
+
+#}
+
+<a id="{{id}}" class="w-full" href="#">
+    <form.Button>
+        <i class="bi bi-box-arrow-down"></i> Exportar todos
+    </form.Button>
+</a>
+
+<script type="module">
+    document.addEventListener("DOMContentLoaded", () => {
+        const link = document.getElementById("{{id}}")
+        link.addEventListener("click", (event) => {
+            event.preventDefault()
+            const qs = window.location.search || ""
+            const url = "{{to}}" + qs
+            window.open(url, "_blank")
+        })
+    })
+</script>
