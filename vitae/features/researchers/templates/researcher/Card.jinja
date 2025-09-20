@@ -59,12 +59,12 @@
         const researcherName = "{{researcher.this.name}}"
         const researcherId = "{{researcher.links.lattes.id}}"
         const cardId = "researcher-" + researcherId
-        let card = document.getElementById(cardId)
-        
+        let card = document.getElementById(cardId)        
         if (!card) return
 
-        if (window.selectedResearchers[researcherId])
+        if (window.selectedResearchers[researcherId]) {
             card.classList.add("border-purple-500")
+        }
 
         card.addEventListener("click", () => {
             if (window.selectedResearchers[researcherId]) {
