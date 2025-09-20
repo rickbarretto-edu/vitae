@@ -4,8 +4,9 @@ import functools
 from pathlib import Path
 
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 
+from vitae.features.researchers.model.researcher import Researcher
 from vitae.features.researchers.repository import (
     FiltersInDatabase,
     ResearchersInDatabase,
@@ -90,3 +91,40 @@ def show_search(
             "page": page,
         },
     )
+
+
+@router.get("/export")
+def export_all(
+    request: Request,
+    query: str = "",
+    country: str | None = None,
+    state: str | None = None,
+    started: str | None = None,
+    has_finished: bool = False,
+    expertise: str | None = None,
+) -> JSONResponse:
+    search = SearchResearchers(ResearchersInDatabase(database))
+    choosen_filters = ChoosenFilters(
+        country=country,
+        state=state,
+        started=started,
+        has_finished=has_finished,
+        expertise=expertise,
+    )
+
+    found: list[Researcher] = search.query(
+        query,
+        order_by=None,
+        filter_by=choosen_filters,
+        page=None,
+    )
+
+    result = [
+        {
+            "lattes_id": researcher.links.lattes.id,
+            "name": str(researcher.this.name),
+        } for researcher in found
+    ]
+
+    print(result)
+    return JSONResponse(content=result)
