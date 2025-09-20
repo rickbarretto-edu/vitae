@@ -40,6 +40,7 @@ class SearchResearchers:
 
         return self.researchers.by_name(
             query,
+            researchers=50,
             order_by=order_by.value if order_by else None,
             filter_by=filter_by,
             page=page,
