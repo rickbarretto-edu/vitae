@@ -32,7 +32,7 @@ class SearchResearchers:
         *,
         order_by: SortingOrder | None = None,
         filter_by: ChoosenFilters | None = None,
-        page: int = 1,
+        page: int | None = 1,
     ) -> list[Researcher]:
         if is_lattes_id(query):
             result = self.researchers.by_id(query)
@@ -40,6 +40,7 @@ class SearchResearchers:
 
         return self.researchers.by_name(
             query,
+            researchers=50,
             order_by=order_by.value if order_by else None,
             filter_by=filter_by,
             page=page,

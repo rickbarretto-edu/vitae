@@ -1,0 +1,53 @@
+{#def 
+    id: str,
+    storage: str,
+    triggers: str,
+    targets: str = "/export",
+#}
+
+{# 
+
+    Export All Button
+    -----------------
+
+    A button component that allows users to export all researchers based on current search filters.
+    The button constructs a URL with the current query string parameters to ensure the export
+    respects the active filters.
+
+#}
+
+<a id="{{id}}" class="w-full" href="#">
+    <form.Button>{{content}}</form.Button>
+</a>
+
+<script type="module">
+    document.addEventListener("DOMContentLoaded", () => {
+        const link = document.getElementById("{{id}}")
+        link.addEventListener("click", async (event) => {
+            event.preventDefault()
+            const qs = window.location.search || ""
+            const url = "{{targets}}" + qs
+            const storageKey = "{{storage}}"
+            const exportResearchers = {{triggers}}
+            try {
+                const res = await fetch(url, { credentials: "same-origin" })
+                if (!res.ok) 
+                    throw new Error(`Fetch failed: ${res.status}`)
+                
+                const text = await res.text()
+                let data
+                try {
+                    data = JSON.parse(text) 
+                } catch { 
+                    data = text 
+                }
+                localStorage.setItem(storageKey, JSON.stringify(data))
+                window.dispatchEvent(new CustomEvent(`${storageKey}:updated`))
+                exportResearchers()
+                localStorage.setItem(storageKey, {})
+            } catch (err) {
+                console.error("Export fetch failed", err)
+            }
+        })
+    })
+</script>

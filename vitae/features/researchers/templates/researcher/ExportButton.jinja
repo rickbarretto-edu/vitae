@@ -1,0 +1,33 @@
+{#def 
+    triggers: str,
+    tooltip: str = "Ctrl + E"
+#}
+
+{#
+
+    Export Button
+    -------------
+
+    A button that triggers an export action when clicked.
+
+    `triggers`: pass the function name to be called when the button is clicked.
+    `tooltip`: the tooltip text shown when hovering over the button. Defaults to "Ctrl + E".
+
+    Content
+    -------
+    The button label content.
+
+    Usage
+    -----
+
+    To create an "export" button that fetches a storage by key and triggers an export action.
+
+        <researcher.ExportButton triggers="export">
+            Export to Lucy Lattes
+        </researcher.ExportButton>
+
+#}
+
+<a id="export-button" onclick="{{triggers}}()" title="{{tooltip}}" class="block w-full max-w-[16rem]">
+    <form.Button>{{content}}</form.Button>
+</a>

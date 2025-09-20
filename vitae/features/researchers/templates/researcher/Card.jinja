@@ -5,14 +5,15 @@
     Card
     ----
 
-    A full researcher profile card component displaying key data such as name, titles, institution, address,
-    specialities, and abstract. Combines multiple researcher.* components into a styled, interactive block.
+    A researcher profile card component displaying key data such as name, titles, institution, address,
+    specialities, and abstract. Combines multiple researcher components into a styled, interactive block.
 
-    `researcher`: the researcher object containing all structured data to be rendered.
-
-    Content
-    -------
-    Not used. All data is driven by the `researcher` parameter.
+    The card is togglable, so the users can select the researchers to be exported. When checked,
+    the card will have a purple border indicating that researcher was selected correcly.
+    
+    But don't worry, the preference is stored across page reloads, since this is stored into the
+    session storage key: "selectedResearchers". Also, when the Card is loaded, its state is loaded
+    from the stored data, assuming the state of the card is kept consistent.
 
     Usage
     -----
@@ -21,36 +22,11 @@
 
         <researcher.Card researcher={{r}} />
 
-    This component includes:
-
-    - <researcher.Profile/>
-    - <researcher.Nationality/>
-    - <researcher.HighestAcademicTitle/>
-    - <researcher.Institution/>
-    - <researcher.Address/>
-    - <researcher.Specialities/>
-    - <researcher.Abstract/>
-
-    This component includes:
-
-    - <researcher.Profile/>
-    - <researcher.Nationality/>
-    - <researcher.HighestAcademicTitle/>
-    - <researcher.Institution/>
-    - <researcher.Address/>
-    - <researcher.Specialities/>
-    - <researcher.Abstract/>
-
 #}
 
 
-<researcher.Export
-    researcher={{researcher.links.lattes.id}}
-    at="researcher" action="export"
-    on-click={{on_click}}
-    class="w-full"
->
-<section class="w-full bg-white border-2 border-gray-100 rounded-xl p-6 mb-6
+<section id="researcher-{{researcher.links.lattes.id}}" 
+    class="w-full bg-white border-2 border-gray-100 rounded-xl p-6 mb-6
     hover:border-indigo-400 hover:shadow-lg hover:-translate-y-1 transition cursor-pointer">
     <researcher.Profile 
         name={{researcher.this.name}} 
@@ -75,4 +51,32 @@
     </researcher.Abstract>
 
 </section>
-</researcher.Export>
+
+<script type="module">
+    window.selectedResearchers = JSON.parse(localStorage.getItem("selectedResearchers") || "{}")
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const researcherName = "{{researcher.this.name}}"
+        const researcherId = "{{researcher.links.lattes.id}}"
+        const cardId = "researcher-" + researcherId
+        let card = document.getElementById(cardId)        
+        if (!card) return
+
+        if (window.selectedResearchers[researcherId]) {
+            card.classList.add("border-purple-500")
+        }
+
+        card.addEventListener("click", () => {
+            if (window.selectedResearchers[researcherId]) {
+                delete window.selectedResearchers[researcherId]
+                card.classList.remove("border-purple-500")
+            } else {
+                window.selectedResearchers[researcherId] = researcherName
+                card.classList.add("border-purple-500")
+            }
+
+            let body = JSON.stringify(window.selectedResearchers)
+            localStorage.setItem("selectedResearchers", body)
+        })
+    })
+</script>

@@ -118,8 +118,8 @@ class Researchers(Protocol):
         self,
         name: str,
         researchers: int,
-        page: int,
         order_by: Order,
+        page: int | None,
         filter_by: ChoosenFilters | None,
     ) -> list[Researcher]:
         """Define a search by name.
@@ -166,8 +166,8 @@ class ResearchersInDatabase(Researchers):
         self,
         name: str,
         researchers: int = 50,
-        page: int = 1,
         order_by: Order = None,
+        page: int | None = 1,
         filter_by: ChoosenFilters | None = None,
     ) -> list[Researcher]:
         """Fetch Researchers by name.
@@ -197,7 +197,10 @@ class ResearchersInDatabase(Researchers):
 
         """
         each_name = name.split()
-        offset = researchers * (page - 1)
+        if page is None:
+            offset = 0
+        else:
+            offset = researchers * (page - 1)
 
         has_names = [
             col(tables.Researcher.full_name).ilike(f"%{name_token}%")
@@ -218,7 +221,11 @@ class ResearchersInDatabase(Researchers):
 
             filtered = using_filter(selected, filter_by)
             ordered = ordered_by_name(filtered, order_by)
-            limited = ordered.offset(offset).limit(researchers)
+
+            if page is None:
+                limited = ordered
+            else:
+                limited = ordered.offset(offset).limit(researchers)
 
             result = session.exec(limited).all()
 

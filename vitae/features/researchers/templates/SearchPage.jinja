@@ -80,6 +80,16 @@
                 </div>
             </header>
 
+            <section id="selection-action" class="my-4 flex gap-2 justify-end">
+                <researcher.DeselectAllButton>
+                    <i class="bi bi-x-circle"></i> Deselecionar todos
+                </form.Button>
+                </researcher.DeselectAllButton>
+                <researcher.ExportButton triggers="exportResearcher">
+                    <i class="bi bi-box-arrow-down"></i> Exportar
+                </researcher.ExportButton>
+            </section>
+
             {% if results %}
                 <main class="flex flex-col items-center">
                     {% for researcher in results %}

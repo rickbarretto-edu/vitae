@@ -4,8 +4,9 @@ import functools
 from pathlib import Path
 
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 
+from vitae.features.researchers.model.researcher import Researcher
 from vitae.features.researchers.repository import (
     FiltersInDatabase,
     ResearchersInDatabase,
@@ -17,7 +18,6 @@ from vitae.features.researchers.usecases import (
     LoadFilters,
     SearchResearchers,
     SortingOrder,
-    ExportToLucy,
 )
 from vitae.infra.database import Database
 from vitae.settings.vitae import Vitae
@@ -93,10 +93,36 @@ def show_search(
     )
 
 
-@router.get("/researcher/{id}/export")
-def export_researcher(id: str):
+@router.get("/export")
+def export_all(
+    request: Request,
+    query: str = "",
+    country: str | None = None,
+    state: str | None = None,
+    started: str | None = None,
+    has_finished: bool = False,
+    expertise: str | None = None,
+) -> JSONResponse:
+    search = SearchResearchers(ResearchersInDatabase(database))
+    choosen_filters = ChoosenFilters(
+        country=country,
+        state=state,
+        started=started,
+        has_finished=has_finished,
+        expertise=expertise,
+    )
 
-    export_to_lucy = ExportToLucy(ResearchersInDatabase(database))
-    csv_file = export_to_lucy.csv_of(id)
+    found: list[Researcher] = search.query(
+        query,
+        order_by=None,
+        filter_by=choosen_filters,
+        page=None,
+    )
 
-    return csv_file
+    result = {
+        researcher.links.lattes.id: str(researcher.this.name)
+        for researcher in found
+    }
+
+    print(result)
+    return JSONResponse(content=result)
