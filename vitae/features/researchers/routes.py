@@ -119,12 +119,10 @@ def export_all(
         page=None,
     )
 
-    result = [
-        {
-            "lattes_id": researcher.links.lattes.id,
-            "name": str(researcher.this.name),
-        } for researcher in found
-    ]
+    result = {
+        researcher.links.lattes.id: str(researcher.this.name)
+        for researcher in found
+    }
 
     print(result)
     return JSONResponse(content=result)
