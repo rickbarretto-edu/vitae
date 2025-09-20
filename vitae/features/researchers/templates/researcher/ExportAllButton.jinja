@@ -2,7 +2,7 @@
     id: str,
     storage: str,
     triggers: str,
-    to: str = "/export",
+    targets: str = "/export",
 #}
 
 {# 
@@ -28,7 +28,7 @@
         link.addEventListener("click", async (event) => {
             event.preventDefault()
             const qs = window.location.search || ""
-            const url = "{{to}}" + qs
+            const url = "{{targets}}" + qs
             const storageKey = "{{storage}}"
             const exportResearchers = {{triggers}}
             try {
