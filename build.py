@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 
 import PyInstaller.__main__
@@ -24,9 +25,9 @@ PyInstaller.__main__.run([
 
     # Application Parameters
     "--windowed",
-    "--splash",
-    "splash.png",
-    # add-data must be passed as a single argument with the correct separator
+
+    # Right now, macOS does not support pyi_splash / --splash
+    *([] if sys.platform.startswith('darwin') else ["--splash", "splash.png"]),
     _add_data_arg("vitae/features/researchers/templates", "vitae/features/researchers/templates"),
 ])
 
