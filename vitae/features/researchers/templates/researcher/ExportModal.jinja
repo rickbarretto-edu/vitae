@@ -1,5 +1,5 @@
 {#def 
-    filtered: str,
+    query_export: str,
     selected: str,
     targets: str,
     storage: str = "selectedResearchers"
@@ -95,7 +95,7 @@
         exportResearchers(localStorage.getItem("{{storage}}") || "{}")
     }
 
-    async function exportFilteredResearchers() {
+    async function exportByQuery() {
         const qs = window.location.search || ""
         const url = "{{targets}}" + qs
         const storageKey = "{{storage}}"
@@ -145,7 +145,7 @@
 
     // Expose function if needed
     window.{{selected}} = exportSelectedResearchers
-    window.{{filtered}} = exportFilteredResearchers
+    window.{{query_export}} = exportByQuery
 })()
 </script>
 
