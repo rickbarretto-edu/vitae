@@ -58,7 +58,7 @@
         lucyModal.showModal()
 
         try {
-            let selected = (typeof data === "string")? JSON.parse(data): : data || {}
+            let selected = (typeof data === "string")? JSON.parse(data) : (data || {})
             const ids = Object.keys(selected)
 
             if (ids.length === 0) {
