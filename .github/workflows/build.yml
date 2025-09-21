@@ -147,24 +147,32 @@ jobs:
 
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: vitae-windows-x86_64
           path: artifacts/windows
 
       - name: Download macOS artifact
         uses: actions/download-artifact@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: vitae-macos
           path: artifacts/macos
 
       - name: Download Linux x86_64 artifact
         uses: actions/download-artifact@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: vitae-linux-x86_64
           path: artifacts/linux
 
       - name: Download Linux arm64 artifact
         uses: actions/download-artifact@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: vitae-linux-arm64
           path: artifacts/linux-arm64
@@ -210,6 +218,8 @@ jobs:
 
       - name: Upload Windows release asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release-windows.zip
@@ -218,6 +228,8 @@ jobs:
 
       - name: Upload macOS release asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release-macos.zip
@@ -226,6 +238,8 @@ jobs:
 
       - name: Upload Linux x86_64 release asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release-linux.zip
@@ -234,6 +248,8 @@ jobs:
 
       - name: Upload Linux arm64 release asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: release-linux-arm64.zip
