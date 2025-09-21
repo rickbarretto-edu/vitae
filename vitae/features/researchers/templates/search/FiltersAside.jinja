@@ -68,17 +68,13 @@
             </form.Attribute>
             <form.Button type="submit">Buscar</form.Button>
         </div>
+        <div class="flex justify-between items-center space-x-2 mt-2">
+            <form.Button onclick="window.location.href='/'">
+                <i class="bi bi-x-circle"></i> Limpar filtros
+            </form.Button>
+            <search.ExportAllButton id="export-all" triggers="exportSearchQuery">
+                <i class="bi bi-box-arrow-down"></i> Exportar todos
+            </search.ExportAllButton>
+        </div>
     </form>
-    <div class="flex justify-between items-center space-x-2">
-        <form.Button onclick="window.location.href='/'">
-            <i class="bi bi-x-circle"></i> Limpar filtros
-        </form.Button>
-        <search.ExportAllButton 
-            id="export-all" targets="/export" 
-            storage="selectedResearchers" 
-            triggers="exportResearcher" 
-        >
-            <i class="bi bi-box-arrow-down"></i> Exportar todos
-        </search.ExportAllButton>
-    </div>
 </aside>
