@@ -202,3 +202,4 @@ jobs:
           asset_path: release-linux-arm64.zip
           asset_name: vitae-${{ github.ref_name }}-linux-arm64.zip
           asset_content_type: application/zip
+
