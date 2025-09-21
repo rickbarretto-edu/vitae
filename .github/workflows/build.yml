@@ -18,7 +18,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -48,7 +48,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -77,7 +77,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -111,7 +111,7 @@ jobs:
 
       - name: Create and start container (arm64)
         run: |
-          docker run --platform linux/arm64 --rm -d --name vitae-arm-builder --privileged -v ${{ github.workspace }}:/workspace -w /workspace python:3.11-slim tail -f /dev/null
+          docker run --platform linux/arm64 --rm -d --name vitae-arm-builder --privileged -v ${{ github.workspace }}:/workspace -w /workspace python:3.12-slim tail -f /dev/null
 
       - name: Install build deps inside container
         run: |
