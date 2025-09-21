@@ -1,0 +1,131 @@
+name: CI / Cross-platform build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master, '**' ]
+  pull_request:
+
+jobs:
+  build-windows:
+    name: Build Windows (x86_64)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry config virtualenvs.create false
+          poetry install --no-interaction --no-ansi --with dev
+
+      - name: Run build.py
+        shell: pwsh
+        run: |
+          python build.py
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitae-windows-x86_64
+          path: dist/vitae/**
+
+  build-macos:
+    name: Build macOS (x86_64 / arm64)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install poetry
+          poetry config virtualenvs.create false
+          poetry install --no-interaction --no-ansi --with dev
+
+      - name: Run build.py
+        run: |
+          python3 build.py
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitae-macos
+          path: dist/vitae/**
+
+  build-linux:
+    name: Build Linux (x86_64)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install poetry
+          poetry config virtualenvs.create false
+          poetry install --no-interaction --no-ansi --with dev
+
+      - name: Run build.py
+        run: |
+          python3 build.py
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitae-linux-x86_64
+          path: dist/vitae/**
+
+  build-linux-arm64:
+    name: Build Linux (arm64 via buildx)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Create and start container (arm64)
+        run: |
+          docker run --platform linux/arm64 --rm -d --name vitae-arm-builder --privileged -v ${{ github.workspace }}:/workspace -w /workspace python:3.11-slim tail -f /dev/null
+
+      - name: Install build deps inside container
+        run: |
+          docker exec vitae-arm-builder bash -lc "python -m pip install --upgrade pip && pip install pyinstaller && pip install -r requirements.txt || true"
+
+      - name: Run build inside container
+        run: |
+          docker exec vitae-arm-builder bash -lc "python build.py"
+
+      - name: Copy out artifacts
+        run: |
+          docker cp vitae-arm-builder:/workspace/dist ./dist-arm || true
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitae-linux-arm64
+          path: dist-arm/**
