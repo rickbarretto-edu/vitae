@@ -115,6 +115,7 @@ jobs:
 
       - name: Install build deps inside container
         run: |
+          docker exec vitae-arm-builder bash -lc "apt-get update && apt-get install -y binutils gcc libssl-dev make || true"
           docker exec vitae-arm-builder bash -lc "python -m pip install --upgrade pip && pip install pyinstaller && pip install -r requirements.txt || true"
 
       - name: Run build inside container
