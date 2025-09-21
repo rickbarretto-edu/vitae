@@ -44,7 +44,15 @@ jobs:
 
   build-macos:
     name: Build macOS (x86_64 / arm64)
-    runs-on: macos-latest
+    # Build on both Intel (macos-13) and Apple Silicon (macos-13-arm64)
+    strategy:
+      matrix:
+        include:
+          - runner: macos-13
+            arch: x86_64
+          - runner: macos-13-arm64
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -68,7 +76,8 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: vitae-macos
+          # store per-arch artifacts so we can publish both
+          name: vitae-macos-${{ matrix.arch }}
           path: dist/vitae/**
 
   build-linux:
@@ -157,13 +166,22 @@ jobs:
           name: vitae-windows-x86_64
           path: artifacts/windows
 
-      - name: Download macOS artifact
+      - name: Download macOS artifacts (Intel and arm64)
         uses: actions/download-artifact@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: vitae-macos
-          path: artifacts/macos
+          # download any per-arch macOS artifacts produced by the matrix
+          name: vitae-macos-x86_64
+          path: artifacts/macos/x86_64
+
+      - name: Download macOS arm64 artifact
+        uses: actions/download-artifact@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: vitae-macos-arm64
+          path: artifacts/macos/arm64
 
       - name: Download Linux x86_64 artifact
         uses: actions/download-artifact@v4
@@ -184,22 +202,25 @@ jobs:
       - name: Prepare per-platform release assets
         run: |
           set -e
-          
-          mkdir -p release-assets/windows release-assets/macos release-assets/linux release-assets/linux-arm64 || true
-          
+
+          # create separate macOS folders for each architecture so we upload
+          # per-arch macOS release assets (Intel and Apple Silicon)
+          mkdir -p release-assets/windows release-assets/macos-x86_64 release-assets/macos-arm64 release-assets/linux release-assets/linux-arm64 || true
+
           # Copy artifacts into per-platform folders (ignore missing)
           cp -r artifacts/windows/* release-assets/windows/ 2>/dev/null || true
-          cp -r artifacts/macos/* release-assets/macos/ 2>/dev/null || true
+          cp -r artifacts/macos/x86_64/* release-assets/macos-x86_64/ 2>/dev/null || true
+          cp -r artifacts/macos/arm64/* release-assets/macos-arm64/ 2>/dev/null || true
           cp -r artifacts/linux/* release-assets/linux/ 2>/dev/null || true
           cp -r artifacts/linux-arm64/* release-assets/linux-arm64/ 2>/dev/null || true
-          
+
           # Also include any top-level dist/vitae contents as fallback into linux
           cp -r dist/vitae/* release-assets/linux/ 2>/dev/null || true
-          
+
           # Zip each folder if it contains files
           cd release-assets
-          
-          for d in windows macos linux linux-arm64; do
+
+          for d in windows macos-x86_64 macos-arm64 linux linux-arm64; do
             if [ -n "$(ls -A $d 2>/dev/null)" ]; then
               zip -r ../release-${d}.zip $d || true
             else
@@ -207,7 +228,7 @@ jobs:
               touch ../release-${d}.zip
             fi
           done
-          
+
           cd ..
 
       - name: Create GitHub Release
@@ -236,8 +257,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release-macos.zip
-          asset_name: vitae-${{ github.ref_name }}-macos.zip
+          asset_path: release-macos-x86_64.zip
+          asset_name: vitae-${{ github.ref_name }}-macos-x86_64.zip
+          asset_content_type: application/zip
+
+      - name: Upload macOS arm64 release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release-macos-arm64.zip
+          asset_name: vitae-${{ github.ref_name }}-macos-arm64.zip
           asset_content_type: application/zip
 
       - name: Upload Linux x86_64 release asset
