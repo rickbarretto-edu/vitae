@@ -1,7 +1,9 @@
-{#def fn_name: str #}
-
-{#set fn_name = "exportLucy" #}
-
+{#def 
+    filtered: str,
+    selected: str,
+    targets: str,
+    storage: str = "selectedResearchers"
+#}
 
 <dialog id="export-modal" class="bg-white/70 backdrop-blur rounded-2xl outline-none shadow-xl shadow-md p-6 max-w-[90%] w-[800px]">
     <header class="flex items-center border-b border-gray-300 mb-4">
@@ -50,14 +52,13 @@
         if (event.target === lucyModal) lucyModal.close()
     })
 
-    // Export function
-    async function exportSelectedResearchers() {
+    function exportResearchers(data) {
         codeblock.classList.add("hidden")
         save.classList.add("hidden")
         lucyModal.showModal()
 
         try {
-            const selected = JSON.parse(localStorage.getItem("selectedResearchers") || "{}")
+            const selected = JSON.parse(data)
             const ids = Object.keys(selected)
 
             if (ids.length === 0) {
@@ -87,6 +88,37 @@
             code.textContent = `Error: ${err.message}`
             codeblock.classList.remove("hidden")
         }
+    } 
+
+    // Export function
+    async function exportSelectedResearchers() {
+        exportResearchers(localStorage.getItem("{{storage}}") || "{}")
+    }
+
+    async function exportFilteredResearchers() {
+        const qs = window.location.search || ""
+        const url = "{{targets}}" + qs
+        const storageKey = "{{storage}}"
+        try {
+            const res = await fetch(url, { credentials: "same-origin" })
+            if (!res.ok) 
+                throw new Error(`Fetch failed: ${res.status}`)
+            
+            const text = await res.text()
+
+            console.log("Fetched text:", text)
+            let data
+            try {
+                data = JSON.parse(text) 
+            } catch { 
+                data = text 
+            }
+
+            console.log("Fetched data:", data)
+            exportResearchers(data)
+        } catch (err) {
+            console.error("Export fetch failed", err)
+        }
     }
 
     // Download button
@@ -112,7 +144,8 @@
     })
 
     // Expose function if needed
-    window.{{fn_name}} = exportSelectedResearchers
+    window.{{selected}} = exportSelectedResearchers
+    window.{{filtered}} = exportFilteredResearchers
 })()
 </script>
 

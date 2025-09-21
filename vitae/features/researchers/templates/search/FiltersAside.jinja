@@ -73,11 +73,7 @@
         <form.Button onclick="window.location.href='/'">
             <i class="bi bi-x-circle"></i> Limpar filtros
         </form.Button>
-        <search.ExportAllButton 
-            id="export-all" targets="/export" 
-            storage="selectedResearchers" 
-            triggers="exportResearcher" 
-        >
+        <search.ExportAllButton id="export-all" triggers="exportFilteredResearchers">
             <i class="bi bi-box-arrow-down"></i> Exportar todos
         </search.ExportAllButton>
     </div>
