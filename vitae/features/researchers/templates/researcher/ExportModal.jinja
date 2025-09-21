@@ -1,6 +1,6 @@
 {#def 
     query_export: str,
-    selected: str,
+    selected_export: str,
     targets: str,
     storage: str = "selectedResearchers"
 #}
@@ -90,8 +90,7 @@
         }
     } 
 
-    // Export function
-    async function exportSelectedResearchers() {
+    async function exportBySelection() {
         exportResearchers(localStorage.getItem("{{storage}}") || "{}")
     }
 
@@ -143,8 +142,7 @@
         }
     })
 
-    // Expose function if needed
-    window.{{selected}} = exportSelectedResearchers
+    window.{{selected_export}} = exportBySelection
     window.{{query_export}} = exportByQuery
 })()
 </script>

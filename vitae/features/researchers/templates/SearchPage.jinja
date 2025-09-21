@@ -85,7 +85,7 @@
                     <i class="bi bi-x-circle"></i> Deselecionar todos
                 </form.Button>
                 </researcher.DeselectAllButton>
-                <researcher.ExportButton triggers="exportSelectedResearchers">
+                <researcher.ExportButton triggers="exportBySelection">
                     <i class="bi bi-box-arrow-down"></i> Exportar
                 </researcher.ExportButton>
             </section>
@@ -108,7 +108,7 @@
 </layout.Page>
 <researcher.ExportModal 
     query-export="exportSearchQuery"
-    selected="exportSelectedResearchers"
+    selected-export="exportBySelection"
     targets="/export"
     storage="selectedResearchers"
 />
