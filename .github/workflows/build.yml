@@ -12,9 +12,33 @@ permissions:
   packages: write
 
 jobs:
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install poetry
+          poetry config virtualenvs.create false
+          poetry install --no-interaction --no-ansi --with dev
+
+      - name: Run pytest
+        run: |
+          pytest -q
+
   build-windows:
     name: Build Windows (x86_64)
     runs-on: windows-latest
+    needs: tests
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,13 +74,14 @@ jobs:
         include:
           - runner: macos-13
             arch: x86_64
-              # The Apple Silicon runner is commented out because macos-13-arm64
-              # availability on GitHub Actions is limited and may not be offered
-              # in all accounts or regions. Enable when your organization has
-              # access to macOS arm64 hosted runners.
-              # - runner: macos-13-arm64
-              #   arch: arm64
+            # The Apple Silicon runner is commented out because macos-13-arm64
+            # availability on GitHub Actions is limited and may not be offered
+            # in all accounts or regions. Enable when your organization has
+            # access to macOS arm64 hosted runners.
+            # - runner: macos-13-arm64
+            #   arch: arm64
     runs-on: ${{ matrix.runner }}
+    needs: tests
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -87,6 +112,7 @@ jobs:
   build-linux:
     name: Build Linux (x86_64)
     runs-on: ubuntu-latest
+    needs: tests
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -121,6 +147,7 @@ jobs:
   build-linux-arm64:
     name: Build Linux (arm64)
     runs-on: ubuntu-latest
+    needs: tests
     steps:
       - name: Checkout
         uses: actions/checkout@v4
