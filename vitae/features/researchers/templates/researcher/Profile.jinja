@@ -28,14 +28,13 @@
 
 
 {% set name = name | string %}
-{% set initials = name | words | map(attribute=0) | join('') %}
 
 <div class="flex items-start justify-between mb-4">
 
     <div class="flex items-center">
         <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 
             text-white flex items-center justify-center font-bold text-xl mr-4">
-            {{ initials[0] ~ initials[-1] }}
+            {{ name | initials or "N/A" }}
         </div>
         <div>
             <h2 class="text-xl font-semibold">{{name}}</h2>
