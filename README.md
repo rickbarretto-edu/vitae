@@ -1,6 +1,6 @@
 <h1 align="center">Vitae</h1>
 
-![Vitae Hero](./splash.png)
+![Vitae Hero](./cover.png)
 
 
 Vitae is a Search Engine for Lattes Researchers. This works by ingesting Lattes' XML files and storing them into a database. 
