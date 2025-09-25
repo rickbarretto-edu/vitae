@@ -3,7 +3,9 @@
 <p align="center">
   <img align="center" src="./cover.png" alt="Vitae Hero" />
 
+<p align="center">
   Vitae is a Search Engine for Lattes Researchers. This works by ingesting Lattes' XML files and storing them into a database. 
+</p>
 </p>
 
 ## At A Glance
