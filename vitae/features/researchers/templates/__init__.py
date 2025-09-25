@@ -15,6 +15,22 @@ __all__ = ["load_templates"]
 def words(text: str) -> list[str]:
     return text.split(" ")
 
+def initials(name: str) -> str:
+    if not name:
+        return ""
+
+    def initial(value: str) -> str:
+        return value[0].upper()
+
+    if words := [word for word in name.strip().split()]:
+        if len(words) == 1:
+            return initial(words[0])
+        else:
+            return initial(words[0]) + initial(words[-1])
+    else:
+        return ""
+
+
 
 # =~=~=~=~=~=~= Jinja Setup =~=~=~=~=~=~=
 
@@ -33,6 +49,7 @@ def load_templates(vitae: Vitae) -> Jinja2Templates:
         auto_reload=True,
     )
     env.filters["words"] = words
+    env.filters["initials"] = initials
     env.add_extension(jinjax.JinjaX)
 
     templates = Jinja2Templates(directory=templates_directory)
